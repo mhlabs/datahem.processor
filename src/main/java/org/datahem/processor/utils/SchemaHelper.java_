@@ -1,0 +1,80 @@
+package org.datahem.processor.utils;
+
+//import com.google.api.services.bigquery.model.TableRow;
+import com.google.api.services.bigquery.model.TableSchema;
+import com.google.api.services.bigquery.model.TableFieldSchema;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.cloud.bigquery.LegacySQLTypeName;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+
+import java.util.List;
+
+/*-
+ * ========================LICENSE_START=================================
+ * DataHem
+ * %%
+ * Copyright (C) 2018 Robert Sahlin and MatHem Sverige AB
+ * %%
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * =========================LICENSE_END==================================
+ */
+
+public class SchemaHelper {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(SchemaHelper.class);
+	
+	public static Gson getBqFieldGson() {
+	    JsonDeserializer<LegacySQLTypeName> typeDeserializer = (jsonElement, type, deserializationContext) -> {
+	        return LegacySQLTypeName.valueOf(jsonElement.getAsString());
+	    };
+	
+	    JsonDeserializer<FieldList> subFieldsDeserializer = (jsonElement, type, deserializationContext) -> {
+	        Field[] fields = deserializationContext.deserialize(jsonElement.getAsJsonArray(), Field[].class);
+	        return FieldList.of(fields);
+	    };
+
+    	return new GsonBuilder()
+        	.registerTypeAdapter(LegacySQLTypeName.class, typeDeserializer)
+        	.registerTypeAdapter(FieldList.class, subFieldsDeserializer)
+        	.create();
+	}
+	
+	public static void main(String[] args) {
+	    // TODO Load schema from file
+	    String jsonSchema = "[{\"mode\":\"REQUIRED\",\"name\":\"identifier\",\"type\":\"STRING\"},{\"mode\":\"REQUIRED\",\"name\":\"code\",\"type\":\"STRING\"},{\"mode\":\"REQUIRED\",\"name\":\"description\",\"type\":\"STRING\"}]";
+	
+	    // Json schema uses "fields"
+	    // com.google.cloud.bigquery.Field uses "subFields"
+	    // FIXME Unable to use @SerializedName policy
+	    jsonSchema = jsonSchema.replace("\"fields\"", "\"subFields\"");
+	
+	    // Deserialize schema with custom Gson
+	    Field[] fields = getBqFieldGson().fromJson(jsonSchema, Field[].class);
+	    Schema schema = Schema.of(fields);
+	
+	    System.out.println(schema.toString());
+	}
+	
+	
+}

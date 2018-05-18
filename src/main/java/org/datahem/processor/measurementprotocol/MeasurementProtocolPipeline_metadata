@@ -1,0 +1,60 @@
+{
+  "name": "MeasurementProtocolPipeline",
+  "description": "A pipeline that process GA-hits in real-time and store events to BigQuery and also publish them to PubSub.",
+  "parameters": [
+	  {
+	    "name": "pubsubTopic",
+	    "label": "Output Cloud PubSub topic",
+	    "help_text": "projects/[project_id]]/topics/[topic]",
+	    "is_optional": false
+	  },
+	  {
+	    "name": "pubsubSubscription",
+	    "label": "Input Cloud PubSub subscription",
+	    "help_text": "projects/[project_id]/subscriptions/[subscription]",
+	    "is_optional": false
+	  },
+	  {
+	    "name": "bigQueryTableSpec",
+	    "label": "BigQuery Table Spec",
+	    "help_text": "BigQuery Table Spec [project_id]:[dataset_id].[table_id] or [dataset_id].[table_id]",
+	    "is_optional": false
+	  },
+	  {
+	    "name": "searchEnginesPattern",
+	    "label": "Regex pattern to categorize search engine traffic",
+	    "help_text": "In Java syntax. Default: .*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*",
+	    "is_optional": true
+	  },
+	  {
+	    "name": "ignoredReferersPattern",
+	    "label": "Ignored referer domain regex pattern",
+	    "help_text": "In java syntax. Default: .*mathem\\.se.*",
+	    "is_optional": true
+	  },
+	  {
+	    "name": "socialNetworksPattern",
+	    "label": "Social Networks domain regex pattern",
+	    "help_text": "In java syntax. Default: .*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*",
+	    "is_optional": true
+	  },
+	  {
+	    "name": "includedHostnamesPattern",
+	    "label": "Included hostnames regex pattern",
+	    "help_text": "In java syntax. Default: .*",
+	    "is_optional": true
+	  },
+	  {
+	    "name": "excludedBotsPattern",
+	    "label": "Exclude bot traffic with user agent matching regex pattern",
+	    "help_text": "In java syntax. Default: .*bot.*|.*spider.*|.*crawler.*",
+	    "is_optional": true
+	  },
+	  {
+	    "name": "siteSearchPattern",
+	    "label": "Extract search term from site search with URL regex pattern",
+	    "help_text": "In java syntax. Default: .*q=(([^&#]*)|&|#|$)",
+	    "is_optional": true
+	  }
+  ]
+}
