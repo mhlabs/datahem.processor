@@ -193,7 +193,7 @@
                 <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
                 <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
                 <includes><include>**/*</include></includes>
-                <repositoryName>datahem.collector</repositoryName>      <!-- github repo name -->
+                <repositoryName>datahem.processor</repositoryName>      <!-- github repo name -->
                 <repositoryOwner>mhlabs</repositoryOwner>    <!-- github username  -->
             </configuration>
             <executions>
