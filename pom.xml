@@ -194,7 +194,7 @@
                 <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
                 <includes><include>**/*</include></includes>
                 <repositoryName>datahem.collector</repositoryName>      <!-- github repo name -->
-                <repositoryOwner>ML-engineer</repositoryOwner>    <!-- github username  -->
+                <repositoryOwner>mhlabs</repositoryOwner>    <!-- github username  -->
             </configuration>
             <executions>
               <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
