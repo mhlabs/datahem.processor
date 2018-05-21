@@ -11,6 +11,8 @@ Description of custom parameters: [MeasurementProtocolPipeline_metadata](./Measu
 **$ANUM_TRACKING_ID :** the property ID without dash, ex. UA123456789
 
 ```shell
+#Set variables in linux
+
 PROJECT_ID='my-prod-project'
 VERSION='0.5'
 TRACKING_ID='UA-1234567-89'
@@ -149,7 +151,7 @@ mvn compile exec:java \
 
 ```shell
 gcloud beta dataflow jobs run mpbackfill \
---gcs-location gs://mathem-data/datahem/0.2/org/datahem/processor/measurement/protocol/MeasurementProtocolPipeline \
+--gcs-location gs://$PROJECT_ID/datahem/$VERSION/org/datahem/processor/measurement/protocol/MeasurementProtocolBackfillPipeline \
 --zone=europe-west1-b \
 --max-workers=1 \
 --parameters bigQueryTableSpec=$ANUM_TRACKING_ID.entities,\
@@ -162,4 +164,3 @@ excludedBotsPattern=\".*bot.*|.*spider.*|.*crawler.*\",\
 siteSearchPattern=\".*q=(([^&#]*)|&|#|$)\",\
 timeZone=Europe/Stockholm"
 ```
-
