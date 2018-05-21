@@ -2,11 +2,11 @@ Description of custom parameters: [MeasurementProtocolPipeline_metadata](./Measu
 
 # 1. Set variables
 
-**$PROJECT ID :** your google project id
+**$PROJECT_ID :** your google project id
 
 **$VERSION :** the datahem version used
 
-**$TRACKING ID **: the property ID tracked in google analytics/measurement protocol, ex. UA-1234567-89
+**$TRACKING_ID :** the property ID tracked in google analytics/measurement protocol, ex. UA-1234567-89
 
 **$ANUM_TRACKING_ID :** the property ID without dash, ex. UA123456789
 
