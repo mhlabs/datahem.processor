@@ -90,67 +90,14 @@ public class MeasurementProtocolBackfillPipeline {
   	public interface MeasurementProtocolBackfillPipelineOptions extends MeasurementProtocolOptions{ 
 
 		@Description("BigQuery Table Spec [project_id]:[dataset_id].[table_id] or [dataset_id].[table_id]")
-	    @Default.String("ga.events")
 	    ValueProvider<String> getBigQueryTableSpec();
 	    void setBigQueryTableSpec(ValueProvider<String> value);
 	
 	  	@Description("BigQuery query")
-	  	@Default.String("SELECT data FROM `mathem-data.robban.backup` LIMIT 100")
 	  	ValueProvider<String> getQuery();
 	  	void setQuery(ValueProvider<String> value);
   }
   
-  /*
-   mvn compile exec:java \
-      -Dexec.mainClass=org.datahem.processor.measurement.protocol.MeasurementProtocolBackfillPipeline \
-      -Dexec.args=" \
-      --project=mathem-data \
-      --stagingLocation=gs://mathem-data/datahem/0.2/org/datahem/processor/staging \
-      --gcpTempLocation=gs://mathem-data/datahem/gcptemp/ \
-      --tempLocation=gs://mathem-data/datahem/temp/ \
-      --runner=DataflowRunner \
-      --zone=europe-west1-b \
-      --region=europe-west1 \
-      --numWorkers=1 \
-      --maxNumWorkers=1 \
-      --diskSizeGb=5 \
-      --workerMachineType=n1-standard-1 \
-      --pubsubTopic=projects/mathem-data/topics/test \
-      --pubsubSubscription=projects/mathem-data/subscriptions/measurementprotocol-1-dev \
-      --bigQueryTableSpec=robban.ga4"
-
-mvn compile exec:java \
-      -Dexec.mainClass=org.datahem.processor.measurement.protocol.MeasurementProtocolBackfillPipeline \
-      -Dexec.args=" \
-      --project=mathem-data \
-      --stagingLocation=gs://mathem-data/datahem/0.2/org/datahem/processor/staging \
-      --gcpTempLocation=gs://mathem-data/datahem/gcptemp/ \
-      --tempLocation=gs://mathem-data/datahem/temp/ \
-      --runner=DataflowRunner \
-      --zone=europe-west1-b \
-      --region=europe-west1 \
-      --bigQueryTableSpec=robban.ga4"
-
-
-//Create template
- mvn compile exec:java \
-     -Dexec.mainClass=org.datahem.processor.measurement.protocol.MeasurementProtocolBackfillPipeline \
-     -Dexec.args="--runner=DataflowRunner \
-                  --project=mathem-data \
-                  --stagingLocation=gs://mathem-data/datahem/0.2/org/datahem/processor/measurement/protocol/staging/ \
-                  --templateLocation=gs://mathem-data/datahem/0.2/org/datahem/processor/measurement/protocol/MeasurementProtocolPipeline \
-                  --workerMachineType=n1-standard-1 \
-                  --diskSizeGb=30"
-
-
-gcloud beta dataflow jobs run hoppla5 \
-        --gcs-location gs://mathem-data/datahem/0.2/org/datahem/processor/measurement/protocol/MeasurementProtocolPipeline \
-        --zone=europe-west1-b \
-        --max-workers=1 \
-        --parameters pubsubSubscription=projects/mathem-data/subscriptions/measurementprotocol-1-dev,pubsubTopic=projects/mathem-data/topics/test,bigQueryTableSpec=robban.ga4,searchEnginesPattern=".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*"
-*/
-
-
 
   public static void main(String[] args) {
     MeasurementProtocolBackfillPipelineOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().as(MeasurementProtocolBackfillPipeline.MeasurementProtocolBackfillPipelineOptions.class);
