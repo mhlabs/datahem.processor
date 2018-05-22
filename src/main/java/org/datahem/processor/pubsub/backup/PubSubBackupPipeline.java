@@ -60,11 +60,13 @@ import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.options.Validation.Required;
 import org.apache.beam.sdk.options.ValueProvider;
+import org.apache.beam.sdk.options.ValueProvider.NestedValueProvider;
 import org.apache.beam.sdk.transforms.Count;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.MapElements;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
+import org.apache.beam.sdk.transforms.SerializableFunction;
 import org.apache.beam.sdk.transforms.SimpleFunction;
 import org.apache.beam.sdk.transforms.windowing.FixedWindows;
 import org.apache.beam.sdk.transforms.windowing.Window;
@@ -153,7 +155,15 @@ public class PubSubBackupPipeline {
     	.apply("InsertTableRowsToBigQuery",
       		BigQueryIO
 				.writeTableRows()
-				.to(options.getBigQueryTableSpec())
+				//.to(options.getBigQueryTableSpec())
+				.to(NestedValueProvider.of(
+					options.getBigQueryTableSpec(),
+					new SerializableFunction<String, String>() {
+						@Override
+						public String apply(String tableSpec) {
+							return tableSpec.replaceAll("[^A-Za-z0-9]", "");
+						}
+					}))
       			.withSchema(schema)
       			.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
       			.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
