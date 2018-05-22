@@ -1,3 +1,5 @@
+#Process google analytics (measurement protocol) hits and store to bigquery
+
 Description of custom parameters: [MeasurementProtocolPipeline_metadata](./MeasurementProtocolPipeline_metadata)
 
 # 1. Set variables
@@ -16,7 +18,6 @@ Description of custom parameters: [MeasurementProtocolPipeline_metadata](./Measu
 PROJECT_ID='my-prod-project'
 VERSION='0.5'
 TRACKING_ID='UA-1234567-89'
-ANUM_TRACKING_ID='UA123456789'
 ```
 
 # 2. Execute jobs
@@ -44,7 +45,7 @@ mvn compile exec:java \
       --workerMachineType=n1-standard-1 \
       --pubsubTopic=projects/$PROJECT_ID/topics/$TRACKING_ID-entities \
       --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$TRACKING_ID-processor \
-      --bigQueryTableSpec=$ANUM_TRACKING_ID.entities \
+      --bigQueryTableSpec=$TRACKING_ID.entities \
       --ignoredReferersPattern=\".*mysite\\.com.*\" \
       --searchEnginesPattern=\".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*\" \
       --socialNetworksPattern=\".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*\" \
@@ -82,7 +83,7 @@ gcloud beta dataflow jobs run ua123456789-processor \
 --parameters \
 pubsubSubscription=projects/$PROJECT_ID/subscriptions/$TRACKING_ID-processor,\
 pubsubTopic=projects/$PROJECT_ID/topics/$TRACKING_ID-entities,\
-bigQueryTableSpec=$ANUM_TRACKING_ID.entities,\
+bigQueryTableSpec=$TRACKING_ID.entities,\
 ignoredReferersPattern=".*mathem\\.se.*",\
 searchEnginesPattern=".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*",\
 socialNetworksPattern=".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*",\
@@ -110,7 +111,7 @@ mvn compile exec:java \
       --maxNumWorkers=1 \
       --diskSizeGb=20 \
       --workerMachineType=n1-standard-1 \
-      --bigQueryTableSpec=$ANUM_TRACKING_ID.entities \
+      --bigQueryTableSpec=$TRACKING_ID.entities \
       --query=\"SELECT data FROM `$PROJECT_ID.backup.$ANUM_TRACKING_ID`\" \
       --ignoredReferersPattern=\".*mysite\\.com.*\" \
       --searchEnginesPattern=\".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*\" \
@@ -138,7 +139,7 @@ mvn compile exec:java \
       --maxNumWorkers=1 \
       --diskSizeGb=20 \
       --workerMachineType=n1-standard-1 \
-      --bigQueryTableSpec=$ANUM_TRACKING_ID.entities \
+      --bigQueryTableSpec=$TRACKING_ID.entities \
       --query=\"SELECT data FROM `$PROJECT_ID.backup.$ANUM_TRACKING_ID`\" \
       --ignoredReferersPattern=\".*mysite\\.com.*\" \
       --searchEnginesPattern=\".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*\" \
@@ -154,7 +155,7 @@ gcloud beta dataflow jobs run mpbackfill \
 --gcs-location gs://$PROJECT_ID/datahem/$VERSION/org/datahem/processor/measurement/protocol/MeasurementProtocolBackfillPipeline \
 --zone=europe-west1-b \
 --max-workers=1 \
---parameters bigQueryTableSpec=$ANUM_TRACKING_ID.entities,\
+--parameters bigQueryTableSpec=$TRACKING_ID.entities,\
 query=\"SELECT data FROM `$PROJECT_ID.backup.$ANUM_TRACKING_ID`\",\
 ignoredReferersPattern=\".*mysite\\.com.*\",\
 searchEnginesPattern=\".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*\",\

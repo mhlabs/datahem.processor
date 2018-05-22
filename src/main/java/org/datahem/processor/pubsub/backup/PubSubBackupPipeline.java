@@ -86,7 +86,6 @@ public class PubSubBackupPipeline {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(PubSubBackupPipeline.class);
 
-    //private interface Options extends PipelineOptions {}
     
     public interface Options extends PipelineOptions, GcpOptions {
 
@@ -161,7 +160,7 @@ public class PubSubBackupPipeline {
 					new SerializableFunction<String, String>() {
 						@Override
 						public String apply(String tableSpec) {
-							return tableSpec.replaceAll("[^A-Za-z0-9]", "");
+							return tableSpec.replaceAll("[^A-Za-z0-9.]", "");
 						}
 					}))
       			.withSchema(schema)
