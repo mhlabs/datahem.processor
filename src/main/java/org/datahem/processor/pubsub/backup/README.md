@@ -6,6 +6,25 @@ Description of custom parameters: [MeasurementProtocolPipeline_metadata](./Measu
 
 **<STREAM ID> **: the ID (name) used to set up a streaming source with the infrastructor script
 
+# 1. Set variables
+
+**$PROJECT_ID :** your google project id
+
+**$VERSION :** the datahem version used
+
+**$STREAM_ID :** the ID (name) used to set up a streaming source with the infrastructor script
+
+**$ANUM_STREAM_ID :** the stream ID without dash, ex. UA123456789, since BigQuery doesn't allow dash
+
+```shell
+#Set variables in linux
+
+PROJECT_ID='my-prod-project'
+VERSION='0.5'
+STREAM_ID='UA-1234567-89'
+```
+
+
 Backup pubsub to bigquery
 
 compile and run
