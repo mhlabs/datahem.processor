@@ -115,9 +115,6 @@ public class MeasurementProtocolPipeline {
     
     // Create schemas from protocol buffers
     
-    //TableSchema payloadCollectorSchema = ProtobufUtils.makeTableSchema(CollectorPayloadProto.CollectorPayload.getDescriptor());
-    
-    //TableSchema schema = ProtobufUtils.makeTableSchema(EventProto.Event.getDescriptor());
     
     TableSchema eventSchema = ProtobufUtils.makeTableSchema(MPEntityProto.MPEntity.getDescriptor());
     	List<TableFieldSchema> fieldsList = eventSchema.getFields();

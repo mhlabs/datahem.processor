@@ -42,6 +42,7 @@ import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableReference;
+import com.google.api.services.bigquery.model.TimePartitioning;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.util.List;
@@ -59,12 +60,14 @@ import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.options.Validation.Required;
 import org.apache.beam.sdk.options.ValueProvider;
+import org.apache.beam.sdk.options.ValueProvider.NestedValueProvider;
 import org.apache.beam.sdk.transforms.Count;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.MapElements;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.transforms.SimpleFunction;
+import org.apache.beam.sdk.transforms.SerializableFunction;
 import org.apache.beam.sdk.transforms.windowing.FixedWindows;
 import org.apache.beam.sdk.transforms.windowing.Window;
 import org.apache.beam.sdk.values.KV;
@@ -103,7 +106,13 @@ public class MeasurementProtocolBackfillPipeline {
     MeasurementProtocolBackfillPipelineOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().as(MeasurementProtocolBackfillPipeline.MeasurementProtocolBackfillPipelineOptions.class);
     Pipeline pipeline = Pipeline.create(options);
     
-   	TableSchema schema = SchemaHelper.mpEntityBigQuerySchema();
+	TableSchema eventSchema = ProtobufUtils.makeTableSchema(MPEntityProto.MPEntity.getDescriptor());
+	List<TableFieldSchema> fieldsList = eventSchema.getFields();
+	TableFieldSchema tfs = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
+	fieldsList.set(fieldsList.indexOf(tfs), tfs.setType("DATE"));
+	TableSchema schema = new TableSchema().setFields(fieldsList);
+    
+//	TableSchema schema = SchemaHelper.mpEntityBigQuerySchema();
     
     pipeline
     	.apply("BigQuery SELECT job",
@@ -152,6 +161,7 @@ public class MeasurementProtocolBackfillPipeline {
 						}
 					}))
 				.withSchema(schema)
+				.withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
         		.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
             	.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
     

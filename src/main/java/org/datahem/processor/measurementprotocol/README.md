@@ -87,7 +87,7 @@ socialNetworksPattern=".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtu
 includedHostnamesPattern=".*",\
 excludedBotsPattern=".*bot.*|.*spider.*|.*crawler.*",\
 siteSearchPattern=".*q=(([^&#]*)|&|#|$)",\
-timeZone="Europe/Stockholm"
+timeZone="Europe/Stockholm
 ```
 
 ## 2.2 Backfill/Replay Measurement Protocol Pipeline (Batch)
@@ -107,6 +107,7 @@ PROJECT_ID='my-prod-project'
 VERSION='0.5'
 TRACKING_ID='UA-1234567-89'
 ANUM_TRACKING_ID='UA123456789'
+IGNORED_REFERERS='.*mysite\\.com.*'
 ```
 
 ### 2.2.A. Compile and execute job
@@ -117,6 +118,7 @@ mvn compile exec:java \
       --project=$PROJECT_ID \
       --stagingLocation=gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/staging \
       --gcpTempLocation=gs://$PROJECT_ID-processor/gcptemp/ \
+      --tempLocation=gs://$PROJECT_ID-processor/temp/ \
       --runner=DataflowRunner \
       --zone=europe-west1-b \
       --region=europe-west1 \
@@ -125,11 +127,11 @@ mvn compile exec:java \
       --diskSizeGb=20 \
       --workerMachineType=n1-standard-1 \
       --bigQueryTableSpec=$TRACKING_ID.entities \
-      --query=\"SELECT data FROM `$PROJECT_ID.backup.$ANUM_TRACKING_ID`\" \
-      --ignoredReferersPattern=\".*mysite\\.com.*\" \
+      --query=\"SELECT data FROM \`$PROJECT_ID.backup.$ANUM_TRACKING_ID\` \" \
+      --ignoredReferersPattern=\"$IGNORED_REFERERS\" \
       --searchEnginesPattern=\".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*\" \
       --socialNetworksPattern=\".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*\" \
-      --includedHostnamesPattern=\".*\" \
+      --includedHostnamesPattern=\".*mysite\\.com.*\" \
       --excludedBotsPattern=\".*bot.*|.*spider.*|.*crawler.*\" \
       --siteSearchPattern=\".*q=(([^&#]*)|&|#|$)\" \
       --timeZone=Europe/Stockholm"
@@ -153,7 +155,7 @@ mvn compile exec:java \
       --diskSizeGb=20 \
       --workerMachineType=n1-standard-1 \
       --bigQueryTableSpec=$TRACKING_ID.entities \
-      --query=\"SELECT data FROM `$PROJECT_ID.backup.$ANUM_TRACKING_ID`\" \
+      --query=\"SELECT data FROM \`$PROJECT_ID.backup.$ANUM_TRACKING_ID\` \" \
       --ignoredReferersPattern=\".*mysite\\.com.*\" \
       --searchEnginesPattern=\".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*\" \
       --socialNetworksPattern=\".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*\" \
@@ -165,11 +167,12 @@ mvn compile exec:java \
 
 ```shell
 gcloud beta dataflow jobs run mpbackfill \
---gcs-location gs://$PROJECT_ID/datahem/$VERSION/org/datahem/processor/measurement/protocol/MeasurementProtocolBackfillPipeline \
+--gcs-location gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/measurementprotocol/MeasurementProtocolBackfillPipeline \
 --zone=europe-west1-b \
+--region=europe-west1 \
 --max-workers=1 \
---parameters bigQueryTableSpec=$TRACKING_ID.entities,\
-query=\"SELECT data FROM `$PROJECT_ID.backup.$ANUM_TRACKING_ID`\",\
+--parameters "bigQueryTableSpec=$TRACKING_ID.entities,\
+query=\"SELECT data FROM \`$PROJECT_ID.backup.$ANUM_TRACKING_ID\` \",\
 ignoredReferersPattern=\".*mysite\\.com.*\",\
 searchEnginesPattern=\".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*\",\
 socialNetworksPattern=\".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*\",\
