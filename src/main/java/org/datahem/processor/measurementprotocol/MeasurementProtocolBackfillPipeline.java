@@ -142,7 +142,15 @@ public class MeasurementProtocolBackfillPipeline {
 		.apply("Write to bigquery", 
 			BigQueryIO
 				.writeTableRows()
-				.to(options.getBigQueryTableSpec())
+				//.to(options.getBigQueryTableSpec())
+				.to(NestedValueProvider.of(
+					options.getBigQueryTableSpec(),
+					new SerializableFunction<String, String>() {
+						@Override
+						public String apply(String tableSpec) {
+							return tableSpec.replaceAll("[^A-Za-z0-9.]", "");
+						}
+					}))
 				.withSchema(schema)
         		.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
             	.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));

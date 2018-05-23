@@ -2,15 +2,19 @@
 
 Description of custom parameters: [MeasurementProtocolPipeline_metadata](./MeasurementProtocolPipeline_metadata)
 
-# 1. Set variables
+# 2. Execute jobs
+
+There are two ways to execute the streaming mesurement protocol processor to read pubsub subscription, process payload to enitites and store entities to bigquery and publish to pubsub topic. 
+
+Before excuting job, change worker parameters to desired values (control number of workers and worker configuration) and change pattern parameter values to the java REGEX that meet your requirements.
+
+## 2.1 Streaming Measurement Protocol Pipeline
 
 **$PROJECT_ID :** your google project id
 
 **$VERSION :** the datahem version used
 
 **$TRACKING_ID :** the property ID tracked in google analytics/measurement protocol, ex. UA-1234567-89
-
-**$ANUM_TRACKING_ID :** the property ID without dash, ex. UA123456789
 
 ```shell
 #Set variables in linux
@@ -20,15 +24,8 @@ VERSION='0.5'
 TRACKING_ID='UA-1234567-89'
 ```
 
-# 2. Execute jobs
-
-There are two ways to execute the streaming mesurement protocol processor to read pubsub subscription, process payload to enitites and store entities to bigquery and publish to pubsub topic. 
-
-Before excuting job, change worker parameters to desired values (control number of workers and worker configuration) and change pattern parameter values to the java REGEX that meet your requirements.
-
-## 2.1 Streaming Measurement Protocol Pipeline
-
 ### 2.1.A. Compile and execute job
+
 ```shell
 mvn compile exec:java \
       -Dexec.mainClass=org.datahem.processor.measurementprotocol.MeasurementProtocolPipeline \
@@ -95,6 +92,22 @@ timeZone="Europe/Stockholm"
 
 ## 2.2 Backfill/Replay Measurement Protocol Pipeline (Batch)
 
+**$PROJECT_ID :** your google project id
+
+**$VERSION :** the datahem version used
+
+**$TRACKING_ID :** the property ID tracked in google analytics/measurement protocol, ex. UA-1234567-89
+
+**$ANUM_TRACKING_ID :** the property ID without dash, ex. UA123456789
+
+```shell
+#Set variables in linux
+
+PROJECT_ID='my-prod-project'
+VERSION='0.5'
+TRACKING_ID='UA-1234567-89'
+ANUM_TRACKING_ID='UA123456789'
+```
 
 ### 2.2.A. Compile and execute job
 ```shell
