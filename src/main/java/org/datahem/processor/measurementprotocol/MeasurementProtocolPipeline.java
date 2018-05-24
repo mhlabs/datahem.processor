@@ -122,9 +122,6 @@ public class MeasurementProtocolPipeline {
     	fieldsList.set(fieldsList.indexOf(tfs), tfs.setType("DATE"));
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     
-    
-    //TableSchema schema = SchemaHelper.eventBigQuerySchema();
-    
 
     PCollection<MPEntity> mpEntities = pipeline
     	.apply("Read collector payloads from pubsub", 
@@ -152,15 +149,15 @@ public class MeasurementProtocolPipeline {
 		.apply("Write to bigquery", 
 			BigQueryIO
 				.writeTableRows()
-				//.to(options.getBigQueryTableSpec())
-				.to(NestedValueProvider.of(
+				.to(options.getBigQueryTableSpec())
+				/*.to(NestedValueProvider.of(
 					options.getBigQueryTableSpec(),
 					new SerializableFunction<String, String>() {
 						@Override
 						public String apply(String tableSpec) {
 							return tableSpec.replaceAll("[^A-Za-z0-9.]", "");
 						}
-					}))
+					}))*/
 				.withSchema(eventSchema)
 				.withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
         		.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)

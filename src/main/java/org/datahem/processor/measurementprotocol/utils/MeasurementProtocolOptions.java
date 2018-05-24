@@ -39,7 +39,7 @@ public interface MeasurementProtocolOptions extends PipelineOptions {
     void setSearchEnginesPattern(ValueProvider<String> value);
     
     @Description("Ignored referer domain regex pattern, java syntax, i.e. .*mathem\\.se.*")
-    @Default.String(".*")
+    //@Default.String(".*")
     ValueProvider<String> getIgnoredReferersPattern();
     void setIgnoredReferersPattern(ValueProvider<String> value);
     

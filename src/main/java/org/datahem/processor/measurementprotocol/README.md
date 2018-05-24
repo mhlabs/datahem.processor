@@ -10,18 +10,31 @@ Before excuting job, change worker parameters to desired values (control number 
 
 ## 2.1 Streaming Measurement Protocol Pipeline
 
-**$PROJECT_ID :** your google project id
-
-**$VERSION :** the datahem version used
-
-**$TRACKING_ID :** the property ID tracked in google analytics/measurement protocol, ex. UA-1234567-89
-
 ```shell
 #Set variables in linux
 
-PROJECT_ID='my-prod-project'
-VERSION='0.5'
-TRACKING_ID='UA-1234567-89'
+#DataHem generic settings
+PROJECT_ID='' # Required. Your google project id. Example: 'my-prod-project'
+VERSION='' # Required. DataHem version used. Example: '0.5'
+
+#Dataflow settings
+DF_REGION= # Optional. Default: us-central1
+DF_ZONE= # Optional. Default:  an availability zone from the region set in DF_REGION.
+DF_NUM_WORKERS= # Optional. Default: Dataflow service will determine an appropriate number of workers. Example: 2
+DF_MAX_NUM_WORKERS= # Optional. Default: Dataflow service will determine an appropriate number of workers. Example: 5
+DF_DISK_SIZE_GB= # Optional. Default: Size defined in your Cloud Platform project. Minimum is 30. Example: 50
+DF_WORKER_MACHINE_TYPE='' # Optional. Default: The Dataflow service will choose the machine type based on your job. Example: 'n1-standard-1'
+
+#Measurement Protocol Pipeline settings
+TRACKING_ID='' # Required. Lowercase and alphanumeric format of GA tracking Id. Example: 'ua123456789'
+IGNORED_REFERERS_PATTERN='' # Required. Example: '.*mysite\\.com.*'
+SEARCH_ENGINES_PATTERN='' # Optional. Define search engine traffic with Java regex syntax. Default: '.*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*'
+SOCIAL_NETWORKS_PATTERN='' # Optional. Define social network traffic with Java regex syntax. Default: '.*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*'
+INCLUDED_HOSTNAMES='' # Optional. Filter hits to only include defined hostnames with Java regex syntax. Default: '.*'
+EXCLUDED_BOTS_PATTERN='' # Optional. Filter out bot user agents with Java regex syntax. Default: '.*bot.*|.*spider.*|.*crawler.*'
+SITE_SEARCH_PATTERN='' #Optional. Define site search URL parameter with Java regex syntax. Default: '.*q=(([^&#]*)|&|#|$)'
+TIME_ZONE='' #Optional. Define local time zone (ex. Europe/Stockholm) for date field used for partitioning. Default: 'Etc/UTC'
+
 ```
 
 ### 2.1.A. Compile and execute job
@@ -34,22 +47,22 @@ mvn compile exec:java \
       --stagingLocation=gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/staging \
       --gcpTempLocation=gs://$PROJECT_ID-processor/gcptemp/ \
       --runner=DataflowRunner \
-      --zone=europe-west1-b \
-      --region=europe-west1 \
-      --numWorkers=1 \
-      --maxNumWorkers=1 \
-      --diskSizeGb=20 \
-      --workerMachineType=n1-standard-1 \
+      --zone=$DF_ZONE \
+      --region=$DF_REGION \
+      --numWorkers=$DF_NUM_WORKERS \
+      --maxNumWorkers=$DF_MAX_NUM_WORKERS \
+      --diskSizeGb=$DF_DISK_SIZE_GB \
+      --workerMachineType=$DF_WORKER_MACHINE_TYPE \
       --pubsubTopic=projects/$PROJECT_ID/topics/$TRACKING_ID-entities \
       --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$TRACKING_ID-processor \
       --bigQueryTableSpec=$TRACKING_ID.entities \
-      --ignoredReferersPattern=\".*mysite\\.com.*\" \
-      --searchEnginesPattern=\".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*\" \
-      --socialNetworksPattern=\".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*\" \
-      --includedHostnamesPattern=\".*\" \
-      --excludedBotsPattern=\".*bot.*|.*spider.*|.*crawler.*\" \
-      --siteSearchPattern=\".*q=(([^&#]*)|&|#|$)\" \
-      --timeZone=Europe/Stockholm"
+      --ignoredReferersPattern=\"$IGNORED_REFERERS_PATTERN\" \
+      --searchEnginesPattern=\"$SEARCH_ENGINES_PATTERN\" \
+      --socialNetworksPattern=\"$SOCIAL_NETWORKS_PATTERN\" \
+      --includedHostnamesPattern=\"$INCLUDED_HOSTNAMES\" \
+      --excludedBotsPattern=\"$EXCLUDED_BOTS_PATTERN\" \
+      --siteSearchPattern=\"$SITE_SEARCH_PATTERN\" \
+      --timeZone=$TIME_ZONE"
 ```
 
 ### 2.1.B. Create and execute dataflow template
@@ -61,53 +74,41 @@ mvn compile exec:java \
      -Dexec.mainClass=org.datahem.processor.measurementprotocol.MeasurementProtocolPipeline \
      -Dexec.args="--runner=DataflowRunner \
                   --project=$PROJECT_ID \
-                  --zone=europe-west1-b \
-                  --region=europe-west1 \
+                  --zone=$DF_ZONE \
+                  --region=$DF_REGION \
                   --stagingLocation=gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/staging \
                   --templateLocation=gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/measurementprotocol/MeasurementProtocolPipeline \
-                  --workerMachineType=n1-standard-1 \
-                  --diskSizeGb=20"
+                  --workerMachineType=$DF_WORKER_MACHINE_TYPE \
+                  --diskSizeGb=$DF_DISK_SIZE_GB"
 ```
 
 ```shell
 # execute template
 
 gcloud beta dataflow jobs run ua123456789-processor \
---gcs-location gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/templates/measurementprotocol/MeasurementProtocolPipeline \
---zone=europe-west1-b \
---region=europe-west1 \
---max-workers=1 \
+--gcs-location gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/measurementprotocol/MeasurementProtocolPipeline \
+--zone=$DF_ZONE \
+--region=$DF_REGION \
+--max-workers=$DF_MAX_NUM_WORKERS \
 --parameters \
-pubsubSubscription=projects/$PROJECT_ID/subscriptions/$TRACKING_ID-processor,\
 pubsubTopic=projects/$PROJECT_ID/topics/$TRACKING_ID-entities,\
+pubsubSubscription=projects/$PROJECT_ID/subscriptions/$TRACKING_ID-processor,\
 bigQueryTableSpec=$TRACKING_ID.entities,\
-ignoredReferersPattern=".*mathem\\.se.*",\
-searchEnginesPattern=".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*",\
-socialNetworksPattern=".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*",\
-includedHostnamesPattern=".*",\
-excludedBotsPattern=".*bot.*|.*spider.*|.*crawler.*",\
-siteSearchPattern=".*q=(([^&#]*)|&|#|$)",\
-timeZone="Europe/Stockholm
+ignoredReferersPattern=\"$IGNORED_REFERERS_PATTERN\",\
+searchEnginesPattern=\"$SEARCH_ENGINES_PATTERN\",\
+socialNetworksPattern=\"$SOCIAL_NETWORKS_PATTERN\",\
+includedHostnamesPattern=\"$INCLUDED_HOSTNAMES\",\
+excludedBotsPattern=\"$EXCLUDED_BOTS_PATTERN\",\
+siteSearchPattern=\"$SITE_SEARCH_PATTERN\",\
+timeZone=$TIME_ZONE
 ```
+
+
 
 ## 2.2 Backfill/Replay Measurement Protocol Pipeline (Batch)
 
-**$PROJECT_ID :** your google project id
-
-**$VERSION :** the datahem version used
-
-**$TRACKING_ID :** the property ID tracked in google analytics/measurement protocol, ex. UA-1234567-89
-
-**$ANUM_TRACKING_ID :** the property ID without dash, ex. UA123456789
-
 ```shell
-#Set variables in linux
-
-PROJECT_ID='my-prod-project'
-VERSION='0.5'
-TRACKING_ID='UA-1234567-89'
-ANUM_TRACKING_ID='UA123456789'
-IGNORED_REFERERS='.*mysite\\.com.*'
+QUERY='' # Required. Query to pull out the records from backup that you want to reprocess. Example: 'SELECT data FROM \`$PROJECT_ID.backup.$TRACKING_ID\`'
 ```
 
 ### 2.2.A. Compile and execute job
@@ -120,21 +121,21 @@ mvn compile exec:java \
       --gcpTempLocation=gs://$PROJECT_ID-processor/gcptemp/ \
       --tempLocation=gs://$PROJECT_ID-processor/temp/ \
       --runner=DataflowRunner \
-      --zone=europe-west1-b \
-      --region=europe-west1 \
-      --numWorkers=1 \
-      --maxNumWorkers=1 \
-      --diskSizeGb=20 \
-      --workerMachineType=n1-standard-1 \
+      --zone=$DF_ZONE \
+      --region=$DF_REGION \
+      --numWorkers=$DF_NUM_WORKERS \
+      --maxNumWorkers=$DF_MAX_NUM_WORKERS \
+      --diskSizeGb=$DF_DISK_SIZE_GB \
+      --workerMachineType=$DF_WORKER_MACHINE_TYPE \
+      --query=\"$QUERY\" \
       --bigQueryTableSpec=$TRACKING_ID.entities \
-      --query=\"SELECT data FROM \`$PROJECT_ID.backup.$ANUM_TRACKING_ID\` \" \
-      --ignoredReferersPattern=\"$IGNORED_REFERERS\" \
-      --searchEnginesPattern=\".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*\" \
-      --socialNetworksPattern=\".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*\" \
-      --includedHostnamesPattern=\".*mysite\\.com.*\" \
-      --excludedBotsPattern=\".*bot.*|.*spider.*|.*crawler.*\" \
-      --siteSearchPattern=\".*q=(([^&#]*)|&|#|$)\" \
-      --timeZone=Europe/Stockholm"
+      --ignoredReferersPattern=\"$IGNORED_REFERERS_PATTERN\" \
+      --searchEnginesPattern=\"$SEARCH_ENGINES_PATTERN\" \
+      --socialNetworksPattern=\"$SOCIAL_NETWORKS_PATTERN\" \
+      --includedHostnamesPattern=\"$INCLUDED_HOSTNAMES\" \
+      --excludedBotsPattern=\"$EXCLUDED_BOTS_PATTERN\" \
+      --siteSearchPattern=\"$SITE_SEARCH_PATTERN\" \
+      --timeZone=$TIME_ZONE"
 ```
 
 ### 2.1.B. Create and execute dataflow template
@@ -148,36 +149,28 @@ mvn compile exec:java \
       --tempLocation=gs://$PROJECT_ID-processor/temp/ \
       --templateLocation=gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/measurementprotocol/MeasurementProtocolBackfillPipeline \
       --runner=DataflowRunner \
-      --zone=europe-west1-b \
-      --region=europe-west1 \
-      --numWorkers=1 \
-      --maxNumWorkers=1 \
-      --diskSizeGb=20 \
-      --workerMachineType=n1-standard-1 \
-      --bigQueryTableSpec=$TRACKING_ID.entities \
-      --query=\"SELECT data FROM \`$PROJECT_ID.backup.$ANUM_TRACKING_ID\` \" \
-      --ignoredReferersPattern=\".*mysite\\.com.*\" \
-      --searchEnginesPattern=\".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*\" \
-      --socialNetworksPattern=\".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*\" \
-      --includedHostnamesPattern=\".*\" \
-      --excludedBotsPattern=\".*bot.*|.*spider.*|.*crawler.*\" \
-      --siteSearchPattern=\".*q=(([^&#]*)|&|#|$)\" \
-      --timeZone=Europe/Stockholm"
+      --zone=$DF_ZONE \
+      --region=$DF_REGION \
+      --numWorkers=$DF_NUM_WORKERS \
+      --maxNumWorkers=$DF_MAX_NUM_WORKERS \
+      --diskSizeGb=$DF_DISK_SIZE_GB \
+      --workerMachineType=$DF_WORKER_MACHINE_TYPE \
 ```
 
 ```shell
 gcloud beta dataflow jobs run mpbackfill \
 --gcs-location gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/measurementprotocol/MeasurementProtocolBackfillPipeline \
---zone=europe-west1-b \
---region=europe-west1 \
---max-workers=1 \
---parameters "bigQueryTableSpec=$TRACKING_ID.entities,\
-query=\"SELECT data FROM \`$PROJECT_ID.backup.$ANUM_TRACKING_ID\` \",\
-ignoredReferersPattern=\".*mysite\\.com.*\",\
-searchEnginesPattern=\".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*\",\
-socialNetworksPattern=\".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*\",\
-includedHostnamesPattern=\".*\",\
-excludedBotsPattern=\".*bot.*|.*spider.*|.*crawler.*\",\
-siteSearchPattern=\".*q=(([^&#]*)|&|#|$)\",\
-timeZone=Europe/Stockholm"
+--zone=$DF_ZONE \
+--region=$DF_REGION \
+--max-workers=$DF_MAX_NUM_WORKERS \
+--parameters \
+query=\"$QUERY\",\
+bigQueryTableSpec=$TRACKING_ID.entities,\
+ignoredReferersPattern=\"$IGNORED_REFERERS_PATTERN\",\
+searchEnginesPattern=\"$SEARCH_ENGINES_PATTERN\",\
+socialNetworksPattern=\"$SOCIAL_NETWORKS_PATTERN\",\
+includedHostnamesPattern=\"$INCLUDED_HOSTNAMES\",\
+excludedBotsPattern=\"$EXCLUDED_BOTS_PATTERN\",\
+siteSearchPattern=\"$SITE_SEARCH_PATTERN\",\
+timeZone=$TIME_ZONE
 ```
