@@ -81,7 +81,8 @@ public class MeasurementProtocolBuilder{
 	private ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
 	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
     private static String excludedBotsPattern = ".*bot.*|.*spider.*|.*crawler.*";
-    private static String includedHostnamesPattern = ".*";
+    //private static String includedHostnamesPattern = ".*";
+    private static String includedHostnamesPattern = ".*www\\.datahem\\.org.*";
     private static String timeZone = "Etc/UTC";
     
     public MeasurementProtocolBuilder(){
@@ -159,8 +160,15 @@ public class MeasurementProtocolBuilder{
         	Matcher botsMatcher = botsPattern.matcher(paramMap.get("user-agent"));
         	Pattern hostPattern = Pattern.compile(getIncludedHostnamesPattern());
         	Matcher hostMatcher = hostPattern.matcher(paramMap.get("dl"));
+        	LOG.info("LOG:" + getExcludedBotsPattern() + " : " + paramMap.get("user-agent"));
         	LOG.info("LOG:" + getIncludedHostnamesPattern() + " : " + paramMap.get("dl"));
-        	if(!botsMatcher.find() && hostMatcher.find()){
+        	boolean isBot = botsMatcher.find();
+        	boolean isHost = hostMatcher.find();
+        	LOG.info("is bot?:" + isBot);
+        	LOG.info("is host? " + isHost);
+        	LOG.info("condition:" + (!isBot && isHost));
+        	//if(!botsMatcher.find() && hostMatcher.find()){
+        	if(!isBot && isHost){
         		LOG.info("no bot and host is ok");
                 //Add epochMillis and timestamp to paramMap       
 	            Instant payloadTimeStamp = new Instant(Long.parseLong(cp.getEpochMillis()));
@@ -204,6 +212,9 @@ public class MeasurementProtocolBuilder{
 
 //mvn compile exec:java -Dexec.mainClass="org.datahem.processor.measurementprotocol.utils.MeasurementProtocolBuilder"
 public static void main(String[] args) {
+	
+	LOG.info("HEllo!");
+	
 	String click = "v=1&_v=j66&a=1140262547&t=event&ni=0&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=K%C3%B6tt%20%26%20Chark%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=992x1096&je=0&ec=Ecommerce&ea=Product%20Click&_u=aCDAAEAL~&jid=145378208&gjid=1242227089&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&_r=1&gtm=G2rP9BRHCJ&pa=click&pr1id=25258&pr1nm=Blodpudding&pr1pr=10.95&pr1br=GEAS&pr1ca=Blodpudding&pal=%2Fvaror%2Fkott-o-chark&z=28686755";
 	String purchase = "v=1&tid=UA-XXXXX-Y&cid=555&t=pageview&dh=https%3A%2F%2Fwww.datahem.org&dp=/receipt&dt=Receipt%20Page&ti=T12345&ta=Google%20Store%20-%20Online&tr=37.39&tt=2.85&ts=5.34&tcc=SUMMER2013&pa=purchase&pr1id=P12345&pr1nm=Android%20Warhol%20T-Shirt&pr1ca=Apparel&pr1br=Google&pr1va=Black&pr1ps=1";
 	String detail = "v=1&tid=UA-XXXXX-Y&cid=555&t=pageview&pa=detail&pr1id=P12345&pr1nm=Android%20Warhol%20T-Shirt&pr1ca=Apparel&pr1br=Google&pr1va=Black&pr1ps=1&pr2id=P54321&pr2nm=iOS%20Warhol%20T-Shirt&pr2ca=Apparel&pr2br=Apple&pr2va=White&pr2ps=2";
