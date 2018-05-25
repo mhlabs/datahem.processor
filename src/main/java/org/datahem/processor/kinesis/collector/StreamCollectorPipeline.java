@@ -113,7 +113,7 @@ public class StreamCollectorPipeline {
     void setAwsSecret(String value);
     
     @Description("AWS REGION")
-    @Default.String("europe-west-1")
+    @Default.String("eu-west-1")
     String getAwsRegion();
     void setAwsRegion(String value);
   	
