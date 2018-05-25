@@ -80,9 +80,9 @@ public class MeasurementProtocolBuilder{
 	private PromotionEntity promotionEntity = new PromotionEntity();
 	private ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
 	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
-    private static String excludedBotsPattern = ".*bot.*|.*spider.*|.*crawler.*";
+    private static String excludedBotsPattern = ".*(bot|spider|crawler).*";
     //private static String includedHostnamesPattern = ".*";
-    private static String includedHostnamesPattern = ".*www\\.datahem\\.org.*";
+    private static String includedHostnamesPattern = ".*(beta.datahem.org|www.datahem.org).*";
     private static String timeZone = "Etc/UTC";
     
     public MeasurementProtocolBuilder(){
@@ -156,20 +156,10 @@ public class MeasurementProtocolBuilder{
             //Exclude bots, spiders and crawlers
             //LOG.info(Arrays.toString(cp.getHeadersMap().entrySet().toArray()));
             if("".equals(paramMap.get("user-agent"))) return events;
-      		Pattern botsPattern = Pattern.compile(getExcludedBotsPattern());
-        	Matcher botsMatcher = botsPattern.matcher(paramMap.get("user-agent"));
-        	Pattern hostPattern = Pattern.compile(getIncludedHostnamesPattern());
-        	Matcher hostMatcher = hostPattern.matcher(paramMap.get("dl"));
-        	LOG.info("LOG:" + getExcludedBotsPattern() + " : " + paramMap.get("user-agent"));
-        	LOG.info("LOG:" + getIncludedHostnamesPattern() + " : " + paramMap.get("dl"));
-        	boolean isBot = botsMatcher.find();
-        	boolean isHost = hostMatcher.find();
-        	LOG.info("is bot?:" + isBot);
-        	LOG.info("is host? " + isHost);
-        	LOG.info("condition:" + (!isBot && isHost));
-        	//if(!botsMatcher.find() && hostMatcher.find()){
+
+        	boolean isBot = paramMap.get("user-agent").matches(getExcludedBotsPattern());
+        	boolean isHost = paramMap.get("dl").matches(getIncludedHostnamesPattern());
         	if(!isBot && isHost){
-        		LOG.info("no bot and host is ok");
                 //Add epochMillis and timestamp to paramMap       
 	            Instant payloadTimeStamp = new Instant(Long.parseLong(cp.getEpochMillis()));
 				DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
@@ -233,7 +223,7 @@ public static void main(String[] args) {
 	//trafficDoubleClidck
 	//trafficCampaign
 	//exception
-	String siteSearch = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fsok%3Fq%3Dpasta%26page%3D1%26pageSize%3D25&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&z=631938637&cd1=gold&cd2=family&cm1=25";
+	String siteSearch = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fbeta.datahem.org%2Fsok%3Fq%3Dpasta%26page%3D1%26pageSize%3D25&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&z=631938637&cd1=gold&cd2=family&cm1=25";
 	
 	MeasurementProtocolBuilder mpb = new MeasurementProtocolBuilder();
 	//pb.setIncludedHostnamesPattern(".*www//.mathem//.se.*");
