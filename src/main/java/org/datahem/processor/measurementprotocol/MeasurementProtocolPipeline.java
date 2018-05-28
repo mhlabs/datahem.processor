@@ -61,6 +61,7 @@ import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.options.Validation.Required;
 import org.apache.beam.sdk.options.ValueProvider;
 import org.apache.beam.sdk.options.ValueProvider.NestedValueProvider;
+import org.apache.beam.sdk.options.ValueProvider.StaticValueProvider;
 import org.apache.beam.sdk.transforms.Count;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.MapElements;
@@ -123,12 +124,48 @@ public class MeasurementProtocolPipeline {
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     
 
-    PCollection<MPEntity> mpEntities = pipeline
+    PCollection<CollectorPayloadEntity> payload = pipeline
     	.apply("Read collector payloads from pubsub", 
     		PubsubIO
     			.readProtos(CollectorPayloadEntityProto.CollectorPayloadEntity.class)
-    			.fromSubscription(options.getPubsubSubscription()))
-    	.apply("Collector Payload to multiple Events", 
+    			.fromSubscription(options.getPubsubSubscription()));
+    
+    payload
+    	.apply("Unfiltered - Collector Payload to multiple Events", 
+    		ParDo.of(new PayloadToMPEntityFn(
+    			options.getSearchEnginesPattern(),
+    			options.getIgnoredReferersPattern(), 
+    			options.getSocialNetworksPattern(),
+    			StaticValueProvider.of(".*"), // match all hostnames
+    			StaticValueProvider.of("a^"), // match no user agent
+    			options.getSiteSearchPattern(),
+    			options.getTimeZone()
+    		)))
+		.apply("Unfiltered - Event to tablerow", 
+    		ParDo.of(new MPEntityToTableRowFn()))
+		.apply("Unfiltered - Fixed Windows",
+			Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
+              .withAllowedLateness(Duration.standardDays(7))
+              .discardingFiredPanes())
+		.apply("Unfiltered - Write to bigquery unfiltered table", 
+			BigQueryIO
+				.writeTableRows()
+				//.to(options.getBigQueryTableSpec() + "_unfiltered")
+				.to(NestedValueProvider.of(
+					options.getBigQueryTableSpec(),
+					new SerializableFunction<String, String>() {
+						@Override
+						public String apply(String tableSpec) {
+							return tableSpec + "_unfiltered";
+						}
+					}))
+				.withSchema(eventSchema)
+				.withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
+        		.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+            	.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
+    
+    PCollection<MPEntity> enrichedEntities = payload
+    	.apply("Enriched - Collector Payload to multiple Events", 
     		ParDo.of(new PayloadToMPEntityFn(
     			options.getSearchEnginesPattern(),
     			options.getIgnoredReferersPattern(), 
@@ -139,32 +176,24 @@ public class MeasurementProtocolPipeline {
     			options.getTimeZone()
     		)));       		
 	        		
-	mpEntities
-	     .apply("Event to tablerow", 
+	enrichedEntities
+	     .apply("Enriched - Event to tablerow", 
     		ParDo.of(new MPEntityToTableRowFn()))
-	    .apply("Fixed Windows",
+	    .apply("Enriched - Fixed Windows",
     		Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
               .withAllowedLateness(Duration.standardDays(7))
               .discardingFiredPanes())
-		.apply("Write to bigquery", 
+		.apply("Enriched - Write to bigquery", 
 			BigQueryIO
 				.writeTableRows()
 				.to(options.getBigQueryTableSpec())
-				/*.to(NestedValueProvider.of(
-					options.getBigQueryTableSpec(),
-					new SerializableFunction<String, String>() {
-						@Override
-						public String apply(String tableSpec) {
-							return tableSpec.replaceAll("[^A-Za-z0-9.]", "");
-						}
-					}))*/
 				.withSchema(eventSchema)
 				.withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
         		.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
             	.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
     
-    mpEntities
-    	.apply("Write to pubsub",
+    enrichedEntities
+    	.apply("Enriched - Write to pubsub",
     	PubsubIO
     	.writeProtos(MPEntityProto.MPEntity.class)
     	.to(options.getPubsubTopic()));

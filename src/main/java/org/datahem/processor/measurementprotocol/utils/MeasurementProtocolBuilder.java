@@ -159,6 +159,10 @@ public class MeasurementProtocolBuilder{
 
         	boolean isBot = paramMap.get("user-agent").matches(getExcludedBotsPattern());
         	boolean isHost = paramMap.get("dl").matches(getIncludedHostnamesPattern());
+        	
+        	LOG.info("isBot: " + isBot + ", isHost: " + isHost + ", " + paramMap.get("user-agent") + " = " + getExcludedBotsPattern() + ", " + paramMap.get("dl") + " = " + getIncludedHostnamesPattern());
+        	
+        	
         	if(!isBot && isHost){
                 //Add epochMillis and timestamp to paramMap       
 	            Instant payloadTimeStamp = new Instant(Long.parseLong(cp.getEpochMillis()));
