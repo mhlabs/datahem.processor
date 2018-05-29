@@ -69,7 +69,7 @@ Create template
 Run job
 
 ```shell
-gcloud beta dataflow jobs run mpbackup \
+gcloud beta dataflow jobs run $STREAM_ID-backup \
 --gcs-location gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/pubsub/backup/PubSubBackupPipeline \
 --zone=$DF_ZONE \
 --region=$DF_REGION \

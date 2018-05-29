@@ -26,7 +26,7 @@ DF_DISK_SIZE_GB= # Optional. Default: Size defined in your Cloud Platform projec
 DF_WORKER_MACHINE_TYPE='' # Optional. Default: The Dataflow service will choose the machine type based on your job. Example: 'n1-standard-1'
 
 #Measurement Protocol Pipeline settings
-TRACKING_ID='' # Required. Lowercase and alphanumeric format of GA tracking Id. Example: 'ua123456789'
+STREAM_ID='' # Required. Lowercase and alphanumeric format of GA tracking Id. Example: 'ua123456789'
 IGNORED_REFERERS_PATTERN='' # Required. Example: '.*mysite\\.com.*'
 SEARCH_ENGINES_PATTERN='' # Optional. Define search engine traffic with Java regex syntax. Default: '.*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*'
 SOCIAL_NETWORKS_PATTERN='' # Optional. Define social network traffic with Java regex syntax. Default: '.*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*'
@@ -53,9 +53,9 @@ mvn compile exec:java \
       --maxNumWorkers=$DF_MAX_NUM_WORKERS \
       --diskSizeGb=$DF_DISK_SIZE_GB \
       --workerMachineType=$DF_WORKER_MACHINE_TYPE \
-      --pubsubTopic=projects/$PROJECT_ID/topics/$TRACKING_ID-entities \
-      --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$TRACKING_ID-processor \
-      --bigQueryTableSpec=$TRACKING_ID.entities \
+      --pubsubTopic=projects/$PROJECT_ID/topics/$STREAM_ID-entities \
+      --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$STREAM_ID-processor \
+      --bigQueryTableSpec=$STREAM_ID.entities \
       --ignoredReferersPattern=\"$IGNORED_REFERERS_PATTERN\" \
       --searchEnginesPattern=\"$SEARCH_ENGINES_PATTERN\" \
       --socialNetworksPattern=\"$SOCIAL_NETWORKS_PATTERN\" \
@@ -85,15 +85,15 @@ mvn compile exec:java \
 ```shell
 # execute template
 
-gcloud beta dataflow jobs run $TRACKING_ID-processor \
+gcloud beta dataflow jobs run $STREAM_ID-processor \
 --gcs-location gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/measurementprotocol/MeasurementProtocolPipeline \
 --zone=$DF_ZONE \
 --region=$DF_REGION \
 --max-workers=$DF_MAX_NUM_WORKERS \
 --parameters \
-pubsubTopic=projects/$PROJECT_ID/topics/$TRACKING_ID-entities,\
-pubsubSubscription=projects/$PROJECT_ID/subscriptions/$TRACKING_ID-processor,\
-bigQueryTableSpec=$TRACKING_ID.entities,\
+pubsubTopic=projects/$PROJECT_ID/topics/$STREAM_ID-entities,\
+pubsubSubscription=projects/$PROJECT_ID/subscriptions/$STREAM_ID-processor,\
+bigQueryTableSpec=$STREAM_ID.entities,\
 ignoredReferersPattern=\"$IGNORED_REFERERS_PATTERN\",\
 searchEnginesPattern=\"$SEARCH_ENGINES_PATTERN\",\
 socialNetworksPattern=\"$SOCIAL_NETWORKS_PATTERN\",\
@@ -108,7 +108,7 @@ timeZone=$TIME_ZONE
 ## 2.2 Backfill/Replay Measurement Protocol Pipeline (Batch)
 
 ```shell
-QUERY='' # Required. Query to pull out the records from backup that you want to reprocess. Example: 'SELECT data FROM \`$PROJECT_ID.backup.$TRACKING_ID\`'
+QUERY='' # Required. Query to pull out the records from backup that you want to reprocess. Example: 'SELECT data FROM \`$PROJECT_ID.backup.$STREAM_ID\`'
 ```
 
 ### 2.2.A. Compile and execute job
@@ -128,7 +128,7 @@ mvn compile exec:java \
       --diskSizeGb=$DF_DISK_SIZE_GB \
       --workerMachineType=$DF_WORKER_MACHINE_TYPE \
       --query=\"$QUERY\" \
-      --bigQueryTableSpec=$TRACKING_ID.entities \
+      --bigQueryTableSpec=$STREAM_ID.entities \
       --ignoredReferersPattern=\"$IGNORED_REFERERS_PATTERN\" \
       --searchEnginesPattern=\"$SEARCH_ENGINES_PATTERN\" \
       --socialNetworksPattern=\"$SOCIAL_NETWORKS_PATTERN\" \
@@ -158,14 +158,14 @@ mvn compile exec:java \
 ```
 
 ```shell
-gcloud beta dataflow jobs run mpbackfill \
+gcloud beta dataflow jobs run $STREAM_ID-backfill \
 --gcs-location gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/measurementprotocol/MeasurementProtocolBackfillPipeline \
 --zone=$DF_ZONE \
 --region=$DF_REGION \
 --max-workers=$DF_MAX_NUM_WORKERS \
 --parameters \
 query=\"$QUERY\",\
-bigQueryTableSpec=$TRACKING_ID.entities,\
+bigQueryTableSpec=$STREAM_ID.entities,\
 ignoredReferersPattern=\"$IGNORED_REFERERS_PATTERN\",\
 searchEnginesPattern=\"$SEARCH_ENGINES_PATTERN\",\
 socialNetworksPattern=\"$SOCIAL_NETWORKS_PATTERN\",\

@@ -84,31 +84,35 @@ Create template
 mvn compile exec:java \
      -Dexec.mainClass=org.datahem.processor.kinesis.collector.StreamCollectorPipeline \
      -Dexec.args="--runner=DataflowRunner \
-                  --project=<PROJECT ID> \
-                  --stagingLocation=gs://<PROJECT ID>-processor/<VERSION>/org/datahem/processor/staging \
-                  --templateLocation=gs://<PROJECT ID>-processor/<VERSION>/org/datahem/processor/kinesis/collector/OrderCollectorPipeline \
-                  --workerMachineType=n1-standard-1 \
-                  --zone=europe-west1-b \
-                  --region=europe-west1 \
-                  --diskSizeGb=25 \
-                  --awsKey=<KEY> \
-                  --awsSecret=<SECRET> \
-                  --awsStream=<STREAM> \
-                  --awsRegion=<REGION> \
-                  --kmsProjectId=<PROJECT ID> \
-                  --kmsLocationId=global \
-                  --kmsKeyRingId=<KEY RING ID> \
-                  --kmsCryptoKeyId=<CRYPTO KEY ID> \
-                  --initialPositionInStream=LATEST"   
+                  --project=$PROJECT_ID \
+                  --stagingLocation=gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/staging \
+                  --templateLocation=gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/kinesis/collector/$STREAM_ID/CollectorPipeline \
+                  --gcpTempLocation=gs://$PROJECT_ID-processor/gcptemp/ \
+                  --zone=$DF_ZONE \
+                  --region=$DF_REGION \
+                  --numWorkers=$DF_NUM_WORKERS \
+                  --maxNumWorkers=$DF_MAX_NUM_WORKERS \
+                  --diskSizeGb=$DF_DISK_SIZE_GB \
+                  --workerMachineType=$DF_WORKER_MACHINE_TYPE \
+                  --awsKey=$ENCRYPTED_AWS_KEY \
+                  --awsSecret=$ENCRYPTED_AWS_SECRET \
+                  --awsStream=$AWS_STREAM \
+                  --awsRegion=$AWS_REGION \
+                  --kmsProjectId=$KMS_PROJECT_ID \
+                  --kmsLocationId=$KMS_LOCATION_ID \
+                  --kmsKeyRingId=$KMS_KEY_RING_ID \
+                  --kmsCryptoKeyId=$KMS_CRYPTO_KEY_ID \
+                  --pubsubTopic=projects/$PROJECT_ID/topics/$STREAM_ID \
+                  --initialPositionInStream=$AWS_INITIAL_POSITION_IN_STREAM"
 ```
 
 //Run job                  
 
 ```shell
-gcloud beta dataflow jobs run kinesisToPubsub \
-        --gcs-location gs://<PROJECT ID>-processor/<VERSION>/org/datahem/processor/kinesis/collector/OrderCollectorPipeline \
-        --zone=europe-west1-b \
-        --region=europe-west1 \
-        --max-workers=2 \
-        --parameters pubsubTopic=projects/<PROJECT ID>/topics/<TOPIC ID>
+gcloud beta dataflow jobs run $STREAM_ID-collector \
+        --gcs-location gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/kinesis/collector/$STREAM_ID/CollectorPipeline \
+        --zone=$DF_ZONE \
+        --region=$DF_REGION \
+        --max-workers=$DF_MAX_NUM_WORKERS \
+        --parameters pubsubTopic=projects/$PROJECT_ID/topics/$STREAM_ID
 ```
