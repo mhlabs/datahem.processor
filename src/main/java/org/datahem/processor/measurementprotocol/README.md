@@ -94,12 +94,12 @@ gcloud beta dataflow jobs run $STREAM_ID-processor \
 pubsubTopic=projects/$PROJECT_ID/topics/$STREAM_ID-entities,\
 pubsubSubscription=projects/$PROJECT_ID/subscriptions/$STREAM_ID-processor,\
 bigQueryTableSpec=$STREAM_ID.entities,\
-ignoredReferersPattern=\"$IGNORED_REFERERS_PATTERN\",\
-searchEnginesPattern=\"$SEARCH_ENGINES_PATTERN\",\
-socialNetworksPattern=\"$SOCIAL_NETWORKS_PATTERN\",\
-includedHostnamesPattern=\"$INCLUDED_HOSTNAMES\",\
-excludedBotsPattern=\"$EXCLUDED_BOTS_PATTERN\",\
-siteSearchPattern=\"$SITE_SEARCH_PATTERN\",\
+ignoredReferersPattern=$IGNORED_REFERERS_PATTERN,\
+searchEnginesPattern=$SEARCH_ENGINES_PATTERN,\
+socialNetworksPattern=$SOCIAL_NETWORKS_PATTERN,\
+includedHostnamesPattern=$INCLUDED_HOSTNAMES,\
+excludedBotsPattern=$EXCLUDED_BOTS_PATTERN,\
+siteSearchPattern=$SITE_SEARCH_PATTERN,\
 timeZone=$TIME_ZONE
 ```
 
@@ -166,11 +166,11 @@ gcloud beta dataflow jobs run $STREAM_ID-backfill \
 --parameters \
 query=\"$QUERY\",\
 bigQueryTableSpec=$STREAM_ID.entities,\
-ignoredReferersPattern=\"$IGNORED_REFERERS_PATTERN\",\
-searchEnginesPattern=\"$SEARCH_ENGINES_PATTERN\",\
-socialNetworksPattern=\"$SOCIAL_NETWORKS_PATTERN\",\
-includedHostnamesPattern=\"$INCLUDED_HOSTNAMES\",\
-excludedBotsPattern=\"$EXCLUDED_BOTS_PATTERN\",\
-siteSearchPattern=\"$SITE_SEARCH_PATTERN\",\
+ignoredReferersPattern=$IGNORED_REFERERS_PATTERN,\
+searchEnginesPattern=$SEARCH_ENGINES_PATTERN,\
+socialNetworksPattern=$SOCIAL_NETWORKS_PATTERN,\
+includedHostnamesPattern=$INCLUDED_HOSTNAMES,\
+excludedBotsPattern=$EXCLUDED_BOTS_PATTERN,\
+siteSearchPattern=$SITE_SEARCH_PATTERN,\
 timeZone=$TIME_ZONE
 ```
