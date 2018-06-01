@@ -54,7 +54,7 @@ public interface MeasurementProtocolOptions extends PipelineOptions {
     void setIncludedHostnamesPattern(ValueProvider<String> value);
     
     @Description("Exclude bot traffic with user agent matching regex pattern, java syntax, i.e. .*bot.*|.*spider.*|.*crawler.*")
-    @Default.String(".*bot.*|.*spider.*|.*crawler.*")
+    @Default.String(".*(^$|bot|spider|crawler).*")
     ValueProvider<String> getExcludedBotsPattern();
     void setExcludedBotsPattern(ValueProvider<String> value);
 
