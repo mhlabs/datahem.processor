@@ -153,12 +153,12 @@ public class MeasurementProtocolBuilder{
             paramMap.putAll(cp.getHeadersMap());
             
             //Exclude bots, spiders and crawlers
-			if(paramMap.get("user-agent") == null){
-				paramMap.put("user-agent", "");
-				LOG.info("user-agent = null");
+			if(paramMap.get("User-Agent") == null){
+				paramMap.put("User-Agent", "");
+				LOG.info("User-Agent = null");
 			}
 
-        	if(!paramMap.get("user-agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern())){
+        	if(!paramMap.get("User-Agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern())){
                 //Add epochMillis and timestamp to paramMap       
 	            Instant payloadTimeStamp = new Instant(Long.parseLong(cp.getEpochMillis()));
 				DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
@@ -236,8 +236,8 @@ private static void test(MeasurementProtocolBuilder mpb, String payload){
 	Map<String,String> headers = new HashMap<String, String>();
 	headers.put("X-AppEngine-Country","SE");
 	headers.put("X-AppEngine-City","stockholm");
-	headers.put("user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36"); //Normal user
-	//headers.put("user-agent","Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"); //bot
+	headers.put("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36"); //Normal user
+	//headers.put("User-Agent","Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"); //bot
 	//headers.put("dr","https://www.tele2.se/mobiltelefoner/samsung/samsung-galaxy-s7"); //referal
 	//headers.put("dr","https://www.google.se/"); //organic search
 	//headers.put("dr","http://m.facebook.com/fdafda?foo=bar&q=hej"); //social

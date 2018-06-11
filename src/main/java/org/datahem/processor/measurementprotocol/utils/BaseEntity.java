@@ -60,7 +60,7 @@ public class BaseEntity{
 		parameters.put("QUEUE_TIME", new Parameter("qt", "String", null, 100, "queueTime", false));
 		parameters.put("CLIENT_ID", new Parameter("cid", "String", null, 100, "clientId", false));
 		parameters.put("USER_ID", new Parameter("uid", "String", null, 100, "userId", false));
-		parameters.put("USER_AGENT", new Parameter("ua|user-agent", "String", null, 1500, "userAgent", false));
+		parameters.put("USER_AGENT", new Parameter("ua|user-agent|User-Agent", "String", null, 1500, "userAgent", false));
 		parameters.put("NON_INTERACTION_HIT", new Parameter("ni", "Boolean", null, 10, "nonInteractionHit", false));
 		parameters.put("CUSTOM_DIMENSION", new Parameter("(cd[0-9]{1,3})", "String", null, 10, null, false));
 		parameters.put("CUSTOM_METRIC", new Parameter("(cm[0-9]{1,3})", "Integer", null, 10, null, false));
