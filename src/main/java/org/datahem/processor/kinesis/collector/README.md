@@ -5,10 +5,10 @@ First you must create a gcp kms key ring and key. You can do that through the co
 
 ```shell
 KMS_LOCATION_ID='global' # Required.
-KMS_KEY_RING_ID='aws' # Required.
-KMS_CRYPTO_KEY_ID='gcp_kinesis_consumer' # Required.
-AWS_KEY='blabla' # Required. The AWS key you want to encrypt.
-AWS_SECRET= # Required. The AWS secret you want to encrypt.
+KMS_KEY_RING_ID='aws_ring' # Required.
+KMS_CRYPTO_KEY_ID='aws_key' # Required.
+AWS_KEY='itisakey' # Required. The AWS key you want to encrypt.
+AWS_SECRET='itisasecret' # Required. The AWS secret you want to encrypt.
 
 gcloud kms keyrings create $KMS_KEY_RING_ID --location $KMS_LOCATION_ID
 
