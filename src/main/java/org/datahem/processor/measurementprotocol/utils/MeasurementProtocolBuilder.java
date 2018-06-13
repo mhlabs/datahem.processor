@@ -145,44 +145,47 @@ public class MeasurementProtocolBuilder{
   	}
 
 	public List<MPEntity> mpEntitiesFromCollectorPayload(CollectorPayloadEntity cp){
-		
-        //Check if post body contains payload and add parameters in a map
-        if (!"".equals(cp.getPayload())) {
-            //Add header parameters to paramMap
-            paramMap = FieldMapper.fieldMapFromQuery(cp.getPayload());
-            paramMap.putAll(cp.getHeadersMap());
-            
-            //Exclude bots, spiders and crawlers
-			if(paramMap.get("User-Agent") == null){
-				paramMap.put("User-Agent", "");
-				LOG.info("User-Agent = null");
-			}
-
-        	if(!paramMap.get("User-Agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern())){
-                //Add epochMillis and timestamp to paramMap       
-	            Instant payloadTimeStamp = new Instant(Long.parseLong(cp.getEpochMillis()));
-				DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
-	            paramMap.put("cpts", payloadTimeStamp.toString(utc_timestamp));
-	            paramMap.put("cpem", cp.getEpochMillis());
-
-				//Set local timezone for use as partition field
-				DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd").withZone(DateTimeZone.forID(getTimeZone()));
-				paramMap.put("cpd", payloadTimeStamp.toString(partition));
-				
-				addAllIfNotNull(events, pageviewEntity.build(paramMap));			
-				addAllIfNotNull(events, eventEntity.build(paramMap));
-				addAllIfNotNull(events, exceptionEntity.build(paramMap));
-				addAllIfNotNull(events, productEntity.build(paramMap));
-				addAllIfNotNull(events, transactionEntity.build(paramMap));
-				addAllIfNotNull(events, socialEntity.build(paramMap));
-				addAllIfNotNull(events, timingEntity.build(paramMap));
-				addAllIfNotNull(events, trafficEntity.build(paramMap));
-				addAllIfNotNull(events, promotionEntity.build(paramMap));
-				addAllIfNotNull(events, productImpressionEntity.build(paramMap));
-				addAllIfNotNull(events, siteSearchEntity.build(paramMap));
-			}
+		try{
+	        //Check if post body contains payload and add parameters in a map
+	        if (!"".equals(cp.getPayload())) {
+	            //Add header parameters to paramMap
+	            paramMap = FieldMapper.fieldMapFromQuery(cp.getPayload());
+	            paramMap.putAll(cp.getHeadersMap());
+	            
+	            //Exclude bots, spiders and crawlers
+				if(paramMap.get("User-Agent") == null){
+					paramMap.put("User-Agent", "");
+					LOG.info("User-Agent = null");
+				}
+	
+	        	if(!paramMap.get("User-Agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern())){
+	                //Add epochMillis and timestamp to paramMap       
+		            Instant payloadTimeStamp = new Instant(Long.parseLong(cp.getEpochMillis()));
+					DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
+		            paramMap.put("cpts", payloadTimeStamp.toString(utc_timestamp));
+		            paramMap.put("cpem", cp.getEpochMillis());
+	
+					//Set local timezone for use as partition field
+					DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd").withZone(DateTimeZone.forID(getTimeZone()));
+					paramMap.put("cpd", payloadTimeStamp.toString(partition));
+					
+					addAllIfNotNull(events, pageviewEntity.build(paramMap));			
+					addAllIfNotNull(events, eventEntity.build(paramMap));
+					addAllIfNotNull(events, exceptionEntity.build(paramMap));
+					addAllIfNotNull(events, productEntity.build(paramMap));
+					addAllIfNotNull(events, transactionEntity.build(paramMap));
+					addAllIfNotNull(events, socialEntity.build(paramMap));
+					addAllIfNotNull(events, timingEntity.build(paramMap));
+					addAllIfNotNull(events, trafficEntity.build(paramMap));
+					addAllIfNotNull(events, promotionEntity.build(paramMap));
+					addAllIfNotNull(events, productImpressionEntity.build(paramMap));
+					addAllIfNotNull(events, siteSearchEntity.build(paramMap));
+				}
+	        }
         }
-        
+        catch (Exception e) {
+				LOG.error(e.toString());
+		}
     	return events;   
     }
         
@@ -203,7 +206,7 @@ public class MeasurementProtocolBuilder{
 public static void main(String[] args) {
 		
 	String click = "v=1&_v=j66&a=1140262547&t=event&ni=0&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=K%C3%B6tt%20%26%20Chark%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=992x1096&je=0&ec=Ecommerce&ea=Product%20Click&_u=aCDAAEAL~&jid=145378208&gjid=1242227089&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&_r=1&gtm=G2rP9BRHCJ&pa=click&pr1id=25258&pr1nm=Blodpudding&pr1pr=10.95&pr1br=GEAS&pr1ca=Blodpudding&pal=%2Fvaror%2Fkott-o-chark&z=28686755";
-	String purchase = "v=1&tid=UA-XXXXX-Y&cid=555&t=pageview&dh=https%3A%2F%2Fwww.datahem.org&dp=/receipt&dt=Receipt%20Page&ti=T12345&ta=Google%20Store%20-%20Online&tr=37.39&tt=2.85&ts=5.34&tcc=SUMMER2013&pa=purchase&pr1id=P12345&pr1nm=Android%20Warhol%20T-Shirt&pr1ca=Apparel&pr1br=Google&pr1va=Black&pr1ps=1";
+	String purchase = "v=1&tid=UA-XXXXX-Y&cid=555&t=pageview&dl=https%3A%2F%2Fwww.datahem.org&dp=/receipt&dt=Receipt%20Page&ti=T12345&ta=Google%20Store%20-%20Online&cd1=test1&cd2=test2&cm1=1&cm2=2&tr=37.39&tt=2.85&ts=5.34&tcc=SUMMER2013&pa=purchase&pr1id=P12345&pr1nm=Android%20Warhol%20T-Shirt&pr1ca=Apparel&pr1br=Google&pr1va=Black&pr1ps=1&pr1cd1=test1&pr1cd2=test2&pr1cm1=1&pr1cm2=2";
 	String detail = "v=1&tid=UA-XXXXX-Y&cid=555&t=pageview&pa=detail&pr1id=P12345&pr1nm=Android%20Warhol%20T-Shirt&pr1ca=Apparel&pr1br=Google&pr1va=Black&pr1ps=1&pr2id=P54321&pr2nm=iOS%20Warhol%20T-Shirt&pr2ca=Apparel&pr2br=Apple&pr2va=White&pr2ps=2";
 	String event = "v=1&tid=UA-XXXXX-Y&cid=555&t=event&ec=UX&ea=click&el=Results&ev=50&dl=https%3A%2F%2Fwww.tele2.se%2Fhandla%2Faktuella-kampanjer%3Futm_source%3DtestSource%26utm_medium%3DtestMedium%26utm_campaign%3DtestName%26utm_term%3DtestTerm%26utm_content%3DtestContent%26gclid%3D54321";
 	String pageview = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&z=631938637&cd1=gold&cd2=family&cm1=25";
@@ -225,7 +228,7 @@ public static void main(String[] args) {
 	MeasurementProtocolBuilder mpb = new MeasurementProtocolBuilder();
 	mpb.setExcludedBotsPattern(".*(^$|bot|spider|crawler).*");
 	
-	List<String> payloads = Stream.of(siteSearch).collect(Collectors.toList());
+	List<String> payloads = Stream.of(purchase).collect(Collectors.toList());
 	payloads
 		.stream()
 		.forEach(payload -> test(mpb, payload));

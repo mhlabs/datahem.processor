@@ -62,8 +62,8 @@ public class BaseEntity{
 		parameters.put("USER_ID", new Parameter("uid", "String", null, 100, "userId", false));
 		parameters.put("USER_AGENT", new Parameter("ua|user-agent|User-Agent", "String", null, 1500, "userAgent", false));
 		parameters.put("NON_INTERACTION_HIT", new Parameter("ni", "Boolean", null, 10, "nonInteractionHit", false));
-		parameters.put("CUSTOM_DIMENSION", new Parameter("(cd[0-9]{1,3})", "String", null, 10, null, false));
-		parameters.put("CUSTOM_METRIC", new Parameter("(cm[0-9]{1,3})", "Integer", null, 10, null, false));
+		parameters.put("CUSTOM_DIMENSION", new Parameter("(cd[0-9]{1,3})", "String", null, 10, "customDimension", false, "cd([0-9]{1,3})"));
+		parameters.put("CUSTOM_METRIC", new Parameter("(cm[0-9]{1,3})", "Integer", null, 10, "customMetric", false, "cm([0-9]{1,3})"));
 		parameters.put("EXPERIMENT_ID", new Parameter("xid", "String", null, 40, "experimentId", false));
 		parameters.put("EXPERIMENT_VARIANT", new Parameter("xvar", "String", null, 500, "experimentVariant", false));
 		parameters.put("CITY", new Parameter("X-AppEngine-City", "String", null, 100, "city", false));
@@ -131,7 +131,11 @@ public class BaseEntity{
 			.setUtcTimestamp(paramMap.get("cpts"));
 		for (Parameter p : parameters.values()){
 			Pattern pattern = Pattern.compile("^" + p.getParameter() + "$");
- 			List<String> bu = paramMap.keySet().stream().filter(pattern.asPredicate()).collect(Collectors.toList());
+ 			List<String> bu = paramMap
+ 				.keySet()
+ 				.stream()
+ 				.filter(pattern.asPredicate())
+ 				.collect(Collectors.toList());
  			if (bu.size() == 0){
  				if(p.getRequired()){
  					throw new IllegalArgumentException("Required parameter (" + p.getParameter() + ") not set.");
@@ -155,7 +159,8 @@ public class BaseEntity{
 	    				}
 	    			}
 	    			else{
-	    				mpEntityBuilder.putParams((p.getParameterName()==null) ? b : p.getParameterName(), getValues(p, paramMap.get(b)));
+	    				//mpEntityBuilder.putParams((p.getParameterName()==null) ? b : p.getParameterName(), getValues(p, paramMap.get(b)));
+	    				mpEntityBuilder.putParams((p.getParameterName()==null) ? b : p.getParameterNameWithSuffix(b), getValues(p, paramMap.get(b)));
 	    			}	
 	           	}
     	}

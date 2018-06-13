@@ -60,8 +60,8 @@ public class ProductEntity extends BaseEntity{
 		parameters.put("PRODUCT_QUANTITY", new Parameter("(pr[0-9]{1,3}qt)", "Integer", null, 500, "productQuantity", false));
 		parameters.put("PRODUCT_COUPON_CODE", new Parameter("(pr[0-9]{1,3}cc)", "String", null, 500, "productCouponCode", false));
 		parameters.put("PRODUCT_POSITION", new Parameter("(pr[0-9]{1,3}ps)", "Integer", null, 500, "productPosition", false));
-		parameters.put("PRODUCT_CUSTOM_DIMENSION", new Parameter("(pr[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "productCustomDimension", false));
-		parameters.put("PRODUCT_CUSTOM_METRIC", new Parameter("(pr[0-9]{1,3}cm[0-9]{1,3})", "String", null, 500, "productCustomMetric", false));
+		parameters.put("PRODUCT_CUSTOM_DIMENSION", new Parameter("(pr[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "productCustomDimension", false, "pr[0-9]{1,3}cd([0-9]{1,3})"));
+		parameters.put("PRODUCT_CUSTOM_METRIC", new Parameter("(pr[0-9]{1,3}cm[0-9]{1,3})", "String", null, 500, "productCustomMetric", false, "pr[0-9]{1,3}cm([0-9]{1,3})"));
 		parameters.put("PRODUCT_ACTION", new Parameter("pa", "String", null, 50, "productAction", true));
 		parameters.put("PRODUCT_ACTION_LIST", new Parameter("pal", "String", null, 500, "productActionList", false)); //If pa == detail || click
 		parameters.put("TRANSACTION_ID", new Parameter("ti", "String", null, 50, "transactionId", false)); //If pa == purchase

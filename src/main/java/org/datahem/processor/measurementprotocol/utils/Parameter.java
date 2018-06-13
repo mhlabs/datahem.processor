@@ -26,6 +26,9 @@ package org.datahem.processor.measurementprotocol.utils;
  * =========================LICENSE_END==================================
  */
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 public class Parameter {	
 	
 	private final String parameter;
@@ -34,14 +37,27 @@ public class Parameter {
 	private final int maxLength;
 	private final String parameterName;
 	private final boolean required;
+	private final String parameterNameSuffix;
 	
 	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required){
+		/*this.parameter = parameter;
+		this.valueType = valueType;
+		this.defaultValue = defaultValue;
+		this.maxLength = maxLength;
+		this.parameterName = parameterName;
+		this.required = required;
+		this.parameterNameSuffix = null;*/
+		this(parameter, valueType, defaultValue, maxLength, parameterName, required, null);
+	}
+
+	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required, String parameterNameSuffix){
 		this.parameter = parameter;
 		this.valueType = valueType;
 		this.defaultValue = defaultValue;
 		this.maxLength = maxLength;
 		this.parameterName = parameterName;
 		this.required = required;
+		this.parameterNameSuffix = parameterNameSuffix;
 	}
 	
 	public String getParameter(){return parameter;}
@@ -50,4 +66,21 @@ public class Parameter {
 	public int getMaxLength(){return maxLength;}
 	public String getParameterName(){return parameterName;}
 	public boolean getRequired(){return required;}
+	public String getParameterNameSuffix(){return parameterNameSuffix;}
+	
+	public String getParameterNameWithSuffix(String param){
+		if(null == parameterNameSuffix){
+			return parameterName;
+		}
+		else{
+			Pattern pattern = Pattern.compile(parameterNameSuffix);
+			Matcher matcher = pattern.matcher(param);
+			if(matcher.find() && matcher.group(1) != null){
+				return parameterName + matcher.group(1);
+			}
+			else {
+				return parameterName;
+			}
+		}
+	}
 }
