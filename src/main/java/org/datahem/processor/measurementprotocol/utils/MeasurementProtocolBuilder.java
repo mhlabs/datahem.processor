@@ -223,12 +223,12 @@ public static void main(String[] args) {
 	//trafficDoubleClidck
 	//trafficCampaign
 	//exception
-	String siteSearch = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fbeta.datahem.org%2Fsok%3Fq%3Dpasta%26page%3D1%26pageSize%3D25&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&z=631938637&cd1=gold&cd2=family&cm1=25";
+	String siteSearch = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fbeta.datahem.org%2Fsok%3Fq%3Dpasta%20knyten%26page%3D1%26pageSize%3D25&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&z=631938637&cd1=gold&cd2=family&cm1=25";
 	
 	MeasurementProtocolBuilder mpb = new MeasurementProtocolBuilder();
 	mpb.setExcludedBotsPattern(".*(^$|bot|spider|crawler).*");
 	
-	List<String> payloads = Stream.of(purchase).collect(Collectors.toList());
+	List<String> payloads = Stream.of(siteSearch).collect(Collectors.toList());
 	payloads
 		.stream()
 		.forEach(payload -> test(mpb, payload));
