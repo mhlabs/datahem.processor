@@ -26,6 +26,7 @@ package org.datahem.processor.measurementprotocol.utils;
  * =========================LICENSE_END==================================
  */
 
+import org.datahem.processor.utils.FieldMapper;
 import org.datahem.processor.measurementprotocol.utils.BaseEntity;
 import org.datahem.processor.measurementprotocol.utils.Parameter;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class SiteSearchEntity extends BaseEntity{
 			Pattern pattern = Pattern.compile(siteSearchPattern);
 			Matcher matcher = pattern.matcher(paramMap.get("dl"));
 			if(matcher.find()){
-				paramMap.put("sst", matcher.group(1));
+				paramMap.put("sst", FieldMapper.decode(matcher.group(1)));
 			}
 			try{
 				eventList.add(builder(paramMap).build());
