@@ -66,7 +66,7 @@ public class FieldMapper{
         		.collect(HashMap::new, (m,v)->m.put(decode(v[0]), decode(v[1])), HashMap::putAll);
     }
     
-    private static String decode(final String encoded) {
+    public static String decode(final String encoded) {
     	try {
         	return encoded == null ? "(not set)" : URLDecoder.decode(encoded, "UTF-8");
     	} catch(final UnsupportedEncodingException e) {
