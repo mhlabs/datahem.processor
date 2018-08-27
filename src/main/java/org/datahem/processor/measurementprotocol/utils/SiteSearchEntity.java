@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 
 public class SiteSearchEntity extends BaseEntity{
 	private Map<String, Parameter> parameters;
-	private static final Logger LOG = LoggerFactory.getLogger(TrafficEntity.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SiteSearchEntity.class);
 	private static String siteSearchPattern = ".*q=(([^&#]*)|&|#|$)";
 	
 	
