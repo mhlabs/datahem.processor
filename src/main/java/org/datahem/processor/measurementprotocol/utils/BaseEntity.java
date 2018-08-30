@@ -173,7 +173,7 @@ public class BaseEntity{
 	private ValEntity getValues(Parameter p, String val){
 		ValEntity.Builder valBuilder = ValEntity.newBuilder();
 		switch(p.getValueType()){
-			case "Integer":	valBuilder.setIntValue(Integer.parseInt(val));
+			case "Integer":	valBuilder.setIntValue(Long.parseLong(val));
 						break;
 			case "String":	valBuilder.setStringValue(val);
 						break;

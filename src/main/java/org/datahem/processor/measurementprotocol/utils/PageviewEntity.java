@@ -54,7 +54,7 @@ public class PageviewEntity extends BaseEntity{
 		parameters.put("DOCUMENT_ENCODING", new Parameter("de", "String", "UTF-8", 20, "encoding", false));
 		parameters.put("SCREEN_COLORS", new Parameter("sd", "String", null, 20, "screenColors", false));
 		parameters.put("USER_LANGUAGE", new Parameter("ul", "String", null, 20, "language", false));
-		parameters.put("JAVA_ENABLED", new Parameter("je", "Boolean", null, 100, "javaEnabled", false));
+		parameters.put("JAVA_ENABLED", new Parameter("je", "Integer", null, 20, "javaEnabled", false));
 		parameters.put("FLASH_VERSION", new Parameter("fl", "String", null, 20, "flashVersion", false));
 	}
 	

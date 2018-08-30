@@ -209,7 +209,10 @@ public static void main(String[] args) {
 	String purchase = "v=1&tid=UA-XXXXX-Y&cid=555&t=pageview&dl=https%3A%2F%2Fwww.datahem.org&dp=/receipt&dt=Receipt%20Page&ti=T12345&ta=Google%20Store%20-%20Online&cd1=test1&cd2=test2&cm1=1&cm2=2&tr=37.39&tt=2.85&ts=5.34&tcc=SUMMER2013&pa=purchase&pr1id=P12345&pr1nm=Android%20Warhol%20T-Shirt&pr1ca=Apparel&pr1br=Google&pr1va=Black&pr1ps=1&pr1cd1=test1&pr1cd2=test2&pr1cm1=1&pr1cm2=2";
 	String detail = "v=1&tid=UA-XXXXX-Y&cid=555&t=pageview&pa=detail&pr1id=P12345&pr1nm=Android%20Warhol%20T-Shirt&pr1ca=Apparel&pr1br=Google&pr1va=Black&pr1ps=1&pr2id=P54321&pr2nm=iOS%20Warhol%20T-Shirt&pr2ca=Apparel&pr2br=Apple&pr2va=White&pr2ps=2";
 	String event = "v=1&tid=UA-XXXXX-Y&cid=555&t=event&ec=UX&ea=click&el=Results&ev=50&dl=https%3A%2F%2Fwww.tele2.se%2Fhandla%2Faktuella-kampanjer%3Futm_source%3DtestSource%26utm_medium%3DtestMedium%26utm_campaign%3DtestName%26utm_term%3DtestTerm%26utm_content%3DtestContent%26gclid%3D54321";
-	String pageview = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&z=631938637&cd1=gold&cd2=family&cm1=25";
+	
+	//String pageview = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=1&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&z=631938637&cd1=gold&cd2=family&cm1=25";
+	String pageview = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18";
+	
 	String add = "v=1&_v=j66&a=1140262547&t=event&ni=0&cu=SEK&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=K%C3%B6tt%20%26%20Chark%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&ec=Ecommerce&ea=Add%20To%20Cart&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&pa=add&pr1id=22534&pr1nm=Kalkon%20R%C3%B6kt%20Skivad&pr1pr=39.95&pr1br=P%C3%A4rsons&pr1ca=Kalkon%20P%C3%A5l%C3%A4gg&pr1qt=1&z=2064466511";
 	String remove = "v=1&_v=j66&a=1140262547&t=event&ni=0&cu=SEK&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=K%C3%B6tt%20%26%20Chark%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&ec=Ecommerce&ea=Add%20To%20Cart&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&pa=remove&pr1id=22534&pr1nm=Kalkon%20R%C3%B6kt%20Skivad&pr1pr=39.95&pr1br=P%C3%A4rsons&pr1ca=Kalkon%20P%C3%A5l%C3%A4gg&pr1qt=1&z=2064466511";
 	String checkoutStepOption = "v=1&_v=j66&a=1140262547&t=event&ni=0&cu=SEK&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=K%C3%B6tt%20%26%20Chark%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&ec=Ecommerce&ea=Add%20To%20Cart&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&pa=checkout&pr1id=22534&pr1nm=Kalkon%20R%C3%B6kt%20Skivad&pr1pr=39.95&pr1br=P%C3%A4rsons&pr1ca=Kalkon%20P%C3%A5l%C3%A4gg&pr1qt=1&cos=1&col=visa&z=2064466511";
@@ -228,7 +231,7 @@ public static void main(String[] args) {
 	MeasurementProtocolBuilder mpb = new MeasurementProtocolBuilder();
 	mpb.setExcludedBotsPattern(".*(^$|bot|spider|crawler).*");
 	
-	List<String> payloads = Stream.of(siteSearch).collect(Collectors.toList());
+	List<String> payloads = Stream.of(pageview).collect(Collectors.toList());
 	payloads
 		.stream()
 		.forEach(payload -> test(mpb, payload));
