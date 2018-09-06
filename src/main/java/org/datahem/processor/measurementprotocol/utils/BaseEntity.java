@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.Collections;
@@ -154,7 +155,8 @@ public class BaseEntity{
 		return builder(paramMap, MPEntity.newBuilder(), this.parameters);
 	}
 	
-	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder, Map<String, Parameter> parameters) throws IllegalArgumentException {
+	//public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder, Map<String, Parameter> parameters) throws IllegalArgumentException {
+	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder, List<Parameter> parameters) throws IllegalArgumentException {
 		
 		mpEntityBuilder
 			//.setVersion(paramMap.get("v"))
@@ -164,7 +166,8 @@ public class BaseEntity{
 			.setEpochMillis(Long.parseLong(paramMap.get("cpem")))
 			.setDate(paramMap.get("cpd"))
 			.setUtcTimestamp(paramMap.get("cpts"));
-		for (Parameter p : parameters.values()){
+		//for (Parameter p : parameters.values()){
+		for (Parameter p : parameters) {
 			Pattern pattern = Pattern.compile("^" + p.getParameter() + "$");
  			List<String> bu = paramMap
  				.keySet()

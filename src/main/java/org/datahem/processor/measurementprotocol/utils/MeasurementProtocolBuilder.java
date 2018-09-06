@@ -28,6 +28,7 @@ package org.datahem.processor.measurementprotocol.utils;
 
 import org.datahem.processor.utils.FieldMapper;
 import org.datahem.processor.measurementprotocol.utils.PageviewEntity;
+/*
 import org.datahem.processor.measurementprotocol.utils.EventEntity;
 import org.datahem.processor.measurementprotocol.utils.ExceptionEntity;
 import org.datahem.processor.measurementprotocol.utils.TimingEntity;
@@ -38,6 +39,7 @@ import org.datahem.processor.measurementprotocol.utils.TrafficEntity;
 import org.datahem.processor.measurementprotocol.utils.PromotionEntity;
 import org.datahem.processor.measurementprotocol.utils.ProductImpressionEntity;
 import org.datahem.processor.measurementprotocol.utils.SiteSearchEntity;
+*/
 
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.CollectorPayloadEntity;
@@ -70,7 +72,7 @@ public class MeasurementProtocolBuilder{
 	private Map<String, String> paramMap;
 	private List<MPEntity> events = new ArrayList<>();
 	private PageviewEntity pageviewEntity = new PageviewEntity();
-	private EventEntity eventEntity = new EventEntity();
+/*	private EventEntity eventEntity = new EventEntity();
 	private ExceptionEntity exceptionEntity = new ExceptionEntity();
 	private ProductEntity productEntity = new ProductEntity();
 	private TransactionEntity transactionEntity = new TransactionEntity();
@@ -80,6 +82,7 @@ public class MeasurementProtocolBuilder{
 	private PromotionEntity promotionEntity = new PromotionEntity();
 	private ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
 	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
+	*/
     private static String excludedBotsPattern = ".*(^$|bot|spider|crawler).*";
     //private static String includedHostnamesPattern = ".*";
     private static String includedHostnamesPattern = ".*(beta.datahem.org|www.datahem.org).*";
@@ -88,6 +91,7 @@ public class MeasurementProtocolBuilder{
     public MeasurementProtocolBuilder(){
 	}
 	
+	/*
   	public String getSearchEnginesPattern(){
     	return this.trafficEntity.getSearchEnginesPattern();
   	}
@@ -111,6 +115,7 @@ public class MeasurementProtocolBuilder{
 	public void setIgnoredReferersPattern(String pattern){
     	this.trafficEntity.setIgnoredReferersPattern(pattern);
   	}
+  	*/
   	
   	public String getExcludedBotsPattern(){
     	return this.excludedBotsPattern;
@@ -128,6 +133,7 @@ public class MeasurementProtocolBuilder{
     	this.includedHostnamesPattern = pattern;
   	}
   	
+  	/*
   	public String getSiteSearchPattern(){
     	return this.siteSearchEntity.getSiteSearchPattern();
   	}
@@ -135,6 +141,7 @@ public class MeasurementProtocolBuilder{
 	public void setSiteSearchPattern(String pattern){
     	this.siteSearchEntity.setSiteSearchPattern(pattern);
   	}
+  	*/
   	
   	public String getTimeZone(){
     	return this.timeZone;
@@ -169,7 +176,8 @@ public class MeasurementProtocolBuilder{
 					DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd").withZone(DateTimeZone.forID(getTimeZone()));
 					paramMap.put("cpd", payloadTimeStamp.toString(partition));
 					
-					addAllIfNotNull(events, pageviewEntity.build(paramMap));			
+					addAllIfNotNull(events, pageviewEntity.build(paramMap));
+					/*
 					addAllIfNotNull(events, eventEntity.build(paramMap));
 					addAllIfNotNull(events, exceptionEntity.build(paramMap));
 					addAllIfNotNull(events, productEntity.build(paramMap));
@@ -180,6 +188,7 @@ public class MeasurementProtocolBuilder{
 					addAllIfNotNull(events, promotionEntity.build(paramMap));
 					addAllIfNotNull(events, productImpressionEntity.build(paramMap));
 					addAllIfNotNull(events, siteSearchEntity.build(paramMap));
+					*/
 				}
 	        }
         }

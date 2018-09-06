@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.Collections;
@@ -43,9 +44,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PageviewEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
+	//private Map<String, Parameter> parameters;
+	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(PageviewEntity.class);
 	
+	/*
 	public PageviewEntity(){
 		super();
 		parameters = new HashMap<String, Parameter>();
@@ -56,6 +59,19 @@ public class PageviewEntity extends BaseEntity{
 		parameters.put("USER_LANGUAGE", new Parameter("ul", "String", null, 20, "language", false));
 		parameters.put("JAVA_ENABLED", new Parameter("je", "Integer", null, 20, "javaEnabled", false));
 		parameters.put("FLASH_VERSION", new Parameter("fl", "String", null, 20, "flashVersion", false));
+	}*/
+	
+		public PageviewEntity(){
+		super();
+		parameters = new ArrayList<>(Arrays.asList(
+			new Parameter("sr", "String", null, 20, "screenResolution", false),
+			new Parameter("vp", "String", null, 20, "viewportSize", false),
+			new Parameter("de", "String", "UTF-8", 20, "encoding", false),
+			new Parameter("sd", "String", null, 20, "screenColors", false),
+			new Parameter("ul", "String", null, 20, "language", false),
+			new Parameter("je", "Integer", null, 20, "javaEnabled", false),
+			new Parameter("fl", "String", null, 20, "flashVersion", false)
+		));
 	}
 	
 	private boolean trigger(Map<String, String> paramMap){
