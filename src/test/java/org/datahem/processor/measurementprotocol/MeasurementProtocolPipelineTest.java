@@ -33,6 +33,10 @@ import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.stream.Stream;
 
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;
@@ -58,6 +62,7 @@ import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -66,6 +71,21 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class MeasurementProtocolPipelineTest {
+
+	private static class Param {
+		private String key;
+		private String valueType;
+		private Object value;
+		
+		Param(String key, String valueType, Object value){
+			this.key = key;
+			this.valueType = valueType;
+			this.value = value;
+		}
+		public String getKey(){return key;}
+		public String getValueType(){return valueType;}
+		public Object getValue(){return value;}
+	}
 
 	@Rule public transient TestPipeline p = TestPipeline.create();
 
@@ -77,13 +97,30 @@ public class MeasurementProtocolPipelineTest {
 				.set(valueType, value));
 	}
 
-	// Generic function to join two lists in Java
+	//Helper function to create TableRows
+	private static TableRow paramToTR(Param param){
+		return new TableRow()
+			.set("key",param.getKey())
+			.set("value", new TableRow()
+				.set(param.getValueType(), param.getValue()));
+	}
+
+	// Generic function to join two lists
 	public static<T> List<T> merge(List<T> list1, List<T> list2){
 		List<T> list = new ArrayList<>();
 		list.addAll(list1);
 		list.addAll(list2);
 		return list;
 	}
+	
+	/*
+		//Helper function to sort list of TableRows
+	public static List<TableRow> sortTRList(List<TableRow> list1){
+		List<T> list = new ArrayList<>();
+		list.addAll(list1);
+		list.addAll(list2);
+		return list;
+	}*/
 
 	/*
 	 * User headers
@@ -112,6 +149,7 @@ public class MeasurementProtocolPipelineTest {
 	/*
 	 * Base entity
 	 */
+	
 	private static List<TableRow> baseParams = new ArrayList<>(Arrays.asList(
 		param("path", "stringValue", "/varor/kott-o-chark"), 
 		param("host", "stringValue", "www.datahem.org"),
@@ -134,6 +172,11 @@ public class MeasurementProtocolPipelineTest {
 		param("version", "stringValue", "1"),
 		param("title", "stringValue", "Frukt & Grönt | Mathem")
 	));
+
+	private static List<Param> bParams= new ArrayList<>(Arrays.asList(
+		new Param("path", "stringValue", "/varor/kott-o-chark")
+	));
+
 
 	private static TableRow baseTR = new TableRow()
 		.set("type","pageview")
@@ -158,8 +201,21 @@ public class MeasurementProtocolPipelineTest {
 		param("javaEnabled", "intValue", 0),
 		param("flashVersion", "stringValue", "10 1 r103")
 	));
-	
-	private static TableRow pageviewTR = baseTR.clone().set("params", merge(baseParams, pageviewParams));
+
+	//private static List<Param> pParams= new ArrayList<>(Arrays.asList(
+	private static List<Param> pParams= Arrays.asList(
+		new Param("language", "stringValue", "sv"),
+		new Param("javaEnabled", "intValue", 0)
+	);
+
+
+
+	//private static TableRow pageviewTR = baseTR.clone().set("params", merge(baseParams, pageviewParams));
+	//private static TableRow eventTR = baseTR.clone().set("params", merge(bParams, pParams).sort(Comparator.comparing(p -> p.key));
+	//private static List<Param> l = merge(bParams, pParams).sort(Comparator.comparing(p -> p.key)).collect(Collectors.toList());
+	//private static List<Param> l = Stream.concat(bParams.stream(), pParams.stream()).collect(Collectors.toList());//.sort(Comparator.comparing(Param::getKey));
+	private static TableRow pageviewTR = baseTR.clone().set("params", Stream.concat(bParams.stream(), pParams.stream()).sorted(Comparator.comparing(Param::getKey)).map(p -> paramToTR(p)).collect(Collectors.toList()));
+	//List<TableRow> ltrs = Stream.concat(bParams.stream(), pParams.stream()).sorted(Comparator.comparing(Param::getKey)).map(p -> paramToTR(p)).collect(Collectors.toList());
 	
 	private static String pageviewPayload = "ul=sv&de=UTF-8&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&fl=10%201%20r103";
 	
@@ -174,6 +230,7 @@ public class MeasurementProtocolPipelineTest {
 	));
 
 	private static TableRow eventTR = baseTR.clone().set("params", merge(baseParams, eventParams));
+	
 
 	
 
