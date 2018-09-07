@@ -54,9 +54,11 @@ import org.apache.beam.sdk.transforms.SimpleFunction;
 import org.apache.beam.sdk.transforms.windowing.FixedWindows;
 import org.apache.beam.sdk.transforms.windowing.Window;
 
+import org.datahem.processor.measurementprotocol.utils.*;
+
 import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.CollectorPayloadEntity;
-import org.datahem.processor.measurementprotocol.utils.PayloadToMPEntityFn;
-import org.datahem.processor.measurementprotocol.utils.MPEntityToTableRowFn;
+//import org.datahem.processor.measurementprotocol.utils.PayloadToMPEntityFn;
+//import org.datahem.processor.measurementprotocol.utils.MPEntityToTableRowFn;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
 
@@ -89,13 +91,14 @@ public class MeasurementProtocolPipelineTest {
 
 	@Rule public transient TestPipeline p = TestPipeline.create();
 
+/*
 	//Helper function to create TableRows
 	private static TableRow param(String key, String valueType, Object value){
 		return new TableRow()
 			.set("key",key)
 			.set("value", new TableRow()
 				.set(valueType, value));
-	}
+	}*/
 
 	//Helper function to create TableRows
 	private static TableRow paramToTR(Param param){
@@ -105,6 +108,14 @@ public class MeasurementProtocolPipelineTest {
 				.set(param.getValueType(), param.getValue()));
 	}
 
+	private static TableRow parameterToTR(Parameter parameter){
+		return new TableRow()
+			.set("key",parameter.getParameterName())
+			.set("value", new TableRow()
+				.set(parameter.getValueType(), parameter.getExampleValue()));
+	}
+
+/*
 	// Generic function to join two lists
 	public static<T> List<T> merge(List<T> list1, List<T> list2){
 		List<T> list = new ArrayList<>();
@@ -113,7 +124,7 @@ public class MeasurementProtocolPipelineTest {
 		return list;
 	}
 	
-	/*
+	
 		//Helper function to sort list of TableRows
 	public static List<TableRow> sortTRList(List<TableRow> list1){
 		List<T> list = new ArrayList<>();
@@ -150,6 +161,7 @@ public class MeasurementProtocolPipelineTest {
 	 * Base entity
 	 */
 	
+	/*
 	private static List<TableRow> baseParams = new ArrayList<>(Arrays.asList(
 		param("path", "stringValue", "/varor/kott-o-chark"), 
 		param("host", "stringValue", "www.datahem.org"),
@@ -171,12 +183,33 @@ public class MeasurementProtocolPipelineTest {
 		param("cityLatLong", "stringValue", "59.422571,17.833131"),
 		param("version", "stringValue", "1"),
 		param("title", "stringValue", "Frukt & Grönt | Mathem")
-	));
+	));*/
+/*
+	private static List<Param> baseParams = Arrays.asList(
+		new Param("path", "stringValue", "/varor/kott-o-chark"), 
+		new Param("host", "stringValue", "www.datahem.org"),
+		new Param("userId", "stringValue", "947563"),
+		new Param("url", "stringValue", "https://www.datahem.org/varor/kott-o-chark"),
+		new Param("clientId", "stringValue", "1062063169.1517835391"),
+		new Param("joinId", "stringValue", "(not set)"),
+		new Param("gtmContainerId", "stringValue", "G7rP2BRHCI"),
+		new Param("customMetric1", "intValue", 25),
+		new Param("adSenseId", "stringValue", "1140262547"),
+		new Param("userAgent", "stringValue", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36"),
+		new Param("customDimension2", "stringValue", "family"),
+		new Param("customDimension1", "stringValue", "gold"),
+		new Param("hitType", "stringValue", "pageview"),
+		new Param("trackingId", "stringValue", "UA-1234567-89"),
+		new Param("country", "stringValue", "SE"),
+		new Param("region", "stringValue", "ab"),
+		new Param("city", "stringValue", "stockholm"),
+		new Param("cityLatLong", "stringValue", "59.422571,17.833131"),
+		new Param("version", "stringValue", "1"),
+		new Param("title", "stringValue", "Frukt & Grönt | Mathem")
+	);*/
 
-	private static List<Param> bParams= new ArrayList<>(Arrays.asList(
-		new Param("path", "stringValue", "/varor/kott-o-chark")
-	));
-
+	private static BaseEntity baseEntity = new BaseEntity();
+	//private static List<Parameter> baseParams = baseEntity.getParameters();
 
 	private static TableRow baseTR = new TableRow()
 		.set("type","pageview")
@@ -184,7 +217,7 @@ public class MeasurementProtocolPipelineTest {
 		.set("userId","947563")
 		.set("utcTimestamp","2018-03-02 07:50:53")
 		.set("epochMillis",1519977053236L)
-		.set("params", baseParams)
+		//.set("params", baseParams)
 		.set("date","2018-03-02");
 	
 	private static String basePayload = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&cid=1062063169.1517835391&uid=947563&tid=UA-1234567-89&jid=&gtm=G7rP2BRHCI&cd1=gold&cd2=family&cm1=25";
@@ -192,6 +225,7 @@ public class MeasurementProtocolPipelineTest {
 	/*
 	 * Pageview entity
 	 */
+	/*
 	private static List<TableRow> pageviewParams = new ArrayList<>(Arrays.asList(
 		param("screenResolution", "stringValue", "1920x1200"),
 		param("viewportSize", "stringValue", "1292x1096"),
@@ -200,21 +234,30 @@ public class MeasurementProtocolPipelineTest {
 		param("language", "stringValue", "sv"),
 		param("javaEnabled", "intValue", 0),
 		param("flashVersion", "stringValue", "10 1 r103")
-	));
+	));*/
 
+/*
 	//private static List<Param> pParams= new ArrayList<>(Arrays.asList(
-	private static List<Param> pParams= Arrays.asList(
+	private static List<Param> pageviewParams= Arrays.asList(
+		new Param("screenResolution", "stringValue", "1920x1200"),
+		new Param("viewportSize", "stringValue", "1292x1096"),
+		new Param("encoding", "stringValue", "UTF-8"),
+		new Param("screenColors", "stringValue", "24-bit"),
 		new Param("language", "stringValue", "sv"),
-		new Param("javaEnabled", "intValue", 0)
-	);
+		new Param("javaEnabled", "intValue", 0),
+		new Param("flashVersion", "stringValue", "10 1 r103")
+	);*/
 
+	private static PageviewEntity pageviewEntity = new PageviewEntity();
+	//private static List<Parameter> pageviewParams = pageviewEntity.getParameters();
 
 
 	//private static TableRow pageviewTR = baseTR.clone().set("params", merge(baseParams, pageviewParams));
 	//private static TableRow eventTR = baseTR.clone().set("params", merge(bParams, pParams).sort(Comparator.comparing(p -> p.key));
 	//private static List<Param> l = merge(bParams, pParams).sort(Comparator.comparing(p -> p.key)).collect(Collectors.toList());
 	//private static List<Param> l = Stream.concat(bParams.stream(), pParams.stream()).collect(Collectors.toList());//.sort(Comparator.comparing(Param::getKey));
-	private static TableRow pageviewTR = baseTR.clone().set("params", Stream.concat(bParams.stream(), pParams.stream()).sorted(Comparator.comparing(Param::getKey)).map(p -> paramToTR(p)).collect(Collectors.toList()));
+	//private static TableRow pageviewTR = baseTR.clone().set("params", Stream.concat(baseParams.stream(), pageviewParams.stream()).sorted(Comparator.comparing(Param::getKey)).map(p -> paramToTR(p)).collect(Collectors.toList()));
+	private static TableRow pageviewTR = baseTR.clone().set("params", Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream()).sorted(Comparator.comparing(Parameter::getParameterName)).map(p -> parameterToTR(p)).collect(Collectors.toList()));
 	//List<TableRow> ltrs = Stream.concat(bParams.stream(), pParams.stream()).sorted(Comparator.comparing(Param::getKey)).map(p -> paramToTR(p)).collect(Collectors.toList());
 	
 	private static String pageviewPayload = "ul=sv&de=UTF-8&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&fl=10%201%20r103";
@@ -222,14 +265,22 @@ public class MeasurementProtocolPipelineTest {
 	/*
 	 * Event entity
 	 */
+	/*
 	private static List<TableRow> eventParams = new ArrayList<>(Arrays.asList(
 		param("eventCategory", "stringValue", "/varor/kott-o-chark"), 
 		param("eventAction", "stringValue", "www.datahem.org"),
 		param("eventLabel", "stringValue", "947563"),
 		param("eventValue", "intValue", 25)
-	));
+	));*/
 
-	private static TableRow eventTR = baseTR.clone().set("params", merge(baseParams, eventParams));
+	private static List<Param> eventParams = Arrays.asList(
+		new Param("eventCategory", "stringValue", "/varor/kott-o-chark"), 
+		new Param("eventAction", "stringValue", "www.datahem.org"),
+		new Param("eventLabel", "stringValue", "947563"),
+		new Param("eventValue", "intValue", 25)
+	);
+
+	//private static TableRow eventTR = baseTR.clone().set("params", merge(baseParams, eventParams));
 	
 
 	
@@ -262,7 +313,8 @@ public class MeasurementProtocolPipelineTest {
 		p.run();
 	}
 	
-		@Test
+	/*
+	@Test
 	public void botPageviewTest() throws Exception {
 		String payload = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&cid=1062063169.1517835391&uid=947563&tid=UA-1234567-89&jid=&gtm=G7rP2BRHCI&cd1=gold&cd2=family&cm1=25";
 		PCollection<TableRow> output = p
@@ -279,7 +331,7 @@ public class MeasurementProtocolPipelineTest {
 		PAssert.that(output).containsInAnyOrder();
 		p.run();
 	}
-	/*
+	
 			@Test
 	public void userEventTest() throws Exception {
 		String payload = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&cid=1062063169.1517835391&uid=947563&tid=UA-1234567-89&jid=&gtm=G7rP2BRHCI&cd1=gold&cd2=family&cm1=25";

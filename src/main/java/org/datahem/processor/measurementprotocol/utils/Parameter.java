@@ -38,19 +38,17 @@ public class Parameter {
 	private final String parameterName;
 	private final boolean required;
 	private final String parameterNameSuffix;
-	
+	private final Object exampleValue;
+
 	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required){
-		/*this.parameter = parameter;
-		this.valueType = valueType;
-		this.defaultValue = defaultValue;
-		this.maxLength = maxLength;
-		this.parameterName = parameterName;
-		this.required = required;
-		this.parameterNameSuffix = null;*/
-		this(parameter, valueType, defaultValue, maxLength, parameterName, required, null);
+		this(parameter, valueType, defaultValue, maxLength, parameterName, required, null, null);
+	}
+	
+	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required, Object exampleValue){
+		this(parameter, valueType, defaultValue, maxLength, parameterName, required, null, exampleValue);
 	}
 
-	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required, String parameterNameSuffix){
+	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required, String parameterNameSuffix, Object exampleValue){
 		this.parameter = parameter;
 		this.valueType = valueType;
 		this.defaultValue = defaultValue;
@@ -58,6 +56,7 @@ public class Parameter {
 		this.parameterName = parameterName;
 		this.required = required;
 		this.parameterNameSuffix = parameterNameSuffix;
+		this.exampleValue = exampleValue;
 	}
 	
 	public String getParameter(){return parameter;}
@@ -83,4 +82,5 @@ public class Parameter {
 			}
 		}
 	}
+	public Object getExampleValue(){return exampleValue;}
 }

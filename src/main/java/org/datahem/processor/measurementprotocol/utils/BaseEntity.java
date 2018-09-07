@@ -83,36 +83,38 @@ public class BaseEntity{
 	
 	public BaseEntity(){
 		parameters = new ArrayList<>(Arrays.asList(
-			new Parameter("a", "String", null, 100, "adSenseId", false),
-			new Parameter("cid", "String", null, 100, "clientId", false),
-			new Parameter("X-AppEngine-City", "String", null, 100, "city", false),
-			new Parameter("X-AppEngine-CityLatLong", "String", null, 100, "cityLatLong", false),
+			new Parameter("a", "String", null, 100, "adSenseId", false, "1140262547"),
+			new Parameter("cid", "String", null, 100, "clientId", false, "1062063169.1517835391"),
+			new Parameter("X-AppEngine-City", "String", null, 100, "city", false, "stockholm"),
+			new Parameter("X-AppEngine-CityLatLong", "String", null, 100, "cityLatLong", false, "59.422571,17.833131"),
 			new Parameter("xid", "String", null, 40, "contentExperimentId", false),
 			new Parameter("xvar", "String", null, 500, "contentExperimentVariant", false),
-			new Parameter("X-AppEngine-Country", "String", null, 100, "country", false),
-			new Parameter("(cd[0-9]{1,3})", "String", null, 10, "customDimension", false, "cd([0-9]{1,3})"),
-			new Parameter("(cm[0-9]{1,3})", "Integer", null, 10, "customMetric", false, "cm([0-9]{1,3})"),
+			new Parameter("X-AppEngine-Country", "String", null, 100, "country", false, "SE"),
+			new Parameter("(cd[0-9]{1,3})", "String", null, 10, "customDimension", false, "cd([0-9]{1,3})", "gold"),
+			new Parameter("(cm[0-9]{1,3})", "Integer", null, 10, "customMetric", false, "cm([0-9]{1,3})", 25),
 			new Parameter("ds", "String", null, 100, "dataSource", false),
-			new Parameter("gtm", "String", null, 100, "gtmContainerId", false),
-			new Parameter("ht", "String", null, 50, "hitType", true),
-			new Parameter("dh", "String", null, 100, "host", false),
-			new Parameter("jid", "String", null, 100, "joinId", false),
+			new Parameter("gtm", "String", null, 100, "gtmContainerId", false, "G7rP2BRHCI"),
+			new Parameter("ht", "String", null, 50, "hitType", true, "pageview"),
+			new Parameter("dh", "String", null, 100, "host", false, "www.datahem.org"),
+			new Parameter("jid", "String", null, 100, "joinId", false, "(not set)"),
 			new Parameter("linkid", "String", null, 2048, "linkId", false),
 			new Parameter("ni", "Boolean", null, 10, "nonInteractionHit", false),
-			new Parameter("dp", "String", null, 2048, "path", false),
+			new Parameter("dp", "String", null, 2048, "path", false, "/varor/kott-o-chark"),
 			new Parameter("qt", "String", null, 100, "queueTime", false),
 			new Parameter("dr", "String", null, 100, "referer", false),
 			new Parameter("drh", "String", null, 100, "refererHost", false),
 			new Parameter("drp", "String", null, 100, "refererPath", false),
-			new Parameter("X-AppEngine-Region", "String", null, 100, "region", false),
-			new Parameter("dt", "String", null, 1500, "title", false),
-			new Parameter("tid", "String", null, 100, "trackingId", true),
-			new Parameter("ua|user-agent|User-Agent", "String", null, 1500, "userAgent", false),
-			new Parameter("dl", "String", null, 2048, "url", false),
-			new Parameter("uid", "String", null, 100, "userId", false),
-			new Parameter("v", "String", null, 100, "version", true)
+			new Parameter("X-AppEngine-Region", "String", null, 100, "region", false, "ab"),
+			new Parameter("dt", "String", null, 1500, "title", false,"Fruit & Vegetables"),
+			new Parameter("tid", "String", null, 100, "trackingId", true, "UA-1234567-89"),
+			new Parameter("ua|user-agent|User-Agent", "String", null, 1500, "userAgent", false, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36"),
+			new Parameter("dl", "String", null, 2048, "url", false, "https://www.datahem.org/varor/fruit"),
+			new Parameter("uid", "String", null, 100, "userId", false, "947563"),
+			new Parameter("v", "String", null, 100, "version", true, "1")
 		));
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return true;

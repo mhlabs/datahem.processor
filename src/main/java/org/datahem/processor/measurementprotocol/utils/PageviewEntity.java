@@ -61,18 +61,20 @@ public class PageviewEntity extends BaseEntity{
 		parameters.put("FLASH_VERSION", new Parameter("fl", "String", null, 20, "flashVersion", false));
 	}*/
 	
-		public PageviewEntity(){
+	public PageviewEntity(){
 		super();
 		parameters = new ArrayList<>(Arrays.asList(
-			new Parameter("de", "String", "UTF-8", 20, "encoding", false),
-			new Parameter("fl", "String", null, 20, "flashVersion", false),
-			new Parameter("sr", "String", null, 20, "screenResolution", false),
-			new Parameter("vp", "String", null, 20, "viewportSize", false),
-			new Parameter("sd", "String", null, 20, "screenColors", false),
-			new Parameter("ul", "String", null, 20, "language", false),
-			new Parameter("je", "Integer", null, 20, "javaEnabled", false)
+			new Parameter("de", "String", "UTF-8", 20, "encoding", false, "UTF-8"),
+			new Parameter("fl", "String", null, 20, "flashVersion", false, "10 1 r103"),
+			new Parameter("sr", "String", null, 20, "screenResolution", false, "1920x1200"),
+			new Parameter("vp", "String", null, 20, "viewportSize", false, "1292x1096"),
+			new Parameter("sd", "String", null, 20, "screenColors", false, "24-bit"),
+			new Parameter("ul", "String", null, 20, "language", false, "sv"),
+			new Parameter("je", "Integer", null, 20, "javaEnabled", false, 0)
 		));
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return "pageview".equals(paramMap.get("t"));
