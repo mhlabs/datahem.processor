@@ -37,6 +37,7 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.util.Collections;
 import java.util.stream.Stream;
+import org.datahem.processor.utils.FieldMapper;
 
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;
@@ -76,17 +77,9 @@ public class MeasurementProtocolPipelineTest {
 	
 	@Rule public transient TestPipeline p = TestPipeline.create();
 
-	//Helper function to create TableRows
-	private static TableRow paramToTR(Param param){
-		return new TableRow()
-			.set("key",param.getKey())
-			.set("value", new TableRow()
-				.set(param.getValueType(), param.getValue()));
-	}
-
 	private static TableRow parameterToTR(Parameter parameter){
 		return new TableRow()
-			.set("key",parameter.getParameterName())
+			.set("key",parameter.getExampleParameterName())
 			.set("value", new TableRow()
 				.set(parameter.getValueType(), parameter.getExampleValue()));
 	}
@@ -100,7 +93,7 @@ public class MeasurementProtocolPipelineTest {
 			put("X-AppEngine-Region","ab");
 			put("X-AppEngine-City","stockholm");
 			put("X-AppEngine-CityLatLong","59.422571,17.833131");
-			put("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36");
+			put("User-Agent","Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14");
 		}
 	};
 	
@@ -122,32 +115,63 @@ public class MeasurementProtocolPipelineTest {
 	private static BaseEntity baseEntity = new BaseEntity();
 	private static TableRow baseTR = new TableRow()
 		.set("type","pageview")
-		.set("clientId","1062063169.1517835391")
-		.set("userId","947563")
+		.set("clientId","35009a79-1a05-49d7-b876-2b884d0f825b")
+		.set("userId","as8eknlll")
 		.set("utcTimestamp","2018-03-02 07:50:53")
 		.set("epochMillis",1519977053236L)
 		.set("date","2018-03-02");
 	private static String basePayload = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&cid=1062063169.1517835391&uid=947563&tid=UA-1234567-89&jid=&gtm=G7rP2BRHCI&cd1=gold&cd2=family&cm1=25";
+	private static String basePayload2 = baseEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
+
+
+/*
+new Parameter("a", "String", null, 100, "adSenseId", false, "1140262547"),
+cid=35009a79-1a05-49d7-b876-2b884d0f825b
+			
+			xid=Qp0gahJ3RAO3DJ18b0XoUQ
+			xvar=1
+			cd1=Sports
+			cm1=47
+			ds=web
+			new Parameter("gtm", "String", null, 100, "gtmContainerId", false, "G7rP2BRHCI"),
+			new Parameter("ht", "String", null, 50, "hitType", true, "pageview"),
+			new Parameter("dh", "String", null, 100, "host", false, "foo.com"),
+			new Parameter("jid", "String", null, 100, "joinId", false, "(not set)"),
+			new Parameter("ni", "Boolean", null, 10, "nonInteractionHit", false, 1),
+			new Parameter("dp", "String", null, 2048, "path", false, "/foo"),
+			new Parameter("qt", "String", null, 100, "queueTime", false, 560),
+			new Parameter("dr", "String", null, 100, "referer", false,"http://example.com"),
+			new Parameter("drh", "String", null, 100, "refererHost", false,"http://example.com"),
+			new Parameter("drp", "String", null, 100, "refererPath", false,""),
+			new Parameter("X-AppEngine-Region", "String", null, 100, "region", false, "ab"),
+			new Parameter("dt", "String", null, 1500, "title", false,"Settings"),
+			new Parameter("tid", "String", null, 100, "trackingId", true, "UA-XXXX-Y"),
+			new Parameter("ua|user-agent|User-Agent", "String", null, 1500, "userAgent", false, "Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14"),
+			new Parameter("dl", "String", null, 2048, "url", false, "http://foo.com/home?a=b"),
+			new Parameter("uid", "String", null, 100, "userId", false, "as8eknlll"),
+			new Parameter("v", "String", null, 100, "version", true, "1")
+*/
 
 	/*
 	 * Pageview entity
 	 */
 
 	private static PageviewEntity pageviewEntity = new PageviewEntity();
-	private static TableRow pageviewTR = baseTR.clone().set("params", Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream()).sorted(Comparator.comparing(Parameter::getParameterName)).map(p -> parameterToTR(p)).collect(Collectors.toList()));	
+	private static TableRow pageviewTR = baseTR.clone().set("params", Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream()).sorted(Comparator.comparing(Parameter::getExampleParameterName)).map(p -> parameterToTR(p)).collect(Collectors.toList()));	
 	private static String pageviewPayload = "ul=sv&de=UTF-8&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&fl=10%201%20r103";
+	private static String pageviewPayload2 = pageviewEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
 	
 	/*
 	 * Event entity
 	 */
 
-
+/*
 	private static List<Param> eventParams = Arrays.asList(
 		new Param("eventCategory", "stringValue", "/varor/kott-o-chark"), 
 		new Param("eventAction", "stringValue", "www.datahem.org"),
 		new Param("eventLabel", "stringValue", "947563"),
 		new Param("eventValue", "intValue", 25)
-	);
+	);*/
 
 
 	private static CollectorPayloadEntity cpeBuilder(Map headers, String payload){
@@ -159,9 +183,16 @@ public class MeasurementProtocolPipelineTest {
 				.build();
 	}
 
+@Test
+	public void userPageviewTest2() throws Exception {
+	String payload = basePayload2 + "&" + pageviewPayload2;
+	Assert.assertEquals(payload, "hello");
+	}
+
+
 	@Test
 	public void userPageviewTest() throws Exception {
-		String payload = basePayload + "&" + pageviewPayload;//"v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&cid=1062063169.1517835391&uid=947563&tid=UA-1234567-89&jid=&gtm=G7rP2BRHCI&cd1=gold&cd2=family&cm1=25";
+		String payload = basePayload + "&" + pageviewPayload;
 		PCollection<TableRow> output = p
 		.apply(Create.of(Arrays.asList(cpeBuilder(user, payload))))
 		.apply(ParDo.of(new PayloadToMPEntityFn(

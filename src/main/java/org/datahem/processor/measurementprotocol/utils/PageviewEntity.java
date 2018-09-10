@@ -66,11 +66,12 @@ public class PageviewEntity extends BaseEntity{
 		parameters = new ArrayList<>(Arrays.asList(
 			new Parameter("de", "String", "UTF-8", 20, "encoding", false, "UTF-8"),
 			new Parameter("fl", "String", null, 20, "flashVersion", false, "10 1 r103"),
-			new Parameter("sr", "String", null, 20, "screenResolution", false, "1920x1200"),
-			new Parameter("vp", "String", null, 20, "viewportSize", false, "1292x1096"),
-			new Parameter("sd", "String", null, 20, "screenColors", false, "24-bit"),
-			new Parameter("ul", "String", null, 20, "language", false, "sv"),
-			new Parameter("je", "Integer", null, 20, "javaEnabled", false, 0)
+			new Parameter("sr", "String", null, 20, "screenResolution", false, "800x600"),
+			new Parameter("vp", "String", null, 20, "viewportSize", false, "123x456"),
+			new Parameter("sd", "String", null, 20, "screenColors", false, "24-bits"),
+			new Parameter("ul", "String", null, 20, "language", false, "en-us"),
+			new Parameter("je", "Integer", null, 20, "javaEnabled", false, 1),
+			new Parameter("linkid", "String", null, 2048, "linkId", false,"nav_bar")
 		));
 	}
 	

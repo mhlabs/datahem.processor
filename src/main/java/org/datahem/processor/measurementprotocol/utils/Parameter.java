@@ -38,17 +38,19 @@ public class Parameter {
 	private final String parameterName;
 	private final boolean required;
 	private final String parameterNameSuffix;
+	private final String exampleParameter;
 	private final Object exampleValue;
+	private final String exampleParameterName;
 
 	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required){
-		this(parameter, valueType, defaultValue, maxLength, parameterName, required, null, null);
+		this(parameter, valueType, defaultValue, maxLength, parameterName, required, null);
 	}
 	
 	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required, Object exampleValue){
-		this(parameter, valueType, defaultValue, maxLength, parameterName, required, null, exampleValue);
+		this(parameter, valueType, defaultValue, maxLength, parameterName, required, null, parameter, exampleValue, parameterName);
 	}
 
-	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required, String parameterNameSuffix, Object exampleValue){
+	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required, String parameterNameSuffix, String exampleParameter, Object exampleValue, String exampleParameterName){
 		this.parameter = parameter;
 		this.valueType = valueType;
 		this.defaultValue = defaultValue;
@@ -56,7 +58,9 @@ public class Parameter {
 		this.parameterName = parameterName;
 		this.required = required;
 		this.parameterNameSuffix = parameterNameSuffix;
+		this.exampleParameter = exampleParameter;
 		this.exampleValue = exampleValue;
+		this.exampleParameterName = exampleParameterName;
 	}
 	
 	public String getParameter(){return parameter;}
@@ -82,5 +86,7 @@ public class Parameter {
 			}
 		}
 	}
+	public String getExampleParameter(){return exampleParameter;}
 	public Object getExampleValue(){return exampleValue;}
+	public String getExampleParameterName(){return exampleParameterName;}
 }
