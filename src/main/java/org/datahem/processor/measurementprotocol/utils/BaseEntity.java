@@ -163,22 +163,18 @@ public class BaseEntity{
 		return builder(paramMap, MPEntity.newBuilder(), this.parameters);
 	}
 	
-	//public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder, Map<String, Parameter> parameters) throws IllegalArgumentException {
 	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder, List<Parameter> parameters) throws IllegalArgumentException {
 		
 		parameters.sort(Comparator.comparing(p -> p.getParameterName()));
 		
 		mpEntityBuilder
-			//.setVersion(paramMap.get("v"))
 			.setType(paramMap.get("et"))
 			.setClientId(paramMap.get("cid"))
 			.setUserId(paramMap.getOrDefault("uid", ""))
 			.setEpochMillis(Long.parseLong(paramMap.get("cpem")))
 			.setDate(paramMap.get("cpd"))
 			.setUtcTimestamp(paramMap.get("cpts"));
-		//for (Parameter p : parameters.values()){
 		for (Parameter p : parameters) {
-			LOG.info(p.getParameterName());
 			Pattern pattern = Pattern.compile("^" + p.getParameter() + "$");
  			List<String> bu = paramMap
  				.keySet()
@@ -208,13 +204,23 @@ public class BaseEntity{
 	    				}
 	    			}
 	    			else{
-	    				//mpEntityBuilder.putParams((p.getParameterName()==null) ? b : p.getParameterName(), getValues(p, paramMap.get(b)));
 	    				mpEntityBuilder.putParams((p.getParameterName()==null) ? b : p.getParameterNameWithSuffix(b), getValues(p, paramMap.get(b)));
 	    			}	
 	           	}
-    	}
+		}
+		
     	
 		}
+		//Make a deep copy of params, then clear params from entity, then sort params copy and put back into entity
+		Map<String, ValEntity> collect = mpEntityBuilder.getParamsMap().entrySet().stream().collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue()));
+		mpEntityBuilder.clearParams();
+		collect
+			.entrySet()
+			.stream()
+			.sorted(Map.Entry.<String, ValEntity>comparingByKey())
+			.forEach(e -> mpEntityBuilder.putParams(e.getKey(), (ValEntity) e.getValue()));
+
+		
 		return mpEntityBuilder;
 	}
 	
