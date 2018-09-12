@@ -78,10 +78,20 @@ public class MeasurementProtocolPipelineTest {
 	@Rule public transient TestPipeline p = TestPipeline.create();
 
 	private static TableRow parameterToTR(Parameter parameter){
+		String s = "";
+		switch(parameter.getValueType()){
+			case "Integer":	s = "intValue";
+				break;
+			case "String":	s= "stringValue";
+				break;
+			case "Boolean":	s= "intValue";
+				break;
+			case "Double":	s= "floatValue";
+		}
 		return new TableRow()
 			.set("key",parameter.getExampleParameterName())
 			.set("value", new TableRow()
-				.set(parameter.getValueType(), parameter.getExampleValue()));
+				.set(s, parameter.getExampleValue()));
 	}
 
 	/*
@@ -118,8 +128,8 @@ public class MeasurementProtocolPipelineTest {
 		.set("clientId","35009a79-1a05-49d7-b876-2b884d0f825b")
 		.set("userId","as8eknlll")
 		.set("utcTimestamp","2018-03-02 07:50:53")
-		.set("epochMillis",1519977053236L)
-		.set("date","2018-03-02");
+		.set("epochMillis",1519977053236L);
+		//.set("date","2018-03-02");
 	private static String basePayload = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&cid=1062063169.1517835391&uid=947563&tid=UA-1234567-89&jid=&gtm=G7rP2BRHCI&cd1=gold&cd2=family&cm1=25";
 	private static String basePayload2 = baseEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
 
@@ -157,7 +167,13 @@ cid=35009a79-1a05-49d7-b876-2b884d0f825b
 	 */
 
 	private static PageviewEntity pageviewEntity = new PageviewEntity();
-	private static TableRow pageviewTR = baseTR.clone().set("params", Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream()).sorted(Comparator.comparing(Parameter::getExampleParameterName)).map(p -> parameterToTR(p)).collect(Collectors.toList()));	
+	private static TableRow pageviewTR = baseTR.clone()
+		.set("params", Stream
+			.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()))
+		.set("date","2018-03-02");	
 	private static String pageviewPayload = "ul=sv&de=UTF-8&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&fl=10%201%20r103";
 	private static String pageviewPayload2 = pageviewEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
 	
@@ -192,14 +208,14 @@ cid=35009a79-1a05-49d7-b876-2b884d0f825b
 
 	@Test
 	public void userPageviewTest() throws Exception {
-		String payload = basePayload + "&" + pageviewPayload;
+		String payload = basePayload2 + "&" + pageviewPayload2;
 		PCollection<TableRow> output = p
 		.apply(Create.of(Arrays.asList(cpeBuilder(user, payload))))
 		.apply(ParDo.of(new PayloadToMPEntityFn(
 				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
-				StaticValueProvider.of(".*(beta.datahem.org|www.datahem.org).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
 				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
-				StaticValueProvider.of(".*(beta.datahem.org|www.datahem.org).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
 				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
 				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
 				StaticValueProvider.of("Europe/Stockholm"))))

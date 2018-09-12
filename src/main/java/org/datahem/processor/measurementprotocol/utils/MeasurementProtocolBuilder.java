@@ -164,9 +164,14 @@ public class MeasurementProtocolBuilder{
 					paramMap.put("User-Agent", "");
 					LOG.info("User-Agent = null");
 				}
-	
+	LOG.info("Running fine");
+		LOG.info(paramMap.get("User-Agent"));
+		LOG.info(getExcludedBotsPattern());
+		LOG.info(paramMap.get("dl"));
+		LOG.info(getIncludedHostnamesPattern());
 	        	if(!paramMap.get("User-Agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern())){
 	                //Add epochMillis and timestamp to paramMap       
+		            
 		            Instant payloadTimeStamp = new Instant(Long.parseLong(cp.getEpochMillis()));
 					DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
 		            paramMap.put("cpts", payloadTimeStamp.toString(utc_timestamp));
@@ -177,6 +182,8 @@ public class MeasurementProtocolBuilder{
 					paramMap.put("cpd", payloadTimeStamp.toString(partition));
 					
 					addAllIfNotNull(events, pageviewEntity.build(paramMap));
+					LOG.info("addallifnotnull pageview");
+					LOG.info(Integer.toString(events.size()));
 					/*
 					addAllIfNotNull(events, eventEntity.build(paramMap));
 					addAllIfNotNull(events, exceptionEntity.build(paramMap));
@@ -220,7 +227,8 @@ public static void main(String[] args) {
 	String event = "v=1&tid=UA-XXXXX-Y&cid=555&t=event&ec=UX&ea=click&el=Results&ev=50&dl=https%3A%2F%2Fwww.tele2.se%2Fhandla%2Faktuella-kampanjer%3Futm_source%3DtestSource%26utm_medium%3DtestMedium%26utm_campaign%3DtestName%26utm_term%3DtestTerm%26utm_content%3DtestContent%26gclid%3D54321";
 	
 	//String pageview = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=1&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&z=631938637&cd1=gold&cd2=family&cm1=25";
-	String pageview = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18";
+	//String pageview = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18";
+	String pageview = "a=1140262547&cid=35009a79-1a05-49d7-b876-2b884d0f825b&X-AppEngine-City=stockholm&X-AppEngine-CityLatLong=59.422571%2C17.833131&xid=Qp0gahJ3RAO3DJ18b0XoUQ&xvar=1&X-AppEngine-Country=SE&cd1=Sports&cm1=47&ds=web&gtm=G7rP2BRHCI&ht=pageview&dh=foo.com&jid=%28not%20set%29&ni=1&dp=%2Ffoo&qt=560&dr=http%3A%2F%2Fexample.com&drh=http%3A%2F%2Fexample.com&drp=&X-AppEngine-Region=ab&dt=Settings&tid=UA-XXXX-Y&User-Agent=Opera%2F9.80%20%28Windows%20NT%206.0%29%20Presto%2F2.12.388%20Version%2F12.14&dl=http%3A%2F%2Ffoo.com%2Fhome%3Fa%3Db&uid=as8eknlll&v=1&de=UTF-8&fl=10%201%20r103&sr=800x600&vp=123x456&sd=24-bits&ul=en-us&je=1&linkid=nav_bar";
 	
 	String add = "v=1&_v=j66&a=1140262547&t=event&ni=0&cu=SEK&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=K%C3%B6tt%20%26%20Chark%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&ec=Ecommerce&ea=Add%20To%20Cart&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&pa=add&pr1id=22534&pr1nm=Kalkon%20R%C3%B6kt%20Skivad&pr1pr=39.95&pr1br=P%C3%A4rsons&pr1ca=Kalkon%20P%C3%A5l%C3%A4gg&pr1qt=1&z=2064466511";
 	String remove = "v=1&_v=j66&a=1140262547&t=event&ni=0&cu=SEK&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=K%C3%B6tt%20%26%20Chark%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&ec=Ecommerce&ea=Add%20To%20Cart&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&pa=remove&pr1id=22534&pr1nm=Kalkon%20R%C3%B6kt%20Skivad&pr1pr=39.95&pr1br=P%C3%A4rsons&pr1ca=Kalkon%20P%C3%A5l%C3%A4gg&pr1qt=1&z=2064466511";
@@ -247,7 +255,7 @@ public static void main(String[] args) {
 }
 
 private static void test(MeasurementProtocolBuilder mpb, String payload){
-	//LOG.info("Inside test!");
+	LOG.info("Inside test!");
 	Map<String,String> headers = new HashMap<String, String>();
 	headers.put("X-AppEngine-Country","SE");
 	headers.put("X-AppEngine-City","stockholm");
