@@ -45,42 +45,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BaseEntity{
-	//private Map<String, Parameter> parameters;
 	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEntity.class);
-	
-	/*
-	public BaseEntity(){
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("HIT_TYPE", new Parameter("ht", "String", null, 50, "hitType", true));
-		parameters.put("URL", new Parameter("dl", "String", null, 2048, "url", false));
-		parameters.put("HOST", new Parameter("dh", "String", null, 100, "host", false));
-		parameters.put("PATH", new Parameter("dp", "String", null, 2048, "path", false));
-		parameters.put("TITLE", new Parameter("dt", "String", null, 1500, "title", false));
-		parameters.put("LINK_ID", new Parameter("linkid", "String", null, 2048, "linkId", false));
-		parameters.put("VERSION", new Parameter("v", "String", null, 100, "version", true));
-		parameters.put("TRACKING_ID", new Parameter("tid", "String", null, 100, "trackingId", true));
-		parameters.put("DATA_SOURCE", new Parameter("ds", "String", null, 100, "dataSource", false));
-		parameters.put("QUEUE_TIME", new Parameter("qt", "String", null, 100, "queueTime", false));
-		parameters.put("CLIENT_ID", new Parameter("cid", "String", null, 100, "clientId", false));
-		parameters.put("USER_ID", new Parameter("uid", "String", null, 100, "userId", false));
-		parameters.put("USER_AGENT", new Parameter("ua|user-agent|User-Agent", "String", null, 1500, "userAgent", false));
-		parameters.put("NON_INTERACTION_HIT", new Parameter("ni", "Boolean", null, 10, "nonInteractionHit", false));
-		parameters.put("CUSTOM_DIMENSION", new Parameter("(cd[0-9]{1,3})", "String", null, 10, "customDimension", false, "cd([0-9]{1,3})"));
-		parameters.put("CUSTOM_METRIC", new Parameter("(cm[0-9]{1,3})", "Integer", null, 10, "customMetric", false, "cm([0-9]{1,3})"));
-		parameters.put("CONTENT_EXPERIMENT_ID", new Parameter("xid", "String", null, 40, "contentExperimentId", false));
-		parameters.put("CONTENT_EXPERIMENT_VARIANT", new Parameter("xvar", "String", null, 500, "contentExperimentVariant", false));
-		parameters.put("COUNTRY", new Parameter("X-AppEngine-Country", "String", null, 100, "country", false));
-		parameters.put("REGION", new Parameter("X-AppEngine-Region", "String", null, 100, "region", false));
-		parameters.put("CITY", new Parameter("X-AppEngine-City", "String", null, 100, "city", false));
-		parameters.put("CITY_LAT_LONG", new Parameter("X-AppEngine-CityLatLong", "String", null, 100, "cityLatLong", false));
-		parameters.put("REFERER", new Parameter("dr", "String", null, 100, "referer", false));
-		parameters.put("REFERER_HOST", new Parameter("drh", "String", null, 100, "refererHost", false));
-		parameters.put("REFERER_PATH", new Parameter("drp", "String", null, 100, "refererPath", false));
-		parameters.put("JOIN_ID", new Parameter("jid", "String", null, 100, "joinId", false));
-		parameters.put("ADSENSE_ID", new Parameter("a", "String", null, 100, "adSenseId", false));
-		parameters.put("GTM_CONTAINER_ID", new Parameter("gtm", "String", null, 100, "gtmContainerId", false));
-	}*/
 	
 	public BaseEntity(){
 		parameters = new ArrayList<>(Arrays.asList(

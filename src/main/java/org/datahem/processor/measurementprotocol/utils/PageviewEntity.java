@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PageviewEntity extends BaseEntity{
-	//private Map<String, Parameter> parameters;
 	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(PageviewEntity.class);
 	
@@ -72,7 +71,6 @@ public class PageviewEntity extends BaseEntity{
 		LOG.info("pageview build");
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-			//paramMap.put("ht", "pageview");
 			paramMap.put("et", "pageview");
     		try{
 				eventList.add(builder(paramMap).build());

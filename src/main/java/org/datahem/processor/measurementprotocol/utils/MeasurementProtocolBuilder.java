@@ -182,8 +182,7 @@ public class MeasurementProtocolBuilder{
 					paramMap.put("cpd", payloadTimeStamp.toString(partition));
 					
 					addAllIfNotNull(events, pageviewEntity.build(paramMap));
-					LOG.info("addallifnotnull pageview");
-					LOG.info(Integer.toString(events.size()));
+
 					/*
 					addAllIfNotNull(events, eventEntity.build(paramMap));
 					addAllIfNotNull(events, exceptionEntity.build(paramMap));

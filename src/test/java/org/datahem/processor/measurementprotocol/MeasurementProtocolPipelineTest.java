@@ -81,8 +81,6 @@ public class MeasurementProtocolPipelineTest {
 	private static final Logger LOG = LoggerFactory.getLogger(MeasurementProtocolPipelineTest.class);
 	
 	@Rule public transient TestPipeline p = TestPipeline.create();
-	
-
 
 	private static TableRow parameterToTR(Parameter parameter){
 		String s = "";
@@ -135,39 +133,9 @@ public class MeasurementProtocolPipelineTest {
 		.set("clientId","35009a79-1a05-49d7-b876-2b884d0f825b")
 		.set("userId","as8eknlll")
 		.set("utcTimestamp","2018-03-02 07:50:53")
-		.set("epochMillis",1519977053236L);
-		//.set("date","2018-03-02");
-	private static String basePayload = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&cid=1062063169.1517835391&uid=947563&tid=UA-1234567-89&jid=&gtm=G7rP2BRHCI&cd1=gold&cd2=family&cm1=25";
-	private static String basePayload2 = baseEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
-
-
-/*
-new Parameter("a", "String", null, 100, "adSenseId", false, "1140262547"),
-cid=35009a79-1a05-49d7-b876-2b884d0f825b
-			
-			xid=Qp0gahJ3RAO3DJ18b0XoUQ
-			xvar=1
-			cd1=Sports
-			cm1=47
-			ds=web
-			new Parameter("gtm", "String", null, 100, "gtmContainerId", false, "G7rP2BRHCI"),
-			new Parameter("ht", "String", null, 50, "hitType", true, "pageview"),
-			new Parameter("dh", "String", null, 100, "host", false, "foo.com"),
-			new Parameter("jid", "String", null, 100, "joinId", false, "(not set)"),
-			new Parameter("ni", "Boolean", null, 10, "nonInteractionHit", false, 1),
-			new Parameter("dp", "String", null, 2048, "path", false, "/foo"),
-			new Parameter("qt", "String", null, 100, "queueTime", false, 560),
-			new Parameter("dr", "String", null, 100, "referer", false,"http://example.com"),
-			new Parameter("drh", "String", null, 100, "refererHost", false,"http://example.com"),
-			new Parameter("drp", "String", null, 100, "refererPath", false,""),
-			new Parameter("X-AppEngine-Region", "String", null, 100, "region", false, "ab"),
-			new Parameter("dt", "String", null, 1500, "title", false,"Settings"),
-			new Parameter("tid", "String", null, 100, "trackingId", true, "UA-XXXX-Y"),
-			new Parameter("ua|user-agent|User-Agent", "String", null, 1500, "userAgent", false, "Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14"),
-			new Parameter("dl", "String", null, 2048, "url", false, "http://foo.com/home?a=b"),
-			new Parameter("uid", "String", null, 100, "userId", false, "as8eknlll"),
-			new Parameter("v", "String", null, 100, "version", true, "1")
-*/
+		.set("epochMillis",1519977053236L)
+		.set("date","2018-03-02");
+	private static String basePayload = baseEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
 
 	/*
 	 * Pageview entity
@@ -179,18 +147,24 @@ cid=35009a79-1a05-49d7-b876-2b884d0f825b
 			.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
 			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
 			.map(p -> parameterToTR(p))
-			.collect(Collectors.toList()))
-		.set("date","2018-03-02");	
-	private static String pageviewPayload = "ul=sv&de=UTF-8&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&fl=10%201%20r103";
-	private static String pageviewPayload2 = pageviewEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
-	
-	private static TableRow pageviewTR2 = baseTR.clone()
+			.collect(Collectors.toList()));	
+	private static String pageviewPayload = pageviewEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
+
+
+	/*
+	 * Event entity
+	 */
+
+	private static EventEntity eventEntity = new EventEntity();
+	private static TableRow eventTR = baseTR.clone()
 		.set("params", Stream
-			.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.concat(baseEntity.getParameters().stream(), eventEntity.getParameters().stream())
 			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
 			.map(p -> parameterToTR(p))
-			.collect(Collectors.toList()))
-		.set("date","2018-03-02");
+			.collect(Collectors.toList()));	
+	private static String eventPayload = eventEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
+
+
 	
 	
 	/*
@@ -215,22 +189,12 @@ cid=35009a79-1a05-49d7-b876-2b884d0f825b
 				.build();
 	}
 
-/*
-@Test
-	public void userPageviewTest2() throws Exception {
-	String payload = basePayload2 + "&" + pageviewPayload2;
-	Assert.assertEquals(payload, "hello");
-	}
-*/
-
 	@Test
 	public void userPageviewTest() throws Exception {
-		String payload = basePayload2 + "&" + pageviewPayload2;
-		LOG.info(payload);
-		LOG.info(pageviewTR.toPrettyString());
-		LOG.info(Integer.toString(pageviewTR.hashCode()) +" : "+pageviewTR.toPrettyString());
+		String uppayload = basePayload + "&" + pageviewPayload;
+		LOG.info("userPageviewTest:" + uppayload);
 		PCollection<TableRow> output = p
-			.apply(Create.of(Arrays.asList(cpeBuilder(user, payload))))
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, uppayload))))
 			.apply(ParDo.of(new PayloadToMPEntityFn(
 				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
 				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
@@ -240,37 +204,21 @@ cid=35009a79-1a05-49d7-b876-2b884d0f825b
 				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
 				StaticValueProvider.of("Europe/Stockholm"))))
 			.apply(ParDo.of(new MPEntityToTableRowFn()));
-		List<TableRow> expected = Arrays.asList(pageviewTR);
 		PAssert.that(output).containsInAnyOrder(pageviewTR);
-		//PAssert.thatSingleton(output).isEqualTo(pageviewTR);//.containsInAnyOrder(pageviewTR);
 		p.run();
 	}
-	/*
-	@Test
-	public void uTest() throws Exception {
-		TableRow expectedTR = pageviewTR;//new TableRow().set("string","string").set("int",25).set("float", 3.6f);
-		TableRow outputTR = pageviewTR2; //new TableRow().set("string","string").set("int",25).set("float", 3.6f);
-		LOG.info(Integer.toString(expectedTR.hashCode()));
-		LOG.info(Integer.toString(outputTR.hashCode()));
-		LOG.info(Boolean.toString(expectedTR.equals(outputTR)));
-		List<TableRow> expected = Arrays.asList(expectedTR);
-		PCollection<TableRow> output = p.apply(Create.of(Arrays.asList(outputTR)));
-		PAssert.that(output).containsInAnyOrder(expected);
-		p.run();
-	}
-*/
-
-	/*
+	
 	@Test
 	public void botPageviewTest() throws Exception {
-		String payload = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&cid=1062063169.1517835391&uid=947563&tid=UA-1234567-89&jid=&gtm=G7rP2BRHCI&cd1=gold&cd2=family&cm1=25";
+		String bppayload = basePayload + "&" + pageviewPayload;
+		LOG.info("botPageviewTest: " + bppayload);
 		PCollection<TableRow> output = p
-		.apply(Create.of(Arrays.asList(cpeBuilder(bot, payload))))
+		.apply(Create.of(Arrays.asList(cpeBuilder(bot, bppayload))))
 		.apply(ParDo.of(new PayloadToMPEntityFn(
 				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
-				StaticValueProvider.of(".*(beta.datahem.org|www.datahem.org).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
 				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
-				StaticValueProvider.of(".*(beta.datahem.org|www.datahem.org).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
 				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
 				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
 				StaticValueProvider.of("Europe/Stockholm"))))
@@ -278,22 +226,27 @@ cid=35009a79-1a05-49d7-b876-2b884d0f825b
 		PAssert.that(output).containsInAnyOrder();
 		p.run();
 	}
-	
-			@Test
+
+	@Test
 	public void userEventTest() throws Exception {
-		String payload = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&cid=1062063169.1517835391&uid=947563&tid=UA-1234567-89&jid=&gtm=G7rP2BRHCI&cd1=gold&cd2=family&cm1=25";
+		String uepayload = basePayload + "&" + eventPayload;
+		LOG.info("userEventTest: " + eventPayload);
+		LOG.info("userEventTest: " + uepayload);
 		PCollection<TableRow> output = p
-		.apply(Create.of(Arrays.asList(cpeBuilder(bot, payload))))
-		.apply(ParDo.of(new PayloadToMPEntityFn(
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, uepayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
 				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
-				StaticValueProvider.of(".*(beta.datahem.org|www.datahem.org).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
 				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
-				StaticValueProvider.of(".*(beta.datahem.org|www.datahem.org).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
 				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
 				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
 				StaticValueProvider.of("Europe/Stockholm"))))
-		.apply(ParDo.of(new MPEntityToTableRowFn()));
-		PAssert.that(output).containsInAnyOrder(Arrays.asList(eventTR));
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(eventTR);
 		p.run();
-	}*/
+	}
+
+	
+
 }
