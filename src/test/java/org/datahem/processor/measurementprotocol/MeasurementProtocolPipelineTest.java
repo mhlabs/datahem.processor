@@ -28,6 +28,7 @@ package org.datahem.processor.measurementprotocol;
 
 import com.google.api.services.bigquery.model.TableRow;
 
+import com.google.gson.Gson;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
@@ -71,11 +72,17 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(JUnit4.class)
 public class MeasurementProtocolPipelineTest {
 	
+	private static final Logger LOG = LoggerFactory.getLogger(MeasurementProtocolPipelineTest.class);
+	
 	@Rule public transient TestPipeline p = TestPipeline.create();
+	
+
 
 	private static TableRow parameterToTR(Parameter parameter){
 		String s = "";
@@ -177,6 +184,15 @@ cid=35009a79-1a05-49d7-b876-2b884d0f825b
 	private static String pageviewPayload = "ul=sv&de=UTF-8&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&fl=10%201%20r103";
 	private static String pageviewPayload2 = pageviewEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
 	
+	private static TableRow pageviewTR2 = baseTR.clone()
+		.set("params", Stream
+			.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()))
+		.set("date","2018-03-02");
+	
+	
 	/*
 	 * Event entity
 	 */
@@ -199,19 +215,23 @@ cid=35009a79-1a05-49d7-b876-2b884d0f825b
 				.build();
 	}
 
+/*
 @Test
 	public void userPageviewTest2() throws Exception {
 	String payload = basePayload2 + "&" + pageviewPayload2;
 	Assert.assertEquals(payload, "hello");
 	}
-
+*/
 
 	@Test
 	public void userPageviewTest() throws Exception {
 		String payload = basePayload2 + "&" + pageviewPayload2;
+		LOG.info(payload);
+		LOG.info(pageviewTR.toPrettyString());
+		LOG.info(Integer.toString(pageviewTR.hashCode()) +" : "+pageviewTR.toPrettyString());
 		PCollection<TableRow> output = p
-		.apply(Create.of(Arrays.asList(cpeBuilder(user, payload))))
-		.apply(ParDo.of(new PayloadToMPEntityFn(
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, payload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
 				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
 				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
 				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
@@ -219,11 +239,27 @@ cid=35009a79-1a05-49d7-b876-2b884d0f825b
 				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
 				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
 				StaticValueProvider.of("Europe/Stockholm"))))
-		.apply(ParDo.of(new MPEntityToTableRowFn()));
-		PAssert.that(output).containsInAnyOrder(Arrays.asList(pageviewTR));
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		List<TableRow> expected = Arrays.asList(pageviewTR);
+		PAssert.that(output).containsInAnyOrder(pageviewTR);
+		//PAssert.thatSingleton(output).isEqualTo(pageviewTR);//.containsInAnyOrder(pageviewTR);
 		p.run();
 	}
-	
+	/*
+	@Test
+	public void uTest() throws Exception {
+		TableRow expectedTR = pageviewTR;//new TableRow().set("string","string").set("int",25).set("float", 3.6f);
+		TableRow outputTR = pageviewTR2; //new TableRow().set("string","string").set("int",25).set("float", 3.6f);
+		LOG.info(Integer.toString(expectedTR.hashCode()));
+		LOG.info(Integer.toString(outputTR.hashCode()));
+		LOG.info(Boolean.toString(expectedTR.equals(outputTR)));
+		List<TableRow> expected = Arrays.asList(expectedTR);
+		PCollection<TableRow> output = p.apply(Create.of(Arrays.asList(outputTR)));
+		PAssert.that(output).containsInAnyOrder(expected);
+		p.run();
+	}
+*/
+
 	/*
 	@Test
 	public void botPageviewTest() throws Exception {

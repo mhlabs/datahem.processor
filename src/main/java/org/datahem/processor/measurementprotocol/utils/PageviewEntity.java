@@ -48,19 +48,6 @@ public class PageviewEntity extends BaseEntity{
 	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(PageviewEntity.class);
 	
-	/*
-	public PageviewEntity(){
-		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("SCREEN_RESOLUTION", new Parameter("sr", "String", null, 20, "screenResolution", false));
-		parameters.put("VIEWPORT_SIZE", new Parameter("vp", "String", null, 20, "viewportSize", false));
-		parameters.put("DOCUMENT_ENCODING", new Parameter("de", "String", "UTF-8", 20, "encoding", false));
-		parameters.put("SCREEN_COLORS", new Parameter("sd", "String", null, 20, "screenColors", false));
-		parameters.put("USER_LANGUAGE", new Parameter("ul", "String", null, 20, "language", false));
-		parameters.put("JAVA_ENABLED", new Parameter("je", "Integer", null, 20, "javaEnabled", false));
-		parameters.put("FLASH_VERSION", new Parameter("fl", "String", null, 20, "flashVersion", false));
-	}*/
-	
 	public PageviewEntity(){
 		super();
 		parameters = new ArrayList<>(Arrays.asList(
@@ -82,6 +69,7 @@ public class PageviewEntity extends BaseEntity{
 	}
 	
 	public List<MPEntity> build(Map<String, String> paramMap){
+		LOG.info("pageview build");
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
 			//paramMap.put("ht", "pageview");

@@ -75,7 +75,6 @@ public class PayloadToMPEntityFn extends DoFn<CollectorPayloadEntity, MPEntity> 
 	        
 	        List<MPEntity> mpEntities = mpb.mpEntitiesFromCollectorPayload(cp);
 	        mpEntities.forEach(mpEntity -> {
-	        	//LOG.info("events timestamp: " + ev.getTimestamp() + ", EpochMillis: " + ev.getEpochMillis());
 	        	c.output(mpEntity);
         	});
 	    	return;
