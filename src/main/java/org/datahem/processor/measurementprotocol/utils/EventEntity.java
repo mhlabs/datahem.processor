@@ -75,7 +75,7 @@ public class EventEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> mpEntities = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("ht", "event");
+			paramMap.put("et", "event");
     		try{
 				mpEntities.add(builder(paramMap).build());
 				return mpEntities;

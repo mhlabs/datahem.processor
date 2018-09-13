@@ -72,8 +72,8 @@ public class MeasurementProtocolBuilder{
 	private Map<String, String> paramMap;
 	private List<MPEntity> events = new ArrayList<>();
 	private PageviewEntity pageviewEntity = new PageviewEntity();
-/*	private EventEntity eventEntity = new EventEntity();
-	private ExceptionEntity exceptionEntity = new ExceptionEntity();
+	private EventEntity eventEntity = new EventEntity();
+/*	private ExceptionEntity exceptionEntity = new ExceptionEntity();
 	private ProductEntity productEntity = new ProductEntity();
 	private TransactionEntity transactionEntity = new TransactionEntity();
 	private SocialEntity socialEntity = new SocialEntity();
@@ -182,9 +182,8 @@ public class MeasurementProtocolBuilder{
 					paramMap.put("cpd", payloadTimeStamp.toString(partition));
 					
 					addAllIfNotNull(events, pageviewEntity.build(paramMap));
-
-					/*
 					addAllIfNotNull(events, eventEntity.build(paramMap));
+					/*
 					addAllIfNotNull(events, exceptionEntity.build(paramMap));
 					addAllIfNotNull(events, productEntity.build(paramMap));
 					addAllIfNotNull(events, transactionEntity.build(paramMap));

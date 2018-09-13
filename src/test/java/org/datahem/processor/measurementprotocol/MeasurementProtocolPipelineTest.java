@@ -143,8 +143,8 @@ public class MeasurementProtocolPipelineTest {
 
 	private static PageviewEntity pageviewEntity = new PageviewEntity();
 	private static TableRow pageviewTR = baseTR.clone()
-		.set("params", Stream
-			.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
 			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
 			.map(p -> parameterToTR(p))
 			.collect(Collectors.toList()));	
@@ -156,28 +156,34 @@ public class MeasurementProtocolPipelineTest {
 	 */
 
 	private static EventEntity eventEntity = new EventEntity();
+	private static List<Parameter> entityType = Arrays.asList(
+		new Parameter("t", "String", null, 50, "hitType", true, "event"),
+		new Parameter("et", "String", null, 50, "entityType", true, "event")
+	);
 	private static TableRow eventTR = baseTR.clone()
-		.set("params", Stream
-			.concat(baseEntity.getParameters().stream(), eventEntity.getParameters().stream())
+		.set("type","event")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), eventEntity.getParameters().stream())
 			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "event") : o)
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "event") : o)
 			.map(p -> parameterToTR(p))
 			.collect(Collectors.toList()));	
-	private static String eventPayload = eventEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
 
-
+	private static String eventPayload = eventEntity
+		.getParameters()
+		.stream()
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
 	
-	
-	/*
-	 * Event entity
-	 */
+	private static String eventBasePayload = baseEntity
+		.getParameters()
+		.stream()
+		.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "event") : o)
+		.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "event") : o)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
 
-/*
-	private static List<Param> eventParams = Arrays.asList(
-		new Param("eventCategory", "stringValue", "/varor/kott-o-chark"), 
-		new Param("eventAction", "stringValue", "www.datahem.org"),
-		new Param("eventLabel", "stringValue", "947563"),
-		new Param("eventValue", "intValue", 25)
-	);*/
 
 
 	private static CollectorPayloadEntity cpeBuilder(Map headers, String payload){
@@ -229,7 +235,7 @@ public class MeasurementProtocolPipelineTest {
 
 	@Test
 	public void userEventTest() throws Exception {
-		String uepayload = basePayload + "&" + eventPayload;
+		String uepayload = eventBasePayload + "&" + eventPayload;
 		LOG.info("userEventTest: " + eventPayload);
 		LOG.info("userEventTest: " + uepayload);
 		PCollection<TableRow> output = p
