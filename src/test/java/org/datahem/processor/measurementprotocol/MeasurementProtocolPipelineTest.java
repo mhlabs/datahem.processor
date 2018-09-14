@@ -237,7 +237,7 @@ public class MeasurementProtocolPipelineTest {
 		.collect(Collectors.joining("&"));
 
 
-/*
+	/*
 	 * SiteSearch entity
 	 */
 
@@ -342,6 +342,50 @@ public class MeasurementProtocolPipelineTest {
 		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
 		.collect(Collectors.joining("&"));
 
+	/*
+	 * Transaction entity
+	 */
+
+	private static TransactionEntity transactionEntity = new TransactionEntity();
+	
+	private static TableRow transactionTR = baseTR.clone()
+		.set("type","transaction")
+		.set("params", 
+			Stream.concat(
+				baseEntity.getParameters().stream(), 
+				transactionEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "transaction") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+			
+			
+		
+	private static String transactionPayload =
+		Stream.concat(
+			Stream.concat(
+				pageviewEntity
+					.getParameters()
+					.stream(),
+				transactionEntity
+					.getParameters()
+					.stream())
+			,
+			Stream.concat(
+				baseEntity
+					.getParameters()
+					.stream()
+					.filter(o -> o.getExampleParameterName() != "entityType"),
+				Arrays.asList(new Parameter("pa", "String", null, 50, "productAction", true,"purchase")).stream())
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+/*
+ * **************************************
+ */
+
 
 	private static CollectorPayloadEntity cpeBuilder(Map headers, String payload){
 			return CollectorPayloadEntity.newBuilder()
@@ -351,6 +395,7 @@ public class MeasurementProtocolPipelineTest {
 				.setUuid("5bd43e1a-8217-4020-826f-3c7f0b763c32")
 				.build();
 	}
+
 
 	@Test
 	public void userPageviewTest() throws Exception {
@@ -470,6 +515,24 @@ public class MeasurementProtocolPipelineTest {
 				StaticValueProvider.of("Europe/Stockholm"))))
 			.apply(ParDo.of(new MPEntityToTableRowFn()));
 		PAssert.that(output).containsInAnyOrder(timingTR);
+		p.run();
+	}
+	
+	@Test
+	public void userTransactionTest() throws Exception {
+		LOG.info(Integer.toString(transactionTR.hashCode())+" : "+transactionTR.toPrettyString());	
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, transactionPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(transactionTR, pageviewTR);
 		p.run();
 	}
 }

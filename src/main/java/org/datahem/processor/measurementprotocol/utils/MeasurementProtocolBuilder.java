@@ -76,9 +76,8 @@ public class MeasurementProtocolBuilder{
 	private ExceptionEntity exceptionEntity = new ExceptionEntity();
 	private SocialEntity socialEntity = new SocialEntity();
 	private TimingEntity timingEntity = new TimingEntity();
-/*	private ProductEntity productEntity = new ProductEntity();
 	private TransactionEntity transactionEntity = new TransactionEntity();
-	
+/*	private ProductEntity productEntity = new ProductEntity();
 	
 	private TrafficEntity trafficEntity = new TrafficEntity();
 	private PromotionEntity promotionEntity = new PromotionEntity();
@@ -189,6 +188,7 @@ public class MeasurementProtocolBuilder{
 					addAllIfNotNull(events, siteSearchEntity.build(paramMap));
 					addAllIfNotNull(events, socialEntity.build(paramMap));
 					addAllIfNotNull(events, timingEntity.build(paramMap));
+					addAllIfNotNull(events, transactionEntity.build(paramMap));
 					/*addAllIfNotNull(events, productEntity.build(paramMap));
 					addAllIfNotNull(events, transactionEntity.build(paramMap));
 

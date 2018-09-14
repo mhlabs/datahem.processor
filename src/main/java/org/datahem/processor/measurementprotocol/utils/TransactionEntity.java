@@ -32,25 +32,31 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public class TransactionEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
+	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(TransactionEntity.class);
 
 	public TransactionEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("TRANSACTION_ID", new Parameter("ti", "String", null, 50, "transactionId", true));
-		parameters.put("AFFILIATION", new Parameter("ta", "String", null, 500, "affiliation", false));
-		parameters.put("REVENUE", new Parameter("tr", "Double", null, 500, "revenue", false));
-		parameters.put("TAX", new Parameter("tt", "Double", null, 500, "tax", false));
-		parameters.put("SHIPPING", new Parameter("ts", "Double", null, 500, "shipping", false));
-		parameters.put("COUPON_CODE", new Parameter("tcc", "String", null, 500, "couponCode", false));
+		parameters = Arrays.asList(
+			new Parameter("ti", "String", null, 50, "transactionId", true, "OD564"),
+			new Parameter("ta", "String", null, 500, "affiliation", false, "Member"),
+			new Parameter("tr", "Double", null, 500, "revenue", false, 15.47),
+			new Parameter("tt", "Double", null, 500, "tax", false, 11.20),
+			new Parameter("ts", "Double", null, 500, "shipping", false, 3.50),
+			new Parameter("tcc", "String", null, 500, "couponCode", false, "SUMMER08")
+		);
+		
+
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return (null != paramMap.get("ti") && "purchase".equals(paramMap.get("pa")));
@@ -59,7 +65,7 @@ public class TransactionEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("ht", "transaction");
+			paramMap.put("et", "transaction");
     		try{
 				eventList.add(builder(paramMap).build());
 				return eventList;
