@@ -49,7 +49,7 @@ public class BaseEntity{
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEntity.class);
 	
 	public BaseEntity(){
-		parameters = new ArrayList<>(Arrays.asList(
+		parameters = Arrays.asList(
 			new Parameter("a", "String", null, 100, "adSenseId", false, "1140262547"),
 			new Parameter("cid", "String", null, 100, "clientId", false, "35009a79-1a05-49d7-b876-2b884d0f825b"),
 			new Parameter("X-AppEngine-City", "String", null, 100, "city", false, "stockholm"),
@@ -66,7 +66,7 @@ public class BaseEntity{
 			new Parameter("dh", "String", null, 100, "host", false, "foo.com"),
 			new Parameter("jid", "String", null, 100, "joinId", false, "(not set)"),
 			new Parameter("ni", "Boolean", null, 10, "nonInteractionHit", false, 1),
-			new Parameter("dp", "String", null, 2048, "path", false, "/foo"),
+			new Parameter("dp", "String", null, 2048, "path", false, "/home"),
 			new Parameter("qt", "Integer", null, 100, "queueTime", false, 560),
 			new Parameter("dr", "String", null, 100, "referer", false,"http://example.com"),
 			new Parameter("drh", "String", null, 100, "refererHost", false,"example.com"),
@@ -78,7 +78,7 @@ public class BaseEntity{
 			new Parameter("dl", "String", null, 2048, "url", false, "http://foo.com/home?a=b"),
 			new Parameter("uid", "String", null, 100, "userId", false, "as8eknlll"),
 			new Parameter("v", "String", null, 100, "version", true, "1")
-		));
+		);
 	}
 	
 	public List<Parameter> getParameters(){return parameters;}

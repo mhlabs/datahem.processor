@@ -73,16 +73,18 @@ public class MeasurementProtocolBuilder{
 	private List<MPEntity> events = new ArrayList<>();
 	private PageviewEntity pageviewEntity = new PageviewEntity();
 	private EventEntity eventEntity = new EventEntity();
-/*	private ExceptionEntity exceptionEntity = new ExceptionEntity();
-	private ProductEntity productEntity = new ProductEntity();
-	private TransactionEntity transactionEntity = new TransactionEntity();
+	private ExceptionEntity exceptionEntity = new ExceptionEntity();
 	private SocialEntity socialEntity = new SocialEntity();
-	private TimingEntity timingEntity = new TimingEntity();	
+	private TimingEntity timingEntity = new TimingEntity();
+/*	private ProductEntity productEntity = new ProductEntity();
+	private TransactionEntity transactionEntity = new TransactionEntity();
+	
+	
 	private TrafficEntity trafficEntity = new TrafficEntity();
 	private PromotionEntity promotionEntity = new PromotionEntity();
 	private ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
-	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
 	*/
+	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
     private static String excludedBotsPattern = ".*(^$|bot|spider|crawler).*";
     //private static String includedHostnamesPattern = ".*";
     private static String includedHostnamesPattern = ".*(foo.com|www.foo.com).*";
@@ -133,7 +135,7 @@ public class MeasurementProtocolBuilder{
     	this.includedHostnamesPattern = pattern;
   	}
   	
-  	/*
+  	
   	public String getSiteSearchPattern(){
     	return this.siteSearchEntity.getSiteSearchPattern();
   	}
@@ -141,7 +143,7 @@ public class MeasurementProtocolBuilder{
 	public void setSiteSearchPattern(String pattern){
     	this.siteSearchEntity.setSiteSearchPattern(pattern);
   	}
-  	*/
+  	
   	
   	public String getTimeZone(){
     	return this.timeZone;
@@ -183,16 +185,18 @@ public class MeasurementProtocolBuilder{
 					
 					addAllIfNotNull(events, pageviewEntity.build(paramMap));
 					addAllIfNotNull(events, eventEntity.build(paramMap));
-					/*
 					addAllIfNotNull(events, exceptionEntity.build(paramMap));
-					addAllIfNotNull(events, productEntity.build(paramMap));
-					addAllIfNotNull(events, transactionEntity.build(paramMap));
+					addAllIfNotNull(events, siteSearchEntity.build(paramMap));
 					addAllIfNotNull(events, socialEntity.build(paramMap));
 					addAllIfNotNull(events, timingEntity.build(paramMap));
+					/*addAllIfNotNull(events, productEntity.build(paramMap));
+					addAllIfNotNull(events, transactionEntity.build(paramMap));
+
+
 					addAllIfNotNull(events, trafficEntity.build(paramMap));
 					addAllIfNotNull(events, promotionEntity.build(paramMap));
 					addAllIfNotNull(events, productImpressionEntity.build(paramMap));
-					addAllIfNotNull(events, siteSearchEntity.build(paramMap));
+					
 					*/
 				}
 	        }

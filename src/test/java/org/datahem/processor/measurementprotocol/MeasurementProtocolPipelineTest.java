@@ -128,6 +128,7 @@ public class MeasurementProtocolPipelineTest {
 	 */
 
 	private static BaseEntity baseEntity = new BaseEntity();
+	
 	private static TableRow baseTR = new TableRow()
 		.set("type","pageview")
 		.set("clientId","35009a79-1a05-49d7-b876-2b884d0f825b")
@@ -135,20 +136,38 @@ public class MeasurementProtocolPipelineTest {
 		.set("utcTimestamp","2018-03-02 07:50:53")
 		.set("epochMillis",1519977053236L)
 		.set("date","2018-03-02");
-	private static String basePayload = baseEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
+	
+	private static String basePayload = 
+		baseEntity
+		.getParameters()
+		.stream()
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
 
 	/*
 	 * Pageview entity
 	 */
 
 	private static PageviewEntity pageviewEntity = new PageviewEntity();
+	
 	private static TableRow pageviewTR = baseTR.clone()
 		.set("params", 
 			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
 			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
 			.map(p -> parameterToTR(p))
 			.collect(Collectors.toList()));	
-	private static String pageviewPayload = pageviewEntity.getParameters().stream().map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue())).collect(Collectors.joining("&"));
+
+	private static String pageviewPayload =
+		Stream.concat(
+			pageviewEntity
+				.getParameters()
+				.stream(), 
+			baseEntity
+				.getParameters()
+				.stream()
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
 
 
 	/*
@@ -156,6 +175,7 @@ public class MeasurementProtocolPipelineTest {
 	 */
 
 	private static EventEntity eventEntity = new EventEntity();
+	
 	private static List<Parameter> entityType = Arrays.asList(
 		new Parameter("t", "String", null, 50, "hitType", true, "event"),
 		new Parameter("et", "String", null, 50, "entityType", true, "event")
@@ -170,20 +190,157 @@ public class MeasurementProtocolPipelineTest {
 			.map(p -> parameterToTR(p))
 			.collect(Collectors.toList()));	
 
-	private static String eventPayload = eventEntity
-		.getParameters()
-		.stream()
-		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
-		.collect(Collectors.joining("&"));
-	
-	private static String eventBasePayload = baseEntity
-		.getParameters()
-		.stream()
-		.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "event") : o)
-		.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "event") : o)
+	private static String eventPayload =
+		Stream.concat(
+			eventEntity
+				.getParameters()
+				.stream(), 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "exception") : o)
+				.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "event") : o)
+		)
 		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
 		.collect(Collectors.joining("&"));
 
+	/*
+	 * Exception entity
+	 */
+
+	private static ExceptionEntity exceptionEntity = new ExceptionEntity();
+	
+	private static TableRow exceptionTR = baseTR.clone()
+		.set("type","exception")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), exceptionEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "exception") : o)
+			.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "exception") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String exceptionPayload =
+		Stream.concat(
+			exceptionEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "exception") : o)
+				.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "exception") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+/*
+	 * SiteSearch entity
+	 */
+
+	private static SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
+	
+	private static TableRow siteSearchTR = baseTR.clone()
+		.set("type","siteSearch")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), siteSearchEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "siteSearch") : o)
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?q=creme%20fraiche") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+	
+	private static TableRow siteSearchPageviewTR = baseTR.clone()
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?q=creme%20fraiche") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String siteSearchPayload =
+		Stream.concat(
+			pageviewEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "siteSearch") : o)
+				.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?q=creme%20fraiche") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+	/*
+	 * Social entity
+	 */
+
+	private static SocialEntity socialEntity = new SocialEntity();
+	
+	private static TableRow socialTR = baseTR.clone()
+		.set("type","social")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), socialEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "social") : o)
+			.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "social") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String socialPayload =
+		Stream.concat(
+			socialEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "social") : o)
+				.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "social") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+	/*
+	 * Social entity
+	 */
+
+	private static TimingEntity timingEntity = new TimingEntity();
+	
+	private static TableRow timingTR = baseTR.clone()
+		.set("type","timing")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), timingEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "timing") : o)
+			.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "timing") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String timingPayload =
+		Stream.concat(
+			timingEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "timing") : o)
+				.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "timing") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
 
 
 	private static CollectorPayloadEntity cpeBuilder(Map headers, String payload){
@@ -197,10 +354,8 @@ public class MeasurementProtocolPipelineTest {
 
 	@Test
 	public void userPageviewTest() throws Exception {
-		String uppayload = basePayload + "&" + pageviewPayload;
-		LOG.info("userPageviewTest:" + uppayload);
 		PCollection<TableRow> output = p
-			.apply(Create.of(Arrays.asList(cpeBuilder(user, uppayload))))
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, pageviewPayload))))
 			.apply(ParDo.of(new PayloadToMPEntityFn(
 				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
 				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
@@ -216,11 +371,9 @@ public class MeasurementProtocolPipelineTest {
 	
 	@Test
 	public void botPageviewTest() throws Exception {
-		String bppayload = basePayload + "&" + pageviewPayload;
-		LOG.info("botPageviewTest: " + bppayload);
 		PCollection<TableRow> output = p
-		.apply(Create.of(Arrays.asList(cpeBuilder(bot, bppayload))))
-		.apply(ParDo.of(new PayloadToMPEntityFn(
+			.apply(Create.of(Arrays.asList(cpeBuilder(bot, pageviewPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
 				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
 				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
 				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
@@ -228,18 +381,15 @@ public class MeasurementProtocolPipelineTest {
 				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
 				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
 				StaticValueProvider.of("Europe/Stockholm"))))
-		.apply(ParDo.of(new MPEntityToTableRowFn()));
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
 		PAssert.that(output).containsInAnyOrder();
 		p.run();
 	}
 
 	@Test
 	public void userEventTest() throws Exception {
-		String uepayload = eventBasePayload + "&" + eventPayload;
-		LOG.info("userEventTest: " + eventPayload);
-		LOG.info("userEventTest: " + uepayload);
 		PCollection<TableRow> output = p
-			.apply(Create.of(Arrays.asList(cpeBuilder(user, uepayload))))
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, eventPayload))))
 			.apply(ParDo.of(new PayloadToMPEntityFn(
 				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
 				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
@@ -253,6 +403,73 @@ public class MeasurementProtocolPipelineTest {
 		p.run();
 	}
 
-	
 
+	@Test
+	public void userExceptionTest() throws Exception {
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, exceptionPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(exceptionTR);
+		p.run();
+	}
+	
+	@Test
+	public void userSiteSearchTest() throws Exception {
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, siteSearchPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(siteSearchTR, siteSearchPageviewTR);
+		p.run();
+	}
+
+	@Test
+	public void userSocialTest() throws Exception {
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, socialPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(socialTR);
+		p.run();
+	}
+
+
+	@Test
+	public void userTimingTest() throws Exception {
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, timingPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(timingTR);
+		p.run();
+	}
 }

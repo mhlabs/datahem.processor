@@ -26,65 +26,45 @@ package org.datahem.processor.measurementprotocol.utils;
  * =========================LICENSE_END==================================
  */
 
-import org.datahem.processor.utils.FieldMapper;
 import org.datahem.processor.measurementprotocol.utils.BaseEntity;
 import org.datahem.processor.measurementprotocol.utils.Parameter;
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.net.URL;
-import java.net.MalformedURLException;
+import java.util.Arrays;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
-import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class SiteSearchEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
-	private static final Logger LOG = LoggerFactory.getLogger(SiteSearchEntity.class);
-	private static String siteSearchPattern = ".*q=(([^&#]*)|&|#|$)";
-	
-	
-	public String getSiteSearchPattern(){
-    	return this.siteSearchPattern;
-  	}
 
-	public void setSiteSearchPattern(String pattern){
-    	this.siteSearchPattern = pattern;
-  	}
+public class ExceptionEntity extends BaseEntity{
+	private List<Parameter> parameters;
+	private static final Logger LOG = LoggerFactory.getLogger(ExceptionEntity.class);
 	
-	public SiteSearchEntity(){
+	public ExceptionEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("SITE_SEARCH_TERM", new Parameter("sst", "String", null, 100, "siteSearchTerm", false));
-		parameters.put("SITE_SEARCH_URL", new Parameter("dl", "String", null, 100, "siteSearchURL", false));
-		parameters.put("SITE_SEARCH_PATH", new Parameter("dp", "String", null, 100, "siteSearchPath", false));
+		parameters = Arrays.asList(
+			new Parameter("exd", "String", null, 150, "exceptionDescription", false, "DatabaseError"),
+			new Parameter("exf", "Boolean", null, 150, "exceptionFatal", false, 0)
+		);
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
+
 	
 	private boolean trigger(Map<String, String> paramMap){
-		Pattern pattern = Pattern.compile(siteSearchPattern);
-        Matcher matcher = pattern.matcher(paramMap.get("dl"));
-		return (matcher.find());
+		return (null != paramMap.get("exd") || null != paramMap.get("exf"));
 	}
 	
-
-	
 	public List<MPEntity> build(Map<String, String> paramMap){
-		List<MPEntity> eventList = new ArrayList<>();
+		List<MPEntity> mpEntities = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("ht", "siteSearch");
-			Pattern pattern = Pattern.compile(siteSearchPattern);
-			Matcher matcher = pattern.matcher(paramMap.get("dl"));
-			if(matcher.find()){
-				paramMap.put("sst", FieldMapper.decode(matcher.group(1)));
-			}
+			paramMap.put("et", "exception");
 			try{
-				eventList.add(builder(paramMap).build());
-				return eventList;
+				mpEntities.add(builder(paramMap).build());
+				return mpEntities;
 			}
 			catch(IllegalArgumentException e){
 				LOG.error(e.toString());
@@ -94,13 +74,14 @@ public class SiteSearchEntity extends BaseEntity{
 		else{
 			return null;
 		}
-	}
+	}	
 	
 	public MPEntity.Builder builder(Map<String, String> paramMap) throws IllegalArgumentException{
 		return builder(paramMap, super.builder(paramMap));
 	}
 	
-	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder eventBuilder) throws IllegalArgumentException{
-		return super.builder(paramMap, eventBuilder, this.parameters);
-	}
+	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder) throws IllegalArgumentException{
+		return super.builder(paramMap, mpEntityBuilder, this.parameters);
+	}	
+	
 }

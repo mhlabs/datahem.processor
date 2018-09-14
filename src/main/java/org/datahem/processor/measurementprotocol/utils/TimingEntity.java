@@ -32,34 +32,47 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+public class TimingEntity extends BaseEntity{
+	private List<Parameter> parameters;
+	private static final Logger LOG = LoggerFactory.getLogger(TimingEntity.class);
 
-public class ExceptionEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
-	private static final Logger LOG = LoggerFactory.getLogger(ExceptionEntity.class);
-
-	public ExceptionEntity(){
+	public TimingEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("EXCEPTION_DESCRIPTION", new Parameter("exd", "String", null, 150, "exceptionDescription", false));
-		parameters.put("EXCEPTION_FATAL", new Parameter("exf", "Boolean", null, 150, "exceptionFatal", false));
+		parameters = Arrays.asList(
+			new Parameter("utc", "String", null, 150, "userTimingCategory", true,"category"),
+			new Parameter("utv", "String", null, 500, "userTimingVariableName", true,"lookup"),
+			new Parameter("utt", "Integer", null, 500, "userTimingTime", true, 123),
+			new Parameter("utl", "String", null, 500, "userTimingLabel", false, "label"),
+			new Parameter("plt", "Integer", null, 500, "pageLoadTime", false, 3554),
+			new Parameter("dns", "Integer", null, 500, "dnsTime", false, 43),
+			new Parameter("pdt", "Integer", null, 500, "pageDownloadTime", false, 500),
+			new Parameter("rrt", "Integer", null, 500, "redirectResponseTime", false, 500),
+			new Parameter("tcp", "Integer", null, 500, "tcpConnectTime", false, 500),
+			new Parameter("srt", "Integer", null, 500, "serverResponseTime", false, 500),
+			new Parameter("dit", "Integer", null, 500, "domInteractiveTime", false, 500),
+			new Parameter("clt", "Integer", null, 500, "contentLoadTime", false, 500)
+		);
 	}
 	
+	public List<Parameter> getParameters(){return parameters;}
+	
 	private boolean trigger(Map<String, String> paramMap){
-		return (null != paramMap.get("exd") || null != paramMap.get("exf"));
+		return (null != paramMap.get("utc") && null != paramMap.get("utv") && null != paramMap.get("utt"));
 	}
 	
 	public List<MPEntity> build(Map<String, String> paramMap){
-		List<MPEntity> mpEntities = new ArrayList<>();
+		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("ht", "exception");
-			try{
-				mpEntities.add(builder(paramMap).build());
-				return mpEntities;
+    		try{
+				paramMap.put("et", "timing");
+				eventList.add(builder(paramMap).build());
+				return eventList;
 			}
 			catch(IllegalArgumentException e){
 				LOG.error(e.toString());
@@ -69,14 +82,13 @@ public class ExceptionEntity extends BaseEntity{
 		else{
 			return null;
 		}
-	}	
+	}
 	
 	public MPEntity.Builder builder(Map<String, String> paramMap) throws IllegalArgumentException{
 		return builder(paramMap, super.builder(paramMap));
 	}
 	
-	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder) throws IllegalArgumentException{
-		return super.builder(paramMap, mpEntityBuilder, this.parameters);
+	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder eventBuilder) throws IllegalArgumentException{
+		return super.builder(paramMap, eventBuilder, this.parameters);
 	}	
-	
 }
