@@ -50,6 +50,10 @@ public class Parameter {
 		this(parameter, valueType, defaultValue, maxLength, parameterName, required, null, parameter, exampleValue, parameterName);
 	}
 
+	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required, String exampleParameter, Object exampleValue){
+		this(parameter, valueType, defaultValue, maxLength, parameterName, required, null, exampleParameter, exampleValue, parameterName);
+	}
+
 	public Parameter(String parameter, String valueType, String defaultValue, int maxLength, String parameterName, boolean required, String parameterNameSuffix, String exampleParameter, Object exampleValue, String exampleParameterName){
 		this.parameter = parameter;
 		this.valueType = valueType;
