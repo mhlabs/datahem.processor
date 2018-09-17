@@ -382,6 +382,44 @@ public class MeasurementProtocolPipelineTest {
 		.collect(Collectors.joining("&"));
 
 
+	/*
+	 * Product entity
+	 */
+
+	private static ProductEntity productEntity = new ProductEntity();
+	
+	private static TableRow productTR = baseTR.clone()
+		.set("type","product")
+		.set("params", 
+			Stream.concat(
+				baseEntity.getParameters().stream(), 
+				productEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "product") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+			
+			
+		
+	private static String productPayload =
+		Stream.concat(
+			Stream.concat(
+				pageviewEntity
+					.getParameters()
+					.stream(),
+				productEntity
+					.getParameters()
+					.stream())
+			,
+			baseEntity
+				.getParameters()
+				.stream()
+				.filter(o -> o.getExampleParameterName() != "entityType")
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
 /*
  * **************************************
  */
@@ -535,4 +573,24 @@ public class MeasurementProtocolPipelineTest {
 		PAssert.that(output).containsInAnyOrder(transactionTR, pageviewTR);
 		p.run();
 	}
+
+
+	@Test
+	public void userProductTest() throws Exception {
+		//LOG.info(Integer.toString(transactionTR.hashCode())+" : "+transactionTR.toPrettyString());	
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, productPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(productTR, pageviewTR);
+		p.run();
+	}
+
 }

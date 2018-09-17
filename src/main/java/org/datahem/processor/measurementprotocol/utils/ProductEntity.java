@@ -80,7 +80,7 @@ public class ProductEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-    			paramMap.put("ht", "product_" + paramMap.get("pa"));
+    			paramMap.put("et", "product");
     			
     			Pattern productExclPattern = Pattern.compile("^(?!pr[0-9]{1,3}.*).*$");
     			//final Matcher matcher;
