@@ -459,6 +459,44 @@ public class MeasurementProtocolPipelineTest {
 
 
 /*
+	 * Promotion entity
+	 */
+
+	private static PromotionEntity promotionEntity = new PromotionEntity();
+	
+	private static TableRow promotionTR = baseTR.clone()
+		.set("type","promotion")
+		.set("params", 
+			Stream.concat(
+				baseEntity.getParameters().stream(), 
+				promotionEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "promotion") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+			
+			
+		
+	private static String promotionPayload =
+		Stream.concat(
+			Stream.concat(
+				pageviewEntity
+					.getParameters()
+					.stream(),
+				promotionEntity
+					.getParameters()
+					.stream())
+			,
+			baseEntity
+				.getParameters()
+				.stream()
+				.filter(o -> o.getExampleParameterName() != "entityType")
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+/*
  * **************************************
  */
 
@@ -629,11 +667,11 @@ public class MeasurementProtocolPipelineTest {
 			.apply(ParDo.of(new MPEntityToTableRowFn()));
 		PAssert.that(output).containsInAnyOrder(productTR, pageviewTR);
 		p.run();
-	}*/
+	}
 
 	@Test
 	public void userProductImpressionTest() throws Exception {
-		LOG.info(Integer.toString(productImpressionTR.hashCode())+" : "+productImpressionTR.toPrettyString());	
+		//LOG.info(Integer.toString(productImpressionTR.hashCode())+" : "+productImpressionTR.toPrettyString());	
 		PCollection<TableRow> output = p
 			.apply(Create.of(Arrays.asList(cpeBuilder(user, productImpressionPayload))))
 			.apply(ParDo.of(new PayloadToMPEntityFn(
@@ -647,7 +685,24 @@ public class MeasurementProtocolPipelineTest {
 			.apply(ParDo.of(new MPEntityToTableRowFn()));
 		PAssert.that(output).containsInAnyOrder(productImpressionTR, pageviewTR);
 		p.run();
-	}
+	}*/
 
+	@Test
+	public void userPromotionTest() throws Exception {
+		LOG.info(Integer.toString(promotionTR.hashCode())+" : "+promotionTR.toPrettyString());	
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, promotionPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(promotionTR, pageviewTR);
+		p.run();
+	}
 
 }

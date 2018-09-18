@@ -80,8 +80,9 @@ public class MeasurementProtocolBuilder{
 	private ProductEntity productEntity = new ProductEntity();
 /*	
 	private TrafficEntity trafficEntity = new TrafficEntity();
-	private PromotionEntity promotionEntity = new PromotionEntity();
 	*/
+	private PromotionEntity promotionEntity = new PromotionEntity();
+	
 	private ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
 	
 	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
@@ -196,8 +197,9 @@ public class MeasurementProtocolBuilder{
 
 
 					addAllIfNotNull(events, trafficEntity.build(paramMap));
-					addAllIfNotNull(events, promotionEntity.build(paramMap));
 					*/
+					addAllIfNotNull(events, promotionEntity.build(paramMap));
+					
 					addAllIfNotNull(events, productImpressionEntity.build(paramMap));
 					
 					

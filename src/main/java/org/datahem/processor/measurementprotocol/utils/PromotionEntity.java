@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -45,18 +46,21 @@ import org.slf4j.LoggerFactory;
 
 
 public class PromotionEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
+	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(PromotionEntity.class);
 	
 	public PromotionEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("PROMOTION_ID", new Parameter("(promo[0-9]{1,3}id)", "String", null, 500, "promotionId", false));
-		parameters.put("PROMOTION_NAME", new Parameter("(promo[0-9]{1,3}nm)", "String", null, 500, "promotionName", false));
-		parameters.put("PROMOTION_CREATIVE", new Parameter("(promo[0-9]{1,3}cr)", "String", null, 500, "promotionCreative", false));
-		parameters.put("PROMOTION_POSITION", new Parameter("(promo[0-9]{1,3}ps)", "Integer", null, 500, "promotionPosition", false));
-		parameters.put("PROMOTION_ACTION", new Parameter("promoa", "String", "view", 50, "promotionAction", false));
+		parameters = Arrays.asList(
+			new Parameter("(promo[0-9]{1,3}id)", "String", null, 500, "promotionId", false, "promo1id", "SHIP"),
+			new Parameter("(promo[0-9]{1,3}nm)", "String", null, 500, "promotionName", false, "promo1nm", "Shipping"),
+			new Parameter("(promo[0-9]{1,3}cr)", "String", null, 500, "promotionCreative", false, "promo1cr", "Shipping Banner"),
+			new Parameter("(promo[0-9]{1,3}ps)", "String", null, 500, "promotionPosition", false, "promo1ps", "banner_slot_1"),
+			new Parameter("promoa", "String", "view", 50, "promotionAction", false, "click")
+		);
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		Pattern promoIndexPattern = Pattern.compile("^promo[0-9]{1,3}.*");
