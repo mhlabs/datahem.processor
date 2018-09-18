@@ -62,7 +62,7 @@ public class ProductEntity extends BaseEntity{
 			new Parameter("(pr[0-9]{1,3}cc)", "String", null, 500, "productCouponCode", false, "pr1cc", "SUMMER_SALE13"),
 			new Parameter("(pr[0-9]{1,3}ps)", "Integer", null, 500, "productPosition", false, "pr1ps", 2),
 			new Parameter("(pr[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "productCustomDimension", false, "pr[0-9]{1,3}cd([0-9]{1,3})", "pr1cd1", "Member", "productCustomDimension1"),
-			new Parameter("(pr[0-9]{1,3}cm[0-9]{1,3})", "Integer", null, 500, "productCustomMetric", false, "pr[0-9]{1,3}cm([0-9]{1,3})", "pr1cm1", 28, "productCustomMetric"),
+			new Parameter("(pr[0-9]{1,3}cm[0-9]{1,3})", "Integer", null, 500, "productCustomMetric", false, "pr[0-9]{1,3}cm([0-9]{1,3})", "pr1cm1", 28, "productCustomMetric1"),
 			new Parameter("pa", "String", null, 50, "productAction", true, "detail"),
 			new Parameter("pal", "String", null, 500, "productActionList", false, "Search Results"), //If pa == detail || click
 			new Parameter("ti", "String", null, 50, "transactionId", false, "T1234"), //If pa == purchase
