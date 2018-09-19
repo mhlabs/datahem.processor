@@ -139,12 +139,6 @@ public class TrafficEntity extends BaseEntity{
 						campaignParameters.put("cm", campaignMap.getOrDefault("utm_medium", "(not set)"));
 						campaignParameters.put("ck", campaignMap.getOrDefault("utm_term", "(not set)"));
 						campaignParameters.put("cc", campaignMap.getOrDefault("utm_content", "(not set)"));
-						/*campaignParameters.put("cn", (campaignMap.get("utm_campaign") == null) ? "(not set)" : campaignMap.get("utm_campaign"));
-						campaignParameters.put("cs", campaignMap.get("utm_source"));
-						campaignParameters.put("cm", (campaignMap.get("utm_medium") == null) ? "(not set)" : campaignMap.get("utm_medium"));
-						campaignParameters.put("ck", (campaignMap.get("utm_term") == null) ? "(not set)" : campaignMap.get("utm_term"));
-						campaignParameters.put("cc", (campaignMap.get("utm_content") == null) ? "(not set)" : campaignMap.get("utm_content"));
-						*/
 						return;
 					}
 				}

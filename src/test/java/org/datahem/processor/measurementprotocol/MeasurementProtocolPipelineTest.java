@@ -544,6 +544,49 @@ public class MeasurementProtocolPipelineTest {
 		.collect(Collectors.joining("&"));
 
 
+	/*
+	 * Traffic entity (Campaign)
+	 */
+
+	
+	private static TableRow campaignTR = baseTR.clone()
+		.set("type","traffic")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), trafficEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "traffic") : o)
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?utm_campaign=january_boots_promo&utm_source=email_promo&utm_medium=email&utm_term=winter%20boots&utm_content=email_variation1") : o)
+			.filter(o -> o.getExampleParameterName() != "campaignId")
+			.filter(o -> o.getExampleParameterName() != "googleAdwordsId")
+			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+				
+	private static TableRow campaignPageviewTR = baseTR.clone()
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?utm_campaign=january_boots_promo&utm_source=email_promo&utm_medium=email&utm_term=winter%20boots&utm_content=email_variation1") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String campaignPayload =
+		Stream.concat(
+			pageviewEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?utm_campaign=january_boots_promo&utm_source=email_promo&utm_medium=email&utm_term=winter%20boots&utm_content=email_variation1") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+
 /*
  * **************************************
  */
@@ -752,7 +795,7 @@ public class MeasurementProtocolPipelineTest {
 		PAssert.that(output).containsInAnyOrder(promotionTR, pageviewTR);
 		p.run();
 	}
-	*/
+	
 	
 	@Test
 	public void userGoogleSearchAdsTest() throws Exception {
@@ -771,6 +814,26 @@ public class MeasurementProtocolPipelineTest {
 			.apply(ParDo.of(new MPEntityToTableRowFn()));
 		PAssert.that(output).containsInAnyOrder(googleSearchAdsTR, googleSearchAdsPageviewTR);
 		p.run();
+	}*/
+
+	@Test
+	public void userCampaignTest() throws Exception {
+		LOG.info(Integer.toString(campaignTR.hashCode())+" : "+campaignTR.toPrettyString());
+		LOG.info(Integer.toString(campaignPageviewTR.hashCode())+" : "+campaignPageviewTR.toPrettyString());
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, campaignPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(campaignTR, campaignPageviewTR);
+		p.run();
 	}
+
 
 }
