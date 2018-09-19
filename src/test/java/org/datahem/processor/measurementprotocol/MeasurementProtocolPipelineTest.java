@@ -496,6 +496,54 @@ public class MeasurementProtocolPipelineTest {
 		.collect(Collectors.joining("&"));
 
 
+	/*
+	 * Traffic entity (Google Search Ads)
+	 */
+
+	private static TrafficEntity trafficEntity = new TrafficEntity();
+	
+	private static TableRow googleSearchAdsTR = baseTR.clone()
+		.set("type","traffic")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), trafficEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "traffic") : o)
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?gclid=EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD") : o)
+			.map(o -> o.getExampleParameterName() == "campaignName" ? new Parameter("cn", "String", null, 100, "campaignName", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignSource" ? new Parameter("cs", "String", null, 100, "campaignSource", false, "google search ads") : o)
+			.map(o -> o.getExampleParameterName() == "campaignMedium" ? new Parameter("cm", "String", null, 50, "campaignMedium", false, "cpc") : o)
+			.map(o -> o.getExampleParameterName() == "campaignKeyword" ? new Parameter("ck", "String", null, 500, "campaignKeyword", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignContent" ? new Parameter("cc", "String", null, 500, "campaignContent", false, "(not set)") : o)
+			.filter(o -> o.getExampleParameterName() != "campaignId")
+			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+				
+	private static TableRow googleSearchAdsPageviewTR = baseTR.clone()
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?gclid=EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String googleSearchAdsPayload =
+		Stream.concat(
+			pageviewEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				//.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "siteSearch") : o)
+				.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?gclid=EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
 /*
  * **************************************
  */
@@ -685,7 +733,7 @@ public class MeasurementProtocolPipelineTest {
 			.apply(ParDo.of(new MPEntityToTableRowFn()));
 		PAssert.that(output).containsInAnyOrder(productImpressionTR, pageviewTR);
 		p.run();
-	}*/
+	}
 
 	@Test
 	public void userPromotionTest() throws Exception {
@@ -702,6 +750,26 @@ public class MeasurementProtocolPipelineTest {
 				StaticValueProvider.of("Europe/Stockholm"))))
 			.apply(ParDo.of(new MPEntityToTableRowFn()));
 		PAssert.that(output).containsInAnyOrder(promotionTR, pageviewTR);
+		p.run();
+	}
+	*/
+	
+	@Test
+	public void userGoogleSearchAdsTest() throws Exception {
+		LOG.info(Integer.toString(googleSearchAdsTR.hashCode())+" : "+googleSearchAdsTR.toPrettyString());
+		LOG.info(Integer.toString(googleSearchAdsPageviewTR.hashCode())+" : "+googleSearchAdsPageviewTR.toPrettyString());
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, googleSearchAdsPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(googleSearchAdsTR, googleSearchAdsPageviewTR);
 		p.run();
 	}
 

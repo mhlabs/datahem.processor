@@ -78,9 +78,7 @@ public class MeasurementProtocolBuilder{
 	private TimingEntity timingEntity = new TimingEntity();
 	private TransactionEntity transactionEntity = new TransactionEntity();
 	private ProductEntity productEntity = new ProductEntity();
-/*	
 	private TrafficEntity trafficEntity = new TrafficEntity();
-	*/
 	private PromotionEntity promotionEntity = new PromotionEntity();
 	
 	private ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
@@ -94,7 +92,7 @@ public class MeasurementProtocolBuilder{
     public MeasurementProtocolBuilder(){
 	}
 	
-	/*
+	
   	public String getSearchEnginesPattern(){
     	return this.trafficEntity.getSearchEnginesPattern();
   	}
@@ -118,7 +116,7 @@ public class MeasurementProtocolBuilder{
 	public void setIgnoredReferersPattern(String pattern){
     	this.trafficEntity.setIgnoredReferersPattern(pattern);
   	}
-  	*/
+  	
   	
   	public String getExcludedBotsPattern(){
     	return this.excludedBotsPattern;
@@ -167,11 +165,11 @@ public class MeasurementProtocolBuilder{
 					paramMap.put("User-Agent", "");
 					LOG.info("User-Agent = null");
 				}
-	LOG.info("Running fine");
-		LOG.info(paramMap.get("User-Agent"));
-		LOG.info(getExcludedBotsPattern());
-		LOG.info(paramMap.get("dl"));
-		LOG.info(getIncludedHostnamesPattern());
+	//LOG.info("Running fine");
+		//LOG.info(paramMap.get("User-Agent"));
+		//LOG.info(getExcludedBotsPattern());
+	//	LOG.info(paramMap.get("dl"));
+	//	LOG.info(getIncludedHostnamesPattern());
 	        	if(!paramMap.get("User-Agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern())){
 	                //Add epochMillis and timestamp to paramMap       
 		            
@@ -192,17 +190,9 @@ public class MeasurementProtocolBuilder{
 					addAllIfNotNull(events, timingEntity.build(paramMap));
 					addAllIfNotNull(events, transactionEntity.build(paramMap));
 					addAllIfNotNull(events, productEntity.build(paramMap));
-					/*
-					addAllIfNotNull(events, transactionEntity.build(paramMap));
-
-
 					addAllIfNotNull(events, trafficEntity.build(paramMap));
-					*/
 					addAllIfNotNull(events, promotionEntity.build(paramMap));
-					
 					addAllIfNotNull(events, productImpressionEntity.build(paramMap));
-					
-					
 				}
 	        }
         }

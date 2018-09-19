@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.net.URL;
@@ -43,14 +44,14 @@ import org.slf4j.LoggerFactory;
 
 
 public class TrafficEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
+	private List<Parameter> parameters;
 	private Map<String, String> campaignParameters = new HashMap<String, String>();
 	private Pattern pattern;
     private Matcher matcher;
 	private static final Logger LOG = LoggerFactory.getLogger(TrafficEntity.class);
-	private static String searchEnginesPattern = ".*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*";  
-	private static String ignoredReferersPattern = ".*mathem\\.se.*";
-	private static String socialNetworksPattern = ".*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*";
+	private static String searchEnginesPattern = "";//.*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*";  
+	private static String ignoredReferersPattern = "";//.*foo\\.com.*";
+	private static String socialNetworksPattern = "";//.*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*";
 	
 	
 	public String getSearchEnginesPattern(){
@@ -85,16 +86,20 @@ public class TrafficEntity extends BaseEntity{
 	
 	public TrafficEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("CAMPAIGN_NAME", new Parameter("cn", "String", null, 100, "campaignName", false));
-		parameters.put("CAMPAIGN_SOURCE", new Parameter("cs", "String", null, 100, "campaignSource", false));
-		parameters.put("CAMPAIGN_MEDIUM", new Parameter("cm", "String", null, 50, "campaignMedium", false));
-		parameters.put("CAMPAIGN_KEYWORD", new Parameter("ck", "String", null, 500, "campaignKeyword", false));
-		parameters.put("CAMPAIGN_CONTENT", new Parameter("cc", "String", null, 500, "campaignContent", false));
-		parameters.put("CAMPAIGN_ID", new Parameter("ci", "String", null, 100, "campaignId", false));
-		parameters.put("GOOGLE_ADWORDS_ID", new Parameter("gclid", "String", null, 1500, "googleAdwordsId", false));
-		parameters.put("GOOGLE_DISPLAY_ADS_ID", new Parameter("dclid", "String", null, 1500, "googleDisplayId", false));
+		parameters = Arrays.asList(
+			new Parameter("cn", "String", null, 100, "campaignName", false, "january_boots_promo"),
+			new Parameter("cs", "String", null, 100, "campaignSource", false, "email_promo"),
+			new Parameter("cm", "String", null, 50, "campaignMedium", false, "email"),
+			new Parameter("ck", "String", null, 500, "campaignKeyword", false, "winter boots"),
+			new Parameter("cc", "String", null, 500, "campaignContent", false, "email_variation1"),
+			new Parameter("ci", "String", null, 100, "campaignId", false, "12345"),
+			new Parameter("gclid", "String", null, 1500, "googleAdwordsId", false, "EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD"),
+			new Parameter("dclid", "String", null, 1500, "googleDisplayId", false, "EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwX")
+		);
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
+	
 	
 	private boolean trigger(Map<String, String> paramMap){
 		parse(paramMap);
@@ -107,33 +112,39 @@ public class TrafficEntity extends BaseEntity{
 
 				if(null != url.getQuery()){
 					Map<String, String> campaignMap = FieldMapper.fieldMapFromURL(url);
-					//Adwords traffic
+					//Google Search Ads traffic
 					if(campaignMap.get("gclid") != null){
-						campaignParameters.put("cn", "adwords");
-						campaignParameters.put("cs", "google");
-						campaignParameters.put("cm", "cpc");
-						campaignParameters.put("ck", "adwords");
-						campaignParameters.put("cc", "adwords");
+						campaignParameters.put("cn", campaignMap.getOrDefault("utm_campaign", "(not set)"));
+						campaignParameters.put("cs", campaignMap.getOrDefault("utm_source","google search ads"));
+						campaignParameters.put("cm", campaignMap.getOrDefault("utm_medium","cpc"));
+						campaignParameters.put("ck", campaignMap.getOrDefault("utm_term","(not set)"));
+						campaignParameters.put("cc", campaignMap.getOrDefault("utm_content","(not set)"));
 						campaignParameters.put("gclid", campaignMap.get("gclid"));
 						return;
 					}
-					//double click traffic
-					if(campaignMap.get("gclsrc") != null){
-						campaignParameters.put("cn", "DoubleClick");
-						campaignParameters.put("cs", "google");
-						campaignParameters.put("cm", "cpc");
-						campaignParameters.put("ck", "DoubleClick");
-						campaignParameters.put("cc", "DoubleClick");
-						campaignParameters.put("gclsrc", campaignMap.get("gclsrc"));
+					//Google Display & Video traffic
+					if(campaignMap.get("dclid") != null){
+						campaignParameters.put("cn", campaignMap.getOrDefault("utm_campaign", "(not set)"));
+						campaignParameters.put("cs", campaignMap.getOrDefault("utm_source","google display & video"));
+						campaignParameters.put("cm", campaignMap.getOrDefault("utm_medium", "cpm"));
+						campaignParameters.put("ck", campaignMap.getOrDefault("utm_term", "(not set)"));
+						campaignParameters.put("cc", campaignMap.getOrDefault("utm_content", "(not set)"));
+						campaignParameters.put("dclid", campaignMap.get("dclid"));
 						return;
 					}
 					//campaign traffic
 					if(campaignMap.get("utm_source") != null){
-						campaignParameters.put("cn", (campaignMap.get("utm_campaign") == null) ? "(not set)" : campaignMap.get("utm_campaign"));
+						campaignParameters.put("cn", campaignMap.getOrDefault("utm_campaign", "(not set)"));
+						campaignParameters.put("cs", campaignMap.get("utm_source"));
+						campaignParameters.put("cm", campaignMap.getOrDefault("utm_medium", "(not set)"));
+						campaignParameters.put("ck", campaignMap.getOrDefault("utm_term", "(not set)"));
+						campaignParameters.put("cc", campaignMap.getOrDefault("utm_content", "(not set)"));
+						/*campaignParameters.put("cn", (campaignMap.get("utm_campaign") == null) ? "(not set)" : campaignMap.get("utm_campaign"));
 						campaignParameters.put("cs", campaignMap.get("utm_source"));
 						campaignParameters.put("cm", (campaignMap.get("utm_medium") == null) ? "(not set)" : campaignMap.get("utm_medium"));
 						campaignParameters.put("ck", (campaignMap.get("utm_term") == null) ? "(not set)" : campaignMap.get("utm_term"));
 						campaignParameters.put("cc", (campaignMap.get("utm_content") == null) ? "(not set)" : campaignMap.get("utm_content"));
+						*/
 						return;
 					}
 				}
@@ -191,7 +202,7 @@ public class TrafficEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("ht", "traffic");   		
+			paramMap.put("et", "traffic");   		
 			try{	
 				eventList.add(builder(paramMap).build());
 				return eventList;
