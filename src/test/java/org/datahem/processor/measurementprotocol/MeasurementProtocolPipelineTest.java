@@ -156,6 +156,7 @@ public class MeasurementProtocolPipelineTest {
 			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
 			.map(p -> parameterToTR(p))
 			.collect(Collectors.toList()));	
+			
 
 	private static String pageviewPayload =
 		Stream.concat(
@@ -585,7 +586,26 @@ public class MeasurementProtocolPipelineTest {
 		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
 		.collect(Collectors.joining("&"));
 
+	/*
+	 * Traffic entity (Referrer)
+	 */
 
+	private static TableRow refererTR = baseTR.clone()
+		.set("type","traffic")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), trafficEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "traffic") : o)
+			.map(o -> o.getExampleParameterName() == "campaignName" ? new Parameter("cn", "String", null, 100, "campaignName", false, "(referal)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignSource" ? new Parameter("cs", "String", null, 100, "campaignSource", false, "example.com") : o)
+			.map(o -> o.getExampleParameterName() == "campaignMedium" ? new Parameter("cm", "String", null, 50, "campaignMedium", false, "referal") : o)
+			.map(o -> o.getExampleParameterName() == "campaignKeyword" ? new Parameter("ck", "String", null, 500, "campaignKeyword", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignContent" ? new Parameter("cc", "String", null, 500, "campaignContent", false, "") : o)
+			.filter(o -> o.getExampleParameterName() != "campaignId")
+			.filter(o -> o.getExampleParameterName() != "googleAdwordsId")
+			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
 
 /*
  * **************************************
@@ -601,9 +621,11 @@ public class MeasurementProtocolPipelineTest {
 				.build();
 	}
 
-/*
+
 	@Test
 	public void userPageviewTest() throws Exception {
+		LOG.info(Integer.toString(pageviewTR.hashCode())+" : "+pageviewTR.toPrettyString());
+		LOG.info(Integer.toString(refererTR.hashCode())+" : "+refererTR.toPrettyString());
 		PCollection<TableRow> output = p
 			.apply(Create.of(Arrays.asList(cpeBuilder(user, pageviewPayload))))
 			.apply(ParDo.of(new PayloadToMPEntityFn(
@@ -615,10 +637,10 @@ public class MeasurementProtocolPipelineTest {
 				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
 				StaticValueProvider.of("Europe/Stockholm"))))
 			.apply(ParDo.of(new MPEntityToTableRowFn()));
-		PAssert.that(output).containsInAnyOrder(pageviewTR);
+		PAssert.that(output).containsInAnyOrder(pageviewTR, refererTR);
 		p.run();
 	}
-	
+	/*
 	@Test
 	public void botPageviewTest() throws Exception {
 		PCollection<TableRow> output = p
@@ -814,7 +836,7 @@ public class MeasurementProtocolPipelineTest {
 			.apply(ParDo.of(new MPEntityToTableRowFn()));
 		PAssert.that(output).containsInAnyOrder(googleSearchAdsTR, googleSearchAdsPageviewTR);
 		p.run();
-	}*/
+	}
 
 	@Test
 	public void userCampaignTest() throws Exception {
@@ -834,6 +856,6 @@ public class MeasurementProtocolPipelineTest {
 		PAssert.that(output).containsInAnyOrder(campaignTR, campaignPageviewTR);
 		p.run();
 	}
-
+*/
 
 }

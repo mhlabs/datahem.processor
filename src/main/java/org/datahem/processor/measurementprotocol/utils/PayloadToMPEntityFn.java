@@ -65,12 +65,12 @@ public class PayloadToMPEntityFn extends DoFn<CollectorPayloadEntity, MPEntity> 
 	      	
 	      	CollectorPayloadEntity cp = c.element();
 	        MeasurementProtocolBuilder mpb = new MeasurementProtocolBuilder();
-	/*        mpb.setSearchEnginesPattern(searchEnginesPattern.get());
+	        mpb.setSearchEnginesPattern(searchEnginesPattern.get());
 	        mpb.setIgnoredReferersPattern(ignoredReferersPattern.get());
-	        mpb.setSocialNetworksPattern(socialNetworksPattern.get());*/
+	        mpb.setSocialNetworksPattern(socialNetworksPattern.get());
 	        mpb.setIncludedHostnamesPattern(includedHostnamesPattern.get());
 	        mpb.setExcludedBotsPattern(excludedBotsPattern.get());
-	//        mpb.setSiteSearchPattern(siteSearchPattern.get());
+	        mpb.setSiteSearchPattern(siteSearchPattern.get());
 	        mpb.setTimeZone(timeZone.get());
 	        
 	        List<MPEntity> mpEntities = mpb.mpEntitiesFromCollectorPayload(cp);

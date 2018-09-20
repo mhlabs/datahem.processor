@@ -68,7 +68,7 @@ public class PageviewEntity extends BaseEntity{
 	}
 	
 	public List<MPEntity> build(Map<String, String> paramMap){
-		LOG.info("pageview build");
+		//LOG.info("pageview build");
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
 			paramMap.put("et", "pageview");
