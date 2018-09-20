@@ -154,10 +154,10 @@ public class MeasurementProtocolPipelineTest {
 		.set("params", 
 			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
 			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.filter(o -> o.getExampleParameterName() != "campaignId")
 			.map(p -> parameterToTR(p))
 			.collect(Collectors.toList()));	
 			
-
 	private static String pageviewPayload =
 		Stream.concat(
 			pageviewEntity
@@ -496,7 +496,36 @@ public class MeasurementProtocolPipelineTest {
 		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
 		.collect(Collectors.joining("&"));
 
+/*
+	 * Traffic entity (pageview base)
+	 */
 
+	private static TableRow trafficPageviewTR = baseTR.clone()
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+			
+	private static String trafficPageviewPayload =
+		Stream.concat(
+			pageviewEntity
+				.getParameters()
+				.stream(), 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));		
+			
+			
 	/*
 	 * Traffic entity (Google Search Ads)
 	 */
@@ -515,6 +544,9 @@ public class MeasurementProtocolPipelineTest {
 			.map(o -> o.getExampleParameterName() == "campaignMedium" ? new Parameter("cm", "String", null, 50, "campaignMedium", false, "cpc") : o)
 			.map(o -> o.getExampleParameterName() == "campaignKeyword" ? new Parameter("ck", "String", null, 500, "campaignKeyword", false, "(not set)") : o)
 			.map(o -> o.getExampleParameterName() == "campaignContent" ? new Parameter("cc", "String", null, 500, "campaignContent", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
 			.filter(o -> o.getExampleParameterName() != "campaignId")
 			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
 			.map(p -> parameterToTR(p))
@@ -525,6 +557,9 @@ public class MeasurementProtocolPipelineTest {
 			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
 			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
 			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?gclid=EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
 			.map(p -> parameterToTR(p))
 			.collect(Collectors.toList()));	
 
@@ -540,6 +575,9 @@ public class MeasurementProtocolPipelineTest {
 				.stream()
 				//.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "siteSearch") : o)
 				.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?gclid=EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD") : o)
+				.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
 		)
 		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
 		.collect(Collectors.joining("&"));
@@ -557,6 +595,9 @@ public class MeasurementProtocolPipelineTest {
 			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
 			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "traffic") : o)
 			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?utm_campaign=january_boots_promo&utm_source=email_promo&utm_medium=email&utm_term=winter%20boots&utm_content=email_variation1") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
 			.filter(o -> o.getExampleParameterName() != "campaignId")
 			.filter(o -> o.getExampleParameterName() != "googleAdwordsId")
 			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
@@ -568,6 +609,9 @@ public class MeasurementProtocolPipelineTest {
 			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
 			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
 			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?utm_campaign=january_boots_promo&utm_source=email_promo&utm_medium=email&utm_term=winter%20boots&utm_content=email_variation1") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
 			.map(p -> parameterToTR(p))
 			.collect(Collectors.toList()));	
 
@@ -582,6 +626,9 @@ public class MeasurementProtocolPipelineTest {
 				.getParameters()
 				.stream()
 				.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?utm_campaign=january_boots_promo&utm_source=email_promo&utm_medium=email&utm_term=winter%20boots&utm_content=email_variation1") : o)
+				.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
 		)
 		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
 		.collect(Collectors.joining("&"));
@@ -606,6 +653,57 @@ public class MeasurementProtocolPipelineTest {
 			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
 			.map(p -> parameterToTR(p))
 			.collect(Collectors.toList()));
+
+
+	/*
+	 * Traffic entity (Organic search)
+	 */
+
+	private static TableRow organicSearchTR = baseTR.clone()
+		.set("type","traffic")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), trafficEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "traffic") : o)
+			.map(o -> o.getExampleParameterName() == "campaignName" ? new Parameter("cn", "String", null, 100, "campaignName", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignSource" ? new Parameter("cs", "String", null, 100, "campaignSource", false, "example.com") : o)
+			.map(o -> o.getExampleParameterName() == "campaignMedium" ? new Parameter("cm", "String", null, 50, "campaignMedium", false, "organic") : o)
+			.map(o -> o.getExampleParameterName() == "campaignKeyword" ? new Parameter("ck", "String", null, 500, "campaignKeyword", false, "(not provided)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignContent" ? new Parameter("cc", "String", null, 500, "campaignContent", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+			.filter(o -> o.getExampleParameterName() != "campaignId")
+			.filter(o -> o.getExampleParameterName() != "googleAdwordsId")
+			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+
+
+	/*
+	 * Traffic entity (Social Traffic)
+	 */
+
+	private static TableRow socialTrafficTR = baseTR.clone()
+		.set("type","traffic")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), trafficEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "traffic") : o)
+			.map(o -> o.getExampleParameterName() == "campaignName" ? new Parameter("cn", "String", null, 100, "campaignName", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignSource" ? new Parameter("cs", "String", null, 100, "campaignSource", false, "example.com") : o)
+			.map(o -> o.getExampleParameterName() == "campaignMedium" ? new Parameter("cm", "String", null, 50, "campaignMedium", false, "social") : o)
+			.map(o -> o.getExampleParameterName() == "campaignKeyword" ? new Parameter("ck", "String", null, 500, "campaignKeyword", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignContent" ? new Parameter("cc", "String", null, 500, "campaignContent", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+			.filter(o -> o.getExampleParameterName() != "campaignId")
+			.filter(o -> o.getExampleParameterName() != "googleAdwordsId")
+			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+
 
 /*
  * **************************************
@@ -637,10 +735,10 @@ public class MeasurementProtocolPipelineTest {
 				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
 				StaticValueProvider.of("Europe/Stockholm"))))
 			.apply(ParDo.of(new MPEntityToTableRowFn()));
-		PAssert.that(output).containsInAnyOrder(pageviewTR, refererTR);
+		PAssert.that(output).containsInAnyOrder(pageviewTR);
 		p.run();
 	}
-	/*
+	
 	@Test
 	public void botPageviewTest() throws Exception {
 		PCollection<TableRow> output = p
@@ -693,6 +791,7 @@ public class MeasurementProtocolPipelineTest {
 		p.run();
 	}
 	
+	
 	@Test
 	public void userSiteSearchTest() throws Exception {
 		PCollection<TableRow> output = p
@@ -709,6 +808,7 @@ public class MeasurementProtocolPipelineTest {
 		PAssert.that(output).containsInAnyOrder(siteSearchTR, siteSearchPageviewTR);
 		p.run();
 	}
+	
 
 	@Test
 	public void userSocialTest() throws Exception {
@@ -818,7 +918,7 @@ public class MeasurementProtocolPipelineTest {
 		p.run();
 	}
 	
-	
+
 	@Test
 	public void userGoogleSearchAdsTest() throws Exception {
 		LOG.info(Integer.toString(googleSearchAdsTR.hashCode())+" : "+googleSearchAdsTR.toPrettyString());
@@ -838,6 +938,7 @@ public class MeasurementProtocolPipelineTest {
 		p.run();
 	}
 
+
 	@Test
 	public void userCampaignTest() throws Exception {
 		LOG.info(Integer.toString(campaignTR.hashCode())+" : "+campaignTR.toPrettyString());
@@ -856,6 +957,45 @@ public class MeasurementProtocolPipelineTest {
 		PAssert.that(output).containsInAnyOrder(campaignTR, campaignPageviewTR);
 		p.run();
 	}
-*/
+
+
+	@Test
+	public void userOrganicSearchPageviewTest() throws Exception {
+		LOG.info(Integer.toString(trafficPageviewTR.hashCode())+" : "+trafficPageviewTR.toPrettyString());
+		LOG.info(Integer.toString(organicSearchTR.hashCode())+" : "+organicSearchTR.toPrettyString());
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, trafficPageviewPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(example.com).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(trafficPageviewTR, organicSearchTR);
+		p.run();
+	}
+	
+
+	@Test
+	public void userSocialTrafficPageviewTest() throws Exception {
+		LOG.info(Integer.toString(trafficPageviewTR.hashCode())+" : "+trafficPageviewTR.toPrettyString());
+		LOG.info(Integer.toString(socialTrafficTR.hashCode())+" : "+socialTrafficTR.toPrettyString());
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, trafficPageviewPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(example.com).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(trafficPageviewTR, socialTrafficTR);
+		p.run();
+	}
 
 }
