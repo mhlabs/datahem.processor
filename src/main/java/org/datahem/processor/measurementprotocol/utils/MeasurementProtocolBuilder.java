@@ -28,19 +28,6 @@ package org.datahem.processor.measurementprotocol.utils;
 
 import org.datahem.processor.utils.FieldMapper;
 import org.datahem.processor.measurementprotocol.utils.PageviewEntity;
-/*
-import org.datahem.processor.measurementprotocol.utils.EventEntity;
-import org.datahem.processor.measurementprotocol.utils.ExceptionEntity;
-import org.datahem.processor.measurementprotocol.utils.TimingEntity;
-import org.datahem.processor.measurementprotocol.utils.ProductEntity;
-import org.datahem.processor.measurementprotocol.utils.TransactionEntity;
-import org.datahem.processor.measurementprotocol.utils.SocialEntity;
-import org.datahem.processor.measurementprotocol.utils.TrafficEntity;
-import org.datahem.processor.measurementprotocol.utils.PromotionEntity;
-import org.datahem.processor.measurementprotocol.utils.ProductImpressionEntity;
-import org.datahem.processor.measurementprotocol.utils.SiteSearchEntity;
-*/
-
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.CollectorPayloadEntity;
 import com.google.protobuf.TextFormat;
@@ -80,6 +67,7 @@ public class MeasurementProtocolBuilder{
 	private ProductEntity productEntity = new ProductEntity();
 	private TrafficEntity trafficEntity = new TrafficEntity();
 	private PromotionEntity promotionEntity = new PromotionEntity();
+	private ExperimentEntity experimentEntity = new ExperimentEntity();
 	
 	private ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
 	
@@ -193,6 +181,7 @@ public class MeasurementProtocolBuilder{
 					addAllIfNotNull(events, trafficEntity.build(paramMap));
 					addAllIfNotNull(events, promotionEntity.build(paramMap));
 					addAllIfNotNull(events, productImpressionEntity.build(paramMap));
+					addAllIfNotNull(events, experimentEntity.build(paramMap));
 				}
 	        }
         }
@@ -226,6 +215,7 @@ public static void main(String[] args) {
 	//String pageview = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=1&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&z=631938637&cd1=gold&cd2=family&cm1=25";
 	//String pageview = "v=1&_v=j66&a=1140262547&t=pageview&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=Frukt%20%26%20Gr%C3%B6nt%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18";
 	String pageview = "a=1140262547&cid=35009a79-1a05-49d7-b876-2b884d0f825b&X-AppEngine-City=stockholm&X-AppEngine-CityLatLong=59.422571%2C17.833131&xid=Qp0gahJ3RAO3DJ18b0XoUQ&xvar=1&X-AppEngine-Country=SE&cd1=Sports&cm1=47&ds=web&gtm=G7rP2BRHCI&t=pageview&dh=foo.com&jid=%28not%20set%29&ni=1&dp=%2Ffoo&qt=560&dr=http%3A%2F%2Fexample.com&drh=http%3A%2F%2Fexample.com&drp=&X-AppEngine-Region=ab&dt=Settings&tid=UA-XXXX-Y&User-Agent=Opera%2F9.80%20%28Windows%20NT%206.0%29%20Presto%2F2.12.388%20Version%2F12.14&dl=http%3A%2F%2Ffoo.com%2Fhome%3Fa%3Db&uid=as8eknlll&v=1&de=UTF-8&fl=10%201%20r103&sr=800x600&vp=123x456&sd=24-bits&ul=en-us&je=1&linkid=nav_bar";
+	String experiment = "a=1140262547&cid=35009a79-1a05-49d7-b876-2b884d0f825b&X-AppEngine-City=stockholm&X-AppEngine-CityLatLong=59.422571%2C17.833131&xid=Qp0gahJ3RAO3DJ18b0XoUQ&xvar=1&X-AppEngine-Country=SE&cd1=Sports&cm1=47&ds=web&gtm=G7rP2BRHCI&t=pageview&dh=foo.com&jid=%28not%20set%29&ni=1&dp=%2Ffoo&qt=560&dr=http%3A%2F%2Fexample.com&drh=http%3A%2F%2Fexample.com&drp=&X-AppEngine-Region=ab&dt=Settings&tid=UA-XXXX-Y&User-Agent=Opera%2F9.80%20%28Windows%20NT%206.0%29%20Presto%2F2.12.388%20Version%2F12.14&dl=http%3A%2F%2Ffoo.com%2Fhome%3Fa%3Db&uid=as8eknlll&v=1&de=UTF-8&fl=10%201%20r103&sr=800x600&vp=123x456&sd=24-bits&ul=en-us&je=1&linkid=nav_bar&exp=fdslkjdflsj.0!tgjlks.1&xid=hello&xvar=world";
 	
 	String add = "v=1&_v=j66&a=1140262547&t=event&ni=0&cu=SEK&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=K%C3%B6tt%20%26%20Chark%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&ec=Ecommerce&ea=Add%20To%20Cart&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&pa=add&pr1id=22534&pr1nm=Kalkon%20R%C3%B6kt%20Skivad&pr1pr=39.95&pr1br=P%C3%A4rsons&pr1ca=Kalkon%20P%C3%A5l%C3%A4gg&pr1qt=1&z=2064466511";
 	String remove = "v=1&_v=j66&a=1140262547&t=event&ni=0&cu=SEK&_s=1&dl=https%3A%2F%2Fwww.datahem.org%2Fvaror%2Fkott-o-chark&dp=%2Fvaror%2Fkott-o-chark&ul=sv&de=UTF-8&dt=K%C3%B6tt%20%26%20Chark%20%7C%20Mathem&sd=24-bit&sr=1920x1200&vp=1292x1096&je=0&ec=Ecommerce&ea=Add%20To%20Cart&_u=aCDAAEAL~&jid=&gjid=&cid=1062063169.1517835391&uid=947563&tid=UA-7391864-18&_gid=616449507.1520411256&gtm=G2rP9BRHCJ&pa=remove&pr1id=22534&pr1nm=Kalkon%20R%C3%B6kt%20Skivad&pr1pr=39.95&pr1br=P%C3%A4rsons&pr1ca=Kalkon%20P%C3%A5l%C3%A4gg&pr1qt=1&z=2064466511";
@@ -245,7 +235,7 @@ public static void main(String[] args) {
 	MeasurementProtocolBuilder mpb = new MeasurementProtocolBuilder();
 	mpb.setExcludedBotsPattern(".*(^$|bot|spider|crawler).*");
 	
-	List<String> payloads = Stream.of(detail).collect(Collectors.toList());
+	List<String> payloads = Stream.of(experiment).collect(Collectors.toList());
 	payloads
 		.stream()
 		.forEach(payload -> test(mpb, payload));
