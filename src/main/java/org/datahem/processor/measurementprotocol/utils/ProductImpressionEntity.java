@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -45,23 +46,27 @@ import org.slf4j.LoggerFactory;
 
 
 public class ProductImpressionEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
+	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(ProductImpressionEntity.class);
 	
 	public ProductImpressionEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("PRODUCT_IMPRESSION_LIST_NAME", new Parameter("(il[0-9]{1,3}nm)", "String", null, 500, "productListName", false));
-		parameters.put("PRODUCT_IMPRESSION_SKU", new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}id)", "String", null, 500, "productSku", false));
-		parameters.put("PRODUCT_IMPRESSION_NAME", new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}nm)", "String", null, 500, "productName", false));
-		parameters.put("PRODUCT_IMPRESSION_BRAND", new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}br)", "String", null, 500, "productBrand", false));
-		parameters.put("PRODUCT_IMPRESSION_CATEGORY", new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}ca)", "String", null, 500, "productCategory", false));
-		parameters.put("PRODUCT_IMPRESSION_VARIANT", new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}va)", "String", null, 500, "productVariant", false));
-		parameters.put("PRODUCT_IMPRESSION_PRICE", new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}pr)", "Double", null, 500, "productPrice", false));
-		parameters.put("PRODUCT_IMPRESSION_POSITION", new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}ps)", "Integer", null, 500, "productPosition", false));
-		parameters.put("PRODUCT_IMPRESSION_CUSTOM_DIMENSION", new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "productCustomDimension", false));
-		parameters.put("PRODUCT_IMPRESSION_CUSTOM_METRIC", new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}cm[0-9]{1,3})", "String", null, 500, "productCustomMetric", false));
+		parameters = Arrays.asList(
+			new Parameter("(il[0-9]{1,3}nm)", "String", null, 500, "productListName", false, "il1nm","Search Results"),
+			new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}id)", "String", null, 500, "productSku", false, "il1pi1id","P67890"),
+			new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}nm)", "String", null, 500, "productName", false, "il1pi1nm","Android T-Shirt"),
+			new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}br)", "String", null, 500, "productBrand", false, "il1pi1br","Google"),
+			new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}ca)", "String", null, 500, "productCategory", false, "il1pi1ca", "Apparel"),
+			new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}va)", "String", null, 500, "productVariant", false, "il1pi1va", "Black"),
+			new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}pr)", "Double", null, 500, "productPrice", false, "il1pi1pr", 29.20),
+			new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}ps)", "Integer", null, 500, "productPosition", false, "il1pi1ps", 2),
+			new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "productCustomDimension", false,"il[0-9]{1,3}pi[0-9]{1,3}cd([0-9]{1,3})", "il1pi1cd1", "Member", "productCustomDimension1"),
+			new Parameter("(il[0-9]{1,3}pi[0-9]{1,3}cm[0-9]{1,3})", "Integer", null, 500, "productCustomMetric", false, "il[0-9]{1,3}pi[0-9]{1,3}cm([0-9]{1,3})", "il1pi1cm1", 28, "productCustomMetric1")
+		);
 	}
+
+	
+	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		Pattern productImpressionIndexPattern = Pattern.compile("^il[0-9]{1,3}pi[0-9]{1,3}.*");
@@ -76,7 +81,7 @@ public class ProductImpressionEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-    			paramMap.put("ht", "productImpression");
+    			paramMap.put("et", "productImpression");
     			
     			Pattern productImpressionExclPattern = Pattern.compile("^(?!il[0-9]{1,3}pi.*).*$");
     			Map<String, String> paramMapExclPr = paramMap

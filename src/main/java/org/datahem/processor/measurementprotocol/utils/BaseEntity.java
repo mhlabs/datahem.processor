@@ -31,10 +31,12 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.Collections;
 import java.util.stream.Stream;
+import java.util.Comparator;
 import java.net.URL;
 import java.net.MalformedURLException;
 
@@ -43,39 +45,41 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BaseEntity{
-	private Map<String, Parameter> parameters;
+	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEntity.class);
 	
 	public BaseEntity(){
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("HIT_TYPE", new Parameter("ht", "String", null, 50, "hitType", true));
-		parameters.put("URL", new Parameter("dl", "String", null, 2048, "url", false));
-		parameters.put("HOST", new Parameter("dh", "String", null, 100, "host", false));
-		parameters.put("PATH", new Parameter("dp", "String", null, 2048, "path", false));
-		parameters.put("TITLE", new Parameter("dt", "String", null, 1500, "title", false));
-		parameters.put("LINK_ID", new Parameter("linkid", "String", null, 2048, "linkId", false));
-		parameters.put("VERSION", new Parameter("v", "String", null, 100, "version", true));
-		parameters.put("TRACKING_ID", new Parameter("tid", "String", null, 100, "trackingId", true));
-		parameters.put("DATA_SOURCE", new Parameter("ds", "String", null, 100, "dataSource", false));
-		parameters.put("QUEUE_TIME", new Parameter("qt", "String", null, 100, "queueTime", false));
-		parameters.put("CLIENT_ID", new Parameter("cid", "String", null, 100, "clientId", false));
-		parameters.put("USER_ID", new Parameter("uid", "String", null, 100, "userId", false));
-		parameters.put("USER_AGENT", new Parameter("ua|user-agent|User-Agent", "String", null, 1500, "userAgent", false));
-		parameters.put("NON_INTERACTION_HIT", new Parameter("ni", "Boolean", null, 10, "nonInteractionHit", false));
-		parameters.put("CUSTOM_DIMENSION", new Parameter("(cd[0-9]{1,3})", "String", null, 10, "customDimension", false, "cd([0-9]{1,3})"));
-		parameters.put("CUSTOM_METRIC", new Parameter("(cm[0-9]{1,3})", "Integer", null, 10, "customMetric", false, "cm([0-9]{1,3})"));
-		parameters.put("EXPERIMENT_ID", new Parameter("xid", "String", null, 40, "experimentId", false));
-		parameters.put("EXPERIMENT_VARIANT", new Parameter("xvar", "String", null, 500, "experimentVariant", false));
-		parameters.put("CITY", new Parameter("X-AppEngine-City", "String", null, 100, "city", false));
-		parameters.put("REGION", new Parameter("X-AppEngine-Region", "String", null, 100, "region", false));
-		parameters.put("CITY_LAT_LONG", new Parameter("X-AppEngine-CityLatLong", "String", null, 100, "cityLatLong", false));
-		parameters.put("REFERER", new Parameter("dr", "String", null, 100, "referer", false));
-		parameters.put("REFERER_HOST", new Parameter("drh", "String", null, 100, "refererHost", false));
-		parameters.put("REFERER_PATH", new Parameter("drp", "String", null, 100, "refererPath", false));
-		parameters.put("JOIN_ID", new Parameter("jid", "String", null, 100, "joinId", false));
-		parameters.put("ADSENSE_ID", new Parameter("a", "String", null, 100, "adSenseId", false));
-		parameters.put("GTM_CONTAINER_ID", new Parameter("gtm", "String", null, 100, "gtmContainerId", false));
+		parameters = Arrays.asList(
+			new Parameter("a", "String", null, 100, "adSenseId", false, "1140262547"),
+			new Parameter("cid", "String", null, 100, "clientId", false, "35009a79-1a05-49d7-b876-2b884d0f825b"),
+			new Parameter("X-AppEngine-City", "String", null, 100, "city", false, "stockholm"),
+			new Parameter("X-AppEngine-CityLatLong", "String", null, 100, "cityLatLong", false, "59.422571,17.833131"),
+			new Parameter("X-AppEngine-Country", "String", null, 100, "country", false, "SE"),
+			new Parameter("(cd[0-9]{1,3})", "String", null, 10, "customDimension", false, "cd([0-9]{1,3})", "cd1", "Sports","customDimension1"),
+			new Parameter("(cm[0-9]{1,3})", "Integer", null, 10, "customMetric", false, "cm([0-9]{1,3})", "cm1",47, "customMetric1"),
+			new Parameter("ds", "String", null, 100, "dataSource", false, "web"),
+			new Parameter("gtm", "String", null, 100, "gtmContainerId", false, "G7rP2BRHCI"),
+			new Parameter("et", "String", null, 50, "entityType", true, "pageview"),
+			new Parameter("t", "String", null, 50, "hitType", true, "pageview"),
+			new Parameter("dh", "String", null, 100, "host", false, "foo.com"),
+			new Parameter("jid", "String", null, 100, "joinId", false, "(not set)"),
+			new Parameter("ni", "Boolean", null, 10, "nonInteractionHit", false, 1),
+			new Parameter("dp", "String", null, 2048, "path", false, "/home"),
+			new Parameter("qt", "Integer", null, 100, "queueTime", false, 560),
+			new Parameter("dr", "String", null, 100, "referer", false,"http://foo.com"),
+			new Parameter("drh", "String", null, 100, "refererHost", false,"foo.com"),
+			new Parameter("drp", "String", null, 100, "refererPath", false,""),
+			new Parameter("X-AppEngine-Region", "String", null, 100, "region", false, "ab"),
+			new Parameter("dt", "String", null, 1500, "title", false,"Settings"),
+			new Parameter("tid", "String", null, 100, "trackingId", true, "UA-XXXX-Y"),
+			new Parameter("ua|user-agent|User-Agent", "String", null, 1500, "userAgent", false, null, "ua","Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14", "userAgent"),
+			new Parameter("dl", "String", null, 2048, "url", false, "http://foo.com/home?a=b"),
+			new Parameter("uid", "String", null, 100, "userId", false, "as8eknlll"),
+			new Parameter("v", "String", null, 100, "version", true, "1")
+		);
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return true;
@@ -87,13 +91,17 @@ public class BaseEntity{
 			URL url = new URL(paramMap.get("dl"));
 			if(paramMap.get("dh")==null) paramMap.put("dh", url.getHost());
 			if(paramMap.get("dp")==null) paramMap.put("dp", url.getPath());
-		}catch (MalformedURLException e) {}
+		}catch (MalformedURLException e) {
+			LOG.error(e.toString());
+		}
 		try{
 			//If document referer parameter exist, extract host and path and add those as separate parameters
 			URL referer = new URL(paramMap.get("dr"));
 			paramMap.put("drh", referer.getHost());
 			paramMap.put("drp", referer.getPath());
-		}catch (MalformedURLException e) {}
+		}catch (MalformedURLException e) {
+			LOG.error(e.toString());
+		}
 	}
 			
 	
@@ -119,17 +127,18 @@ public class BaseEntity{
 		return builder(paramMap, MPEntity.newBuilder(), this.parameters);
 	}
 	
-	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder, Map<String, Parameter> parameters) throws IllegalArgumentException {
+	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder, List<Parameter> parameters) throws IllegalArgumentException {
+		
+		parameters.sort(Comparator.comparing(p -> p.getParameterName()));
 		
 		mpEntityBuilder
-			//.setVersion(paramMap.get("v"))
-			.setType(paramMap.get("ht"))
+			.setType(paramMap.get("et"))
 			.setClientId(paramMap.get("cid"))
 			.setUserId(paramMap.getOrDefault("uid", ""))
 			.setEpochMillis(Long.parseLong(paramMap.get("cpem")))
 			.setDate(paramMap.get("cpd"))
 			.setUtcTimestamp(paramMap.get("cpts"));
-		for (Parameter p : parameters.values()){
+		for (Parameter p : parameters) {
 			Pattern pattern = Pattern.compile("^" + p.getParameter() + "$");
  			List<String> bu = paramMap
  				.keySet()
@@ -159,13 +168,23 @@ public class BaseEntity{
 	    				}
 	    			}
 	    			else{
-	    				//mpEntityBuilder.putParams((p.getParameterName()==null) ? b : p.getParameterName(), getValues(p, paramMap.get(b)));
 	    				mpEntityBuilder.putParams((p.getParameterName()==null) ? b : p.getParameterNameWithSuffix(b), getValues(p, paramMap.get(b)));
 	    			}	
 	           	}
-    	}
-
 		}
+		
+    	
+		}
+		//Make a deep copy of params, then clear params from entity, then sort params copy and put back into entity
+		Map<String, ValEntity> collect = mpEntityBuilder.getParamsMap().entrySet().stream().collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue()));
+		mpEntityBuilder.clearParams();
+		collect
+			.entrySet()
+			.stream()
+			.sorted(Map.Entry.<String, ValEntity>comparingByKey())
+			.forEach(e -> mpEntityBuilder.putParams(e.getKey(), (ValEntity) e.getValue()));
+
+		
 		return mpEntityBuilder;
 	}
 	
@@ -173,7 +192,7 @@ public class BaseEntity{
 	private ValEntity getValues(Parameter p, String val){
 		ValEntity.Builder valBuilder = ValEntity.newBuilder();
 		switch(p.getValueType()){
-			case "Integer":	valBuilder.setIntValue(Integer.parseInt(val));
+			case "Integer":	valBuilder.setIntValue(Long.parseLong(val));
 						break;
 			case "String":	valBuilder.setStringValue(val);
 						break;

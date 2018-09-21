@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,15 +40,19 @@ import org.slf4j.LoggerFactory;
 
 
 public class ExceptionEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
+	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(ExceptionEntity.class);
-
+	
 	public ExceptionEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("EXCEPTION_DESCRIPTION", new Parameter("exd", "String", null, 150, "exceptionDescription", false));
-		parameters.put("EXCEPTION_FATAL", new Parameter("exf", "Boolean", null, 150, "exceptionFatal", false));
+		parameters = Arrays.asList(
+			new Parameter("exd", "String", null, 150, "exceptionDescription", false, "DatabaseError"),
+			new Parameter("exf", "Boolean", null, 150, "exceptionFatal", false, 0)
+		);
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
+
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return (null != paramMap.get("exd") || null != paramMap.get("exf"));
@@ -56,7 +61,7 @@ public class ExceptionEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> mpEntities = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("ht", "exception");
+			paramMap.put("et", "exception");
 			try{
 				mpEntities.add(builder(paramMap).build());
 				return mpEntities;

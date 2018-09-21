@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -45,29 +46,32 @@ import org.slf4j.LoggerFactory;
 
 
 public class ProductEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
+	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(ProductEntity.class);
 	
 	public ProductEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("PRODUCT_SKU", new Parameter("(pr[0-9]{1,3}id)", "String", null, 500, "productSku", false));
-		parameters.put("PRODUCT_NAME", new Parameter("(pr[0-9]{1,3}nm)", "String", null, 500, "productName", false));
-		parameters.put("PRODUCT_BRAND", new Parameter("(pr[0-9]{1,3}br)", "String", null, 500, "productBrand", false));
-		parameters.put("PRODUCT_CATEGORY", new Parameter("(pr[0-9]{1,3}ca)", "String", null, 500, "productCategory", false));
-		parameters.put("PRODUCT_VARIANT", new Parameter("(pr[0-9]{1,3}va)", "String", null, 500, "productVariant", false));
-		parameters.put("PRODUCT_PRICE", new Parameter("(pr[0-9]{1,3}pr)", "Double", null, 500, "productPrice", false));
-		parameters.put("PRODUCT_QUANTITY", new Parameter("(pr[0-9]{1,3}qt)", "Integer", null, 500, "productQuantity", false));
-		parameters.put("PRODUCT_COUPON_CODE", new Parameter("(pr[0-9]{1,3}cc)", "String", null, 500, "productCouponCode", false));
-		parameters.put("PRODUCT_POSITION", new Parameter("(pr[0-9]{1,3}ps)", "Integer", null, 500, "productPosition", false));
-		parameters.put("PRODUCT_CUSTOM_DIMENSION", new Parameter("(pr[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "productCustomDimension", false, "pr[0-9]{1,3}cd([0-9]{1,3})"));
-		parameters.put("PRODUCT_CUSTOM_METRIC", new Parameter("(pr[0-9]{1,3}cm[0-9]{1,3})", "String", null, 500, "productCustomMetric", false, "pr[0-9]{1,3}cm([0-9]{1,3})"));
-		parameters.put("PRODUCT_ACTION", new Parameter("pa", "String", null, 50, "productAction", true));
-		parameters.put("PRODUCT_ACTION_LIST", new Parameter("pal", "String", null, 500, "productActionList", false)); //If pa == detail || click
-		parameters.put("TRANSACTION_ID", new Parameter("ti", "String", null, 50, "transactionId", false)); //If pa == purchase
-		parameters.put("CHECKOUT_STEP", new Parameter("cos", "Integer", null, 50, "checkoutStep", false)); //If pa == checkout
-		parameters.put("CHECKOUT_STEP_OPTION", new Parameter("col", "String", null, 50, "checkoutStepOption", false)); //If pa == checkout
+		parameters = Arrays.asList(
+			new Parameter("(pr[0-9]{1,3}id)", "String", null, 500, "productSku", false, "pr1id", "P12345"),
+			new Parameter("(pr[0-9]{1,3}nm)", "String", null, 500, "productName", false, "pr1nm", "Android T-Shirt"),
+			new Parameter("(pr[0-9]{1,3}br)", "String", null, 500, "productBrand", false, "pr1br", "Google"),
+			new Parameter("(pr[0-9]{1,3}ca)", "String", null, 500, "productCategory", false, "pr1ca", "Apparel/Mens/T-Shirts"),
+			new Parameter("(pr[0-9]{1,3}va)", "String", null, 500, "productVariant", false, "pr1va", "Black"),
+			new Parameter("(pr[0-9]{1,3}pr)", "Double", null, 500, "productPrice", false, "pr1pr", 29.20),
+			new Parameter("(pr[0-9]{1,3}qt)", "Integer", null, 500, "productQuantity", false, "pr1qt", 2),
+			new Parameter("(pr[0-9]{1,3}cc)", "String", null, 500, "productCouponCode", false, "pr1cc", "SUMMER_SALE13"),
+			new Parameter("(pr[0-9]{1,3}ps)", "Integer", null, 500, "productPosition", false, "pr1ps", 2),
+			new Parameter("(pr[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "productCustomDimension", false, "pr[0-9]{1,3}cd([0-9]{1,3})", "pr1cd1", "Member", "productCustomDimension1"),
+			new Parameter("(pr[0-9]{1,3}cm[0-9]{1,3})", "Integer", null, 500, "productCustomMetric", false, "pr[0-9]{1,3}cm([0-9]{1,3})", "pr1cm1", 28, "productCustomMetric1"),
+			new Parameter("pa", "String", null, 50, "productAction", true, "detail"),
+			new Parameter("pal", "String", null, 500, "productActionList", false, "Search Results"), //If pa == detail || click
+			new Parameter("ti", "String", null, 50, "transactionId", false, "T1234"), //If pa == purchase
+			new Parameter("cos", "Integer", null, 50, "checkoutStep", false, 2), //If pa == checkout
+			new Parameter("col", "String", null, 50, "checkoutStepOption", false, "Visa") //If pa == checkout
+		);
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return Stream.of("detail", "click", "add", "remove", "checkout", "purchase", "refund").collect(Collectors.toList()).contains(paramMap.get("pa"));
@@ -76,7 +80,7 @@ public class ProductEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-    			paramMap.put("ht", "product_" + paramMap.get("pa"));
+    			paramMap.put("et", "product");
     			
     			Pattern productExclPattern = Pattern.compile("^(?!pr[0-9]{1,3}.*).*$");
     			//final Matcher matcher;

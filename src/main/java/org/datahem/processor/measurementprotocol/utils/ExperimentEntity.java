@@ -33,45 +33,60 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class TimingEntity extends BaseEntity{
+public class ExperimentEntity extends BaseEntity{
 	private List<Parameter> parameters;
-	private static final Logger LOG = LoggerFactory.getLogger(TimingEntity.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ExperimentEntity.class);
 
-	public TimingEntity(){
+	public ExperimentEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("utc", "String", null, 150, "userTimingCategory", true,"category"),
-			new Parameter("utv", "String", null, 500, "userTimingVariableName", true,"lookup"),
-			new Parameter("utt", "Integer", null, 500, "userTimingTime", true, 123),
-			new Parameter("utl", "String", null, 500, "userTimingLabel", false, "label"),
-			new Parameter("plt", "Integer", null, 500, "pageLoadTime", false, 3554),
-			new Parameter("dns", "Integer", null, 500, "dnsTime", false, 43),
-			new Parameter("pdt", "Integer", null, 500, "pageDownloadTime", false, 500),
-			new Parameter("rrt", "Integer", null, 500, "redirectResponseTime", false, 500),
-			new Parameter("tcp", "Integer", null, 500, "tcpConnectTime", false, 500),
-			new Parameter("srt", "Integer", null, 500, "serverResponseTime", false, 500),
-			new Parameter("dit", "Integer", null, 500, "domInteractiveTime", false, 500),
-			new Parameter("clt", "Integer", null, 500, "contentLoadTime", false, 500)
+			new Parameter("expi", "String", null, 150, "experimentId", true, "fdslkjdflsj"),
+			new Parameter("expv", "String", null, 500, "experimentVariant", true, "0")
 		);
 	}
 	
 	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
-		return (null != paramMap.get("utc") && null != paramMap.get("utv") && null != paramMap.get("utt"));
+		return (null != paramMap.get("exp") || (null != paramMap.get("xid") && (null != paramMap.get("xvar"))));
 	}
 	
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
     		try{
-				paramMap.put("et", "timing");
-				eventList.add(builder(paramMap).build());
+				paramMap.put("et", "experiment");
+				if(null != paramMap.get("exp")){
+					try{
+	    				Pattern.compile("!")
+	    					.splitAsStream(paramMap.get("exp"))
+	        				.map(s -> Arrays.copyOf(s.split("\\."), 2))
+	        				.forEach(s -> {
+	        					paramMap.put("expi",s[0]);
+	        					paramMap.put("expv", s[1]);
+	        					eventList.add(builder(paramMap).build());
+	        				});
+        			}catch(NullPointerException e) {
+						return null;
+					}	
+				}
+				if((null != paramMap.get("xid") && (null != paramMap.get("xvar")))){
+					try{
+	    				paramMap.put("expi",paramMap.get("xid"));
+	        			paramMap.put("expv", paramMap.get("xvar"));
+	        			eventList.add(builder(paramMap).build());
+	        		}
+        			catch(NullPointerException e) {
+						return null;
+					}	
+				}
+
 				return eventList;
 			}
 			catch(IllegalArgumentException e){

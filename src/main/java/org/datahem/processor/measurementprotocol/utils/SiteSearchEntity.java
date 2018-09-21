@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.net.URL;
@@ -44,8 +45,8 @@ import org.slf4j.LoggerFactory;
 
 
 public class SiteSearchEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
-	private static final Logger LOG = LoggerFactory.getLogger(TrafficEntity.class);
+	private List<Parameter> parameters;
+	private static final Logger LOG = LoggerFactory.getLogger(SiteSearchEntity.class);
 	private static String siteSearchPattern = ".*q=(([^&#]*)|&|#|$)";
 	
 	
@@ -59,24 +60,26 @@ public class SiteSearchEntity extends BaseEntity{
 	
 	public SiteSearchEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("SITE_SEARCH_TERM", new Parameter("sst", "String", null, 100, "siteSearchTerm", false));
-		parameters.put("SITE_SEARCH_URL", new Parameter("dl", "String", null, 100, "siteSearchURL", false));
-		parameters.put("SITE_SEARCH_PATH", new Parameter("dp", "String", null, 100, "siteSearchPath", false));
+		parameters = Arrays.asList(
+			new Parameter("sst", "String", null, 100, "siteSearchTerm", false, "creme fraiche"),
+			new Parameter("dl", "String", null, 100, "siteSearchURL", false, "http://foo.com/home?q=creme%20fraiche"),
+			new Parameter("dp", "String", null, 100, "siteSearchPath", false, "/home")
+		);
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
+	
 	
 	private boolean trigger(Map<String, String> paramMap){
 		Pattern pattern = Pattern.compile(siteSearchPattern);
-        Matcher matcher = pattern.matcher(paramMap.get("dl"));
+		Matcher matcher = pattern.matcher(paramMap.get("dl"));
 		return (matcher.find());
 	}
-	
 
-	
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("ht", "siteSearch");
+			paramMap.put("et", "siteSearch");
 			Pattern pattern = Pattern.compile(siteSearchPattern);
 			Matcher matcher = pattern.matcher(paramMap.get("dl"));
 			if(matcher.find()){

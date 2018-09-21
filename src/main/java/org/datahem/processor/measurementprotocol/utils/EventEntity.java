@@ -32,23 +32,28 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public class EventEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
+	
+	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(EventEntity.class);
 	
 	public EventEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("EVENT_CATEGORY", new Parameter("ec", "String", null, 150, "eventCategory", true));
-		parameters.put("EVENT_ACTION", new Parameter("ea", "String", null, 500, "eventAction", true));
-		parameters.put("EVENT_LABEL", new Parameter("el", "String", null, 500, "eventLabel", false));
-		parameters.put("EVENT_VALUE", new Parameter("ev", "Integer", null, 100, "eventValue", false));
+		parameters = Arrays.asList(
+			new Parameter("ec", "String", null, 150, "eventCategory", true, "Category"),
+			new Parameter("ea", "String", null, 500, "eventAction", true, "Action"),
+			new Parameter("el", "String", null, 500, "eventLabel", false, "Label"),
+			new Parameter("ev", "Integer", null, 100, "eventValue", false, 55)
+		);
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return "event".equals(paramMap.get("t"));
@@ -57,7 +62,7 @@ public class EventEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> mpEntities = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("ht", "event");
+			paramMap.put("et", "event");
     		try{
 				mpEntities.add(builder(paramMap).build());
 				return mpEntities;

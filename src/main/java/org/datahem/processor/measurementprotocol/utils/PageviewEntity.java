@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.Collections;
@@ -43,20 +44,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PageviewEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
+	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(PageviewEntity.class);
 	
 	public PageviewEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("SCREEN_RESOLUTION", new Parameter("sr", "String", null, 20, "screenResolution", false));
-		parameters.put("VIEWPORT_SIZE", new Parameter("vp", "String", null, 20, "viewportSize", false));
-		parameters.put("DOCUMENT_ENCODING", new Parameter("de", "String", "UTF-8", 20, "encoding", false));
-		parameters.put("SCREEN_COLORS", new Parameter("sd", "String", null, 20, "screenColors", false));
-		parameters.put("USER_LANGUAGE", new Parameter("ul", "String", null, 20, "language", false));
-		parameters.put("JAVA_ENABLED", new Parameter("je", "Boolean", null, 100, "javaEnabled", false));
-		parameters.put("FLASH_VERSION", new Parameter("fl", "String", null, 20, "flashVersion", false));
+		parameters = new ArrayList<>(Arrays.asList(
+			new Parameter("de", "String", "UTF-8", 20, "encoding", false, "UTF-8"),
+			new Parameter("fl", "String", null, 20, "flashVersion", false, "10 1 r103"),
+			new Parameter("sr", "String", null, 20, "screenResolution", false, "800x600"),
+			new Parameter("vp", "String", null, 20, "viewportSize", false, "123x456"),
+			new Parameter("sd", "String", null, 20, "screenColors", false, "24-bits"),
+			new Parameter("ul", "String", null, 20, "language", false, "en-us"),
+			new Parameter("je", "Integer", null, 20, "javaEnabled", false, 1),
+			new Parameter("linkid", "String", null, 2048, "linkId", false,"nav_bar")
+		));
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return "pageview".equals(paramMap.get("t"));
@@ -65,7 +70,7 @@ public class PageviewEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("ht", "pageview");
+			paramMap.put("et", "pageview");
     		try{
 				eventList.add(builder(paramMap).build());
 				return eventList;

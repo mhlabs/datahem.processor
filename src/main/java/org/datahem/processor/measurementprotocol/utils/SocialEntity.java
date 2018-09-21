@@ -32,21 +32,26 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SocialEntity extends BaseEntity{
-	private Map<String, Parameter> parameters;
+	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(SocialEntity.class);
 
+	
 	public SocialEntity(){
 		super();
-		parameters = new HashMap<String, Parameter>();
-		parameters.put("SOCIAL_NETWORK", new Parameter("sn", "String", null, 50, "socialNetwork", true));
-		parameters.put("SOCIAL_ACTION", new Parameter("sa", "String", null, 50, "socialAction", true));
-		parameters.put("SOCIAL_ACTION_TARGET", new Parameter("st", "String", null, 2048, "socialActionTarget", true));
+		parameters = Arrays.asList(
+			new Parameter("sn", "String", null, 50, "socialNetwork", true, "facebook"),
+			new Parameter("sa", "String", null, 50, "socialAction", true, "like"),
+			new Parameter("st", "String", null, 2048, "socialActionTarget", true, "http://foo.com")
+		);
 	}
+	
+	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return (null != paramMap.get("sn") && null != paramMap.get("sa") && null != paramMap.get("st"));
@@ -55,7 +60,7 @@ public class SocialEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("ht", "social");
+			paramMap.put("et", "social");
     		try{
 				eventList.add(builder(paramMap).build());
 				return eventList;

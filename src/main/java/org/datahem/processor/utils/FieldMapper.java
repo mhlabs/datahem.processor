@@ -29,6 +29,7 @@ package org.datahem.processor.utils;
 
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
@@ -69,6 +70,14 @@ public class FieldMapper{
     public static String decode(final String encoded) {
     	try {
         	return encoded == null ? "(not set)" : URLDecoder.decode(encoded, "UTF-8");
+    	} catch(final UnsupportedEncodingException e) {
+        	throw new RuntimeException("Impossible: UTF-8 is a required encoding", e);
+    	}
+	}
+	
+	public static String encode(Object decoded) {
+    	try {
+        	return decoded == null ? "" : URLEncoder.encode(String.valueOf(decoded), "UTF-8").replace("+", "%20");
     	} catch(final UnsupportedEncodingException e) {
         	throw new RuntimeException("Impossible: UTF-8 is a required encoding", e);
     	}
