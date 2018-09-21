@@ -49,9 +49,9 @@ public class TrafficEntity extends BaseEntity{
 	private Pattern pattern;
     private Matcher matcher;
 	private static final Logger LOG = LoggerFactory.getLogger(TrafficEntity.class);
-	private static String searchEnginesPattern = "";//.*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*";  
-	private static String ignoredReferersPattern = "";//.*foo\\.com.*";
-	private static String socialNetworksPattern = "";//.*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*";
+	private static String searchEnginesPattern = "";
+	private static String ignoredReferersPattern = "";
+	private static String socialNetworksPattern = "";
 	
 	
 	public String getSearchEnginesPattern(){
@@ -98,10 +98,6 @@ public class TrafficEntity extends BaseEntity{
 	
 	private boolean trigger(Map<String, String> paramMap){
 		parse(paramMap);
-		LOG.info("cm: " + campaignParameters.getOrDefault("cm", "none"));
-		LOG.info("dr: " + paramMap.getOrDefault("dr", "none"));
-		LOG.info("drh: " + paramMap.getOrDefault("drh", "none"));
-		LOG.info("ignored referers: " + getIgnoredReferersPattern());
 		return (null != campaignParameters.getOrDefault("cm", null));
 	}
 	
@@ -148,7 +144,6 @@ public class TrafficEntity extends BaseEntity{
 					pattern = Pattern.compile(ignoredReferersPattern);
 					matcher = pattern.matcher(paramMap.getOrDefault("drh", ""));
 					if(matcher.find()){
-						LOG.info("self referal");
 						return;
 					}
 					
@@ -162,7 +157,6 @@ public class TrafficEntity extends BaseEntity{
 						if(matcher.find()) campaignParameters.put("ck", (matcher.group(1) == null) ? "(not provided)" : matcher.group(1));
 						else campaignParameters.put("ck", "(not provided)");
 						campaignParameters.put("cc", "(not set)");
-						LOG.info("organic search");
 						return;
 					}
 					
@@ -175,7 +169,6 @@ public class TrafficEntity extends BaseEntity{
 						campaignParameters.put("cm", "social");
 						campaignParameters.put("ck", "(not set)");
 						campaignParameters.put("cc", "(not set)");
-						LOG.info("social");
 						return;
 					}
 					
@@ -185,7 +178,6 @@ public class TrafficEntity extends BaseEntity{
 					campaignParameters.put("cm", "referal");
 					campaignParameters.put("ck", "(not set)");
 					campaignParameters.put("cc", paramMap.get("drp"));
-					LOG.info("referer");
 					return;
         		}
 				
