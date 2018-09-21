@@ -87,7 +87,6 @@ public class ExperimentEntity extends BaseEntity{
 					}	
 				}
 
-				//eventList.add(builder(paramMap).build());
 				return eventList;
 			}
 			catch(IllegalArgumentException e){

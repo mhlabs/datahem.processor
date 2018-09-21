@@ -59,8 +59,6 @@ import org.apache.beam.sdk.transforms.windowing.Window;
 import org.datahem.processor.measurementprotocol.utils.*;
 
 import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.CollectorPayloadEntity;
-//import org.datahem.processor.measurementprotocol.utils.PayloadToMPEntityFn;
-//import org.datahem.processor.measurementprotocol.utils.MPEntityToTableRowFn;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
 
@@ -573,7 +571,6 @@ public class MeasurementProtocolPipelineTest {
 			baseEntity
 				.getParameters()
 				.stream()
-				//.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "siteSearch") : o)
 				.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?gclid=EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD") : o)
 				.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
 				.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
@@ -757,7 +754,7 @@ public class MeasurementProtocolPipelineTest {
 				.build();
 	}
 
-/*
+
 	@Test
 	public void userPageviewTest() throws Exception {
 		LOG.info(Integer.toString(pageviewTR.hashCode())+" : "+pageviewTR.toPrettyString());
@@ -904,7 +901,7 @@ public class MeasurementProtocolPipelineTest {
 
 	@Test
 	public void userProductTest() throws Exception {
-		//LOG.info(Integer.toString(transactionTR.hashCode())+" : "+transactionTR.toPrettyString());	
+		LOG.info(Integer.toString(transactionTR.hashCode())+" : "+transactionTR.toPrettyString());	
 		PCollection<TableRow> output = p
 			.apply(Create.of(Arrays.asList(cpeBuilder(user, productPayload))))
 			.apply(ParDo.of(new PayloadToMPEntityFn(
@@ -922,7 +919,7 @@ public class MeasurementProtocolPipelineTest {
 
 	@Test
 	public void userProductImpressionTest() throws Exception {
-		//LOG.info(Integer.toString(productImpressionTR.hashCode())+" : "+productImpressionTR.toPrettyString());	
+		LOG.info(Integer.toString(productImpressionTR.hashCode())+" : "+productImpressionTR.toPrettyString());	
 		PCollection<TableRow> output = p
 			.apply(Create.of(Arrays.asList(cpeBuilder(user, productImpressionPayload))))
 			.apply(ParDo.of(new PayloadToMPEntityFn(
@@ -1035,7 +1032,7 @@ public class MeasurementProtocolPipelineTest {
 		PAssert.that(output).containsInAnyOrder(trafficPageviewTR, socialTrafficTR);
 		p.run();
 	}
-	*/
+	
 	@Test
 	public void userExperimentTest() throws Exception {
 		LOG.info(Integer.toString(pageviewTR.hashCode())+" : "+pageviewTR.toPrettyString());
