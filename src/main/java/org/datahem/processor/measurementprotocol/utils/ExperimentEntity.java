@@ -46,8 +46,8 @@ public class ExperimentEntity extends BaseEntity{
 	public ExperimentEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("expi", "String", null, 150, "experimentId", true,"fdslkjdflsj"),
-			new Parameter("expv", "String", null, 500, "experimentVariant", true,"0")
+			new Parameter("expi", "String", null, 150, "experimentId", true, "fdslkjdflsj"),
+			new Parameter("expv", "String", null, 500, "experimentVariant", true, "0")
 		);
 	}
 	

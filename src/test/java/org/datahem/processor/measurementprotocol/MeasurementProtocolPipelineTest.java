@@ -705,6 +705,44 @@ public class MeasurementProtocolPipelineTest {
 			.collect(Collectors.toList()));
 
 
+	/*
+	 * Experiment entity
+	 */
+
+	private static ExperimentEntity experimentEntity = new ExperimentEntity();
+	
+	private static TableRow experimentTR = baseTR.clone()
+		.set("type","experiment")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), experimentEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "experiment") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+		
+	private static String experimentPayload =
+		Stream.concat(
+			Stream.concat(
+				pageviewEntity
+					.getParameters()
+					.stream(),
+				experimentEntity
+					.getParameters()
+					.stream())
+					.map(o -> o.getExampleParameterName() == "experimentId" ? new Parameter("exp", "String", null, 50, "entityType", true, "fdslkjdflsj.0") : o)
+					.filter(o -> o.getExampleParameterName() != "experimentVariant")
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "experiment") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+
+
 /*
  * **************************************
  */
@@ -719,7 +757,7 @@ public class MeasurementProtocolPipelineTest {
 				.build();
 	}
 
-
+/*
 	@Test
 	public void userPageviewTest() throws Exception {
 		LOG.info(Integer.toString(pageviewTR.hashCode())+" : "+pageviewTR.toPrettyString());
@@ -995,6 +1033,25 @@ public class MeasurementProtocolPipelineTest {
 				StaticValueProvider.of("Europe/Stockholm"))))
 			.apply(ParDo.of(new MPEntityToTableRowFn()));
 		PAssert.that(output).containsInAnyOrder(trafficPageviewTR, socialTrafficTR);
+		p.run();
+	}
+	*/
+	@Test
+	public void userExperimentTest() throws Exception {
+		LOG.info(Integer.toString(pageviewTR.hashCode())+" : "+pageviewTR.toPrettyString());
+		LOG.info(Integer.toString(experimentTR.hashCode())+" : "+experimentTR.toPrettyString());
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, experimentPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(experimentTR, pageviewTR);
 		p.run();
 	}
 
