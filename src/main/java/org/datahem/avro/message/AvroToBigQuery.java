@@ -1,4 +1,4 @@
-package com.datahem.avro.message;
+package org.datahem.avro.message;
 
 import com.google.api.client.json.GenericJson;
 import com.google.api.services.bigquery.model.TableCell;

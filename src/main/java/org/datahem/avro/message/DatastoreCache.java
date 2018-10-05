@@ -1,4 +1,4 @@
-package com.datahem.avro.message;
+package org.datahem.avro.message;
 
 import org.apache.avro.message.SchemaStore;
 import com.google.common.collect.MapMaker;

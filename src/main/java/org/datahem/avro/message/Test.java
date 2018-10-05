@@ -1,4 +1,4 @@
-package com.datahem.avro.message;
+package org.datahem.avro.message;
 
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaNormalization;

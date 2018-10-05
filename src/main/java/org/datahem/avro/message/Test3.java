@@ -1,4 +1,4 @@
-package com.datahem.avro.message;
+package org.datahem.avro.message;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;

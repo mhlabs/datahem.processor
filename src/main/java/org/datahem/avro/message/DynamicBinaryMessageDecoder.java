@@ -18,7 +18,7 @@
  */
 
 //package org.apache.avro.message;
-package com.datahem.avro.message;
+package org.datahem.avro.message;
 
 import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.BinaryMessageEncoder;
