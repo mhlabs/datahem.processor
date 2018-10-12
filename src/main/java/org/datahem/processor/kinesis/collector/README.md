@@ -40,7 +40,7 @@ DF_WORKER_MACHINE_TYPE='n1-standard-1' # Optional. Default: The Dataflow service
 ENCRYPTED_AWS_KEY # Required. The encrypted AWS Key.
 ENCRYPTED_AWS_SECRET # Required. The encrypted AWS Secret.
 AWS_STREAM # Required. The name of the AWS stream to read from. Example: 'customer-stream'
-AWS_REGION # Optional. The region of the AWS stream. Default: 'europe-west-1'
+AWS_REGION # Optional. The region of the AWS stream. Default: 'eu-west-1'
 KMS_PROJECT_ID # Required. The project id of the GCP KMS used for encryption. Example: 'my-prod-project'
 KMS_LOCATION_ID # Optional. The project id of the GCP KMS used for encryption. Default: 'global'
 KMS_KEY_RING_ID # Required. The key ring id in the GCP KMS used for encryption. 

@@ -314,6 +314,13 @@
     <version>2.4.0</version>
 </dependency>
 
+<!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-datastore -->
+<dependency>
+    <groupId>com.google.cloud</groupId>
+    <artifactId>google-cloud-datastore</artifactId>
+    <version>1.46.0</version>
+</dependency>
+
 <!-- https://mvnrepository.com/artifact/com.amazonaws/amazon-kinesis-client -->
 <dependency>
     <groupId>com.amazonaws</groupId>
