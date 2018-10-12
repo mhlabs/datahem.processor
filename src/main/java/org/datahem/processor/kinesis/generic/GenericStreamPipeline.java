@@ -44,6 +44,7 @@ import com.google.api.services.bigquery.model.TimePartitioning;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -63,6 +64,7 @@ import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryHelpers;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
+//import com.google.pubsub.v1.PubsubMessage;
 
 import org.apache.beam.sdk.io.kinesis.KinesisIO;
 import org.apache.beam.sdk.io.kinesis.KinesisRecord;
@@ -101,7 +103,9 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.DateTimeZone;
-
+import java.util.UUID;
+import com.google.common.collect.ImmutableMap;
+import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,22 +136,51 @@ public class GenericStreamPipeline {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
 
-		PCollectionList<String> kinesis = PCollectionList.empty(pipeline);
+		PCollectionList<PubsubMessage> kinesis = PCollectionList.empty(pipeline);
 		
 		for (Config.KinesisStream kinesisStream : Config.read(options.getConfig())) {
 			LOG.info("Stream name: " + kinesisStream.name);
-			LOG.info("Record namespace: " + kinesisStream.recordNamespace);
-			LOG.info("Record name: " + kinesisStream.recordName);
-			PCollection<String> pass = pipeline.apply(Create.of(WORDS).withCoder(StringUtf8Coder.of()));
+			//LOG.info("Record namespace: " + kinesisStream.recordNamespace);
+			//LOG.info("Record name: " + kinesisStream.recordName);
+			String name = kinesisStream.name;
+			String recordName = kinesisStream.recordName;
+			String recordNamespace = kinesisStream.recordNamespace;
+			PCollection<PubsubMessage> pass = pipeline
+			.apply("Read " + name ,Create.of(WORDS).withCoder(StringUtf8Coder.of()))
+			.apply("Convert String To PubSub Message", ParDo.of(new DoFn<String, PubsubMessage>() {
+				@ProcessElement
+				public void processElement(ProcessContext c) {
+					System.out.println("Inside processor..");
+					//String string = c.element();
+					byte[] payload = c.element().getBytes(StandardCharsets.UTF_8);
+					Map<String,String> attributes = 
+					//new HashMap<String, String>();
+					//attributes.put("stream", name);
+					
+	               			ImmutableMap.<String, String>builder()
+	               				.put("timestamp", Long.toString(Instant.now().getMillis()))
+	               				.put("stream", name)
+	               				.put("recordNamespace", recordNamespace)
+	               				.put("recordName", recordName)
+	               				.put("uuid", UUID.randomUUID().toString())
+	               				.build();
+
+					PubsubMessage pubsubMessage = new PubsubMessage(payload, attributes);
+				System.out.println("Creating table row..");
+				c.output(pubsubMessage);
+				}
+			}));
 			kinesis = kinesis.and(pass);
 		}
 		
 		kinesis
-			.apply(Flatten.<String>pCollections())
-			.apply("Fixed Windows", Window.<String>into(FixedWindows.of(Duration.standardMinutes(1))))
+			.apply("Flatten collections", Flatten.<PubsubMessage>pCollections())
+			.apply("Fixed Windows", Window.<PubsubMessage>into(FixedWindows.of(Duration.standardMinutes(1))))
 			.apply("Write to pubsub",
 				PubsubIO
-					.writeStrings()
+					.writeMessages()
+					.withIdAttribute("uuid")
+					.withTimestampAttribute("timestamp")
 					.to(options.getPubsubTopic())
 		);
 		
