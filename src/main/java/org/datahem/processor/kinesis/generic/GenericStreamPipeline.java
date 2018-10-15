@@ -126,10 +126,51 @@ public class GenericStreamPipeline {
 		String getConfig();
 		void setConfig(String value);
 		
+		@Description("Encrypted AWS KEY")
+		String getAwsKey();
+		void setAwsKey(String value);
+
+		@Description("Encrypted AWS SECRET")
+		String getAwsSecret();
+		void setAwsSecret(String value);
+
+		@Description("AWS REGION")
+		@Default.String("eu-west-1")
+		String getAwsRegion();
+		void setAwsRegion(String value);
+
+		@Description("AWS STREAM")
+		String getAwsStream();
+		void setAwsStream(String value);
+
+		@Description("GCP KMS project ID")
+		@Default.String("")
+		String getKmsProjectId();
+		void setKmsProjectId(String value);
+
+		@Description("GCP KMS Location ID")
+		@Default.String("global")
+		String getKmsLocationId();
+		void setKmsLocationId(String value);
+	
+		@Description("GCP KMS Key Ring ID")
+		@Default.String("")
+		String getKmsKeyRingId();
+		void setKmsKeyRingId(String value);
+		
+		@Description("GCP KMS Crypto Key ID")
+		@Default.String("")
+		String getKmsCryptoKeyId();
+		void setKmsCryptoKeyId(String value);
+		
+		@Description("Initial Position In AWS Kinesis Stream, i.e. LATEST | TRIM_HORIZON | AT_TIMESTAMP")
+		@Default.String("LATEST")
+		String getInitialPositionInStream();
+		void setInitialPositionInStream(String value);
+
 		@Description("Pub/Sub topic: ")
-  	//@Default.String("projects/mathem-data/topics/test")
-  	ValueProvider<String> getPubsubTopic();
-  	void setPubsubTopic(ValueProvider<String> topic);
+		ValueProvider<String> getPubsubTopic();
+		void setPubsubTopic(ValueProvider<String> topic);
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -139,39 +180,37 @@ public class GenericStreamPipeline {
 		PCollectionList<PubsubMessage> kinesis = PCollectionList.empty(pipeline);
 		
 		for (Config.KinesisStream kinesisStream : Config.read(options.getConfig())) {
-			LOG.info("Stream name: " + kinesisStream.name);
-			//LOG.info("Record namespace: " + kinesisStream.recordNamespace);
-			//LOG.info("Record name: " + kinesisStream.recordName);
 			String name = kinesisStream.name;
 			String recordName = kinesisStream.recordName;
 			String recordNamespace = kinesisStream.recordNamespace;
 			PCollection<PubsubMessage> pass = pipeline
-			.apply("Read " + name ,Create.of(WORDS).withCoder(StringUtf8Coder.of()))
-			.apply("Convert String To PubSub Message", ParDo.of(new DoFn<String, PubsubMessage>() {
-				@ProcessElement
-				public void processElement(ProcessContext c) {
-					System.out.println("Inside processor..");
-					//String string = c.element();
-					byte[] payload = c.element().getBytes(StandardCharsets.UTF_8);
-					Map<String,String> attributes = 
-					//new HashMap<String, String>();
-					//attributes.put("stream", name);
-					
-	               			ImmutableMap.<String, String>builder()
-	               				.put("timestamp", Long.toString(Instant.now().getMillis()))
-	               				.put("stream", name)
-	               				.put("recordNamespace", recordNamespace)
-	               				.put("recordName", recordName)
-	               				.put("uuid", UUID.randomUUID().toString())
-	               				.build();
-
-					PubsubMessage pubsubMessage = new PubsubMessage(payload, attributes);
-				System.out.println("Creating table row..");
-				c.output(pubsubMessage);
-				}
-			}));
-			kinesis = kinesis.and(pass);
-		}
+			.apply(name + ": read kinesis stream", KinesisIO.read()
+				.withStreamName(name)
+				.withInitialPositionInStream(InitialPositionInStream.valueOf(options.getInitialPositionInStream()))
+				.withAWSClientsProvider(
+					KmsUtils.decrypt(options.getKmsProjectId(), options.getKmsLocationId(), options.getKmsKeyRingId(), options.getKmsCryptoKeyId(), options.getAwsKey()), 
+					KmsUtils.decrypt(options.getKmsProjectId(),options.getKmsLocationId(),options.getKmsKeyRingId(),options.getKmsCryptoKeyId(),options.getAwsSecret()),
+					Regions.fromName(options.getAwsRegion())))
+				.apply(name + ": convert kinesis record to pubsub message", ParDo.of(new DoFn<KinesisRecord, PubsubMessage>() {
+					@ProcessElement
+					public void processElement(ProcessContext c) throws Exception {
+						KinesisRecord kr = c.element();
+						byte[] payload = kr.getDataAsBytes();
+						Map<String,String> attributes = 
+						
+								ImmutableMap.<String, String>builder()
+									.put("timestamp", Long.toString(Instant.now().getMillis()))
+									.put("stream", name)
+									.put("recordNamespace", recordNamespace)
+									.put("recordName", recordName)
+									.put("uuid", UUID.randomUUID().toString())
+									.build();
+	
+						PubsubMessage pubsubMessage = new PubsubMessage(payload, attributes);
+						c.output(pubsubMessage);
+				}}));
+			kinesis = kinesis.and(pass);	
+		};
 		
 		kinesis
 			.apply("Flatten collections", Flatten.<PubsubMessage>pCollections())
@@ -184,8 +223,6 @@ public class GenericStreamPipeline {
 					.to(options.getPubsubTopic())
 		);
 		
-		//skapa attributes: UUID, timestamp, stream, namespace, record
-
 		pipeline.run();
 	}
 }
