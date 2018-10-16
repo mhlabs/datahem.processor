@@ -34,6 +34,8 @@ import org.datahem.avro.message.DatastoreCache;
 import org.datahem.avro.message.DynamicBinaryMessageDecoder;
 import org.apache.avro.generic.GenericData.Record;
 import org.apache.avro.generic.GenericData;
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 //import org.apache.beam.sdk.options.ValueProvider;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
@@ -43,30 +45,25 @@ import org.slf4j.LoggerFactory;
 public class JsonToAvroBinaryFn extends DoFn<PubsubMessage, PubsubMessage> {
 		private static final Logger LOG = LoggerFactory.getLogger(JsonToAvroBinaryFn.class);
 		private DatastoreCache cache;
-		private DynamicBinaryMessageDecoder<Record> decoder;
-		
-		//public JsonToAvroBinaryFn() {}
 		
 		@Setup
 			public void setup(StartBundleContext c) throws Exception {
 				cache = new DatastoreCache();
-				cache.addSchema(SCHEMA_V1);
-				decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, cache);
 			}
 		
 		@ProcessElement
 			public void processElement(ProcessContext c) throws Exception {
 				PubsubMessage received = c.element();
-
+				//String fingerprint = received.getAttribute("fingerprint");
+				//Schema schema = cache.findByFingerprint(Long.parseLong(fingerprint));
 				try{
-					byte[] payload = Converters.jsonToAvroBinary(c.getPayload(), SCHEMA_V1);
+					String json = new String(received.getPayload());
+					byte[] payload = Converters.jsonToAvroBinary(json, cache.findByFingerprint(Long.parseLong(received.getAttribute("fingerprint"))));
 					Map<String,String> attributes = 
 								ImmutableMap.<String, String>builder()
-									.put("timestamp", Long.toString(Instant.now().getMillis()))
-									.put("stream", name)
-									.put("recordNamespace", recordNamespace)
-									.put("recordName", recordName)
-									.put("uuid", UUID.randomUUID().toString())
+									.put("timestamp", received.getAttribute("timestamp"))
+									.put("fingerprint", received.getAttribute("fingerprint"))
+									.put("uuid", received.getAttribute("uuid"))
 									.build();
 	
 					PubsubMessage pubsubMessage = new PubsubMessage(payload, attributes);

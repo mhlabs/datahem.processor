@@ -37,9 +37,10 @@ public class Config {
 	private static final Logger LOG = LoggerFactory.getLogger(Config.class);
 
 	static public class KinesisStream {
-		public String name;
-		public String recordNamespace;
-		public String recordName;
+		public String stream;
+		//public String recordNamespace;
+		//public String recordName;
+		public String fingerprint;
 	}
 
 	public List<KinesisStream> kinesisStreams;

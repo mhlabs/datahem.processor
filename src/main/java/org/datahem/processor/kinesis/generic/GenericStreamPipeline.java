@@ -180,18 +180,19 @@ public class GenericStreamPipeline {
 		PCollectionList<PubsubMessage> kinesis = PCollectionList.empty(pipeline);
 		
 		for (Config.KinesisStream kinesisStream : Config.read(options.getConfig())) {
-			String name = kinesisStream.name;
-			String recordName = kinesisStream.recordName;
-			String recordNamespace = kinesisStream.recordNamespace;
+			String stream = kinesisStream.stream;
+			//String recordName = kinesisStream.recordName;
+			//String recordNamespace = kinesisStream.recordNamespace;
+			String fingerprint = kinesisStream.fingerprint;
 			PCollection<PubsubMessage> pass = pipeline
-			.apply(name + ": read kinesis stream", KinesisIO.read()
-				.withStreamName(name)
+			.apply(stream + ": read kinesis stream", KinesisIO.read()
+				.withStreamName(stream)
 				.withInitialPositionInStream(InitialPositionInStream.valueOf(options.getInitialPositionInStream()))
 				.withAWSClientsProvider(
 					KmsUtils.decrypt(options.getKmsProjectId(), options.getKmsLocationId(), options.getKmsKeyRingId(), options.getKmsCryptoKeyId(), options.getAwsKey()), 
 					KmsUtils.decrypt(options.getKmsProjectId(),options.getKmsLocationId(),options.getKmsKeyRingId(),options.getKmsCryptoKeyId(),options.getAwsSecret()),
 					Regions.fromName(options.getAwsRegion())))
-				.apply(name + ": convert kinesis record to pubsub message", ParDo.of(new DoFn<KinesisRecord, PubsubMessage>() {
+				.apply(stream + ": convert kinesis record to pubsub message", ParDo.of(new DoFn<KinesisRecord, PubsubMessage>() {
 					@ProcessElement
 					public void processElement(ProcessContext c) throws Exception {
 						KinesisRecord kr = c.element();
@@ -200,9 +201,10 @@ public class GenericStreamPipeline {
 						
 								ImmutableMap.<String, String>builder()
 									.put("timestamp", Long.toString(Instant.now().getMillis()))
-									.put("stream", name)
-									.put("recordNamespace", recordNamespace)
-									.put("recordName", recordName)
+									.put("stream", stream)
+									.put("stream", fingerprint)
+									//.put("recordNamespace", recordNamespace)
+									//.put("recordName", recordName)
 									.put("uuid", UUID.randomUUID().toString())
 									.build();
 	
