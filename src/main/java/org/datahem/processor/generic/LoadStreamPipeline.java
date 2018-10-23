@@ -39,15 +39,21 @@ import java.io.IOException;
 
 import org.apache.beam.sdk.Pipeline;
 
-
+import org.apache.avro.Schema;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
-
+import org.apache.beam.sdk.transforms.SerializableFunction;
 import org.apache.beam.sdk.io.kinesis.KinesisIO;
 import org.apache.beam.sdk.io.kinesis.KinesisRecord;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.amazonaws.regions.Regions;
 
+import org.datahem.avro.message.AvroToBigQuery;
+//import org.apache.beam.sdk.io.gcp.bigquery.BigQueryAvroUtils;
+import org.apache.beam.sdk.values.ValueInSingleWindow;
+import org.apache.beam.sdk.io.gcp.bigquery.TableDestination;
+import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
+import org.apache.beam.sdk.io.gcp.bigquery.DynamicDestinations;
 import org.apache.beam.sdk.metrics.Counter;
 import org.apache.beam.sdk.metrics.Metrics;
 import org.apache.beam.sdk.extensions.gcp.options.GcpOptions;
@@ -69,6 +75,13 @@ import org.apache.beam.sdk.transforms.windowing.FixedWindows;
 import org.apache.beam.sdk.transforms.windowing.Window;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
+import com.google.api.services.bigquery.model.TableRow;
+import com.google.api.services.bigquery.model.TableSchema;
+import org.datahem.avro.message.Converters;
+import org.datahem.avro.message.DatastoreCache;
+import org.datahem.avro.message.DynamicBinaryMessageDecoder;
+import org.apache.avro.generic.GenericData.Record;
+import org.apache.avro.generic.GenericData;
 
 import org.joda.time.Duration;
 import org.joda.time.Instant;
@@ -101,6 +114,7 @@ public class LoadStreamPipeline {
 	public static void main(String[] args) throws IOException {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
+		
 
 		pipeline
 		.apply("Read pubsub messages", 
@@ -115,36 +129,40 @@ public class LoadStreamPipeline {
 				@Setup
 				public void setup() throws Exception {
 					//cache = new DatastoreCache();
+					String SCHEMA_STR_V1 = "{\"type\":\"record\", \"namespace\":\"foo\", \"name\":\"Man\", \"fields\":[ { \"name\":\"name\", \"type\":\"string\" }, { \"name\":\"age\", \"type\":[\"null\",\"double\"] } ] }";
+					Schema SCHEMA_V1 = new Schema.Parser().parse(SCHEMA_STR_V1);
 					decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, new DatastoreCache());
 				}
-				
 				@ProcessElement
 				public void processElement(ProcessContext c) {
 					PubsubMessage received = c.element();
 					//DatastoreCache cache = new DatastoreCache();
 					//DynamicBinaryMessageDecoder<Record> decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, cache);
-					return decoder.decode(received.getPayload());
+					c.output(decoder.decode(received.getPayload()));
+					//return Converters.avroBinaryToRecord(received.getPayload(), decoder)
 				}
-			))
-		/*.apply("Fixed Windows",
-			Window.<PubsubMessage>into(FixedWindows.of(Duration.standardMinutes(1)))
-				.withAllowedLateness(Duration.standardDays(7))
-				.discardingFiredPanes())*/
+			}))
 		.apply("Wite to dynamic BigQuery destinations", BigQueryIO.<Record>write()
-			.to(new DynamicDestinations<Record, String>() {
-				public String getDestination(ValueInSingleWindow<Record> element) {
-					return element.getValue().getUserId();
+			.to(new DynamicDestinations<Record, Schema>() {
+				public Schema getDestination(ValueInSingleWindow<Record> element) {
+					//return element.getValue().getUserId();
+					return element.getValue().getSchema();//.getName();
 				}
-				public TableDestination getTable(String user) {
-					return new TableDestination(tableForUser(user), "Table for user " + user);
+				public TableDestination getTable(Schema schema) {
+					//TableReference tr = new TableReference();
+					//tr.set
+					return new TableDestination(schema.getNamespace() + "." + schema.getName(), "Table for:" + schema.getFullName());
+					//return new TableDestination(tableForUser(user), "Table for user " + user);
 				}
-				public TableSchema getSchema(String user) {
-					return tableSchemaForUser(user);
+				public TableSchema getSchema(Schema schema) {
+					return AvroToBigQuery.getTableSchemaRecord(schema);
+					//return tableSchemaForUser(user);
 				}
 			})
-			.withFormatFunction(new SerializableFunction<UserEvent, TableRow>() {
-				public TableRow apply(UserEvent event) {
-					return convertUserEventToTableRow(event);
+			.withFormatFunction(new SerializableFunction<Record, TableRow>() {
+				public TableRow apply(Record record) {
+					return AvroToBigQuery.getTableRow(record);
+					//return convertUserEventToTableRow(event);
 				}
 			}));
 

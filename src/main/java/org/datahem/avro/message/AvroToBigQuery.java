@@ -44,7 +44,7 @@ import static org.apache.avro.Schema.*;
 //public class AvroToBigQuery<TRecord extends SpecificRecord>  extends DoFn<TRecord, TableRow> {
 public class AvroToBigQuery {
 
-	static TableRow getTableRow(GenericRecord record) {
+	public static TableRow getTableRow(GenericRecord record) {
         TableRow row = new TableRow();
         encode(record, row);
         return row;
