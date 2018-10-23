@@ -36,6 +36,7 @@ import org.apache.avro.generic.GenericData.Record;
 import org.apache.avro.generic.GenericData;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import java.nio.charset.StandardCharsets;
 //import org.apache.beam.sdk.options.ValueProvider;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
@@ -47,7 +48,7 @@ public class JsonToAvroBinaryFn extends DoFn<PubsubMessage, PubsubMessage> {
 		private DatastoreCache cache;
 		
 		@Setup
-			public void setup(StartBundleContext c) throws Exception {
+			public void setup() throws Exception {
 				cache = new DatastoreCache();
 			}
 		
@@ -57,7 +58,7 @@ public class JsonToAvroBinaryFn extends DoFn<PubsubMessage, PubsubMessage> {
 				//String fingerprint = received.getAttribute("fingerprint");
 				//Schema schema = cache.findByFingerprint(Long.parseLong(fingerprint));
 				try{
-					String json = new String(received.getPayload());
+					String json = new String(received.getPayload(), StandardCharsets.UTF_8);
 					byte[] payload = Converters.jsonToAvroBinary(json, cache.findByFingerprint(Long.parseLong(received.getAttribute("fingerprint"))));
 					Map<String,String> attributes = 
 								ImmutableMap.<String, String>builder()
@@ -69,6 +70,7 @@ public class JsonToAvroBinaryFn extends DoFn<PubsubMessage, PubsubMessage> {
 					PubsubMessage pubsubMessage = new PubsubMessage(payload, attributes);
 					c.output(pubsubMessage);
 				}catch(Exception e){
+					LOG.error(new String(received.getPayload(), StandardCharsets.UTF_8));
 					LOG.error(e.toString());
 				}
     		}

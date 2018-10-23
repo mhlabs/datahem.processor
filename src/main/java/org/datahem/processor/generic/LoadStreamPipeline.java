@@ -26,7 +26,6 @@ package org.datahem.processor.generic;
  * =========================LICENSE_END==================================
  */
 
-import org.datahem.processor.utils.KmsUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -81,9 +80,9 @@ import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SerializeStreamPipeline {
+public class LoadStreamPipeline {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(SerializeStreamPipeline.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LoadStreamPipeline.class);
 
 	public interface Options extends PipelineOptions, GcpOptions {
 
@@ -108,19 +107,46 @@ public class SerializeStreamPipeline {
 			PubsubIO
 				.readMessagesWithAttributes()
 				.fromSubscription(options.getPubsubSubscription()))
-		.apply("Convert payload from Json to Avro Binary", 
-			ParDo.of(new JsonToAvroBinaryFn()))
-		.apply("Fixed Windows",
+		.apply("Convert PubsubMessage payload from Avro Binary to Avro Generic Record", 
+			ParDo.of(new DoFn<PubsubMessage,Record>() {
+				//private DatastoreCache cache;
+				private DynamicBinaryMessageDecoder<Record> decoder;
+				
+				@Setup
+				public void setup() throws Exception {
+					//cache = new DatastoreCache();
+					decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, new DatastoreCache());
+				}
+				
+				@ProcessElement
+				public void processElement(ProcessContext c) {
+					PubsubMessage received = c.element();
+					//DatastoreCache cache = new DatastoreCache();
+					//DynamicBinaryMessageDecoder<Record> decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, cache);
+					return decoder.decode(received.getPayload());
+				}
+			))
+		/*.apply("Fixed Windows",
 			Window.<PubsubMessage>into(FixedWindows.of(Duration.standardMinutes(1)))
 				.withAllowedLateness(Duration.standardDays(7))
-				.discardingFiredPanes())
-		.apply("Write to pubsub",
-				PubsubIO
-					.writeMessages()
-					.withIdAttribute("uuid")
-					.withTimestampAttribute("timestamp")
-					.to(options.getPubsubTopic())
-		);
+				.discardingFiredPanes())*/
+		.apply("Wite to dynamic BigQuery destinations", BigQueryIO.<Record>write()
+			.to(new DynamicDestinations<Record, String>() {
+				public String getDestination(ValueInSingleWindow<Record> element) {
+					return element.getValue().getUserId();
+				}
+				public TableDestination getTable(String user) {
+					return new TableDestination(tableForUser(user), "Table for user " + user);
+				}
+				public TableSchema getSchema(String user) {
+					return tableSchemaForUser(user);
+				}
+			})
+			.withFormatFunction(new SerializableFunction<UserEvent, TableRow>() {
+				public TableRow apply(UserEvent event) {
+					return convertUserEventToTableRow(event);
+				}
+			}));
 
 		pipeline.run();
 	}
