@@ -80,6 +80,10 @@ public class Converters {
 		output.flush();
 		return output.toByteArray();
 	}
+	
+	public static byte[] avroRecordToBinary(GenericData.Record genericRecord) throws IOException {
+		return avroRecordToBinary(genericRecord, genericRecord.getSchema());
+	}
 
 	public static String avroBinaryToJson(byte[] avro, MessageDecoder.BaseDecoder<Record> decoder) throws IOException {
 		return avroRecordToJson(avroBinaryToRecord(avro, decoder));

@@ -39,6 +39,7 @@ import java.io.IOException;
 
 import org.apache.beam.sdk.Pipeline;
 
+import org.apache.beam.sdk.coders.AvroCoder;
 import org.apache.avro.Schema;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
@@ -82,6 +83,9 @@ import org.datahem.avro.message.DatastoreCache;
 import org.datahem.avro.message.DynamicBinaryMessageDecoder;
 import org.apache.avro.generic.GenericData.Record;
 import org.apache.avro.generic.GenericData;
+import org.apache.avro.SchemaNormalization;
+import org.apache.beam.sdk.coders.CoderRegistry;
+import org.apache.beam.sdk.coders.Coder;
 
 import org.joda.time.Duration;
 import org.joda.time.Instant;
@@ -98,12 +102,6 @@ public class LoadStreamPipeline {
 	private static final Logger LOG = LoggerFactory.getLogger(LoadStreamPipeline.class);
 
 	public interface Options extends PipelineOptions, GcpOptions {
-
-	
-		@Description("Pub/Sub topic")
-		//@Default.String("projects/mathem-data/topics/orders")
-		ValueProvider<String> getPubsubTopic();
-		void setPubsubTopic(ValueProvider<String> value);
 		
 		@Description("Pub/Sub subscription")
 		//@Default.String("projects/mathem-data/subscriptions/measurementprotocol-1-dev")
@@ -114,7 +112,9 @@ public class LoadStreamPipeline {
 	public static void main(String[] args) throws IOException {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
-		
+		CoderRegistry cr = pipeline.getCoderRegistry();
+		GenericRecordCoder coder = new GenericRecordCoder();
+		cr.registerCoderForClass(Record.class, coder);
 
 		pipeline
 		.apply("Read pubsub messages", 
@@ -138,31 +138,29 @@ public class LoadStreamPipeline {
 					PubsubMessage received = c.element();
 					//DatastoreCache cache = new DatastoreCache();
 					//DynamicBinaryMessageDecoder<Record> decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, cache);
-					c.output(decoder.decode(received.getPayload()));
-					//return Converters.avroBinaryToRecord(received.getPayload(), decoder)
+					try{
+						c.output(decoder.decode(received.getPayload()));	
+					}catch(IOException e){
+						LOG.error(e.toString());
+					}
 				}
 			}))
 		.apply("Wite to dynamic BigQuery destinations", BigQueryIO.<Record>write()
-			.to(new DynamicDestinations<Record, Schema>() {
-				public Schema getDestination(ValueInSingleWindow<Record> element) {
-					//return element.getValue().getUserId();
-					return element.getValue().getSchema();//.getName();
+			.to(new DynamicDestinations<Record, String>() {
+				public String getDestination(ValueInSingleWindow<Record> element) {
+					String fingerprint = Long.toString(SchemaNormalization.parsingFingerprint64(element.getValue().getSchema()));
+					return fingerprint;
 				}
-				public TableDestination getTable(Schema schema) {
-					//TableReference tr = new TableReference();
-					//tr.set
-					return new TableDestination(schema.getNamespace() + "." + schema.getName(), "Table for:" + schema.getFullName());
-					//return new TableDestination(tableForUser(user), "Table for user " + user);
+				public TableDestination getTable(String fingerprint) {
+					return new TableDestination(fingerprint + "." + fingerprint, "Table for:" + fingerprint);
 				}
-				public TableSchema getSchema(Schema schema) {
-					return AvroToBigQuery.getTableSchemaRecord(schema);
-					//return tableSchemaForUser(user);
+				public TableSchema getSchema(String fingerprint) {
+					return new TableSchema();
 				}
 			})
 			.withFormatFunction(new SerializableFunction<Record, TableRow>() {
 				public TableRow apply(Record record) {
 					return AvroToBigQuery.getTableRow(record);
-					//return convertUserEventToTableRow(event);
 				}
 			}));
 
