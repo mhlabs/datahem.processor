@@ -1,4 +1,4 @@
-labspackage org.datahem.avro.message;
+package org.datahem.avro.message;
 
 /*-
  * ========================LICENSE_START=================================

@@ -41,6 +41,8 @@ import org.apache.beam.sdk.Pipeline;
 
 import org.apache.beam.sdk.coders.AvroCoder;
 import org.apache.avro.Schema;
+import org.apache.avro.SchemaCompatibility;
+import org.apache.avro.SchemaCompatibility.SchemaCompatibilityType;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
 import org.apache.beam.sdk.transforms.SerializableFunction;
@@ -49,12 +51,19 @@ import org.apache.beam.sdk.io.kinesis.KinesisRecord;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.amazonaws.regions.Regions;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import org.datahem.avro.message.AvroToBigQuery;
 //import org.apache.beam.sdk.io.gcp.bigquery.BigQueryAvroUtils;
 import org.apache.beam.sdk.values.ValueInSingleWindow;
 import org.apache.beam.sdk.io.gcp.bigquery.TableDestination;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.io.gcp.bigquery.DynamicDestinations;
+import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.CreateDisposition;
+import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.WriteDisposition;
+import com.google.cloud.bigquery.BigQueryOptions;
+
+import org.apache.beam.sdk.io.gcp.bigquery.InsertRetryPolicy;
+import org.apache.beam.sdk.io.gcp.bigquery.WriteResult;
 import org.apache.beam.sdk.metrics.Counter;
 import org.apache.beam.sdk.metrics.Metrics;
 import org.apache.beam.sdk.extensions.gcp.options.GcpOptions;
@@ -109,6 +118,7 @@ public class LoadStreamPipeline {
 		void setPubsubSubscription(ValueProvider<String> subscription);
 	}
 
+
 	public static void main(String[] args) throws IOException {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
@@ -116,56 +126,123 @@ public class LoadStreamPipeline {
 		GenericRecordCoder coder = new GenericRecordCoder();
 		cr.registerCoderForClass(Record.class, coder);
 		DatastoreCache cache = new DatastoreCache();
+		Map tableFingerprintLabel = new HashMap<string, string>();
 
-		pipeline
-		.apply("Read pubsub messages", 
-			PubsubIO
-				.readMessagesWithAttributes()
-				.fromSubscription(options.getPubsubSubscription()))
-		.apply("Convert PubsubMessage payload from Avro Binary to Avro Generic Record", 
-			ParDo.of(new DoFn<PubsubMessage,Record>() {
-				//private DatastoreCache cache;
-				private DynamicBinaryMessageDecoder<Record> decoder;
-				
-				@Setup
-				public void setup() throws Exception {
-					//cache = new DatastoreCache();
-					String SCHEMA_STR_V1 = "{\"type\":\"record\", \"namespace\":\"foo\", \"name\":\"Man\", \"fields\":[ { \"name\":\"name\", \"type\":\"string\" }, { \"name\":\"age\", \"type\":[\"null\",\"double\"] } ] }";
-					Schema SCHEMA_V1 = new Schema.Parser().parse(SCHEMA_STR_V1);
-					decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, new DatastoreCache());
-				}
-				@ProcessElement
-				public void processElement(ProcessContext c) {
-					PubsubMessage received = c.element();
-					try{
-						c.output(decoder.decode(received.getPayload()));	
-					}catch(IOException e){
-						LOG.error(e.toString());
-					}
-				}
-			}))
-		.apply("Wite to dynamic BigQuery destinations", BigQueryIO.<Record>write()
-			.to(new DynamicDestinations<Record, String>() {
-				public String getDestination(ValueInSingleWindow<Record> element) {
-					String fingerprint = Long.toString(SchemaNormalization.parsingFingerprint64(element.getValue().getSchema()));
-					return fingerprint;
-				}
-				public TableDestination getTable(String fingerprint) {
-					Schema schema = cache.findByFingerprint(Long.parseLong(fingerprint));
-					return new TableDestination("generic_streams." + schema.getName(), "Table for:" + fingerprint);
-					//return new TableDestination("generic_streams." + fingerprint, "Table for:" + fingerprint);
-				}
-				public TableSchema getSchema(String fingerprint) {
-					String SCHEMA_STR_V1 = "{\"type\":\"record\", \"namespace\":\"foo\", \"name\":\"Man\", \"fields\":[ { \"name\":\"name\", \"type\":\"string\" }, { \"name\":\"age\", \"type\":[\"null\",\"double\"] } ] }";
-					Schema SCHEMA_V1 = new Schema.Parser().parse(SCHEMA_STR_V1);
-					return AvroToBigQuery.getTableSchemaRecord(SCHEMA_V1);
-				}
-			})
-			.withFormatFunction(new SerializableFunction<Record, TableRow>() {
-				public TableRow apply(Record record) {
-					return AvroToBigQuery.getTableRow(record);
-				}
-			}));
+		PCollection<Record> incomingRecords = 
+			pipeline
+				.apply("Read pubsub messages", 
+					PubsubIO
+						.readMessagesWithAttributes()
+						.fromSubscription(options.getPubsubSubscription()))
+				.apply("Convert PubsubMessage payload from Avro Binary to Avro Generic Record", 
+					ParDo.of(new DoFn<PubsubMessage,Record>() {
+						//private DatastoreCache cache;
+						private DynamicBinaryMessageDecoder<Record> decoder;
+						
+						@Setup
+						public void setup() throws Exception {
+							//cache = new DatastoreCache();
+							String SCHEMA_STR_V1 = "{\"type\":\"record\", \"namespace\":\"foo\", \"name\":\"Man\", \"fields\":[ { \"name\":\"name\", \"type\":\"string\" }, { \"name\":\"age\", \"type\":[\"null\",\"double\"] } ] }";
+							Schema SCHEMA_V1 = new Schema.Parser().parse(SCHEMA_STR_V1);
+							decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, new DatastoreCache());
+						}
+						@ProcessElement
+						public void processElement(ProcessContext c) {
+							PubsubMessage received = c.element();
+							try{
+								c.output(decoder.decode(received.getPayload()));	
+							}catch(IOException e){
+								LOG.error(e.toString());
+							}
+						}
+					}));
+			
+			WriteResult writeResult = 
+				incomingRecords.apply(
+					"Wite to dynamic BigQuery destinations", 
+					BigQueryIO.<Record>write()
+					.to(new DynamicDestinations<Record, String>() {
+						public String getDestination(ValueInSingleWindow<Record> element) {
+							String fingerprint = Long.toString(SchemaNormalization.parsingFingerprint64(element.getValue().getSchema()));
+							return fingerprint;
+						}
+						public TableDestination getTable(String fingerprint) {
+							Schema schema = cache.findByFingerprint(Long.parseLong(fingerprint));
+							String project = "mathem-ml-datahem-test";
+							String dataset = "generic_streams";
+							String table = schema.getName();
+							if(tableFingerprintLabel.get(tableId) == null){
+								TableId tableId = TableId.of(project, dataset, table);
+								Table table = bigQuery.getTable(tableId);
+								if(table.getLabels().get(fingerprint) == null){
+									table.setLabels(table.getLabels().set("fingerprint", fingerprint));
+									tableFingerprintLabel.set(tableId, fingerprint);
+								}
+							}
+							return new TableDestination(dataset + "." + table, "Table for:" + fingerprint);
+							//return new TableDestination("generic_streams." + fingerprint, "Table for:" + fingerprint);
+						}
+						public TableSchema getSchema(String fingerprint) {
+							String SCHEMA_STR_V1 = "{\"type\":\"record\", \"namespace\":\"foo\", \"name\":\"Man\", \"fields\":[ { \"name\":\"name\", \"type\":\"string\" }, { \"name\":\"age\", \"type\":[\"null\",\"double\"] } ] }";
+							Schema SCHEMA_V1 = new Schema.Parser().parse(SCHEMA_STR_V1);
+							return AvroToBigQuery.getTableSchemaRecord(SCHEMA_V1);
+						}
+					})
+					.withFormatFunction(new SerializableFunction<Record, TableRow>() {
+						public TableRow apply(Record record) {
+							return AvroToBigQuery.getTableRow(record);
+						}
+					})
+					.withWriteDisposition(WriteDisposition.WRITE_APPEND)
+					.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors()));
+					
+
+			writeResult
+				.getFailedInserts()
+				//.apply("MutateSchema", BigQuerySchemaMutator.mutateWithSchema(incomingRecordsView))
+				.apply("Mutate schema", 
+					ParDo.of(new DoFn<Record,Record>() {
+						//private DatastoreCache cache;
+						private DynamicBinaryMessageDecoder<Record> decoder;
+						private transient BigQuery bigQuery;
+						
+						@Setup
+						public void setup() throws Exception {
+							//cache = new DatastoreCache();
+							String SCHEMA_STR_V1 = "{\"type\":\"record\", \"namespace\":\"foo\", \"name\":\"Man\", \"fields\":[ { \"name\":\"name\", \"type\":\"string\" }, { \"name\":\"age\", \"type\":[\"null\",\"double\"] } ] }";
+							Schema SCHEMA_V1 = new Schema.Parser().parse(SCHEMA_STR_V1);
+							decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, new DatastoreCache());
+							bigQuery =
+								BigQueryOptions.newBuilder()
+									.setCredentials(GoogleCredentials.getApplicationDefault())
+									.build()
+									.getService();
+						}
+						
+						@ProcessElement
+						public void processElement(ProcessContext c) {
+							Record record = c.element();
+							if(SchemaCompatibility.checkReaderWriterCompatibility(Schema reader, Schema writer).getType() == SchemaCompatibilityType.COMPATIBLE){
+								LOG.info("hello");
+							}
+							try{
+								c.output(decoder.decode(received.getPayload()));	
+							}catch(IOException e){
+								LOG.error(e.toString());
+							}
+						}
+					}))
+				.apply(
+					"RetryWriteMutatedRows",
+					BigQueryIO.<Record>write()
+						//.withFormatFunction(TableRowWithSchema::getTableRow)
+						.withFormatFunction(new SerializableFunction<Record, TableRow>() {
+							public TableRow apply(Record record) {
+								return AvroToBigQuery.getTableRow(record);
+							}
+						})
+						.withCreateDisposition(CreateDisposition.CREATE_NEVER)
+						.withWriteDisposition(WriteDisposition.WRITE_APPEND));
 
 		pipeline.run();
 	}
