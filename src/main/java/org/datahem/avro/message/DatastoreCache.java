@@ -1,4 +1,4 @@
-package org.datahem.avro.message;
+labspackage org.datahem.avro.message;
 
 /*-
  * ========================LICENSE_START=================================
@@ -26,6 +26,7 @@ package org.datahem.avro.message;
  * =========================LICENSE_END==================================
  */
 
+import java.io.Serializable;
 import org.apache.avro.message.SchemaStore;
 import com.google.common.collect.MapMaker;
 import java.util.Map;
@@ -37,8 +38,9 @@ import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 
-public class DatastoreCache implements SchemaStore {
-    private final Map<Long, Schema> schemas = new MapMaker().makeMap();
+public class DatastoreCache implements SchemaStore, Serializable {
+    //private final Map<Long, Schema> schemas = new MapMaker().makeMap();
+    private final Map<Long, String> schemas = new MapMaker().makeMap();
 
     /**
      * Adds a schema to this cache that can be retrieved using its AVRO-CRC-64
@@ -49,7 +51,8 @@ public class DatastoreCache implements SchemaStore {
     public void addSchema(Schema schema) {
       long fingerprint = SchemaNormalization.parsingFingerprint64(schema);
       System.out.println("SchemaStore addSchema: " + Long.toString(fingerprint) + " : " + schema.toString());
-      schemas.put(fingerprint, schema);
+      //schemas.put(fingerprint, schema);
+      schemas.put(fingerprint, schema.toString());
       addSchemaToDatastore(fingerprint, schema);
     }
 
@@ -57,11 +60,12 @@ public class DatastoreCache implements SchemaStore {
 	public Schema findByFingerprint(long fingerprint) {
       //System.out.println("SchemaStore findByFingerprint: " + Long.toString(fingerprint) + " : " + schemas.get(fingerprint).toString());
 		if (schemas.get(fingerprint) != null) {
-			return schemas.get(fingerprint);
+			return new Schema.Parser().parse(schemas.get(fingerprint));
 		}
 		Schema schema = getSchemaFromDatastore(fingerprint);
 		if (schema != null) {
-			schemas.put(fingerprint, schema);
+			//schemas.put(fingerprint, schema);
+			schemas.put(fingerprint, schema.toString());
 			return schema;
 		}
 		return null;

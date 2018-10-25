@@ -115,7 +115,7 @@ public class LoadStreamPipeline {
 		CoderRegistry cr = pipeline.getCoderRegistry();
 		GenericRecordCoder coder = new GenericRecordCoder();
 		cr.registerCoderForClass(Record.class, coder);
-		//DatastoreCache cache = new DatastoreCache();
+		DatastoreCache cache = new DatastoreCache();
 
 		pipeline
 		.apply("Read pubsub messages", 
@@ -151,7 +151,9 @@ public class LoadStreamPipeline {
 					return fingerprint;
 				}
 				public TableDestination getTable(String fingerprint) {
-					return new TableDestination("generic_streams." + fingerprint, "Table for:" + fingerprint);
+					Schema schema = cache.findByFingerprint(Long.parseLong(fingerprint));
+					return new TableDestination("generic_streams." + schema.getName(), "Table for:" + fingerprint);
+					//return new TableDestination("generic_streams." + fingerprint, "Table for:" + fingerprint);
 				}
 				public TableSchema getSchema(String fingerprint) {
 					String SCHEMA_STR_V1 = "{\"type\":\"record\", \"namespace\":\"foo\", \"name\":\"Man\", \"fields\":[ { \"name\":\"name\", \"type\":\"string\" }, { \"name\":\"age\", \"type\":[\"null\",\"double\"] } ] }";
