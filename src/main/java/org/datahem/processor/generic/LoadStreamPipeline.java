@@ -57,6 +57,7 @@ import org.datahem.avro.message.AvroToBigQuery;
 import org.apache.beam.sdk.values.ValueInSingleWindow;
 import org.apache.beam.sdk.io.gcp.bigquery.TableDestination;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
+import org.apache.beam.sdk.io.gcp.bigquery.BigQuery;
 import org.apache.beam.sdk.io.gcp.bigquery.DynamicDestinations;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.CreateDisposition;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.WriteDisposition;
@@ -171,8 +172,8 @@ public class LoadStreamPipeline {
 							String project = "mathem-ml-datahem-test";
 							String dataset = "generic_streams";
 							String table = schema.getName();
+							TableId tableId = TableId.of(project, dataset, table);
 							if(tableFingerprintLabel.get(tableId) == null){
-								TableId tableId = TableId.of(project, dataset, table);
 								Table table = bigQuery.getTable(tableId);
 								if(table.getLabels().get(fingerprint) == null){
 									table.setLabels(table.getLabels().set("fingerprint", fingerprint));
@@ -222,7 +223,16 @@ public class LoadStreamPipeline {
 						@ProcessElement
 						public void processElement(ProcessContext c) {
 							Record record = c.element();
-							if(SchemaCompatibility.checkReaderWriterCompatibility(Schema reader, Schema writer).getType() == SchemaCompatibilityType.COMPATIBLE){
+							Schema writer = record.getSchema();
+							//Schema writer = cache.findByFingerprint(Long.parseLong(fingerprint));
+							String project = "mathem-ml-datahem-test";
+							String dataset = "generic_streams";
+							
+							String table = reader.getName();
+							TableId tableId = TableId.of(project, dataset, table);
+							Schema reader = cache.findByFingerprint(tableFingerprintLabel.get(tableId));
+							SchemaPairCompatibility compatibility = SchemaCompatibility.checkReaderWriterCompatibility(reader, writer);
+							if(compatibility.getType() == SchemaCompatibilityType.COMPATIBLE){
 								LOG.info("hello");
 							}
 							try{

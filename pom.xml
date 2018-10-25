@@ -265,6 +265,14 @@
       </exclusions>
     </dependency>
 
+<!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-bigquery -->
+<dependency>
+    <groupId>com.google.cloud</groupId>
+    <artifactId>google-cloud-bigquery</artifactId>
+    <version>1.49.0</version>
+</dependency>
+
+
     
 <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-cloudkms -->
 <dependency>
