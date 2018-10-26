@@ -57,11 +57,14 @@ import org.datahem.avro.message.AvroToBigQuery;
 import org.apache.beam.sdk.values.ValueInSingleWindow;
 import org.apache.beam.sdk.io.gcp.bigquery.TableDestination;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
-import org.apache.beam.sdk.io.gcp.bigquery.BigQuery;
+
 import org.apache.beam.sdk.io.gcp.bigquery.DynamicDestinations;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.CreateDisposition;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.WriteDisposition;
 import com.google.cloud.bigquery.BigQueryOptions;
+import com.google.cloud.bigquery.BigQuery;
+import com.google.cloud.bigquery.TableId;
+import com.google.cloud.bigquery.Table;
 
 import org.apache.beam.sdk.io.gcp.bigquery.InsertRetryPolicy;
 import org.apache.beam.sdk.io.gcp.bigquery.WriteResult;
@@ -84,8 +87,11 @@ import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.transforms.SimpleFunction;
 import org.apache.beam.sdk.transforms.windowing.FixedWindows;
 import org.apache.beam.sdk.transforms.windowing.Window;
+import org.apache.beam.sdk.transforms.View;
+import org.apache.beam.sdk.transforms.WithKeys;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
+import org.apache.beam.sdk.values.PCollectionView;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import org.datahem.avro.message.Converters;
@@ -96,6 +102,8 @@ import org.apache.avro.generic.GenericData;
 import org.apache.avro.SchemaNormalization;
 import org.apache.beam.sdk.coders.CoderRegistry;
 import org.apache.beam.sdk.coders.Coder;
+
+import java.util.HashMap;
 
 import org.joda.time.Duration;
 import org.joda.time.Instant;
@@ -110,6 +118,7 @@ import org.slf4j.LoggerFactory;
 public class LoadStreamPipeline {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(LoadStreamPipeline.class);
+	private static Map tableFingerprintLabel = new HashMap<String, String>();
 
 	public interface Options extends PipelineOptions, GcpOptions {
 		
@@ -119,6 +128,28 @@ public class LoadStreamPipeline {
 		void setPubsubSubscription(ValueProvider<String> subscription);
 	}
 
+	private static void labelTableWithFingerprint(String fingerprint, String project, String dataset, String tableName){
+		TableId tableId = TableId.of(project, dataset, tableName);
+		if(tableFingerprintLabel.get(tableId) == null){
+			BigQuery bigQuery = BigQueryOptions.newBuilder()
+				.setCredentials(GoogleCredentials.getApplicationDefault())
+				.build()
+				.getService();
+			Table table = bigQuery.getTable(tableId);
+			if(table.getLabels().get("fingerprint") == null){
+				Map labels = table.getLabels();
+				labels.put("fingerprint", fingerprint);
+				table
+					.toBuilder()
+					.setLabels(labels)
+					.build()
+					.update();
+				tableFingerprintLabel.put(tableId, fingerprint);
+			}else{
+				tableFingerprintLabel.put(tableId, fingerprint);
+			}
+		}
+	}
 
 	public static void main(String[] args) throws IOException {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
@@ -127,7 +158,7 @@ public class LoadStreamPipeline {
 		GenericRecordCoder coder = new GenericRecordCoder();
 		cr.registerCoderForClass(Record.class, coder);
 		DatastoreCache cache = new DatastoreCache();
-		Map tableFingerprintLabel = new HashMap<string, string>();
+		//Map tableFingerprintLabel = new HashMap<String, String>();
 
 		PCollection<Record> incomingRecords = 
 			pipeline
@@ -139,6 +170,7 @@ public class LoadStreamPipeline {
 					ParDo.of(new DoFn<PubsubMessage,Record>() {
 						//private DatastoreCache cache;
 						private DynamicBinaryMessageDecoder<Record> decoder;
+						private transient BigQuery bigQuery;
 						
 						@Setup
 						public void setup() throws Exception {
@@ -147,6 +179,7 @@ public class LoadStreamPipeline {
 							Schema SCHEMA_V1 = new Schema.Parser().parse(SCHEMA_STR_V1);
 							decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, new DatastoreCache());
 						}
+						
 						@ProcessElement
 						public void processElement(ProcessContext c) {
 							PubsubMessage received = c.element();
@@ -172,16 +205,8 @@ public class LoadStreamPipeline {
 							String project = "mathem-ml-datahem-test";
 							String dataset = "generic_streams";
 							String table = schema.getName();
-							TableId tableId = TableId.of(project, dataset, table);
-							if(tableFingerprintLabel.get(tableId) == null){
-								Table table = bigQuery.getTable(tableId);
-								if(table.getLabels().get(fingerprint) == null){
-									table.setLabels(table.getLabels().set("fingerprint", fingerprint));
-									tableFingerprintLabel.set(tableId, fingerprint);
-								}
-							}
+							labelTableWithFingerprint(fingerprint, project, dataset, table);
 							return new TableDestination(dataset + "." + table, "Table for:" + fingerprint);
-							//return new TableDestination("generic_streams." + fingerprint, "Table for:" + fingerprint);
 						}
 						public TableSchema getSchema(String fingerprint) {
 							String SCHEMA_STR_V1 = "{\"type\":\"record\", \"namespace\":\"foo\", \"name\":\"Man\", \"fields\":[ { \"name\":\"name\", \"type\":\"string\" }, { \"name\":\"age\", \"type\":[\"null\",\"double\"] } ] }";
@@ -196,13 +221,18 @@ public class LoadStreamPipeline {
 					})
 					.withWriteDisposition(WriteDisposition.WRITE_APPEND)
 					.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors()));
-					
-
+			
+			// Create side-input to join records with their incoming schema
+			PCollectionView<Map<Integer, Record>> incomingRecordsView =
+				incomingRecords
+					.apply("KeyIncomingByHash", WithKeys.of(record -> AvroToBigQuery.getTableRow(record).hashCode()))
+					.apply("CreateView", View.asMap());
+			
 			writeResult
 				.getFailedInserts()
 				//.apply("MutateSchema", BigQuerySchemaMutator.mutateWithSchema(incomingRecordsView))
 				.apply("Mutate schema", 
-					ParDo.of(new DoFn<Record,Record>() {
+					ParDo.of(new DoFn<TableRow,TableRow>() {
 						//private DatastoreCache cache;
 						private DynamicBinaryMessageDecoder<Record> decoder;
 						private transient BigQuery bigQuery;
@@ -212,7 +242,7 @@ public class LoadStreamPipeline {
 							//cache = new DatastoreCache();
 							String SCHEMA_STR_V1 = "{\"type\":\"record\", \"namespace\":\"foo\", \"name\":\"Man\", \"fields\":[ { \"name\":\"name\", \"type\":\"string\" }, { \"name\":\"age\", \"type\":[\"null\",\"double\"] } ] }";
 							Schema SCHEMA_V1 = new Schema.Parser().parse(SCHEMA_STR_V1);
-							decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, new DatastoreCache());
+							decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, cache);
 							bigQuery =
 								BigQueryOptions.newBuilder()
 									.setCredentials(GoogleCredentials.getApplicationDefault())
@@ -222,7 +252,10 @@ public class LoadStreamPipeline {
 						
 						@ProcessElement
 						public void processElement(ProcessContext c) {
-							Record record = c.element();
+							TableRow tablerow = c.element();
+							Map<Integer, Record> irv = c.sideInput(incomingRecordsView);
+							Record record = irv.get(tablerow.hashCode());
+							
 							Schema writer = record.getSchema();
 							//Schema writer = cache.findByFingerprint(Long.parseLong(fingerprint));
 							String project = "mathem-ml-datahem-test";
@@ -242,6 +275,7 @@ public class LoadStreamPipeline {
 							}
 						}
 					}))
+					.withSideInputs(incomingRecordsView)
 				.apply(
 					"RetryWriteMutatedRows",
 					BigQueryIO.<Record>write()
