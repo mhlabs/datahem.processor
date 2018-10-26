@@ -131,23 +131,27 @@ public class LoadStreamPipeline {
 	private static void labelTableWithFingerprint(String fingerprint, String project, String dataset, String tableName){
 		TableId tableId = TableId.of(project, dataset, tableName);
 		if(tableFingerprintLabel.get(tableId) == null){
-			BigQuery bigQuery = BigQueryOptions.newBuilder()
-				.setCredentials(GoogleCredentials.getApplicationDefault())
-				.build()
-				.getService();
-			Table table = bigQuery.getTable(tableId);
-			if(table.getLabels().get("fingerprint") == null){
-				Map labels = table.getLabels();
-				labels.put("fingerprint", fingerprint);
-				table
-					.toBuilder()
-					.setLabels(labels)
+			try{
+				BigQuery bigQuery = BigQueryOptions.newBuilder()
+					.setCredentials(GoogleCredentials.getApplicationDefault())
 					.build()
-					.update();
-				tableFingerprintLabel.put(tableId, fingerprint);
-			}else{
-				tableFingerprintLabel.put(tableId, fingerprint);
-			}
+					.getService();
+				Table table = bigQuery.getTable(tableId);
+				if(table.getLabels().get("fingerprint") == null){
+					Map labels = table.getLabels();
+					labels.put("fingerprint", fingerprint);
+					table
+						.toBuilder()
+						.setLabels(labels)
+						.build()
+						.update();
+					tableFingerprintLabel.put(tableId, fingerprint);
+				}else{
+					tableFingerprintLabel.put(tableId, fingerprint);
+				}
+			}catch(IOException e){
+								LOG.error(e.toString());
+							}
 		}
 	}
 
@@ -232,7 +236,7 @@ public class LoadStreamPipeline {
 				.getFailedInserts()
 				//.apply("MutateSchema", BigQuerySchemaMutator.mutateWithSchema(incomingRecordsView))
 				.apply("Mutate schema", 
-					ParDo.of(new DoFn<TableRow,TableRow>() {
+					ParDo.of(new DoFn<TableRow,Record>() {
 						//private DatastoreCache cache;
 						private DynamicBinaryMessageDecoder<Record> decoder;
 						private transient BigQuery bigQuery;
@@ -256,6 +260,7 @@ public class LoadStreamPipeline {
 							Map<Integer, Record> irv = c.sideInput(incomingRecordsView);
 							Record record = irv.get(tablerow.hashCode());
 							
+							/*
 							Schema writer = record.getSchema();
 							//Schema writer = cache.findByFingerprint(Long.parseLong(fingerprint));
 							String project = "mathem-ml-datahem-test";
@@ -268,14 +273,15 @@ public class LoadStreamPipeline {
 							if(compatibility.getType() == SchemaCompatibilityType.COMPATIBLE){
 								LOG.info("hello");
 							}
-							try{
-								c.output(decoder.decode(received.getPayload()));	
-							}catch(IOException e){
+							try{*/
+								c.output(record);
+								//c.output(decoder.decode(received.getPayload()));	
+							/*}catch(IOException e){
 								LOG.error(e.toString());
-							}
+							}*/
 						}
-					}))
-					.withSideInputs(incomingRecordsView)
+					})
+					.withSideInputs(incomingRecordsView))
 				.apply(
 					"RetryWriteMutatedRows",
 					BigQueryIO.<Record>write()
