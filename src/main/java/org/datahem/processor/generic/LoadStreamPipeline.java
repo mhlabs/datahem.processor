@@ -43,6 +43,7 @@ import org.apache.beam.sdk.coders.AvroCoder;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaCompatibility;
 import org.apache.avro.SchemaCompatibility.SchemaCompatibilityType;
+import org.apache.avro.SchemaCompatibility.SchemaPairCompatibility;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
 import org.apache.beam.sdk.transforms.SerializableFunction;
@@ -130,7 +131,7 @@ public class LoadStreamPipeline {
 
 	private static void labelTableWithFingerprint(String fingerprint, String project, String dataset, String tableName){
 		TableId tableId = TableId.of(project, dataset, tableName);
-		if(tableFingerprintLabel.get(tableId) == null){
+		if(tableFingerprintLabel.get(tableId.toString()) == null){
 			try{
 				BigQuery bigQuery = BigQueryOptions.newBuilder()
 					.setCredentials(GoogleCredentials.getApplicationDefault())
@@ -145,9 +146,9 @@ public class LoadStreamPipeline {
 						.setLabels(labels)
 						.build()
 						.update();
-					tableFingerprintLabel.put(tableId, fingerprint);
+					tableFingerprintLabel.put(tableId.toString(), fingerprint);
 				}else{
-					tableFingerprintLabel.put(tableId, fingerprint);
+					tableFingerprintLabel.put(tableId.toString(), fingerprint);
 				}
 			}catch(IOException e){
 								LOG.error(e.toString());
@@ -256,29 +257,43 @@ public class LoadStreamPipeline {
 						
 						@ProcessElement
 						public void processElement(ProcessContext c) {
+							//first part, get record from tablerow-lookup
 							TableRow tablerow = c.element();
 							Map<Integer, Record> irv = c.sideInput(incomingRecordsView);
 							Record record = irv.get(tablerow.hashCode());
 							
-							/*
+							//second part, group records by fingerprint
+							
+							//third part, modify schema for group of records
+							
+							//fourth part, transform records to tablerows and write to bq
+							
 							Schema writer = record.getSchema();
 							//Schema writer = cache.findByFingerprint(Long.parseLong(fingerprint));
 							String project = "mathem-ml-datahem-test";
 							String dataset = "generic_streams";
 							
-							String table = reader.getName();
+							String table = writer.getName();
 							TableId tableId = TableId.of(project, dataset, table);
-							Schema reader = cache.findByFingerprint(tableFingerprintLabel.get(tableId));
+							String fingerprintLabel = (String) tableFingerprintLabel.get(tableId.toString());
+							Schema reader = cache.findByFingerprint(Long.parseLong(fingerprintLabel));
 							SchemaPairCompatibility compatibility = SchemaCompatibility.checkReaderWriterCompatibility(reader, writer);
 							if(compatibility.getType() == SchemaCompatibilityType.COMPATIBLE){
-								LOG.info("hello");
+								LOG.info("Compatible schemas!");
+								Table table = bigQuery.getTable(tableId);
+								TableDefinition tableDef = table.getDefinition();
+								table
+									.toBuilder()
+									.setDefinition(tableDef.toBuilder().setSchema(schema).build())
+									.build()
+									.update();
 							}
-							try{*/
+							try{
 								c.output(record);
 								//c.output(decoder.decode(received.getPayload()));	
-							/*}catch(IOException e){
+							}catch(Exception e){
 								LOG.error(e.toString());
-							}*/
+							}
 						}
 					})
 					.withSideInputs(incomingRecordsView))
