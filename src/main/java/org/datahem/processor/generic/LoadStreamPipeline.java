@@ -66,6 +66,8 @@ import com.google.cloud.bigquery.BigQueryOptions;
 import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.TableId;
 import com.google.cloud.bigquery.Table;
+import com.google.cloud.bigquery.TableDefinition;
+//import com.google.cloud.bigquery.Schema;
 
 import org.apache.beam.sdk.io.gcp.bigquery.InsertRetryPolicy;
 import org.apache.beam.sdk.io.gcp.bigquery.WriteResult;
@@ -280,11 +282,11 @@ public class LoadStreamPipeline {
 							SchemaPairCompatibility compatibility = SchemaCompatibility.checkReaderWriterCompatibility(reader, writer);
 							if(compatibility.getType() == SchemaCompatibilityType.COMPATIBLE){
 								LOG.info("Compatible schemas!");
-								Table table = bigQuery.getTable(tableId);
-								TableDefinition tableDef = table.getDefinition();
-								table
+								Table bqTable = bigQuery.getTable(tableId);
+								TableDefinition bqTableDef = bqTable.getDefinition();
+								bqTable
 									.toBuilder()
-									.setDefinition(tableDef.toBuilder().setSchema(schema).build())
+									.setDefinition(bqTableDef.toBuilder().setSchema(AvroToBigQuery.getTableSchemaRecord(writer)).build())
 									.build()
 									.update();
 							}
