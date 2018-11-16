@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.datahem.processor.measurementprotocol.MeasurementProtocolPipelineTest
+-------------------------------------------------------------------------------
+Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.307 s - in org.datahem.processor.measurementprotocol.MeasurementProtocolPipelineTest
