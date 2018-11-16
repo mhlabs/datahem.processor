@@ -236,7 +236,8 @@
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>[1.22.0]</version>
+      <version>1.26.0</version>
+      <!--<version>[1.22.0]</version>-->
       <!--<version>1.23.0</version>-->
       <exclusions>
         <!-- Exclude an old version of guava that is being pulled
@@ -252,7 +253,8 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-bigquery</artifactId>
-      <version>v2-rev382-1.22.0</version>
+      <version>v2-rev410-1.25.0</version>
+      <!--<version>v2-rev382-1.22.0</version>-->
       <!--<version>v2-rev295-1.22.0</version> -->
     	<!--<version>v2-rev382-1.23.0</version>-->
       <exclusions>
