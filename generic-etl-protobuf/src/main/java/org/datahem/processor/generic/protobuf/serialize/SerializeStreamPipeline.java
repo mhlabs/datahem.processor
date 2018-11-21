@@ -98,7 +98,13 @@ public class SerializeStreamPipeline {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
 		Map<String, String> streamProtoLookup = new HashMap<String, String>();
-		
+		for (Config.Stream stream : Config.read(options.getConfig())) {
+			String name = stream.name;
+			String proto = stream.proto;
+			//streamProtoLookup.put("collector","org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto$CollectorPayloadEntity");
+			streamProtoLookup.put(name, proto);
+		}
+
 
 		pipeline
 		.apply("Read pubsub messages", 
