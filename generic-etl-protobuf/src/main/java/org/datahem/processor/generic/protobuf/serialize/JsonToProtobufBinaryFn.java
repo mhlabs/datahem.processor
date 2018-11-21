@@ -66,19 +66,23 @@ public class JsonToProtobufBinaryFn extends DoFn<PubsubMessage, PubsubMessage> {
 				PubsubMessage received = c.element();
 				String stream = received.getAttribute("stream");
 				//String protobufClassName = streamProtoLookup.get(stream);
-				String protobufClassName = "org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.CollectorPayloadEntity";
+				String protobufClassName = "org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto$CollectorPayloadEntity";
 				try{
 					String json = new String(received.getPayload(), StandardCharsets.UTF_8);
 					LOG.info("json: " + json);
 					// Use reflection to create and serialize protobuf message
 					Class<?> clazz = Class.forName(protobufClassName);
+					LOG.info("class.forname ok");
 					//Message.Builder = clazz.newBuilderForType();
 					//Class<?> clazzBuilder = Class.forName(protobufClassName + ".Builder");
-					Method newBuilderMethod = clazz.getMethod("newBuilderForType");
-					//Bar.Builder builder = (Bar.Builder) newBuilderMethod.invoke(null);
+					Method newBuilderMethod = clazz.getMethod("newBuilder");
+					LOG.info("new builder method ok");
 					Message.Builder builder = (Message.Builder) newBuilderMethod.invoke(null);
+					LOG.info("builder ok");
 					JsonFormat.parser().ignoringUnknownFields().merge(json, builder);
+					LOG.info("JsonFormat ok");
 					Message message = builder.build();
+					LOG.info("builder.build() ok");
 					byte[] payload = message.toByteArray();
 					Map<String,String> attributes = 
 								ImmutableMap.<String, String>builder()
@@ -87,7 +91,7 @@ public class JsonToProtobufBinaryFn extends DoFn<PubsubMessage, PubsubMessage> {
 									.build();
 					//Create PubSubMessage with the serialized message as payload
 					PubsubMessage pubsubMessage = new PubsubMessage(payload, attributes);
-					LOG.info(pubsubMessage.toPrettyString());
+					//LOG.info(pubsubMessage.toPrettyString());
 					c.output(pubsubMessage);
 				}catch(Exception e){
 					LOG.error(new String(received.getPayload(), StandardCharsets.UTF_8));
