@@ -28,21 +28,10 @@ package org.datahem.processor.generic.protobuf.serialize;
 
 
 import org.apache.beam.sdk.transforms.DoFn;
-/*
 import org.apache.beam.sdk.options.ValueProvider;
-import com.datahem.protobuf.kinesis.order.v1.OrderEntityProto.*;
-import com.datahem.protobuf.kinesis.order.v1.OrderEntityProto;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.Instant;
-import org.joda.time.DateTimeZone;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;*/
 import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import java.util.regex.Pattern;
-//import java.util.regex.Matcher;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
 import java.util.Map;
 import java.util.HashMap;
@@ -64,8 +53,7 @@ public class JsonToProtobufBinaryFn extends DoFn<PubsubMessage, PubsubMessage> {
 		@ProcessElement
 			public void processElement(ProcessContext c) throws Exception {
 				PubsubMessage received = c.element();
-				String stream = received.getAttribute("stream");
-				String protobufClassName = streamProtoLookup.get(stream);
+				String protobufClassName = streamProtoLookup.get(received.getAttribute("stream"));
 				try{
 					String json = new String(received.getPayload(), StandardCharsets.UTF_8);
 					// Use reflection to create and serialize protobuf message
@@ -78,7 +66,7 @@ public class JsonToProtobufBinaryFn extends DoFn<PubsubMessage, PubsubMessage> {
 					Map<String,String> attributes = 
 								ImmutableMap.<String, String>builder()
 									.putAll(received.getAttributeMap())
-									.put("proto", protobufClassName)
+									.put("protobufClassName", protobufClassName)
 									.build();
 					//Create PubSubMessage with the serialized message as payload
 					PubsubMessage pubsubMessage = new PubsubMessage(payload, attributes);
