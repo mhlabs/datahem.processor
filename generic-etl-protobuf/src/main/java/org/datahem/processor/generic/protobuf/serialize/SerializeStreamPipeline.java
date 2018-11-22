@@ -66,12 +66,6 @@ import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 
 import org.joda.time.Duration;
-/*
-import org.joda.time.Instant;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.DateTimeZone;*/
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,15 +75,22 @@ public class SerializeStreamPipeline {
 	private static final Logger LOG = LoggerFactory.getLogger(SerializeStreamPipeline.class);
 
 	public interface Options extends PipelineOptions, GcpOptions {
-
+		/*
+		 * Configure mapping between stream name (pubsub message attribute set by the extract job) and the protobufclassname to be used for serialization of the JSON.
+		 * --config='[{"streamName":"collector", "protoJavaClassName":"org.datahem.protobuf.collector.v1", "protoJavaOuterClassName":"CollectorPayloadEntityProto", "protoJavaClassName":"CollectorPayloadEntity"}]'
+		 * public String protoJavaPackage;
+		public String protoJavaOuterClassName
+		public String protoJavaClassName;
+		*/
+		@Description("JSON Configuration string")
+		String getConfig();
+		void setConfig(String value);
 	
 		@Description("Pub/Sub topic")
-		//@Default.String("projects/mathem-data/topics/orders")
 		ValueProvider<String> getPubsubTopic();
 		void setPubsubTopic(ValueProvider<String> value);
 		
 		@Description("Pub/Sub subscription")
-		//@Default.String("projects/mathem-data/subscriptions/measurementprotocol-1-dev")
 		ValueProvider<String> getPubsubSubscription();
 		void setPubsubSubscription(ValueProvider<String> subscription);
 	}
@@ -98,13 +99,9 @@ public class SerializeStreamPipeline {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
 		Map<String, String> streamProtoLookup = new HashMap<String, String>();
-		for (Config.Stream stream : Config.read(options.getConfig())) {
-			String name = stream.name;
-			String proto = stream.proto;
-			//streamProtoLookup.put("collector","org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto$CollectorPayloadEntity");
-			streamProtoLookup.put(name, proto);
+		for (Config.StreamConfig streamConfig : Config.read(options.getConfig())) {
+			streamProtoLookup.put(streamConfig.streamName, streamConfig.getProtoJavaFullName());
 		}
-
 
 		pipeline
 		.apply("Read pubsub messages", 

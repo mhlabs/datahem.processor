@@ -66,7 +66,6 @@ public class JsonToProtobufBinaryFn extends DoFn<PubsubMessage, PubsubMessage> {
 				PubsubMessage received = c.element();
 				String stream = received.getAttribute("stream");
 				String protobufClassName = streamProtoLookup.get(stream);
-				//String protobufClassName = "org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto$CollectorPayloadEntity";
 				try{
 					String json = new String(received.getPayload(), StandardCharsets.UTF_8);
 					// Use reflection to create and serialize protobuf message
