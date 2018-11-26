@@ -128,36 +128,6 @@ public class LoadStreamPipeline {
 		void setPubsubSubscription(ValueProvider<String> subscription);
 	}
 
-/*
-	private static void labelTableWithFingerprint(String fingerprint, String project, String dataset, String tableName){
-		TableId tableId = TableId.of(project, dataset, tableName);
-		if(tableFingerprintLabel.get(tableId.toString()) == null){
-			try{
-				BigQuery bigQuery = BigQueryOptions.newBuilder()
-					.setCredentials(GoogleCredentials.getApplicationDefault())
-					.build()
-					.getService();
-				Table table = bigQuery.getTable(tableId);
-				if(table.getLabels().get("fingerprint") == null){
-					Map labels = new HashMap<String, String>(); 
-					labels.putAll(table.getLabels());
-					//Map labels = table.getLabels();
-					labels.put("fingerprint", fingerprint);
-					table
-						.toBuilder()
-						.setLabels(labels)
-						.build()
-						.update();
-					tableFingerprintLabel.put(tableId.toString(), fingerprint);
-				}else{
-					tableFingerprintLabel.put(tableId.toString(), fingerprint);
-				}
-			}catch(IOException e){
-								LOG.error(e.toString());
-							}
-		}
-	}*/
-
 	public static void main(String[] args) throws IOException {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
@@ -181,37 +151,26 @@ public class LoadStreamPipeline {
 					BigQueryIO.<PubsubMessage>write()
 					.to(new DynamicDestinations<PubsubMessage, PubsubMessage>() {
 						public PubsubMessage getDestination(ValueInSingleWindow<PubsubMessage> element) {
-							//String fingerprint = Long.toString(SchemaNormalization.parsingFingerprint64(element.getValue().getSchema()));
 							LOG.info("record: " + element.getValue().getAttributeMap().toString());
-							
 							return element.getValue();
 						}
 						public TableDestination getTable(PubsubMessage psm) {
-							//LOG.info("fingerprint: " + fingerprint);
-							//Schema schema = cache.findByFingerprint(Long.parseLong(fingerprint));
 							String project = "mathem-ml-datahem-test";
 							String dataset = "generic_streams";
 							String table = "prototest";
-							//String table = schema.getName();
-							//labelTableWithFingerprint(fingerprint, project, dataset, table);
 							return new TableDestination(dataset + "." + table, "Table for:" + table);
 						}
 						public TableSchema getSchema(PubsubMessage received) {
 							//String protobufClassName = received.getAttribute("protobufClassName");
 							String protobufClassName = received.getAttribute("proto");
 							try{
-								//String json = new String(received.getPayload(), StandardCharsets.UTF_8);
 								// Use reflection to create and serialize protobuf message
 								Class<?> clazz = Class.forName(protobufClassName);
-								//Method parseFromMethod = clazz.getMethod("parseFrom");
-								//Object obj = (Object) parseFromMethod.invoke(received.getPayload());
 								Method getDescriptor = clazz.getMethod("getDescriptor");
 								Descriptor descriptor = (Descriptor) getDescriptor.invoke(null);
-								TableSchema schema = ProtobufUtils.makeTableSchema(descriptor);
-								//Message message = (Message) parseFromMethod.invoke(received.getPayload());
-								//TableSchema schema = ProtobufUtils.makeTableSchema(message.getDescriptor());
-								return schema;	
-								//return ProtobufUtils.makeTableRow(message);
+								return ProtobufUtils.makeTableSchema(descriptor);
+								//TableSchema schema = ProtobufUtils.makeTableSchema(descriptor);
+								//return schema;	
 							}catch(Exception e){
 								LOG.error(e.toString());
 							}
@@ -220,21 +179,13 @@ public class LoadStreamPipeline {
 					})
 					.withFormatFunction(new SerializableFunction<PubsubMessage, TableRow>() {
 						public TableRow apply(PubsubMessage received) {
-							//PubsubMessage received = psm;//.element();
-							//String protobufClassName = received.getAttribute("protobufClassName");
 							String protobufClassName = received.getAttribute("proto");
-							LOG.info("protobufClassName: " + protobufClassName);
-							LOG.info("payload: " + new String(received.getPayload()));
 							try{
-								//String json = new String(received.getPayload(), StandardCharsets.UTF_8);
-								// Use reflection to create and serialize protobuf message
+								// Use reflection to deserialize bytes to protobuf message
 								Class<?> clazz = Class.forName(protobufClassName);
 								Method parseFromMethod = clazz.getMethod("parseFrom", byte[].class);
 								Message message = (Message) parseFromMethod.invoke(null, received.getPayload());
-								LOG.info("bytestring: " + message.toByteString().toString());
-								///Class<Message> message = clazz.cast(parseFromMethod.invoke(received.getPayload()));
 								return ProtobufUtils.makeTableRow(message);
-								//return ProtobufUtils.makeTableRow(clazz.cast(parseFromMethod.invoke(received.getPayload())));
 							}catch(Exception e){
 								LOG.error(e.toString());
 							}

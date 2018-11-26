@@ -64,28 +64,40 @@ import org.apache.beam.sdk.transforms.windowing.FixedWindows;
 import org.apache.beam.sdk.transforms.windowing.Window;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
-
+import java.lang.reflect.*;
+import com.google.protobuf.Message;
+import com.google.protobuf.Descriptors.Descriptor;
 import org.joda.time.Duration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SerializeStreamPipeline {
+public class SerializePubSubMessageStreamPipeline {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(SerializeStreamPipeline.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SerializePubSubMessageStreamPipeline.class);
 
 	public interface Options extends PipelineOptions, GcpOptions {
 		/*
 		 * Configure mapping between stream name (pubsub message attribute set by the extract job) and the protobufclassname to be used for serialization of the JSON.
 		 * --config='[{"streamName":"collector", "protoJavaClassName":"org.datahem.protobuf.collector.v1", "protoJavaOuterClassName":"CollectorPayloadEntityProto", "protoJavaClassName":"CollectorPayloadEntity"}]'
-		 * public String protoJavaPackage;
-		public String protoJavaOuterClassName
-		public String protoJavaClassName;
 		*/
+
 		@Description("JSON Configuration string")
 		String getConfig();
 		void setConfig(String value);
-	
+		/*
+		@Description("Protobuf Java package")
+		ValueProvider<String> getProtoJavaPackage();
+		void setProtoJavaPackage(ValueProvider<String> value);
+		
+		@Description("Protobuf Java Outer Class Name")
+		ValueProvider<String> getProtoJavaOuterClassName();
+		void setProtoJavaOuterClassName(ValueProvider<String> value);
+		
+		@Description("Protobuf Java Class Name")
+		ValueProvider<String> getProtoJavaClassName();
+		void setProtoJavaClassName(ValueProvider<String> value);
+	*/
 		@Description("Pub/Sub topic")
 		ValueProvider<String> getPubsubTopic();
 		void setPubsubTopic(ValueProvider<String> value);
@@ -98,9 +110,11 @@ public class SerializeStreamPipeline {
 	public static void main(String[] args) throws IOException {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
-		Map<String, String> streamProtoLookup = new HashMap<String, String>();
+		
+		Map<String, Config.StreamConfig> streamConfigLookup = new HashMap<String, Config.StreamConfig>();
 		for (Config.StreamConfig streamConfig : Config.read(options.getConfig())) {
-			streamProtoLookup.put(streamConfig.streamName, streamConfig.getProtoJavaFullName());
+			//streamConfigLookup.put(streamConfig.streamName, streamConfig.getProtoJavaFullName());
+			streamConfigLookup.put(streamConfig.streamName, streamConfig);
 		}
 
 		pipeline
@@ -109,7 +123,8 @@ public class SerializeStreamPipeline {
 				.readMessagesWithAttributes()
 				.fromSubscription(options.getPubsubSubscription()))
 		.apply("Convert payload from Json to Protobuf Binary", 
-			ParDo.of(new JsonToProtobufBinaryFn(streamProtoLookup)))
+			ParDo.of(new JsonToProtobufBinaryPubSubMessageFn(streamConfigLookup)))
+			//ParDo.of(new JsonToProtobufBinaryFn(builder)))
 		.apply("Fixed Windows",
 			Window.<PubsubMessage>into(FixedWindows.of(Duration.standardMinutes(1)))
 				.withAllowedLateness(Duration.standardDays(7))

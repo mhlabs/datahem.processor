@@ -42,24 +42,30 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.lang.reflect.*;
 
 
-public class JsonToProtobufBinaryFn extends DoFn<PubsubMessage, PubsubMessage> {
-		private static final Logger LOG = LoggerFactory.getLogger(JsonToProtobufBinaryFn.class);
-		private Map<String, String> streamProtoLookup = new HashMap<String, String>();
+public class JsonToProtobufBinaryPubSubMessageFn extends DoFn<PubsubMessage, PubsubMessage> {
+		private static final Logger LOG = LoggerFactory.getLogger(JsonToProtobufBinaryPubSubMessageFn.class);
+
 		
-		public JsonToProtobufBinaryFn(Map<String,String> streamProtoLookup) {
-			this.streamProtoLookup = streamProtoLookup;
+		private Map<String, Config.StreamConfig> streamConfigLookup = new HashMap<String, Config.StreamConfig>();
+		
+		public JsonToProtobufBinaryPubSubMessageFn(Map<String,Config.StreamConfig> streamConfigLookup) {
+			this.streamConfigLookup = streamConfigLookup;
 		}
 		
 		@ProcessElement
 			public void processElement(ProcessContext c) throws Exception {
 				PubsubMessage received = c.element();
-				String protobufClassName = streamProtoLookup.get(received.getAttribute("stream"));
+				String protobufClassName = streamConfigLookup.get(received.getAttribute("stream")).getProtoJavaFullName();
+				
 				try{
 					String json = new String(received.getPayload(), StandardCharsets.UTF_8);
 					// Use reflection to create and serialize protobuf message
 					Class<?> clazz = Class.forName(protobufClassName);
+					
+					//Class<?> clazz = Class.forName(protoJavaFullName);
 					Method newBuilderMethod = clazz.getMethod("newBuilder");
 					Message.Builder builder = (Message.Builder) newBuilderMethod.invoke(null);
+					
 					JsonFormat.parser().ignoringUnknownFields().merge(json, builder);
 					Message message = builder.build();
 					byte[] payload = message.toByteArray();
@@ -67,6 +73,7 @@ public class JsonToProtobufBinaryFn extends DoFn<PubsubMessage, PubsubMessage> {
 								ImmutableMap.<String, String>builder()
 									.putAll(received.getAttributeMap())
 									.put("protobufClassName", protobufClassName)
+									//.put("protoJavaFullName", protoJavaFullName)
 									.build();
 					//Create PubSubMessage with the serialized message as payload
 					PubsubMessage pubsubMessage = new PubsubMessage(payload, attributes);
