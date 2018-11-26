@@ -182,7 +182,7 @@ public class LoadStreamPipeline {
 					.to(new DynamicDestinations<PubsubMessage, PubsubMessage>() {
 						public PubsubMessage getDestination(ValueInSingleWindow<PubsubMessage> element) {
 							//String fingerprint = Long.toString(SchemaNormalization.parsingFingerprint64(element.getValue().getSchema()));
-							//LOG.info("fingerprint: " + fingerprint + " , record: " + element.getValue().toString() + " , schema: " + element.getValue().getSchema().toString());
+							LOG.info("record: " + element.getValue().getAttributeMap().toString());
 							
 							return element.getValue();
 						}
@@ -197,7 +197,8 @@ public class LoadStreamPipeline {
 							return new TableDestination(dataset + "." + table, "Table for:" + table);
 						}
 						public TableSchema getSchema(PubsubMessage received) {
-							String protobufClassName = received.getAttribute("protobufClassName");
+							//String protobufClassName = received.getAttribute("protobufClassName");
+							String protobufClassName = received.getAttribute("proto");
 							try{
 								//String json = new String(received.getPayload(), StandardCharsets.UTF_8);
 								// Use reflection to create and serialize protobuf message
@@ -220,14 +221,20 @@ public class LoadStreamPipeline {
 					.withFormatFunction(new SerializableFunction<PubsubMessage, TableRow>() {
 						public TableRow apply(PubsubMessage received) {
 							//PubsubMessage received = psm;//.element();
-							String protobufClassName = received.getAttribute("protobufClassName");
+							//String protobufClassName = received.getAttribute("protobufClassName");
+							String protobufClassName = received.getAttribute("proto");
+							LOG.info("protobufClassName: " + protobufClassName);
+							LOG.info("payload: " + new String(received.getPayload()));
 							try{
 								//String json = new String(received.getPayload(), StandardCharsets.UTF_8);
 								// Use reflection to create and serialize protobuf message
 								Class<?> clazz = Class.forName(protobufClassName);
-								Method parseFromMethod = clazz.getMethod("parseFrom");
-								Message message = (Message) parseFromMethod.invoke(received.getPayload());
+								Method parseFromMethod = clazz.getMethod("parseFrom", byte[].class);
+								Message message = (Message) parseFromMethod.invoke(null, received.getPayload());
+								LOG.info("bytestring: " + message.toByteString().toString());
+								///Class<Message> message = clazz.cast(parseFromMethod.invoke(received.getPayload()));
 								return ProtobufUtils.makeTableRow(message);
+								//return ProtobufUtils.makeTableRow(clazz.cast(parseFromMethod.invoke(received.getPayload())));
 							}catch(Exception e){
 								LOG.error(e.toString());
 							}
