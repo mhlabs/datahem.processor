@@ -1,4 +1,4 @@
-package org.datahem.processor.kinesis.extract;
+package org.datahem.processor.specific;
 
 /*-
  * ========================LICENSE_START=================================
@@ -26,36 +26,43 @@ package org.datahem.processor.kinesis.extract;
  * =========================LICENSE_END==================================
  */
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
-import java.util.List;
+
+import org.apache.beam.sdk.transforms.DoFn;
+import org.apache.beam.sdk.options.ValueProvider;
+import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-public class Config {
-	private static final Logger LOG = LoggerFactory.getLogger(Config.class);
-
-	static public class KinesisStream {
-		public String stream;
-		//public String recordNamespace;
-		//public String recordName;
-		//public String fingerprint;
-	}
-
-	public List<KinesisStream> kinesisStreams;
+import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
+import java.util.Map;
+import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
+import com.google.protobuf.Message;
+import com.google.protobuf.util.JsonFormat;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.lang.reflect.*;
 
 
-	public static List<KinesisStream> read(String config) {
-		LOG.info("config:" + config);
-		Gson gson = new Gson();
+public class JsonToProtobufMessageFn extends DoFn<PubsubMessage, Message> {
+		private static final Logger LOG = LoggerFactory.getLogger(JsonToProtobufMessageFn.class);
+		//private Message messageType;
+		private final Parser<T> parser;
 
-		try {
-			Type listType = new TypeToken<List<KinesisStream>>(){}.getType();
-			return gson.fromJson(config, listType);
-			//gson.fromJson(config, Config.class);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		public JsonToProtobufMessageFn(Parser<T> parser) {
+			this.parser = parser;
 		}
-	}
+		
+		@ProcessElement
+			public void processElement(ProcessContext c) throws Exception {
+				PubsubMessage received = c.element();
+				try{
+					String json = new String(received.getPayload(), StandardCharsets.UTF_8);
+					Message.Builder builder = messageType.newBuilder();
+					JsonFormat.parser().ignoringUnknownFields().merge(json, builder);
+					Message message = builder.build();
+					c.output(message);
+				}catch(Exception e){
+					LOG.error(new String(received.getPayload(), StandardCharsets.UTF_8));
+					LOG.error(e.toString());
+				}
+		}
 }

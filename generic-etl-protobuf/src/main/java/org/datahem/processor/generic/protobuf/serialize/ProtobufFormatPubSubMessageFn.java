@@ -1,4 +1,4 @@
-package org.datahem.processor.kinesis.extract;
+package org.datahem.processor.generic.protobuf.serialize;
 
 /*-
  * ========================LICENSE_START=================================
@@ -26,36 +26,36 @@ package org.datahem.processor.kinesis.extract;
  * =========================LICENSE_END==================================
  */
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
-import java.util.List;
+import org.apache.beam.sdk.transforms.SerializableFunction;
+import com.google.api.services.bigquery.model.TableRow;
+import org.datahem.processor.generic.protobuf.utils.ProtobufUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-public class Config {
-	private static final Logger LOG = LoggerFactory.getLogger(Config.class);
-
-	static public class KinesisStream {
-		public String stream;
-		//public String recordNamespace;
-		//public String recordName;
-		//public String fingerprint;
-	}
-
-	public List<KinesisStream> kinesisStreams;
+import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
+import com.google.protobuf.Message;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.lang.reflect.*;
 
 
-	public static List<KinesisStream> read(String config) {
-		LOG.info("config:" + config);
-		Gson gson = new Gson();
-
-		try {
-			Type listType = new TypeToken<List<KinesisStream>>(){}.getType();
-			return gson.fromJson(config, listType);
-			//gson.fromJson(config, Config.class);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+public class ProtobufFormatPubSubMessageFn implements SerializableFunction<PubsubMessage, TableRow> {
+		private static final Logger LOG = LoggerFactory.getLogger(ProtobufFormatPubSubMessageFn.class);
+		private static String protobufClassName;
+	
+	public ProtobufFormatPubSubMessageFn(String protobufClassName) {
+			this.protobufClassName = protobufClassName;
 		}
+	
+	public TableRow apply(PubsubMessage received) {
+		//String protobufClassName = received.getAttribute("protoJavaFullName");
+		try{
+		// Use reflection to deserialize bytes to protobuf message
+			Class<?> clazz = Class.forName(protobufClassName);
+			Method parseFromMethod = clazz.getMethod("parseFrom", byte[].class);
+			Message message = (Message) parseFromMethod.invoke(null, received.getPayload());
+			return ProtobufUtils.makeTableRow(message);
+		}catch(Exception e){
+			LOG.error(e.toString());
+		}
+		return null;
 	}
 }

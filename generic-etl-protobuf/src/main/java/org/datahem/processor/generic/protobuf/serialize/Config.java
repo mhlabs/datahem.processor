@@ -1,4 +1,4 @@
-package org.datahem.processor.kinesis.extract;
+package org.datahem.processor.generic.protobuf.serialize;
 
 /*-
  * ========================LICENSE_START=================================
@@ -36,24 +36,26 @@ import org.slf4j.LoggerFactory;
 public class Config {
 	private static final Logger LOG = LoggerFactory.getLogger(Config.class);
 
-	static public class KinesisStream {
-		public String stream;
-		//public String recordNamespace;
-		//public String recordName;
-		//public String fingerprint;
+	static public class StreamConfig {
+		public String streamName;
+		public String protoJavaPackage;
+		public String protoJavaOuterClassName;
+		public String protoJavaClassName;
+		
+		public String getProtoJavaFullName(){
+			return protoJavaPackage + "." + protoJavaOuterClassName +"$" + protoJavaClassName;
+		}
 	}
 
-	public List<KinesisStream> kinesisStreams;
+	public List<StreamConfig> streamConfigs;
 
 
-	public static List<KinesisStream> read(String config) {
-		LOG.info("config:" + config);
+	public static List<StreamConfig> read(String config) {
 		Gson gson = new Gson();
 
 		try {
-			Type listType = new TypeToken<List<KinesisStream>>(){}.getType();
+			Type listType = new TypeToken<List<StreamConfig>>(){}.getType();
 			return gson.fromJson(config, listType);
-			//gson.fromJson(config, Config.class);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

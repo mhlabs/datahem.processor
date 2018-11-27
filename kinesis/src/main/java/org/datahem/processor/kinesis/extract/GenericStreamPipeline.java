@@ -27,16 +27,16 @@ package org.datahem.processor.kinesis.extract;
  */
 
 import org.datahem.processor.kinesis.extract.Config;
-import org.datahem.processor.utils.ProtobufUtils;
+//import org.datahem.processor.utils.ProtobufUtils;
 import org.datahem.processor.utils.KmsUtils;
 
 import com.google.protobuf.util.JsonFormat;
-
+/*
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.api.services.bigquery.model.TableReference;
 import com.google.api.services.bigquery.model.TimePartitioning;
-
+*/
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -48,16 +48,18 @@ import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+/*
 import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
-
+*/
 import java.util.List;
 import java.io.IOException;
 
 import org.apache.beam.sdk.Pipeline;
-import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
-import org.apache.beam.sdk.io.gcp.bigquery.BigQueryHelpers;
+
+//import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
+//import org.apache.beam.sdk.io.gcp.bigquery.BigQueryHelpers;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
 
@@ -178,7 +180,7 @@ public class GenericStreamPipeline {
 			String stream = kinesisStream.stream;
 			//String recordName = kinesisStream.recordName;
 			//String recordNamespace = kinesisStream.recordNamespace;
-			String fingerprint = kinesisStream.fingerprint;
+			//String fingerprint = kinesisStream.fingerprint;
 			PCollection<PubsubMessage> pass = pipeline
 			.apply(stream + ": read kinesis stream", KinesisIO.read()
 				.withStreamName(stream)
@@ -197,7 +199,7 @@ public class GenericStreamPipeline {
 								ImmutableMap.<String, String>builder()
 									.put("timestamp", Long.toString(Instant.now().getMillis()))
 									.put("stream", stream)
-									.put("stream", fingerprint)
+									//.put("fingerprint", fingerprint)
 									//.put("recordNamespace", recordNamespace)
 									//.put("recordName", recordName)
 									.put("uuid", UUID.randomUUID().toString())

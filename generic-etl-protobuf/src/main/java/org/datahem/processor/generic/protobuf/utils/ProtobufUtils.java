@@ -1,4 +1,4 @@
-package org.datahem.processor.utils;
+package org.datahem.processor.generic.protobuf.utils;
 
 /*-
  * ========================LICENSE_START=================================
