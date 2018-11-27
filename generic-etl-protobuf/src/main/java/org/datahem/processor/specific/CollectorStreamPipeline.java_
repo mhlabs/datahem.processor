@@ -1,4 +1,4 @@
-package org.datahem.processor.generic.protobuf.serialize;
+package org.datahem.processor.specific;
 
 /*-
  * ========================LICENSE_START=================================
@@ -25,7 +25,8 @@ package org.datahem.processor.generic.protobuf.serialize;
  * THE SOFTWARE.
  * =========================LICENSE_END==================================
  */
-
+import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto; //<-change
+import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.CollectorPayloadEntity; //<-change
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -85,23 +86,11 @@ import org.apache.beam.sdk.values.ValueInSingleWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GenericStreamPipeline {
+public class CollectorStreamPipeline { //<- change
 	
-	private static final Logger LOG = LoggerFactory.getLogger(GenericStreamPipeline.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CollectorStreamPipeline.class); //<- change
 
 	public interface Options extends PipelineOptions, GcpOptions {
-		
-		@Description("Protobuf Java package")
-		ValueProvider<String> getProtoJavaPackage();
-		void setProtoJavaPackage(ValueProvider<String> value);
-		
-		@Description("Protobuf Java Outer Class Name")
-		ValueProvider<String> getProtoJavaOuterClassName();
-		void setProtoJavaOuterClassName(ValueProvider<String> value);
-		
-		@Description("Protobuf Java Class Name")
-		ValueProvider<String> getProtoJavaClassName();
-		void setProtoJavaClassName(ValueProvider<String> value);
 	
 		@Description("Pub/Sub topic")
 		ValueProvider<String> getPubsubTopic();
@@ -115,20 +104,6 @@ public class GenericStreamPipeline {
 	public static void main(String[] args) throws IOException {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
-		
-		
-		try{
-			//Generic
-			String protoJavaFullName = options.getProtoJavaPackage() + "." + options.getProtoJavaOuterClassName() +"$" + options.getProtoJavaClassName();
-			
-			Class<?> clazz = Class.forName(protoJavaFullName);
-			//Method newBuilderMethod = clazz.getMethod("newBuilder");
-			//Message.Builder builder = (Message.Builder) newBuilderMethod.invoke(null);
-			Method getDescriptor = clazz.getMethod("getDescriptor");
-			Descriptor descriptor = (Descriptor) getDescriptor.invoke(null);
-			TableSchema schema = ProtobufUtils.makeTableSchema(descriptor);
-			//Specific
-			
 			
 		PCollection<Message> incomingMessages =
 		pipeline
@@ -141,8 +116,7 @@ public class GenericStreamPipeline {
 				.withAllowedLateness(Duration.standardDays(7))
 				.discardingFiredPanes())
 		.apply("Convert payload from Json to Protobuf Message", 
-			//ParDo.of(new JsonToProtobufBinaryFn(streamConfigLookup)))
-			ParDo.of(new JsonToProtobufMessageFn(protoJavaFullName)));
+			ParDo.of(new JsonToProtobufMessageFn(CollectorPayloadEntity.PARSER))); //<- change
 		
 		incomingMessages
 			.apply("Write to pubsub",
@@ -155,7 +129,7 @@ public class GenericStreamPipeline {
 		);
 		
 		incomingMessages
-			.apply(// Replace with serializable function for destination and use withSchema(schema) since it is the same schema for all messages
+			.apply(
 					"Wite to dynamic BigQuery destinations", 
 					BigQueryIO.<Message>write()
 					.to(new DynamicDestinations<Message, Message>() {
@@ -171,9 +145,6 @@ public class GenericStreamPipeline {
 						}
 						public TableSchema getSchema(Message message) {
 							try{
-								Class<?> clazz = Class.forName(protoJavaFullName);
-								Method getDescriptor = clazz.getMethod("getDescriptor");
-								Descriptor descriptor = (Descriptor) getDescriptor.invoke(null);
 								return ProtobufUtils.makeTableSchema(descriptor);
 							}catch(Exception e){
 								LOG.error(e.toString());
@@ -185,7 +156,6 @@ public class GenericStreamPipeline {
 					.withWriteDisposition(WriteDisposition.WRITE_APPEND)
 					.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors()));
 		
-		}catch(Exception e){}
 		pipeline.run();
 	}
 }
