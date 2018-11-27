@@ -37,22 +37,14 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.lang.reflect.*;
 
 
-public class ProtobufFormatFn implements SerializableFunction<PubsubMessage, TableRow> {
-		private static final Logger LOG = LoggerFactory.getLogger(ProtobufFormatFn.class);
-		private static String protobufClassName;
+public class ProtobufFormatMessageFn implements SerializableFunction<Message, TableRow> {
+	private static final Logger LOG = LoggerFactory.getLogger(ProtobufFormatMessageFn.class);
 	
-	public ProtobufFormatFn(String protobufClassName) {
-			this.protobufClassName = protobufClassName;
-		}
+	public ProtobufFormatMessageFn() {}
 	
-	public TableRow apply(PubsubMessage received) {
-		//String protobufClassName = received.getAttribute("protoJavaFullName");
+	public TableRow apply(Message received) {
 		try{
-		// Use reflection to deserialize bytes to protobuf message
-			Class<?> clazz = Class.forName(protobufClassName);
-			Method parseFromMethod = clazz.getMethod("parseFrom", byte[].class);
-			Message message = (Message) parseFromMethod.invoke(null, received.getPayload());
-			return ProtobufUtils.makeTableRow(message);
+			return ProtobufUtils.makeTableRow(received);
 		}catch(Exception e){
 			LOG.error(e.toString());
 		}

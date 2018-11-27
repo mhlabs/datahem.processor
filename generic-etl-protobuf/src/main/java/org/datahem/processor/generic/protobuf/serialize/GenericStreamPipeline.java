@@ -43,6 +43,14 @@ import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
 
+import org.apache.beam.sdk.io.gcp.bigquery.TableDestination;
+import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
+
+import org.apache.beam.sdk.io.gcp.bigquery.DynamicDestinations;
+import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.CreateDisposition;
+import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.WriteDisposition;
+import org.apache.beam.sdk.io.gcp.bigquery.InsertRetryPolicy;
+
 import org.apache.beam.sdk.metrics.Counter;
 import org.apache.beam.sdk.metrics.Metrics;
 import org.apache.beam.sdk.extensions.gcp.options.GcpOptions;
@@ -68,6 +76,11 @@ import java.lang.reflect.*;
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Message;
 import org.joda.time.Duration;
+import org.apache.beam.sdk.transforms.SerializableFunction;
+import com.google.api.services.bigquery.model.TableRow;
+import com.google.api.services.bigquery.model.TableSchema;
+import org.datahem.processor.generic.protobuf.utils.ProtobufUtils;
+import org.apache.beam.sdk.values.ValueInSingleWindow;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +126,9 @@ public class GenericStreamPipeline {
 			Descriptor descriptor = (Descriptor) getDescriptor.invoke(null);
 			
 			//Specific
-
+			
+			
+		PCollection<Message> incomingMessages =
 		pipeline
 		.apply("Read pubsub messages", 
 			PubsubIO
@@ -123,17 +138,48 @@ public class GenericStreamPipeline {
 			Window.<PubsubMessage>into(FixedWindows.of(Duration.standardMinutes(1)))
 				.withAllowedLateness(Duration.standardDays(7))
 				.discardingFiredPanes())
-		.apply("Convert payload from Json to Protobuf Binary", 
+		.apply("Convert payload from Json to Protobuf Message", 
 			//ParDo.of(new JsonToProtobufBinaryFn(streamConfigLookup)))
 			ParDo.of(new JsonToProtobufMessageFn(builder)));
 		
-		/*.apply("Write to pubsub",
+		incomingMessages
+			.apply("Write to pubsub",
 				PubsubIO
-					.writeMessages()
+					//.writeMessages()
+					.writeProtos(Message.class)
 					.withIdAttribute("uuid")
 					.withTimestampAttribute("timestamp")
 					.to(options.getPubsubTopic())
-		);*/
+		);
+		
+		incomingMessages
+			.apply(
+					"Wite to dynamic BigQuery destinations", 
+					BigQueryIO.<Message>write()
+					.to(new DynamicDestinations<Message, Message>() {
+						public Message getDestination(ValueInSingleWindow<Message> element) {
+							//LOG.info("record: " + element.getValue().getAttributeMap().toString());
+							return element.getValue();
+						}
+						public TableDestination getTable(Message message) {
+							String project = "mathem-ml-datahem-test";
+							String dataset = "generic_streams";
+							String table = "prototest";
+							return new TableDestination(dataset + "." + table, "Table for:" + table);
+						}
+						public TableSchema getSchema(Message message) {
+							try{
+								return ProtobufUtils.makeTableSchema(descriptor);
+							}catch(Exception e){
+								LOG.error(e.toString());
+							}
+							return null;
+						}
+					})
+					.withFormatFunction(new ProtobufFormatMessageFn())
+					.withWriteDisposition(WriteDisposition.WRITE_APPEND)
+					.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors()));
+		
 		}catch(Exception e){}
 		pipeline.run();
 	}
