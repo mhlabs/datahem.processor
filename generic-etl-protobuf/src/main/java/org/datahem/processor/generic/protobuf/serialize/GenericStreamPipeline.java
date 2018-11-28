@@ -154,6 +154,7 @@ public class GenericStreamPipeline {
 					.to(options.getPubsubTopic())
 		);
 		
+		/*
 		incomingMessages
 			.apply(// Replace with serializable function for destination and use withSchema(schema) since it is the same schema for all messages
 					"Wite to dynamic BigQuery destinations", 
@@ -179,12 +180,30 @@ public class GenericStreamPipeline {
 								LOG.error(e.toString());
 							}
 							return null;
-						}
+						} 
 					})
 					.withFormatFunction(new ProtobufFormatMessageFn())
+					//.to(options.getBigQueryTableSpec())
+					//.withSchema(schema)
 					.withWriteDisposition(WriteDisposition.WRITE_APPEND)
-					.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors()));
+					.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors()));*/
 		
+		incomingMessages
+			.apply(
+				"Write_results_to_BQ_table_partition_by_date",
+				BigQueryIO.<Message>write()
+					.to((SerializableFunction<ValueInSingleWindow<Message>, TableDestination>) element -> {
+						Message message = element.getValue();
+						String project = "mathem-ml-datahem-test";
+						String dataset = "generic_streams";
+						String table = "prototest";
+						return new TableDestination(dataset + "." + table, "Table for:" + table);
+					})
+					.withFormatFunction(new ProtobufFormatMessageFn())
+					.withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
+					.withWriteDisposition(WriteDisposition.WRITE_APPEND)
+					.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors())
+					.withSchema(schema));		
 		}catch(Exception e){}
 		pipeline.run();
 	}
