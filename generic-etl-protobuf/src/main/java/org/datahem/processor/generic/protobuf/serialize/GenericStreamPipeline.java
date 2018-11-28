@@ -122,13 +122,9 @@ public class GenericStreamPipeline {
 			String protoJavaFullName = options.getProtoJavaPackage() + "." + options.getProtoJavaOuterClassName() +"$" + options.getProtoJavaClassName();
 			
 			Class<?> clazz = Class.forName(protoJavaFullName);
-			//Method newBuilderMethod = clazz.getMethod("newBuilder");
-			//Message.Builder builder = (Message.Builder) newBuilderMethod.invoke(null);
 			Method getDescriptor = clazz.getMethod("getDescriptor");
 			Descriptor descriptor = (Descriptor) getDescriptor.invoke(null);
 			TableSchema schema = ProtobufUtils.makeTableSchema(descriptor);
-			//Specific
-			
 			
 		PCollection<Message> incomingMessages =
 		pipeline
@@ -141,65 +137,23 @@ public class GenericStreamPipeline {
 				.withAllowedLateness(Duration.standardDays(7))
 				.discardingFiredPanes())
 		.apply("Convert payload from Json to Protobuf Message", 
-			//ParDo.of(new JsonToProtobufBinaryFn(streamConfigLookup)))
 			ParDo.of(new JsonToProtobufMessageFn(protoJavaFullName)));
 		
 		incomingMessages
 			.apply("Write to pubsub",
 				PubsubIO
-					//.writeMessages()
 					.writeProtos(Message.class)
 					.withIdAttribute("uuid")
 					.withTimestampAttribute("timestamp")
 					.to(options.getPubsubTopic())
 		);
 		
-		/*
-		incomingMessages
-			.apply(// Replace with serializable function for destination and use withSchema(schema) since it is the same schema for all messages
-					"Wite to dynamic BigQuery destinations", 
-					BigQueryIO.<Message>write()
-					.to(new DynamicDestinations<Message, Message>() {
-						public Message getDestination(ValueInSingleWindow<Message> element) {
-							//LOG.info("record: " + element.getValue().getAttributeMap().toString());
-							return element.getValue();
-						}
-						public TableDestination getTable(Message message) {
-							String project = "mathem-ml-datahem-test";
-							String dataset = "generic_streams";
-							String table = "prototest";
-							return new TableDestination(dataset + "." + table, "Table for:" + table);
-						}
-						public TableSchema getSchema(Message message) {
-							try{
-								Class<?> clazz = Class.forName(protoJavaFullName);
-								Method getDescriptor = clazz.getMethod("getDescriptor");
-								Descriptor descriptor = (Descriptor) getDescriptor.invoke(null);
-								return ProtobufUtils.makeTableSchema(descriptor);
-							}catch(Exception e){
-								LOG.error(e.toString());
-							}
-							return null;
-						} 
-					})
-					.withFormatFunction(new ProtobufFormatMessageFn())
-					//.to(options.getBigQueryTableSpec())
-					//.withSchema(schema)
-					.withWriteDisposition(WriteDisposition.WRITE_APPEND)
-					.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors()));*/
-		
 		incomingMessages
 			.apply(
-				"Write_results_to_BQ_table_partition_by_date",
+				"Write to BigQuery",
 				BigQueryIO.<Message>write()
-					.to((SerializableFunction<ValueInSingleWindow<Message>, TableDestination>) element -> {
-						Message message = element.getValue();
-						String project = "mathem-ml-datahem-test";
-						String dataset = "generic_streams";
-						String table = "prototest";
-						return new TableDestination(dataset + "." + table, "Table for:" + table);
-					})
-					.withFormatFunction(new ProtobufFormatMessageFn())
+					.to(new ProtobufBigQueryToFn("payload"))
+					.withFormatFunction(new ProtobufBigQueryFormatFn())
 					.withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
 					.withWriteDisposition(WriteDisposition.WRITE_APPEND)
 					.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors())

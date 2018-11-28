@@ -37,10 +37,10 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.lang.reflect.*;
 
 
-public class ProtobufFormatMessageFn implements SerializableFunction<Message, TableRow> {
-	private static final Logger LOG = LoggerFactory.getLogger(ProtobufFormatMessageFn.class);
+public class ProtobufBigQueryFormatFn implements SerializableFunction<Message, TableRow> {
+	private static final Logger LOG = LoggerFactory.getLogger(ProtobufBigQueryFormatFn.class);
 	
-	public ProtobufFormatMessageFn() {}
+	public ProtobufBigQueryFormatFn() {}
 	
 	public TableRow apply(Message received) {
 		try{
