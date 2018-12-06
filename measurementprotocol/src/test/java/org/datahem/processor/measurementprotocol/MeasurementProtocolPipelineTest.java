@@ -1052,23 +1052,4 @@ public class MeasurementProtocolPipelineTest {
 		p.run();
 	}
 	
-	@Test
-	public void userTest() throws Exception {
-		LOG.info(Integer.toString(pageviewTR.hashCode())+" : "+pageviewTR.toPrettyString());
-		testPayload = "v=1&_v=j72&aip=1&a=1644735658&t=pageview&_s=1&dl=https%3A%2F%2Fwww.mathem.se%2Fsok%3Fq%3Dpri%26page%3D1%26pageSize%3D10%26type%3Dp&dp=%2Fsok%3Fq%3Dpri&ul=sv-se&de=UTF-8&dt=S%C3%B6kresultat%20f%C3%B6r%20%22pri%22%20%7C%20MatHem&sd=32-bit&sr=414x736&vp=414x622&je=0&_u=SCCAAMArAAAAAC~&jid=&gjid=&cid=1529543873.1543935007&tid=UA-7391864-18&_gid=31757251.1543935007&gtm=2wgbc0P9BRHCJ&cd1=search-result&cd2=undefined&cm1=undefined&linkid=main-search&z=1763910873";
-		PCollection<TableRow> output = p
-			.apply(Create.of(Arrays.asList(cpeBuilder(user, testPayload))))
-			.apply(ParDo.of(new PayloadToMPEntityFn(
-				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
-				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
-				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
-				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
-				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
-				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
-				StaticValueProvider.of("Europe/Stockholm"))))
-			.apply(ParDo.of(new MPEntityToTableRowFn()));
-		PAssert.that(output).containsInAnyOrder(pageviewTR);
-		p.run();
-	}
-
 }

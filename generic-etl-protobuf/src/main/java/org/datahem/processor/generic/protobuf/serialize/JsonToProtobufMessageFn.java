@@ -66,6 +66,9 @@ public class JsonToProtobufMessageFn extends DoFn<PubsubMessage, Message> {
 					Message.Builder builder = (Message.Builder) newBuilderMethod.invoke(null);
 					String json = new String(received.getPayload(), StandardCharsets.UTF_8);
 					JsonFormat.parser().ignoringUnknownFields().merge(json, builder);
+					builder
+						.setMessageUuid(received.getAttribute("MessageUuid"))
+						.setMessageTimestamp(received.getAttribute("MessageTimestamp"));
 					Message message = builder.build();
 					c.output(message);
 				}catch(Exception e){

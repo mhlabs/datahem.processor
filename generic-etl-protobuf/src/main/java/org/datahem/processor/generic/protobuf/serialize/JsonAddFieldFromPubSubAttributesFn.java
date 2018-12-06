@@ -26,35 +26,44 @@ package org.datahem.processor.generic.protobuf.serialize;
  * =========================LICENSE_END==================================
  */
 
-import org.apache.beam.sdk.transforms.SerializableFunction;
-//import com.google.api.services.bigquery.model.TableRow;
-import org.apache.beam.sdk.io.gcp.bigquery.TableDestination;
-//import org.datahem.processor.generic.protobuf.utils.ProtobufUtils;
-import org.apache.beam.sdk.values.ValueInSingleWindow;
+
+import org.apache.beam.sdk.transforms.DoFn;
+import org.apache.beam.sdk.options.ValueProvider;
+import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
+import java.util.Map;
+import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
 import com.google.protobuf.Message;
+import com.google.protobuf.util.JsonFormat;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.lang.reflect.*;
-import com.google.protobuf.Descriptors;
 
 
-public class ProtobufBigQueryToFn implements SerializableFunction<ValueInSingleWindow<Message>, TableDestination> {
-	private static final Logger LOG = LoggerFactory.getLogger(ProtobufBigQueryToFn.class);
-	private String tableField;
-	
-	public ProtobufBigQueryToFn(String tableField) {
-		this.tableField = tableField;
-	}
-	
-	public TableDestination apply(ValueInSingleWindow<Message> element) {
-		Message message = element.getValue();
-		Descriptors.FieldDescriptor field = message.getDescriptorForType().findFieldByName(tableField);
-		String table = String.valueOf(message.getField(field));
-		String project = "mathem-ml-datahem-test";
-		String dataset = "generic_streams";
-		//String table = "prototest2";
-		return new TableDestination(dataset + "." + table, "Table for:" + table);
-	}
+public class JsonAddFieldFromPubSubAttributesFn extends DoFn<PubsubMessage, PubsubMessage> {
+		private static final Logger LOG = LoggerFactory.getLogger(JsonAddFieldFromPubSubAttributesFn.class);
+		//private Message.Builder builder = null;
+		private String attribute;
+
+		public JsonAddFieldFromPubSubAttributesFn(String attribute) {
+			this.attribute = protoJavaFullName;
+		}
+		
+		@ProcessElement
+			public void processElement(ProcessContext c) throws Exception {
+				PubsubMessage received = c.element();
+				try{
+					String json = new String(received.getPayload(), StandardCharsets.UTF_8);
+
+
+					JsonFormat.parser().ignoringUnknownFields().merge(json, builder);
+					Message message = builder.build();
+					c.output(message);
+				}catch(Exception e){
+					LOG.error(new String(received.getPayload(), StandardCharsets.UTF_8));
+					LOG.error(e.toString());
+				}
+		}
 }

@@ -88,17 +88,21 @@ public class BaseEntity{
 	private void parse(Map<String, String> paramMap){
 		try{
 			//If document location parameter exist, extract host and path and add those as separate parameters
-			URL url = new URL(paramMap.get("dl"));
-			if(paramMap.get("dh")==null) paramMap.put("dh", url.getHost());
-			if(paramMap.get("dp")==null) paramMap.put("dp", url.getPath());
+			if(paramMap.get("dl") != null){
+				URL url = new URL(paramMap.get("dl"));
+				if(paramMap.get("dh")==null) paramMap.put("dh", url.getHost());
+				if(paramMap.get("dp")==null) paramMap.put("dp", url.getPath());
+			}
 		}catch (MalformedURLException e) {
 			LOG.error(e.toString());
 		}
 		try{
 			//If document referer parameter exist, extract host and path and add those as separate parameters
-			URL referer = new URL(paramMap.get("dr"));
-			paramMap.put("drh", referer.getHost());
-			paramMap.put("drp", referer.getPath());
+			if(paramMap.get("dr") != null){
+				URL referer = new URL(paramMap.get("dr"));
+				paramMap.put("drh", referer.getHost());
+				paramMap.put("drp", referer.getPath());
+			}
 		}catch (MalformedURLException e) {
 			LOG.error(e.toString());
 		}
@@ -183,24 +187,27 @@ public class BaseEntity{
 			.stream()
 			.sorted(Map.Entry.<String, ValEntity>comparingByKey())
 			.forEach(e -> mpEntityBuilder.putParams(e.getKey(), (ValEntity) e.getValue()));
-
-		
 		return mpEntityBuilder;
 	}
 	
 	//Store parameters as the type specified for each parameter
 	private ValEntity getValues(Parameter p, String val){
 		ValEntity.Builder valBuilder = ValEntity.newBuilder();
-		switch(p.getValueType()){
-			case "Integer":	valBuilder.setIntValue(Long.parseLong(val));
-						break;
-			case "String":	valBuilder.setStringValue(val);
-						break;
-			case "Boolean":	valBuilder.setIntValue(Integer.parseInt(val));
-						break;
-			case "Double":	 valBuilder.setFloatValue(Double.parseDouble(val));
-						break;
+		try{
+			switch(p.getValueType()){
+				case "Integer":	valBuilder.setIntValue(Long.parseLong(val));
+							break;
+				case "String":	valBuilder.setStringValue(val);
+							break;
+				case "Boolean":	valBuilder.setIntValue(Integer.parseInt(val));
+							break;
+				case "Double":	 valBuilder.setFloatValue(Double.parseDouble(val));
+							break;
+			}
+		}catch(Exception e){
+			LOG.error(e.toString());
+		}finally{
+			return valBuilder.build();
 		}
-		return valBuilder.build();
 	}
 }
