@@ -1,12 +1,14 @@
 package org.datahem.processor.measurementprotocol.utils;
-
-import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.*;
-import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto;
+//import com.google.pubsub.v1.PubsubMessage;
+import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
+//import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.*;
+//import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.options.ValueProvider;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 /*-
  * ========================LICENSE_START=================================
@@ -34,7 +36,8 @@ import java.util.List;
  * =========================LICENSE_END==================================
  */
 
-public class PayloadToMPEntityFn extends DoFn<CollectorPayloadEntity, MPEntity> {
+//public class PayloadToMPEntityFn extends DoFn<CollectorPayloadEntity, MPEntity> {
+public class PayloadToMPEntityFn extends DoFn<PubsubMessage, MPEntity> {
 		ValueProvider<String> searchEnginesPattern;
 		ValueProvider<String> ignoredReferersPattern;
 		ValueProvider<String> socialNetworksPattern;
@@ -63,7 +66,8 @@ public class PayloadToMPEntityFn extends DoFn<CollectorPayloadEntity, MPEntity> 
       	@ProcessElement      
       	public void processElement(ProcessContext c)  {
 	      	
-	      	CollectorPayloadEntity cp = c.element();
+	      	//CollectorPayloadEntity cp = c.element();
+	      	PubsubMessage received = c.element();
 	        MeasurementProtocolBuilder mpb = new MeasurementProtocolBuilder();
 	        mpb.setSearchEnginesPattern(searchEnginesPattern.get());
 	        mpb.setIgnoredReferersPattern(ignoredReferersPattern.get());
@@ -73,10 +77,19 @@ public class PayloadToMPEntityFn extends DoFn<CollectorPayloadEntity, MPEntity> 
 	        mpb.setSiteSearchPattern(siteSearchPattern.get());
 	        mpb.setTimeZone(timeZone.get());
 	        
-	        List<MPEntity> mpEntities = mpb.mpEntitiesFromCollectorPayload(cp);
+	        
+	        //List<MPEntity> mpEntities = mpb.mpEntitiesFromPayload(received.getPayload().toStringUtf8());
+	        List<MPEntity> mpEntities = mpb.mpEntitiesFromPayload(new String(received.getPayload(), StandardCharsets.UTF_8));
 	        mpEntities.forEach(mpEntity -> {
 	        	c.output(mpEntity);
         	});
+	        
+	        /*
+	        List<MPEntity> mpEntities = mpb.mpEntitiesFromCollectorPayload(cp);
+	        mpEntities.forEach(mpEntity -> {
+	        	c.output(mpEntity);
+        	});*/
+        	
 	    	return;
 	    	
 		}

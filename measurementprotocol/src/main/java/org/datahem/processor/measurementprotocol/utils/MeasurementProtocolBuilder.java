@@ -139,13 +139,16 @@ public class MeasurementProtocolBuilder{
     	this.timeZone = tz;
   	}
 
-	public List<MPEntity> mpEntitiesFromCollectorPayload(CollectorPayloadEntity cp){
+	//public List<MPEntity> mpEntitiesFromCollectorPayload(CollectorPayloadEntity cp){
+	public List<MPEntity> mpEntitiesFromPayload(String payload){
 		try{
 	        //Check if post body contains payload and add parameters in a map
-	        if (!"".equals(cp.getPayload())) {
+	        //if (!"".equals(cp.getPayload())) {
+	        if (!"".equals(payload)) {
 	            //Add header parameters to paramMap
-	            paramMap = FieldMapper.fieldMapFromQuery(cp.getPayload());
-	            paramMap.putAll(cp.getHeadersMap());
+	            //paramMap = FieldMapper.fieldMapFromQuery(cp.getPayload());
+	            paramMap = FieldMapper.fieldMapFromQuery(payload);
+	            //paramMap.putAll(cp.getHeadersMap());
 	            
 	            //Exclude bots, spiders and crawlers
 				if(paramMap.get("User-Agent") == null){
@@ -156,11 +159,13 @@ public class MeasurementProtocolBuilder{
 	        	if(!paramMap.get("User-Agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern())){
 	                //Add epochMillis and timestamp to paramMap       
 		            
-		            Instant payloadTimeStamp = new Instant(Long.parseLong(cp.getEpochMillis()));
+		            //Instant payloadTimeStamp = new Instant(Long.parseLong(cp.getEpochMillis()));
+		            Instant payloadTimeStamp = new Instant(Long.parseLong(paramMap.get("timestamp")));
 					DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
 		            paramMap.put("cpts", payloadTimeStamp.toString(utc_timestamp));
-		            paramMap.put("cpem", cp.getEpochMillis());
-	
+		            //paramMap.put("cpem", cp.getEpochMillis());
+		            paramMap.put("cpem", paramMap.get("timestamp"));
+
 					//Set local timezone for use as partition field
 					DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd").withZone(DateTimeZone.forID(getTimeZone()));
 					paramMap.put("cpd", payloadTimeStamp.toString(partition));

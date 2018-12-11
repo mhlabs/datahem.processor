@@ -26,8 +26,8 @@ package org.datahem.processor.measurementprotocol;
  * =========================LICENSE_END==================================
  */
 
-import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.*;
-import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto;
+//import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.*;
+//import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
 import org.datahem.processor.measurementprotocol.utils.MeasurementProtocolBuilder;
@@ -50,6 +50,7 @@ import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryHelpers;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
+import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
 import org.apache.beam.sdk.metrics.Counter;
 import org.apache.beam.sdk.metrics.Metrics;
 import org.apache.beam.sdk.extensions.gcp.options.GcpOptions;
@@ -124,10 +125,12 @@ public class MeasurementProtocolPipeline {
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     
 
-    PCollection<CollectorPayloadEntity> payload = pipeline
+    //PCollection<CollectorPayloadEntity> payload = pipeline
+    PCollection<PubsubMessage> payload = pipeline
     	.apply("Read collector payloads from pubsub", 
     		PubsubIO
-    			.readProtos(CollectorPayloadEntityProto.CollectorPayloadEntity.class)
+    			.readMessagesWithAttributes()
+    			//.readProtos(CollectorPayloadEntityProto.CollectorPayloadEntity.class)
     			.fromSubscription(options.getPubsubSubscription()));
     
     payload
