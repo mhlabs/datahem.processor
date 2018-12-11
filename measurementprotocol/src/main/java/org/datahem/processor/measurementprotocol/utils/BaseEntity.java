@@ -137,6 +137,7 @@ public class BaseEntity{
 		
 		mpEntityBuilder
 			.setType(paramMap.get("et"))
+			.setHitId(paramMap.get("uuid"))
 			.setClientId(paramMap.get("cid"))
 			.setUserId(paramMap.getOrDefault("uid", ""))
 			.setEpochMillis(Long.parseLong(paramMap.get("cpem")))

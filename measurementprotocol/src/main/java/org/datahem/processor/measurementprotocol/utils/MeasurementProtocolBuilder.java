@@ -153,7 +153,7 @@ public class MeasurementProtocolBuilder{
 	            //Exclude bots, spiders and crawlers
 				if(paramMap.get("User-Agent") == null){
 					paramMap.put("User-Agent", "");
-					LOG.info("User-Agent = null");
+					//LOG.info("User-Agent = null, payload: " + payload + ", paramMap: " + paramMap.toString());
 				}
 
 	        	if(!paramMap.get("User-Agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern())){

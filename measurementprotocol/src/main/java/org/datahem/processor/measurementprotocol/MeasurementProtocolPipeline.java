@@ -91,9 +91,14 @@ public class MeasurementProtocolPipeline {
 	private static final Logger LOG = LoggerFactory.getLogger(MeasurementProtocolPipeline.class);
   
   
-  public interface MeasurementProtocolPipelineOptions extends MeasurementProtocolOptions {
-
-	
+  //public interface MeasurementProtocolPipelineOptions extends MeasurementProtocolOptions {
+  public interface MeasurementProtocolPipelineOptions extends PipelineOptions{
+	@Description("JSON Configuration string")
+	//ValueProvider<String> getConfig();
+	//void setConfig(ValueProvider<String> value);
+	String getConfig();
+	void setConfig(String value);
+	/*
 	@Description("BigQuery Table Spec [project_id]:[dataset_id].[table_id] or [dataset_id].[table_id]")
     //@Default.String("UA123456789.entities")
     ValueProvider<String> getBigQueryTableSpec();
@@ -108,7 +113,7 @@ public class MeasurementProtocolPipeline {
 	//@Default.String("projects/mathem-data/subscriptions/measurementprotocol-1-dev")
 	ValueProvider<String> getPubsubSubscription();
 	void setPubsubSubscription(ValueProvider<String> subscription);
-	
+	*/
   }
 
   public static void main(String[] args) {
@@ -124,6 +129,10 @@ public class MeasurementProtocolPipeline {
     	fieldsList.set(fieldsList.indexOf(tfs), tfs.setType("DATE"));
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     
+	
+	for (Config.Account.Property property : Config.read(options.getConfig())) {
+			//String pubsubSubscription = property.pubsubSubscription;
+			String pubsubSubscription = "projects/" + options.as(GcpOptions.class).getProject() + "/subscriptions/" + property.id;
 
     //PCollection<CollectorPayloadEntity> payload = pipeline
     PCollection<PubsubMessage> payload = pipeline
@@ -131,8 +140,12 @@ public class MeasurementProtocolPipeline {
     		PubsubIO
     			.readMessagesWithAttributes()
     			//.readProtos(CollectorPayloadEntityProto.CollectorPayloadEntity.class)
-    			.fromSubscription(options.getPubsubSubscription()));
+    			//.fromSubscription(options.getPubsubSubscription()));
+    			.fromSubscription(pubsubSubscription));
     
+    for(Config.Account.Property.View view : property.views){
+    //Config.Account.Property.View view = property.view;
+    	/*
     payload
     	.apply("Unfiltered - Collector Payload to multiple Events", 
     		ParDo.of(new PayloadToMPEntityFn(
@@ -166,6 +179,7 @@ public class MeasurementProtocolPipeline {
 				.withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
         		.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
             	.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
+            	
     
     PCollection<MPEntity> enrichedEntities = payload
     	.apply("Enriched - Collector Payload to multiple Events", 
@@ -177,8 +191,21 @@ public class MeasurementProtocolPipeline {
     			options.getExcludedBotsPattern(),
     			options.getSiteSearchPattern(),
     			options.getTimeZone()
-    		)));       		
-	        		
+    		)));
+    		*/
+	
+	PCollection<MPEntity> enrichedEntities = payload
+    	.apply("Enriched - Collector Payload to multiple Events", 
+    		ParDo.of(new PayloadToMPEntityFn(
+    			StaticValueProvider.of(view.searchEnginesPattern),
+    			StaticValueProvider.of(view.ignoredReferersPattern), 
+    			StaticValueProvider.of(view.socialNetworksPattern),
+    			StaticValueProvider.of(view.includedHostnamesPattern),
+    			StaticValueProvider.of(view.excludedBotsPattern),
+    			StaticValueProvider.of(view.siteSearchPattern),
+    			StaticValueProvider.of(view.timeZone)
+    		)));
+	
 	enrichedEntities
 	     .apply("Enriched - Event to tablerow", 
     		ParDo.of(new MPEntityToTableRowFn()))
@@ -189,18 +216,20 @@ public class MeasurementProtocolPipeline {
 		.apply("Enriched - Write to bigquery", 
 			BigQueryIO
 				.writeTableRows()
-				.to(options.getBigQueryTableSpec())
+				//.to(options.getBigQueryTableSpec())
+				.to(property.id + "." + view.id)
 				.withSchema(eventSchema)
 				.withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
         		.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
             	.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
-    
+    /*
     enrichedEntities
     	.apply("Enriched - Write to pubsub",
     	PubsubIO
     	.writeProtos(MPEntityProto.MPEntity.class)
     	.to(options.getPubsubTopic()));
-    
+    */
+   }}
     pipeline.run();
   }
 }
