@@ -203,7 +203,7 @@ public class MeasurementProtocolPipeline {
     			StaticValueProvider.of(view.includedHostnamesPattern),
     			StaticValueProvider.of(view.excludedBotsPattern),
     			StaticValueProvider.of(view.siteSearchPattern),
-    			StaticValueProvider.of(view.timeZone)
+    			StaticValueProvider.of(view.getTimeZone())
     		)));
 	
 	enrichedEntities
