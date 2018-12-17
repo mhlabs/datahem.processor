@@ -81,6 +81,8 @@ import org.joda.time.format.DateTimeFormatter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.google.api.services.bigquery.model.TimePartitioning;
+//import org.apache.beam.sdk.io.gcp.bigquery.TableDestination;
 
 public class PubSubBackupPipeline {
 	
@@ -98,9 +100,7 @@ public class PubSubBackupPipeline {
 	@Default.String("projects/mathem-data/subscriptions/measurementprotocol-1-dev")
 	ValueProvider<String> getPubsubSubscription();
 	void setPubsubSubscription(ValueProvider<String> subscription);
-  
-  
-  }
+	}
 
     public static void main(String[] args) throws IOException {
         Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
@@ -118,6 +118,7 @@ public class PubSubBackupPipeline {
 	    fieldsSchemaList.add(new TableFieldSchema().setName("data").setType("BYTES").setMode("REQUIRED"));
 		
 	    TableSchema schema = new TableSchema().setFields(fieldsSchemaList);
+	    TimePartitioning partition = new TimePartitioning().setField("publish_time");
 			
     	pipeline
     	.apply("Read from pubsub",
@@ -134,15 +135,10 @@ public class PubSubBackupPipeline {
 	        	List<TableRow> attributes = new ArrayList<>();
 	        	if (attributeMap != null) {
 	        		attributeMap.forEach((k,v)-> {
-	        			//LOG.info("key: " + k + ", value: " + v);
 	        			attributes.add(new TableRow().set("key",k).set("value", v));
         			});
-
 				}
-	        	
 	        	DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
-	        	//LOG.info("data: " + pubsubMessage.getPayload());
-				//LOG.info("publish_time: " + c.timestamp());
 	        	TableRow tableRow = new TableRow()
 	        		.set("publish_time", c.timestamp().toString(partition))
 	        		.set("attributes", attributes)
@@ -153,8 +149,7 @@ public class PubSubBackupPipeline {
 		}))
     	.apply("InsertTableRowsToBigQuery",
       		BigQueryIO
-				.writeTableRows()
-				//.to(options.getBigQueryTableSpec())
+				.<TableRow>write()
 				.to(NestedValueProvider.of(
 					options.getBigQueryTableSpec(),
 					new SerializableFunction<String, String>() {
@@ -162,13 +157,15 @@ public class PubSubBackupPipeline {
 						public String apply(String tableSpec) {
 							return tableSpec.replaceAll("[^A-Za-z0-9.]", "");
 						}
-					}))
+				}))
+				.withFormatFunction(tr -> tr)
       			.withSchema(schema)
+      			.withTimePartitioning(partition)
       			.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
       			.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
     	// Run the pipeline
-    	pipeline.run();//.waitUntilFinish();
+    	pipeline.run();
 
     }
 }
