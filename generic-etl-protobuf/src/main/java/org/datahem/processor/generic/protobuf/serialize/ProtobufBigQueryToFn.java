@@ -38,23 +38,35 @@ import com.google.protobuf.Message;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.lang.reflect.*;
 import com.google.protobuf.Descriptors;
+import com.google.api.services.bigquery.model.TimePartitioning;
 
 
 public class ProtobufBigQueryToFn implements SerializableFunction<ValueInSingleWindow<Message>, TableDestination> {
 	private static final Logger LOG = LoggerFactory.getLogger(ProtobufBigQueryToFn.class);
+	private String dataset;
 	private String tableField;
+	private String partitionField;
 	
-	public ProtobufBigQueryToFn(String tableField) {
+	public ProtobufBigQueryToFn(String dataset, String tableField, String partitionField) {
+		this.dataset = dataset;
 		this.tableField = tableField;
+		this.partitionField = partitionField;
+	}
+	
+	public ProtobufBigQueryToFn(String dataset, String tableField) {
+		this(dataset, tableField, "");
 	}
 	
 	public TableDestination apply(ValueInSingleWindow<Message> element) {
 		Message message = element.getValue();
 		Descriptors.FieldDescriptor field = message.getDescriptorForType().findFieldByName(tableField);
-		String table = String.valueOf(message.getField(field));
-		String project = "mathem-ml-datahem-test";
-		String dataset = "generic_streams";
-		//String table = "prototest2";
-		return new TableDestination(dataset + "." + table, "Table for:" + table);
+		String messageField = String.valueOf(message.getField(field));
+		String table = (messageField != null) ? messageField : tableField;
+		String destination = (dataset + "." + table).replaceAll("[^A-Za-z0-9.]", "");
+		TimePartitioning partition = new TimePartitioning();
+		if (partitionField != null && partitionField != ""){
+			partition.setField(partitionField);
+		}
+		return new TableDestination(dataset + "." + table, "Table for:" + table, partition);
 	}
 }

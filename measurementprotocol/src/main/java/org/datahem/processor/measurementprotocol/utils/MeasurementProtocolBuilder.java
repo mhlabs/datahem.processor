@@ -162,7 +162,9 @@ public class MeasurementProtocolBuilder{
 		            //Instant payloadTimeStamp = new Instant(Long.parseLong(cp.getEpochMillis()));
 		            Instant payloadTimeStamp = new Instant(Long.parseLong(paramMap.get("timestamp")));
 					DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
-		            paramMap.put("cpts", payloadTimeStamp.toString(utc_timestamp));
+					DateTimeFormatter local_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZone(DateTimeZone.forID(getTimeZone()));
+		            paramMap.put("cpts", payloadTimeStamp.toString(local_timestamp));
+		            //paramMap.put("cpts", payloadTimeStamp.toString(utc_timestamp));
 		            //paramMap.put("cpem", cp.getEpochMillis());
 		            paramMap.put("cpem", paramMap.get("timestamp"));
 

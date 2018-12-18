@@ -87,10 +87,9 @@ import java.io.Serializable;
 import java.io.IOException;
 
 public class MeasurementProtocolPipeline {
-	
 	private static final Logger LOG = LoggerFactory.getLogger(MeasurementProtocolPipeline.class);
-  
-  
+
+
   //public interface MeasurementProtocolPipelineOptions extends MeasurementProtocolOptions {
   public interface MeasurementProtocolPipelineOptions extends PipelineOptions{
 	@Description("JSON Configuration string")
@@ -98,30 +97,12 @@ public class MeasurementProtocolPipeline {
 	//void setConfig(ValueProvider<String> value);
 	String getConfig();
 	void setConfig(String value);
-	/*
-	@Description("BigQuery Table Spec [project_id]:[dataset_id].[table_id] or [dataset_id].[table_id]")
-    //@Default.String("UA123456789.entities")
-    ValueProvider<String> getBigQueryTableSpec();
-    void setBigQueryTableSpec(ValueProvider<String> value);
-	
-  	@Description("Pub/Sub topic: ")
-  	//@Default.String("projects/mathem-data/topics/test")
-  	ValueProvider<String> getPubsubTopic();
-  	void setPubsubTopic(ValueProvider<String> topic);
-  	
-  	@Description("Pub/Sub subscription")
-	//@Default.String("projects/mathem-data/subscriptions/measurementprotocol-1-dev")
-	ValueProvider<String> getPubsubSubscription();
-	void setPubsubSubscription(ValueProvider<String> subscription);
-	*/
   }
 
   public static void main(String[] args) {
     MeasurementProtocolPipelineOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().as(MeasurementProtocolPipeline.MeasurementProtocolPipelineOptions.class);
     Pipeline pipeline = Pipeline.create(options);
-    
     // Create schemas from protocol buffers
-    
     
     TableSchema eventSchema = ProtobufUtils.makeTableSchema(MPEntityProto.MPEntity.getDescriptor());
     	List<TableFieldSchema> fieldsList = eventSchema.getFields();
@@ -133,95 +114,43 @@ public class MeasurementProtocolPipeline {
 	for (Config.Account.Property property : Config.read(options.getConfig())) {
 			//String pubsubSubscription = property.pubsubSubscription;
 			String pubsubSubscription = "projects/" + options.as(GcpOptions.class).getProject() + "/subscriptions/" + property.id;
+			LOG.info("pubsibSubscription: " + pubsubSubscription);
 
-    //PCollection<CollectorPayloadEntity> payload = pipeline
     PCollection<PubsubMessage> payload = pipeline
-    	.apply("Read collector payloads from pubsub", 
+    	.apply(property.id + " - Read payloads from pubsub", 
     		PubsubIO
     			.readMessagesWithAttributes()
-    			//.readProtos(CollectorPayloadEntityProto.CollectorPayloadEntity.class)
-    			//.fromSubscription(options.getPubsubSubscription()));
     			.fromSubscription(pubsubSubscription));
     
     for(Config.Account.Property.View view : property.views){
-    //Config.Account.Property.View view = property.view;
-    	/*
-    payload
-    	.apply("Unfiltered - Collector Payload to multiple Events", 
-    		ParDo.of(new PayloadToMPEntityFn(
-    			options.getSearchEnginesPattern(),
-    			options.getIgnoredReferersPattern(), 
-    			options.getSocialNetworksPattern(),
-    			StaticValueProvider.of(".*"), // match all hostnames
-    			StaticValueProvider.of("a^"), // match no user agent
-    			options.getSiteSearchPattern(),
-    			options.getTimeZone()
-    		)))
-		.apply("Unfiltered - Event to tablerow", 
-    		ParDo.of(new MPEntityToTableRowFn()))
-		.apply("Unfiltered - Fixed Windows",
-			Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
-              .withAllowedLateness(Duration.standardDays(7))
-              .discardingFiredPanes())
-		.apply("Unfiltered - Write to bigquery unfiltered table", 
-			BigQueryIO
-				.writeTableRows()
-				//.to(options.getBigQueryTableSpec() + "_unfiltered")
-				.to(NestedValueProvider.of(
-					options.getBigQueryTableSpec(),
-					new SerializableFunction<String, String>() {
-						@Override
-						public String apply(String tableSpec) {
-							return tableSpec + "_unfiltered";
-						}
-					}))
-				.withSchema(eventSchema)
-				.withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
-        		.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-            	.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
-            	
-    
-    PCollection<MPEntity> enrichedEntities = payload
-    	.apply("Enriched - Collector Payload to multiple Events", 
-    		ParDo.of(new PayloadToMPEntityFn(
-    			options.getSearchEnginesPattern(),
-    			options.getIgnoredReferersPattern(), 
-    			options.getSocialNetworksPattern(),
-    			options.getIncludedHostnamesPattern(),
-    			options.getExcludedBotsPattern(),
-    			options.getSiteSearchPattern(),
-    			options.getTimeZone()
-    		)));
-    		*/
 	
-	PCollection<MPEntity> enrichedEntities = payload
-    	.apply("Enriched - Collector Payload to multiple Events", 
-    		ParDo.of(new PayloadToMPEntityFn(
-    			StaticValueProvider.of(view.searchEnginesPattern),
-    			StaticValueProvider.of(view.ignoredReferersPattern), 
-    			StaticValueProvider.of(view.socialNetworksPattern),
-    			StaticValueProvider.of(view.includedHostnamesPattern),
-    			StaticValueProvider.of(view.excludedBotsPattern),
-    			StaticValueProvider.of(view.siteSearchPattern),
-    			StaticValueProvider.of(view.getTimeZone())
-    		)));
-	
-	enrichedEntities
-	     .apply("Enriched - Event to tablerow", 
-    		ParDo.of(new MPEntityToTableRowFn()))
-	    .apply("Enriched - Fixed Windows",
-    		Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
-              .withAllowedLateness(Duration.standardDays(7))
-              .discardingFiredPanes())
-		.apply("Enriched - Write to bigquery", 
-			BigQueryIO
-				.writeTableRows()
-				//.to(options.getBigQueryTableSpec())
-				.to(property.id + "." + view.id)
-				.withSchema(eventSchema)
-				.withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
-        		.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-            	.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
+		PCollection<MPEntity> enrichedEntities = payload
+	    	.apply(view.id + " - Payload to multiple Events", 
+	    		ParDo.of(new PayloadToMPEntityFn(
+	    			StaticValueProvider.of(view.searchEnginesPattern),
+	    			StaticValueProvider.of(view.ignoredReferersPattern), 
+	    			StaticValueProvider.of(view.socialNetworksPattern),
+	    			StaticValueProvider.of(view.includedHostnamesPattern),
+	    			StaticValueProvider.of(view.excludedBotsPattern),
+	    			StaticValueProvider.of(view.siteSearchPattern),
+	    			StaticValueProvider.of(view.timeZone)
+	    		)));
+		
+		enrichedEntities
+		     .apply(view.id + " - Event to tablerow", 
+	    		ParDo.of(new MPEntityToTableRowFn()))
+		    .apply(view.id + " - Fixed Windows",
+	    		Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
+	              .withAllowedLateness(Duration.standardDays(7))
+	              .discardingFiredPanes())
+			.apply(view.id + " - Write to bigquery", 
+				BigQueryIO
+					.writeTableRows()
+					.to(property.id + "." + view.id)
+					.withSchema(eventSchema)
+					.withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
+	        		.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+	            	.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
     /*
     enrichedEntities
     	.apply("Enriched - Write to pubsub",

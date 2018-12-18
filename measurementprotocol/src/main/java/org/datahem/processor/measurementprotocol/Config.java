@@ -55,12 +55,14 @@ public class Config {
 				public String includedHostnamesPattern;
 				public String excludedBotsPattern;
 				public String siteSearchPattern;
+				public String timeZone;
+				/*
 				public String timeZoneRegion;
 				public String timeZoneCity;
 				
 				public String getTimeZone(){
 					return timeZoneRegion + "/" + timeZoneCity;
-				}
+				}*/
 			}
 		}
 	}

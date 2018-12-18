@@ -152,7 +152,7 @@ public class GenericStreamPipeline {
 			.apply(
 				"Write to BigQuery",
 				BigQueryIO.<Message>write()
-					.to(new ProtobufBigQueryToFn("payload"))
+					.to(new ProtobufBigQueryToFn("backup","payload"))
 					.withFormatFunction(new ProtobufBigQueryFormatFn())
 					.withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
 					.withWriteDisposition(WriteDisposition.WRITE_APPEND)
