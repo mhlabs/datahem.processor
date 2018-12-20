@@ -26,16 +26,45 @@ DF_DISK_SIZE_GB= # Optional. Default: Size defined in your Cloud Platform projec
 DF_WORKER_MACHINE_TYPE='' # Optional. Default: The Dataflow service will choose the machine type based on your job. Example: 'n1-standard-1'
 
 #Measurement Protocol Pipeline settings
-STREAM_ID='' # Required. Lowercase and alphanumeric format of GA tracking Id. Example: 'ua123456789'
-IGNORED_REFERERS_PATTERN='' # Required. Example: '.*mysite\\.com.*'
-SEARCH_ENGINES_PATTERN='' # Optional. Define search engine traffic with Java regex syntax. Default: '.*www\\.google\\..*|.*www\\.bing\\..*|.*search\\.yahoo\\..*'
-SOCIAL_NETWORKS_PATTERN='' # Optional. Define social network traffic with Java regex syntax. Default: '.*facebook\\..*|.*instagram\\..*|.*pinterest\\..*|.*youtube\\..*|.*linkedin\\..*|.*twitter\\..*'
-INCLUDED_HOSTNAMES='' # Optional. Filter hits to only include defined hostnames with Java regex syntax. Default: '.*'
-EXCLUDED_BOTS_PATTERN='' # Optional. Filter out bot user agents with Java regex syntax. Default: '.*bot.*|.*spider.*|.*crawler.*'
-SITE_SEARCH_PATTERN='' #Optional. Define site search URL parameter with Java regex syntax. Default: '.*q=(([^&#]*)|&|#|$)'
-TIME_ZONE='' #Optional. Define local time zone (ex. Europe/Stockholm) for date field used for partitioning. Default: 'Etc/UTC'
-
+CONFIG=''  # Required. JSON. Example: CONFIG='{"name":"<accountName>","properties":[{"id":"ua123456789","views":[{"id":"master","searchEnginesPattern":".*(www.google.|www.bing.|search.yahoo.).*","ignoredReferersPattern":".*(datahem.org|klarna.com).*","socialNetworksPattern":".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*","includedHostnamesPattern":".*(datahem.org).*","excludedBotsPattern":".*(^$|bot|spider|crawler).*","siteSearchPattern":".*q=(([^&#]*)|&|#|$)","timeZone":"Europe/Stockholm", "pubSubTopic":"ua123456789-master"},{"id":"unfiltered","searchEnginesPattern":".*(www.google.|www.bing.|search.yahoo.).*","ignoredReferersPattern":".*(www.datahem.org).*","socialNetworksPattern":".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*","includedHostnamesPattern":".*","excludedBotsPattern":"a^","siteSearchPattern":".*q=(([^&#]*)|&|#|$)","timeZone":"Europe/Stockholm"}]}]}'
+# Specify an account with one or multiple properties. Each property can have one or more views.
+```json
+{"name":"abcd",
+"properties":[
+    {"id":"ua123456789",
+    "views":[
+        {"id":"master",
+        "searchEnginesPattern":".*(www.google.|www.bing.|search.yahoo.).*",
+        "ignoredReferersPattern":".*(datahem.org|klarna.com).*",
+        "socialNetworksPattern":".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*",
+        "includedHostnamesPattern":".*(datahem.org).*",
+        "excludedBotsPattern":".*(^$|bot|spider|crawler).*",
+        "siteSearchPattern":".*q=(([^&#]*)|&|#|$)",
+        "timeZone":"Europe/Stockholm",
+        "pubSubTopic":"ua123456789-master"},
+        {"id":"unfiltered",
+        "searchEnginesPattern":".*(www.google.|www.bing.|search.yahoo.).*",
+        "ignoredReferersPattern":".*(www.datahem.org).*",
+        "socialNetworksPattern":".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*",
+        "includedHostnamesPattern":".*",
+        "excludedBotsPattern":"a^",
+        "siteSearchPattern":".*q=(([^&#]*)|&|#|$)",
+        "timeZone":"Europe/Stockholm"}
+    ]}
+]}
 ```
+
+# name -> Account name. [REQUIRED, STRING]
+# properties[].id -> Property id [REQUIRED, STRING] Name of the pubsubSubscription to read from.
+# properties[].views[].id -> View id. [REQUIRED, STRING]
+# properties[].views[].searchEnginesPattern -> Search Engine Regex Pattern [REQUIRED, STRING] Regex-pattern to match traffic from search engines.
+# properties[].views[].ignoredReferrersPattern -> Ignored Referrers Regex Pattern [REQUIRED, STRING] Regex-pattern to match referrers that should be ignored as traffic source.
+# properties[].views[].socialNetworksPattern -> Social Networks Regex Pattern [REQUIRED, STRING] Regex-pattern to match traffic from social networks.
+# properties[].views[].includedHostnamesPattern -> Included Hostnames Regex Pattern [REQUIRED, STRING] Regex-pattern to match hostnames that should be included, rest is excluded.
+# properties[].views[].excludedBotsPattern -> Excluded Bots Regex Pattern [REQUIRED, STRING] Regex-pattern to match user-agents that should be excluded.
+# properties[].views[].siteSearchPattern -> Site Search Regex Pattern [REQUIRED, STRING] Regex-pattern to match site search and search terms.
+# properties[].views[].timeZone -> Timezone [REQUIRED, STRING] Local timezone.
+# properties[].views[].pubSubTopic -> PubSubTopic [OPTIONAL, STRING] Name of the PubSub topic to publish enriched entities to.
 
 ### 2.1.A. Compile and execute job
 
@@ -44,6 +73,7 @@ mvn compile exec:java \
       -Dexec.mainClass=org.datahem.processor.measurementprotocol.MeasurementProtocolPipeline \
       -Dexec.args=" \
       --project=$PROJECT_ID \
+      --jobName=measurementprotocol \
       --stagingLocation=gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/staging \
       --gcpTempLocation=gs://$PROJECT_ID-processor/gcptemp/ \
       --runner=DataflowRunner \
@@ -52,17 +82,8 @@ mvn compile exec:java \
       --numWorkers=$DF_NUM_WORKERS \
       --maxNumWorkers=$DF_MAX_NUM_WORKERS \
       --diskSizeGb=$DF_DISK_SIZE_GB \
-      --workerMachineType=$DF_WORKER_MACHINE_TYPE \
-      --pubsubTopic=projects/$PROJECT_ID/topics/$STREAM_ID-entities \
-      --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$STREAM_ID-processor \
-      --bigQueryTableSpec=$STREAM_ID.entities \
-      --ignoredReferersPattern=\"$IGNORED_REFERERS_PATTERN\" \
-      --searchEnginesPattern=\"$SEARCH_ENGINES_PATTERN\" \
-      --socialNetworksPattern=\"$SOCIAL_NETWORKS_PATTERN\" \
-      --includedHostnamesPattern=\"$INCLUDED_HOSTNAMES\" \
-      --excludedBotsPattern=\"$EXCLUDED_BOTS_PATTERN\" \
-      --siteSearchPattern=\"$SITE_SEARCH_PATTERN\" \
-      --timeZone=$TIME_ZONE"
+      --config='$CONFIG' \
+      --workerMachineType=$DF_WORKER_MACHINE_TYPE"
 ```
 
 ### 2.1.B. Create and execute dataflow template
@@ -91,16 +112,7 @@ gcloud beta dataflow jobs run $STREAM_ID-processor \
 --region=$DF_REGION \
 --max-workers=$DF_MAX_NUM_WORKERS \
 --parameters \
-pubsubTopic=projects/$PROJECT_ID/topics/$STREAM_ID-entities,\
-pubsubSubscription=projects/$PROJECT_ID/subscriptions/$STREAM_ID-processor,\
-bigQueryTableSpec=$STREAM_ID.entities,\
-ignoredReferersPattern=$IGNORED_REFERERS_PATTERN,\
-searchEnginesPattern=$SEARCH_ENGINES_PATTERN,\
-socialNetworksPattern=$SOCIAL_NETWORKS_PATTERN,\
-includedHostnamesPattern=$INCLUDED_HOSTNAMES,\
-excludedBotsPattern=$EXCLUDED_BOTS_PATTERN,\
-siteSearchPattern=$SITE_SEARCH_PATTERN,\
-timeZone=$TIME_ZONE
+--config=$CONFIG
 ```
 
 

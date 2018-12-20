@@ -97,8 +97,6 @@ public class PromotionEntity extends BaseEntity{
         				return matcher.group(1);
         				}, Collectors.toList()));
     			
-    			
-    			
     			//Build a promotion hit for each promotion
     			for(Map.Entry<String, List<String>> entry : entries.entrySet()){
 		            List<String> keys = entry.getValue();

@@ -26,16 +26,12 @@ package org.datahem.processor.measurementprotocol;
  * =========================LICENSE_END==================================
  */
 
-//import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.*;
-//import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
 import org.datahem.processor.measurementprotocol.utils.MeasurementProtocolBuilder;
 import org.datahem.processor.utils.ProtobufUtils;
 import org.datahem.processor.measurementprotocol.utils.PayloadToMPEntityFn;
 import org.datahem.processor.measurementprotocol.utils.MPEntityToTableRowFn;
-import org.datahem.processor.measurementprotocol.utils.SchemaHelper;
-import org.datahem.processor.measurementprotocol.utils.MeasurementProtocolOptions;
 
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
@@ -89,14 +85,12 @@ import java.io.IOException;
 public class MeasurementProtocolPipeline {
 	private static final Logger LOG = LoggerFactory.getLogger(MeasurementProtocolPipeline.class);
 
-
-  //public interface MeasurementProtocolPipelineOptions extends MeasurementProtocolOptions {
   public interface MeasurementProtocolPipelineOptions extends PipelineOptions{
 	@Description("JSON Configuration string")
-	//ValueProvider<String> getConfig();
-	//void setConfig(ValueProvider<String> value);
-	String getConfig();
-	void setConfig(String value);
+	ValueProvider<String> getConfig();
+	void setConfig(ValueProvider<String> value);
+	//String getConfig();
+	//void setConfig(String value);
   }
 
   public static void main(String[] args) {
@@ -111,8 +105,7 @@ public class MeasurementProtocolPipeline {
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     
 	
-	for (Config.Account.Property property : Config.read(options.getConfig())) {
-			//String pubsubSubscription = property.pubsubSubscription;
+	for (Config.Account.Property property : Config.read(options.getConfig().get())) {
 			String pubsubSubscription = "projects/" + options.as(GcpOptions.class).getProject() + "/subscriptions/" + property.id;
 			LOG.info("pubsibSubscription: " + pubsubSubscription);
 
@@ -122,43 +115,45 @@ public class MeasurementProtocolPipeline {
     			.readMessagesWithAttributes()
     			.fromSubscription(pubsubSubscription));
     
-    for(Config.Account.Property.View view : property.views){
-	
-		PCollection<MPEntity> enrichedEntities = payload
-	    	.apply(view.id + " - Payload to multiple Events", 
-	    		ParDo.of(new PayloadToMPEntityFn(
-	    			StaticValueProvider.of(view.searchEnginesPattern),
-	    			StaticValueProvider.of(view.ignoredReferersPattern), 
-	    			StaticValueProvider.of(view.socialNetworksPattern),
-	    			StaticValueProvider.of(view.includedHostnamesPattern),
-	    			StaticValueProvider.of(view.excludedBotsPattern),
-	    			StaticValueProvider.of(view.siteSearchPattern),
-	    			StaticValueProvider.of(view.timeZone)
-	    		)));
-		
-		enrichedEntities
-		     .apply(view.id + " - Event to tablerow", 
-	    		ParDo.of(new MPEntityToTableRowFn()))
-		    .apply(view.id + " - Fixed Windows",
-	    		Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
-	              .withAllowedLateness(Duration.standardDays(7))
-	              .discardingFiredPanes())
-			.apply(view.id + " - Write to bigquery", 
-				BigQueryIO
-					.writeTableRows()
-					.to(property.id + "." + view.id)
-					.withSchema(eventSchema)
-					.withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
-	        		.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-	            	.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
-    /*
-    enrichedEntities
-    	.apply("Enriched - Write to pubsub",
-    	PubsubIO
-    	.writeProtos(MPEntityProto.MPEntity.class)
-    	.to(options.getPubsubTopic()));
-    */
-   }}
+        for(Config.Account.Property.View view : property.views){ //Start view
+            PCollection<MPEntity> enrichedEntities = payload
+                .apply(view.id + " - Payload to multiple Events", 
+                    ParDo.of(new PayloadToMPEntityFn(
+                        StaticValueProvider.of(view.searchEnginesPattern),
+                        StaticValueProvider.of(view.ignoredReferersPattern), 
+                        StaticValueProvider.of(view.socialNetworksPattern),
+                        StaticValueProvider.of(view.includedHostnamesPattern),
+                        StaticValueProvider.of(view.excludedBotsPattern),
+                        StaticValueProvider.of(view.siteSearchPattern),
+                        StaticValueProvider.of(view.timeZone)
+                    )));
+            
+            enrichedEntities
+                .apply(view.id + " - Event to tablerow", 
+                    ParDo.of(new MPEntityToTableRowFn()))
+                .apply(view.id + " - Fixed Windows",
+                    Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
+                    .withAllowedLateness(Duration.standardDays(7))
+                    .discardingFiredPanes())
+                .apply(view.id + " - Write to bigquery", 
+                    BigQueryIO
+                        .writeTableRows()
+                        .to(property.id + "." + view.id)
+                        .withSchema(eventSchema)
+                        .withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
+                        .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
+            
+            if(view.pubSubTopic != null){
+                String pubSubTopic = "projects/" + options.as(GcpOptions.class).getProject() + "/topics/" + view.pubSubTopic;
+                enrichedEntities
+                    .apply(view.id + " - Write to pubsub",
+                        PubsubIO
+                            .writeProtos(MPEntityProto.MPEntity.class)
+                            .to(pubSubTopic));
+            }
+        } //End View
+    }
     pipeline.run();
   }
 }

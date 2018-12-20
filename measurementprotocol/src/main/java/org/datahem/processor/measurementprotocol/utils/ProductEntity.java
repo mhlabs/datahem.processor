@@ -119,9 +119,7 @@ public class ProductEntity extends BaseEntity{
 		            		MPEntity evp = builder(prParamMap).build();
 							eventList.add(evp);
 						}
-
-					}
-					catch(IllegalArgumentException e){
+					}catch(IllegalArgumentException e){
 						LOG.error(e.toString());
 					}
 				}
