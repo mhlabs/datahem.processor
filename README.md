@@ -2,6 +2,11 @@
 Process bounded and unbounded data and write to PubSub and BigQuery, currently using Google Dataflow (Apache Beam) and supports processing of Google Analytics hits and AWS Kinesis events
 
 # Version:
+## 0.9.0 (2018-12-20): Measurement Protocol Pipeline restructuring
+Reads pubsub messages with request headers stored as pubsub attributes instead of concatenating request querystring body, synced changes with datahem.collector version 0.9.0.
+Configure jobs with json (account -> properties -> views) to process multiple properties and views in the same job.
+Cleaned up code and updated documentation. See README.md in the measurementprotocol.src.main.java.org.datahem.processor.measurementprotocol folder
+
 ## 0.7.2 (2018-09-21): Measurement Protocol Pipeline Test & Google Experiment entity
 Beam pipeline tests for all measurement protocol entities (16 tests).
 New entity capturing experiments from both Google Optimize and Content Experiments
