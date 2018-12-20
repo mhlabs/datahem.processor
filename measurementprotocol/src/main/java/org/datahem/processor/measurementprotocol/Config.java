@@ -46,7 +46,6 @@ public class Config {
 			public String id;
 			public List<View> views;
 			
-			//public View view;
 			static public class View{
 				public String id;
 				public String searchEnginesPattern;
@@ -55,32 +54,20 @@ public class Config {
 				public String includedHostnamesPattern;
 				public String excludedBotsPattern;
 				public String siteSearchPattern;
-				public String timeZoneRegion;
-				public String timeZoneCity;
-				
-				public String getTimeZone(){
-					return timeZoneRegion + "/" + timeZoneCity;
-				}
+				public String timeZone;
+                public String pubSubTopic;
 			}
 		}
 	}
 
-	//public List<Property> properties;
-
-	//public static List<Property> read(String config) {
 	public static List<Config.Account.Property> read(String config) {
-		//config = "{\"name\":\"mathem\",\"properties\":[{\"id\":\"ua73918641\",\"views\":[{\"id\":\"master\",\"searchEnginesPattern\":\"(google)\",\"ignoredReferersPattern\":\"(mathem.se)\",\"socialNetworksPattern\":\"(facebook)\",\"includedHostnamesPattern\":\".*(mathem.se).*\",\"excludedBotsPattern\":\"(bot)\",\"siteSearchPattern\":\"(q)\",\"timeZone\":\"Europe/Stockholm\"}]}]}";
 		LOG.info("config:" + config);
 		Gson gson = new Gson();
 		JsonReader reader = new JsonReader(new StringReader(config));
 		reader.setLenient(true);
-
 		try {
-			//Type listType = new TypeToken<List<Property>>(){}.getType();
 			Account account = gson.fromJson(reader, Account.class);
 			return account.properties;
-			//return gson.fromJson(config, listType);
-			//gson.fromJson(config, Config.class);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

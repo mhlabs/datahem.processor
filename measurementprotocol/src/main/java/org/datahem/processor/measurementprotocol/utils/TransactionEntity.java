@@ -52,8 +52,6 @@ public class TransactionEntity extends BaseEntity{
 			new Parameter("ts", "Double", null, 500, "shipping", false, 3.50),
 			new Parameter("tcc", "String", null, 500, "couponCode", false, "SUMMER08")
 		);
-		
-
 	}
 	
 	public List<Parameter> getParameters(){return parameters;}

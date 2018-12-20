@@ -44,11 +44,6 @@ public class MPEntityToTableRowFn extends DoFn<MPEntity,TableRow> {
       	public void processElement(ProcessContext c)  {
       		MPEntity mpEntity = c.element();
 	        TableRow tRow = ProtobufUtils.makeTableRow(mpEntity);
-	        /*
-	        try{
-	        	LOG.info(Integer.toString(tRow.hashCode())+" : "+tRow.toPrettyString());	
-	        }catch(Exception e){}
-	        */
 	        c.output(tRow);
 	     	return;
 	    }

@@ -107,7 +107,6 @@ public class BaseEntity{
 			LOG.error(e.toString());
 		}
 	}
-			
 	
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> mpEntities = new ArrayList<>();
@@ -137,12 +136,12 @@ public class BaseEntity{
 		
 		mpEntityBuilder
 			.setType(paramMap.get("et"))
-			.setHitId(paramMap.get("uuid"))
+            .setHitId(paramMap.get("MessageUuid"))
 			.setClientId(paramMap.get("cid"))
 			.setUserId(paramMap.getOrDefault("uid", ""))
 			.setEpochMillis(Long.parseLong(paramMap.get("cpem")))
 			.setDate(paramMap.get("cpd"))
-			.setUtcTimestamp(paramMap.get("cpts"));
+			.setLocalTimestamp(paramMap.get("cpts"));
 		for (Parameter p : parameters) {
 			Pattern pattern = Pattern.compile("^" + p.getParameter() + "$");
  			List<String> bu = paramMap
@@ -176,9 +175,7 @@ public class BaseEntity{
 	    				mpEntityBuilder.putParams((p.getParameterName()==null) ? b : p.getParameterNameWithSuffix(b), getValues(p, paramMap.get(b)));
 	    			}	
 	           	}
-		}
-		
-    	
+		    }
 		}
 		//Make a deep copy of params, then clear params from entity, then sort params copy and put back into entity
 		Map<String, ValEntity> collect = mpEntityBuilder.getParamsMap().entrySet().stream().collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue()));
@@ -206,7 +203,7 @@ public class BaseEntity{
 							break;
 			}
 		}catch(Exception e){
-			LOG.error(e.toString());
+			//LOG.error(e.toString());
 		}finally{
 			return valBuilder.build();
 		}

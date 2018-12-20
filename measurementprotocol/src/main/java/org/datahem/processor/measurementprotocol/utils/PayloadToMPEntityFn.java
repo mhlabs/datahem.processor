@@ -1,14 +1,13 @@
 package org.datahem.processor.measurementprotocol.utils;
-//import com.google.pubsub.v1.PubsubMessage;
+
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
-//import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.*;
-//import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.options.ValueProvider;
+
+import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
+import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
+
 import java.util.List;
-import java.nio.charset.StandardCharsets;
 
 /*-
  * ========================LICENSE_START=================================
@@ -36,7 +35,6 @@ import java.nio.charset.StandardCharsets;
  * =========================LICENSE_END==================================
  */
 
-//public class PayloadToMPEntityFn extends DoFn<CollectorPayloadEntity, MPEntity> {
 public class PayloadToMPEntityFn extends DoFn<PubsubMessage, MPEntity> {
 		ValueProvider<String> searchEnginesPattern;
 		ValueProvider<String> ignoredReferersPattern;
@@ -66,7 +64,6 @@ public class PayloadToMPEntityFn extends DoFn<PubsubMessage, MPEntity> {
       	@ProcessElement      
       	public void processElement(ProcessContext c)  {
 	      	
-	      	//CollectorPayloadEntity cp = c.element();
 	      	PubsubMessage received = c.element();
 	        MeasurementProtocolBuilder mpb = new MeasurementProtocolBuilder();
 	        mpb.setSearchEnginesPattern(searchEnginesPattern.get());
@@ -77,21 +74,10 @@ public class PayloadToMPEntityFn extends DoFn<PubsubMessage, MPEntity> {
 	        mpb.setSiteSearchPattern(siteSearchPattern.get());
 	        mpb.setTimeZone(timeZone.get());
 	        
-	        
-	        //List<MPEntity> mpEntities = mpb.mpEntitiesFromPayload(received.getPayload().toStringUtf8());
-	        List<MPEntity> mpEntities = mpb.mpEntitiesFromPayload(new String(received.getPayload(), StandardCharsets.UTF_8));
+	        List<MPEntity> mpEntities = mpb.mpEntitiesFromPayload(received);
 	        mpEntities.forEach(mpEntity -> {
 	        	c.output(mpEntity);
-        	});
-	        
-	        /*
-	        List<MPEntity> mpEntities = mpb.mpEntitiesFromCollectorPayload(cp);
-	        mpEntities.forEach(mpEntity -> {
-	        	c.output(mpEntity);
-        	});*/
-        	
-	    	return;
-	    	
+        	});	
+	    	return;	
 		}
-      
   }

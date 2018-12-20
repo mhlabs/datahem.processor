@@ -26,11 +26,8 @@ package org.datahem.processor.measurementprotocol.utils;
  * =========================LICENSE_END==================================
  */
 
-import org.datahem.processor.utils.FieldMapper;
-import org.datahem.processor.measurementprotocol.utils.PageviewEntity;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
-import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.CollectorPayloadEntity;
-import com.google.protobuf.TextFormat;
+import java.nio.charset.StandardCharsets;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Collections;
@@ -41,8 +38,12 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.net.URL;
-import java.net.MalformedURLException;
+
+import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
+
+import org.datahem.processor.utils.FieldMapper;
+import org.datahem.processor.measurementprotocol.utils.PageviewEntity;
+import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -139,32 +140,27 @@ public class MeasurementProtocolBuilder{
     	this.timeZone = tz;
   	}
 
-	//public List<MPEntity> mpEntitiesFromCollectorPayload(CollectorPayloadEntity cp){
-	public List<MPEntity> mpEntitiesFromPayload(String payload){
+    public List<MPEntity> mpEntitiesFromPayload(PubsubMessage message){
 		try{
+            String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
 	        //Check if post body contains payload and add parameters in a map
-	        //if (!"".equals(cp.getPayload())) {
 	        if (!"".equals(payload)) {
 	            //Add header parameters to paramMap
-	            //paramMap = FieldMapper.fieldMapFromQuery(cp.getPayload());
 	            paramMap = FieldMapper.fieldMapFromQuery(payload);
-	            //paramMap.putAll(cp.getHeadersMap());
+                paramMap.putAll(message.getAttributeMap());
 	            
 	            //Exclude bots, spiders and crawlers
 				if(paramMap.get("User-Agent") == null){
 					paramMap.put("User-Agent", "");
-					//LOG.info("User-Agent = null, payload: " + payload + ", paramMap: " + paramMap.toString());
 				}
 
 	        	if(!paramMap.get("User-Agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern())){
 	                //Add epochMillis and timestamp to paramMap       
-		            
-		            //Instant payloadTimeStamp = new Instant(Long.parseLong(cp.getEpochMillis()));
-		            Instant payloadTimeStamp = new Instant(Long.parseLong(paramMap.get("timestamp")));
-					DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
-		            paramMap.put("cpts", payloadTimeStamp.toString(utc_timestamp));
-		            //paramMap.put("cpem", cp.getEpochMillis());
-		            paramMap.put("cpem", paramMap.get("timestamp"));
+                    Instant payloadTimeStamp = new Instant(Long.parseLong(paramMap.get("MessageTimestamp")));
+					//DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
+					DateTimeFormatter local_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZone(DateTimeZone.forID(getTimeZone()));
+		            paramMap.put("cpts", payloadTimeStamp.toString(local_timestamp));
+                    paramMap.put("cpem", paramMap.get("MessageTimestamp"));
 
 					//Set local timezone for use as partition field
 					DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd").withZone(DateTimeZone.forID(getTimeZone()));
@@ -196,12 +192,4 @@ public class MeasurementProtocolBuilder{
         	list.addAll(c);
     	}
 	}
-	
-	public static boolean regexMatcherFind(String expression,String input) {
-    	if(!"".equals(input)) return false;
-    	Pattern p = Pattern.compile(expression);
-        Matcher m = p.matcher(input);
-        return m.find();
-	}
-
 }
