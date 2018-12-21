@@ -100,8 +100,10 @@ public class MeasurementProtocolPipeline {
     
     TableSchema eventSchema = ProtobufUtils.makeTableSchema(MPEntityProto.MPEntity.getDescriptor());
     	List<TableFieldSchema> fieldsList = eventSchema.getFields();
-    	TableFieldSchema tfs = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
-    	fieldsList.set(fieldsList.indexOf(tfs), tfs.setType("DATE"));
+    	TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
+    	fieldsList.set(fieldsList.indexOf(date), date.setType("DATE"));
+        TableFieldSchema localDateTime = new TableFieldSchema().setName("localDateTime").setType("STRING").setMode("NULLABLE");
+    	fieldsList.set(fieldsList.indexOf(localDateTime), localDateTime.setType("DATETIME"));
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     
 	

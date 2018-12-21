@@ -38,6 +38,7 @@ compile and run
       -Dexec.mainClass=org.datahem.processor.pubsub.backup.PubSubBackupPipeline \
       -Dexec.args=" \
       --project=$PROJECT_ID \
+      --jobName=$STREAM_ID-backup \
       --stagingLocation=gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/staging \
       --gcpTempLocation=gs://$PROJECT_ID-processor/gcptemp/ \
       --runner=DataflowRunner \
