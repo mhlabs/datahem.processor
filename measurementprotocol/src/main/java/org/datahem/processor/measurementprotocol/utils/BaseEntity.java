@@ -141,7 +141,7 @@ public class BaseEntity{
 			.setUserId(paramMap.getOrDefault("uid", ""))
 			.setEpochMillis(Long.parseLong(paramMap.get("cpem")))
 			.setDate(paramMap.get("cpd"))
-			.setLocalTimestamp(paramMap.get("cpts"));
+			.setLocalDateTime(paramMap.get("cpts"));
 		for (Parameter p : parameters) {
 			Pattern pattern = Pattern.compile("^" + p.getParameter() + "$");
  			List<String> bu = paramMap

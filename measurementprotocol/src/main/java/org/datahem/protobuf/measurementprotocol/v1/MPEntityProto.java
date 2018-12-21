@@ -718,14 +718,14 @@ public final class MPEntityProto {
         getUserIdBytes();
 
     /**
-     * <code>optional string localTimestamp = 5;</code>
+     * <code>optional string localDateTime = 5;</code>
      */
-    java.lang.String getLocalTimestamp();
+    java.lang.String getLocalDateTime();
     /**
-     * <code>optional string localTimestamp = 5;</code>
+     * <code>optional string localDateTime = 5;</code>
      */
     com.google.protobuf.ByteString
-        getLocalTimestampBytes();
+        getLocalDateTimeBytes();
 
     /**
      * <code>optional int64 epochMillis = 6;</code>
@@ -792,7 +792,7 @@ public final class MPEntityProto {
       hitId_ = "";
       clientId_ = "";
       userId_ = "";
-      localTimestamp_ = "";
+      localDateTime_ = "";
       epochMillis_ = 0L;
       date_ = "";
     }
@@ -849,7 +849,7 @@ public final class MPEntityProto {
             case 42: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              localTimestamp_ = s;
+              localDateTime_ = s;
               break;
             }
             case 48: {
@@ -1046,34 +1046,34 @@ public final class MPEntityProto {
       }
     }
 
-    public static final int LOCALTIMESTAMP_FIELD_NUMBER = 5;
-    private volatile java.lang.Object localTimestamp_;
+    public static final int LOCALDATETIME_FIELD_NUMBER = 5;
+    private volatile java.lang.Object localDateTime_;
     /**
-     * <code>optional string localTimestamp = 5;</code>
+     * <code>optional string localDateTime = 5;</code>
      */
-    public java.lang.String getLocalTimestamp() {
-      java.lang.Object ref = localTimestamp_;
+    public java.lang.String getLocalDateTime() {
+      java.lang.Object ref = localDateTime_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        localTimestamp_ = s;
+        localDateTime_ = s;
         return s;
       }
     }
     /**
-     * <code>optional string localTimestamp = 5;</code>
+     * <code>optional string localDateTime = 5;</code>
      */
     public com.google.protobuf.ByteString
-        getLocalTimestampBytes() {
-      java.lang.Object ref = localTimestamp_;
+        getLocalDateTimeBytes() {
+      java.lang.Object ref = localDateTime_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        localTimestamp_ = b;
+        localDateTime_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -1223,8 +1223,8 @@ public final class MPEntityProto {
       if (!getUserIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, userId_);
       }
-      if (!getLocalTimestampBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, localTimestamp_);
+      if (!getLocalDateTimeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, localDateTime_);
       }
       if (epochMillis_ != 0L) {
         output.writeInt64(6, epochMillis_);
@@ -1260,8 +1260,8 @@ public final class MPEntityProto {
       if (!getUserIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, userId_);
       }
-      if (!getLocalTimestampBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, localTimestamp_);
+      if (!getLocalDateTimeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, localDateTime_);
       }
       if (epochMillis_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
@@ -1304,8 +1304,8 @@ public final class MPEntityProto {
           .equals(other.getClientId());
       result = result && getUserId()
           .equals(other.getUserId());
-      result = result && getLocalTimestamp()
-          .equals(other.getLocalTimestamp());
+      result = result && getLocalDateTime()
+          .equals(other.getLocalDateTime());
       result = result && (getEpochMillis()
           == other.getEpochMillis());
       result = result && internalGetParams().equals(
@@ -1330,8 +1330,8 @@ public final class MPEntityProto {
       hash = (53 * hash) + getClientId().hashCode();
       hash = (37 * hash) + USERID_FIELD_NUMBER;
       hash = (53 * hash) + getUserId().hashCode();
-      hash = (37 * hash) + LOCALTIMESTAMP_FIELD_NUMBER;
-      hash = (53 * hash) + getLocalTimestamp().hashCode();
+      hash = (37 * hash) + LOCALDATETIME_FIELD_NUMBER;
+      hash = (53 * hash) + getLocalDateTime().hashCode();
       hash = (37 * hash) + EPOCHMILLIS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getEpochMillis());
@@ -1489,7 +1489,7 @@ public final class MPEntityProto {
 
         userId_ = "";
 
-        localTimestamp_ = "";
+        localDateTime_ = "";
 
         epochMillis_ = 0L;
 
@@ -1524,7 +1524,7 @@ public final class MPEntityProto {
         result.hitId_ = hitId_;
         result.clientId_ = clientId_;
         result.userId_ = userId_;
-        result.localTimestamp_ = localTimestamp_;
+        result.localDateTime_ = localDateTime_;
         result.epochMillis_ = epochMillis_;
         result.params_ = internalGetParams();
         result.params_.makeImmutable();
@@ -1587,8 +1587,8 @@ public final class MPEntityProto {
           userId_ = other.userId_;
           onChanged();
         }
-        if (!other.getLocalTimestamp().isEmpty()) {
-          localTimestamp_ = other.localTimestamp_;
+        if (!other.getLocalDateTime().isEmpty()) {
+          localDateTime_ = other.localDateTime_;
           onChanged();
         }
         if (other.getEpochMillis() != 0L) {
@@ -1903,71 +1903,71 @@ public final class MPEntityProto {
         return this;
       }
 
-      private java.lang.Object localTimestamp_ = "";
+      private java.lang.Object localDateTime_ = "";
       /**
-       * <code>optional string localTimestamp = 5;</code>
+       * <code>optional string localDateTime = 5;</code>
        */
-      public java.lang.String getLocalTimestamp() {
-        java.lang.Object ref = localTimestamp_;
+      public java.lang.String getLocalDateTime() {
+        java.lang.Object ref = localDateTime_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          localTimestamp_ = s;
+          localDateTime_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>optional string localTimestamp = 5;</code>
+       * <code>optional string localDateTime = 5;</code>
        */
       public com.google.protobuf.ByteString
-          getLocalTimestampBytes() {
-        java.lang.Object ref = localTimestamp_;
+          getLocalDateTimeBytes() {
+        java.lang.Object ref = localDateTime_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          localTimestamp_ = b;
+          localDateTime_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>optional string localTimestamp = 5;</code>
+       * <code>optional string localDateTime = 5;</code>
        */
-      public Builder setLocalTimestamp(
+      public Builder setLocalDateTime(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        localTimestamp_ = value;
+        localDateTime_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string localTimestamp = 5;</code>
+       * <code>optional string localDateTime = 5;</code>
        */
-      public Builder clearLocalTimestamp() {
+      public Builder clearLocalDateTime() {
         
-        localTimestamp_ = getDefaultInstance().getLocalTimestamp();
+        localDateTime_ = getDefaultInstance().getLocalDateTime();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string localTimestamp = 5;</code>
+       * <code>optional string localDateTime = 5;</code>
        */
-      public Builder setLocalTimestampBytes(
+      public Builder setLocalDateTimeBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        localTimestamp_ = value;
+        localDateTime_ = value;
         onChanged();
         return this;
       }
@@ -2261,15 +2261,15 @@ public final class MPEntityProto {
       "\n$measurement_protocol_entity_v2.proto\022\024" +
       "org.datahem.proto.v2\"F\n\tValEntity\022\023\n\013str" +
       "ingValue\030\001 \001(\t\022\020\n\010intValue\030\002 \001(\003\022\022\n\nfloa" +
-      "tValue\030\003 \001(\001\"\220\002\n\010MPEntity\022\014\n\004type\030\001 \001(\t\022" +
+      "tValue\030\003 \001(\001\"\217\002\n\010MPEntity\022\014\n\004type\030\001 \001(\t\022" +
       "\r\n\005hitId\030\002 \001(\t\022\020\n\010clientId\030\003 \001(\t\022\016\n\006user" +
-      "Id\030\004 \001(\t\022\026\n\016localTimestamp\030\005 \001(\t\022\023\n\013epoc" +
-      "hMillis\030\006 \001(\003\022:\n\006params\030\007 \003(\0132*.org.data" +
-      "hem.proto.v2.MPEntity.ParamsEntry\022\014\n\004dat" +
-      "e\030\010 \001(\t\032N\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022.\n\005v" +
-      "alue\030\002 \001(\0132\037.org.datahem.proto.v2.ValEnt",
-      "ity:\0028\001B<\n+org.datahem.protobuf.measurem" +
-      "entprotocol.v1B\rMPEntityProtob\006proto3"
+      "Id\030\004 \001(\t\022\025\n\rlocalDateTime\030\005 \001(\t\022\023\n\013epoch" +
+      "Millis\030\006 \001(\003\022:\n\006params\030\007 \003(\0132*.org.datah" +
+      "em.proto.v2.MPEntity.ParamsEntry\022\014\n\004date" +
+      "\030\010 \001(\t\032N\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022.\n\005va" +
+      "lue\030\002 \001(\0132\037.org.datahem.proto.v2.ValEnti",
+      "ty:\0028\001B<\n+org.datahem.protobuf.measureme" +
+      "ntprotocol.v1B\rMPEntityProtob\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2294,7 +2294,7 @@ public final class MPEntityProto {
     internal_static_org_datahem_proto_v2_MPEntity_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_org_datahem_proto_v2_MPEntity_descriptor,
-        new java.lang.String[] { "Type", "HitId", "ClientId", "UserId", "LocalTimestamp", "EpochMillis", "Params", "Date", });
+        new java.lang.String[] { "Type", "HitId", "ClientId", "UserId", "LocalDateTime", "EpochMillis", "Params", "Date", });
     internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_descriptor =
       internal_static_org_datahem_proto_v2_MPEntity_descriptor.getNestedTypes().get(0);
     internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_fieldAccessorTable = new
