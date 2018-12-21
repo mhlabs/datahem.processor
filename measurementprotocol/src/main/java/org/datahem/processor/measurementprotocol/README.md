@@ -28,6 +28,8 @@ DF_WORKER_MACHINE_TYPE='' # Optional. Default: The Dataflow service will choose 
 #Measurement Protocol Pipeline settings
 CONFIG=''  # Required. JSON. Example: CONFIG='{"name":"<accountName>","properties":[{"id":"ua123456789","views":[{"id":"master","searchEnginesPattern":".*(www.google.|www.bing.|search.yahoo.).*","ignoredReferersPattern":".*(datahem.org|klarna.com).*","socialNetworksPattern":".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*","includedHostnamesPattern":".*(datahem.org).*","excludedBotsPattern":".*(^$|bot|spider|crawler).*","siteSearchPattern":".*q=(([^&#]*)|&|#|$)","timeZone":"Europe/Stockholm", "pubSubTopic":"ua123456789-master"},{"id":"unfiltered","searchEnginesPattern":".*(www.google.|www.bing.|search.yahoo.).*","ignoredReferersPattern":".*(www.datahem.org).*","socialNetworksPattern":".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*","includedHostnamesPattern":".*","excludedBotsPattern":"a^","siteSearchPattern":".*q=(([^&#]*)|&|#|$)","timeZone":"Europe/Stockholm"}]}]}'
 # Specify an account with one or multiple properties. Each property can have one or more views.
+```
+
 ```json
 {"name":"abcd",
 "properties":[
