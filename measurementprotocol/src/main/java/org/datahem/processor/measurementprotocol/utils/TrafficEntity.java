@@ -103,7 +103,9 @@ public class TrafficEntity extends BaseEntity{
 	
 	private void parse(Map<String, String> paramMap){
 		try{
-				URL url = new URL(paramMap.get("dl"));
+			URL url = new URL(paramMap.get("dl"));
+            //Fix for Single Page Applications where dl and referrer stays the same for each hit but dp is updated
+            if(url.getPath() != paramMap.get("dp").split("?")[0] ? false : true){
 
 				if(null != url.getQuery()){
 					Map<String, String> campaignMap = FieldMapper.fieldMapFromURL(url);
@@ -180,7 +182,7 @@ public class TrafficEntity extends BaseEntity{
 					campaignParameters.put("cc", paramMap.get("drp"));
 					return;
         		}
-				
+            }
 			}
 			catch (MalformedURLException e) {
 				LOG.error(e.toString());
