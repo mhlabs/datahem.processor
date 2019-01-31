@@ -45,12 +45,12 @@ public class TransactionEntity extends BaseEntity{
 	public TransactionEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("ti", "String", null, 50, "transactionId", true, "OD564"),
+			new Parameter("ti", "String", null, 50, "transaction_id", true, "OD564"),
 			new Parameter("ta", "String", null, 500, "affiliation", false, "Member"),
 			new Parameter("tr", "Double", null, 500, "revenue", false, 15.47),
 			new Parameter("tt", "Double", null, 500, "tax", false, 11.20),
 			new Parameter("ts", "Double", null, 500, "shipping", false, 3.50),
-			new Parameter("tcc", "String", null, 500, "couponCode", false, "SUMMER08")
+			new Parameter("tcc", "String", null, 500, "coupon_code", false, "SUMMER08")
 		);
 	}
 	

@@ -52,11 +52,11 @@ public class PromotionEntity extends BaseEntity{
 	public PromotionEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("(promo[0-9]{1,3}id)", "String", null, 500, "promotionId", false, "promo1id", "SHIP"),
-			new Parameter("(promo[0-9]{1,3}nm)", "String", null, 500, "promotionName", false, "promo1nm", "Shipping"),
-			new Parameter("(promo[0-9]{1,3}cr)", "String", null, 500, "promotionCreative", false, "promo1cr", "Shipping Banner"),
-			new Parameter("(promo[0-9]{1,3}ps)", "String", null, 500, "promotionPosition", false, "promo1ps", "banner_slot_1"),
-			new Parameter("promoa", "String", "view", 50, "promotionAction", false, "click")
+			new Parameter("(promo[0-9]{1,3}id)", "String", null, 500, "promotion_id", false, "promo1id", "SHIP"),
+			new Parameter("(promo[0-9]{1,3}nm)", "String", null, 500, "promotion_name", false, "promo1nm", "Shipping"),
+			new Parameter("(promo[0-9]{1,3}cr)", "String", null, 500, "promotion_creative", false, "promo1cr", "Shipping Banner"),
+			new Parameter("(promo[0-9]{1,3}ps)", "String", null, 500, "promotion_position", false, "promo1ps", "banner_slot_1"),
+			new Parameter("promoa", "String", "view", 50, "promotion_action", false, "click")
 		);
 	}
 	

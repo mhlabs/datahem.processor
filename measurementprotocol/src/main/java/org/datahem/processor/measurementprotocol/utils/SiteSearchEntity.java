@@ -61,9 +61,9 @@ public class SiteSearchEntity extends BaseEntity{
 	public SiteSearchEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("sst", "String", null, 100, "siteSearchTerm", false, "creme fraiche"),
-			new Parameter("dl", "String", null, 100, "siteSearchURL", false, "http://foo.com/home?q=creme%20fraiche"),
-			new Parameter("dp", "String", null, 100, "siteSearchPath", false, "/home")
+			new Parameter("sst", "String", null, 100, "site_search_term", false, "creme fraiche"),
+			new Parameter("dl", "String", null, 100, "site_search_url", false, "http://foo.com/home?q=creme%20fraiche"),
+			new Parameter("dp", "String", null, 100, "site_search_path", false, "/home")
 		);
 	}
 	

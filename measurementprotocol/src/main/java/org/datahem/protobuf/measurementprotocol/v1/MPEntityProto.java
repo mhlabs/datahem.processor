@@ -7,7 +7,7 @@ package org.datahem.protobuf.measurementprotocol.v1;
  * ========================LICENSE_START=================================
  * DataHem
  * %%
- * Copyright (C) 2018 Robert Sahlin and MatHem Sverige AB
+ * Copyright (C) 2018 - 2019 Robert Sahlin and MatHem Sverige AB
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,24 +45,29 @@ public final class MPEntityProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional string stringValue = 1;</code>
+     * <code>optional string string_value = 1;</code>
      */
     java.lang.String getStringValue();
     /**
-     * <code>optional string stringValue = 1;</code>
+     * <code>optional string string_value = 1;</code>
      */
     com.google.protobuf.ByteString
         getStringValueBytes();
 
     /**
-     * <code>optional int64 intValue = 2;</code>
+     * <code>optional int64 int_value = 2;</code>
      */
     long getIntValue();
 
     /**
-     * <code>optional double floatValue = 3;</code>
+     * <code>optional float double_value = 3;</code>
      */
-    double getFloatValue();
+    float getDoubleValue();
+
+    /**
+     * <code>optional float float_value = 4;</code>
+     */
+    float getFloatValue();
   }
   /**
    * Protobuf type {@code org.datahem.proto.v2.ValEntity}
@@ -78,7 +83,8 @@ public final class MPEntityProto {
     private ValEntity() {
       stringValue_ = "";
       intValue_ = 0L;
-      floatValue_ = 0D;
+      doubleValue_ = 0F;
+      floatValue_ = 0F;
     }
 
     @java.lang.Override
@@ -117,9 +123,14 @@ public final class MPEntityProto {
               intValue_ = input.readInt64();
               break;
             }
-            case 25: {
+            case 29: {
 
-              floatValue_ = input.readDouble();
+              doubleValue_ = input.readFloat();
+              break;
+            }
+            case 37: {
+
+              floatValue_ = input.readFloat();
               break;
             }
           }
@@ -145,10 +156,10 @@ public final class MPEntityProto {
               org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.class, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.Builder.class);
     }
 
-    public static final int STRINGVALUE_FIELD_NUMBER = 1;
+    public static final int STRING_VALUE_FIELD_NUMBER = 1;
     private volatile java.lang.Object stringValue_;
     /**
-     * <code>optional string stringValue = 1;</code>
+     * <code>optional string string_value = 1;</code>
      */
     public java.lang.String getStringValue() {
       java.lang.Object ref = stringValue_;
@@ -163,7 +174,7 @@ public final class MPEntityProto {
       }
     }
     /**
-     * <code>optional string stringValue = 1;</code>
+     * <code>optional string string_value = 1;</code>
      */
     public com.google.protobuf.ByteString
         getStringValueBytes() {
@@ -179,21 +190,30 @@ public final class MPEntityProto {
       }
     }
 
-    public static final int INTVALUE_FIELD_NUMBER = 2;
+    public static final int INT_VALUE_FIELD_NUMBER = 2;
     private long intValue_;
     /**
-     * <code>optional int64 intValue = 2;</code>
+     * <code>optional int64 int_value = 2;</code>
      */
     public long getIntValue() {
       return intValue_;
     }
 
-    public static final int FLOATVALUE_FIELD_NUMBER = 3;
-    private double floatValue_;
+    public static final int DOUBLE_VALUE_FIELD_NUMBER = 3;
+    private float doubleValue_;
     /**
-     * <code>optional double floatValue = 3;</code>
+     * <code>optional float double_value = 3;</code>
      */
-    public double getFloatValue() {
+    public float getDoubleValue() {
+      return doubleValue_;
+    }
+
+    public static final int FLOAT_VALUE_FIELD_NUMBER = 4;
+    private float floatValue_;
+    /**
+     * <code>optional float float_value = 4;</code>
+     */
+    public float getFloatValue() {
       return floatValue_;
     }
 
@@ -215,8 +235,11 @@ public final class MPEntityProto {
       if (intValue_ != 0L) {
         output.writeInt64(2, intValue_);
       }
-      if (floatValue_ != 0D) {
-        output.writeDouble(3, floatValue_);
+      if (doubleValue_ != 0F) {
+        output.writeFloat(3, doubleValue_);
+      }
+      if (floatValue_ != 0F) {
+        output.writeFloat(4, floatValue_);
       }
     }
 
@@ -232,9 +255,13 @@ public final class MPEntityProto {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(2, intValue_);
       }
-      if (floatValue_ != 0D) {
+      if (doubleValue_ != 0F) {
         size += com.google.protobuf.CodedOutputStream
-          .computeDoubleSize(3, floatValue_);
+          .computeFloatSize(3, doubleValue_);
+      }
+      if (floatValue_ != 0F) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(4, floatValue_);
       }
       memoizedSize = size;
       return size;
@@ -257,8 +284,12 @@ public final class MPEntityProto {
       result = result && (getIntValue()
           == other.getIntValue());
       result = result && (
-          java.lang.Double.doubleToLongBits(getFloatValue())
-          == java.lang.Double.doubleToLongBits(
+          java.lang.Float.floatToIntBits(getDoubleValue())
+          == java.lang.Float.floatToIntBits(
+              other.getDoubleValue()));
+      result = result && (
+          java.lang.Float.floatToIntBits(getFloatValue())
+          == java.lang.Float.floatToIntBits(
               other.getFloatValue()));
       return result;
     }
@@ -270,14 +301,17 @@ public final class MPEntityProto {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptorForType().hashCode();
-      hash = (37 * hash) + STRINGVALUE_FIELD_NUMBER;
+      hash = (37 * hash) + STRING_VALUE_FIELD_NUMBER;
       hash = (53 * hash) + getStringValue().hashCode();
-      hash = (37 * hash) + INTVALUE_FIELD_NUMBER;
+      hash = (37 * hash) + INT_VALUE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getIntValue());
-      hash = (37 * hash) + FLOATVALUE_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          java.lang.Double.doubleToLongBits(getFloatValue()));
+      hash = (37 * hash) + DOUBLE_VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + java.lang.Float.floatToIntBits(
+          getDoubleValue());
+      hash = (37 * hash) + FLOAT_VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + java.lang.Float.floatToIntBits(
+          getFloatValue());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -400,7 +434,9 @@ public final class MPEntityProto {
 
         intValue_ = 0L;
 
-        floatValue_ = 0D;
+        doubleValue_ = 0F;
+
+        floatValue_ = 0F;
 
         return this;
       }
@@ -426,6 +462,7 @@ public final class MPEntityProto {
         org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity result = new org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity(this);
         result.stringValue_ = stringValue_;
         result.intValue_ = intValue_;
+        result.doubleValue_ = doubleValue_;
         result.floatValue_ = floatValue_;
         onBuilt();
         return result;
@@ -475,7 +512,10 @@ public final class MPEntityProto {
         if (other.getIntValue() != 0L) {
           setIntValue(other.getIntValue());
         }
-        if (other.getFloatValue() != 0D) {
+        if (other.getDoubleValue() != 0F) {
+          setDoubleValue(other.getDoubleValue());
+        }
+        if (other.getFloatValue() != 0F) {
           setFloatValue(other.getFloatValue());
         }
         onChanged();
@@ -506,7 +546,7 @@ public final class MPEntityProto {
 
       private java.lang.Object stringValue_ = "";
       /**
-       * <code>optional string stringValue = 1;</code>
+       * <code>optional string string_value = 1;</code>
        */
       public java.lang.String getStringValue() {
         java.lang.Object ref = stringValue_;
@@ -521,7 +561,7 @@ public final class MPEntityProto {
         }
       }
       /**
-       * <code>optional string stringValue = 1;</code>
+       * <code>optional string string_value = 1;</code>
        */
       public com.google.protobuf.ByteString
           getStringValueBytes() {
@@ -537,7 +577,7 @@ public final class MPEntityProto {
         }
       }
       /**
-       * <code>optional string stringValue = 1;</code>
+       * <code>optional string string_value = 1;</code>
        */
       public Builder setStringValue(
           java.lang.String value) {
@@ -550,7 +590,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional string stringValue = 1;</code>
+       * <code>optional string string_value = 1;</code>
        */
       public Builder clearStringValue() {
         
@@ -559,7 +599,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional string stringValue = 1;</code>
+       * <code>optional string string_value = 1;</code>
        */
       public Builder setStringValueBytes(
           com.google.protobuf.ByteString value) {
@@ -575,13 +615,13 @@ public final class MPEntityProto {
 
       private long intValue_ ;
       /**
-       * <code>optional int64 intValue = 2;</code>
+       * <code>optional int64 int_value = 2;</code>
        */
       public long getIntValue() {
         return intValue_;
       }
       /**
-       * <code>optional int64 intValue = 2;</code>
+       * <code>optional int64 int_value = 2;</code>
        */
       public Builder setIntValue(long value) {
         
@@ -590,7 +630,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional int64 intValue = 2;</code>
+       * <code>optional int64 int_value = 2;</code>
        */
       public Builder clearIntValue() {
         
@@ -599,28 +639,54 @@ public final class MPEntityProto {
         return this;
       }
 
-      private double floatValue_ ;
+      private float doubleValue_ ;
       /**
-       * <code>optional double floatValue = 3;</code>
+       * <code>optional float double_value = 3;</code>
        */
-      public double getFloatValue() {
+      public float getDoubleValue() {
+        return doubleValue_;
+      }
+      /**
+       * <code>optional float double_value = 3;</code>
+       */
+      public Builder setDoubleValue(float value) {
+        
+        doubleValue_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional float double_value = 3;</code>
+       */
+      public Builder clearDoubleValue() {
+        
+        doubleValue_ = 0F;
+        onChanged();
+        return this;
+      }
+
+      private float floatValue_ ;
+      /**
+       * <code>optional float float_value = 4;</code>
+       */
+      public float getFloatValue() {
         return floatValue_;
       }
       /**
-       * <code>optional double floatValue = 3;</code>
+       * <code>optional float float_value = 4;</code>
        */
-      public Builder setFloatValue(double value) {
+      public Builder setFloatValue(float value) {
         
         floatValue_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional double floatValue = 3;</code>
+       * <code>optional float float_value = 4;</code>
        */
       public Builder clearFloatValue() {
         
-        floatValue_ = 0D;
+        floatValue_ = 0F;
         onChanged();
         return this;
       }
@@ -688,47 +754,47 @@ public final class MPEntityProto {
         getTypeBytes();
 
     /**
-     * <code>optional string hitId = 2;</code>
+     * <code>optional string hit_id = 2;</code>
      */
     java.lang.String getHitId();
     /**
-     * <code>optional string hitId = 2;</code>
+     * <code>optional string hit_id = 2;</code>
      */
     com.google.protobuf.ByteString
         getHitIdBytes();
 
     /**
-     * <code>optional string clientId = 3;</code>
+     * <code>optional string client_id = 3;</code>
      */
     java.lang.String getClientId();
     /**
-     * <code>optional string clientId = 3;</code>
+     * <code>optional string client_id = 3;</code>
      */
     com.google.protobuf.ByteString
         getClientIdBytes();
 
     /**
-     * <code>optional string userId = 4;</code>
+     * <code>optional string user_id = 4;</code>
      */
     java.lang.String getUserId();
     /**
-     * <code>optional string userId = 4;</code>
+     * <code>optional string user_id = 4;</code>
      */
     com.google.protobuf.ByteString
         getUserIdBytes();
 
     /**
-     * <code>optional string localDateTime = 5;</code>
+     * <code>optional string local_date_time = 5;</code>
      */
     java.lang.String getLocalDateTime();
     /**
-     * <code>optional string localDateTime = 5;</code>
+     * <code>optional string local_date_time = 5;</code>
      */
     com.google.protobuf.ByteString
         getLocalDateTimeBytes();
 
     /**
-     * <code>optional int64 epochMillis = 6;</code>
+     * <code>optional int64 epoch_millis = 6;</code>
      */
     long getEpochMillis();
 
@@ -944,10 +1010,10 @@ public final class MPEntityProto {
       }
     }
 
-    public static final int HITID_FIELD_NUMBER = 2;
+    public static final int HIT_ID_FIELD_NUMBER = 2;
     private volatile java.lang.Object hitId_;
     /**
-     * <code>optional string hitId = 2;</code>
+     * <code>optional string hit_id = 2;</code>
      */
     public java.lang.String getHitId() {
       java.lang.Object ref = hitId_;
@@ -962,7 +1028,7 @@ public final class MPEntityProto {
       }
     }
     /**
-     * <code>optional string hitId = 2;</code>
+     * <code>optional string hit_id = 2;</code>
      */
     public com.google.protobuf.ByteString
         getHitIdBytes() {
@@ -978,10 +1044,10 @@ public final class MPEntityProto {
       }
     }
 
-    public static final int CLIENTID_FIELD_NUMBER = 3;
+    public static final int CLIENT_ID_FIELD_NUMBER = 3;
     private volatile java.lang.Object clientId_;
     /**
-     * <code>optional string clientId = 3;</code>
+     * <code>optional string client_id = 3;</code>
      */
     public java.lang.String getClientId() {
       java.lang.Object ref = clientId_;
@@ -996,7 +1062,7 @@ public final class MPEntityProto {
       }
     }
     /**
-     * <code>optional string clientId = 3;</code>
+     * <code>optional string client_id = 3;</code>
      */
     public com.google.protobuf.ByteString
         getClientIdBytes() {
@@ -1012,10 +1078,10 @@ public final class MPEntityProto {
       }
     }
 
-    public static final int USERID_FIELD_NUMBER = 4;
+    public static final int USER_ID_FIELD_NUMBER = 4;
     private volatile java.lang.Object userId_;
     /**
-     * <code>optional string userId = 4;</code>
+     * <code>optional string user_id = 4;</code>
      */
     public java.lang.String getUserId() {
       java.lang.Object ref = userId_;
@@ -1030,7 +1096,7 @@ public final class MPEntityProto {
       }
     }
     /**
-     * <code>optional string userId = 4;</code>
+     * <code>optional string user_id = 4;</code>
      */
     public com.google.protobuf.ByteString
         getUserIdBytes() {
@@ -1046,10 +1112,10 @@ public final class MPEntityProto {
       }
     }
 
-    public static final int LOCALDATETIME_FIELD_NUMBER = 5;
+    public static final int LOCAL_DATE_TIME_FIELD_NUMBER = 5;
     private volatile java.lang.Object localDateTime_;
     /**
-     * <code>optional string localDateTime = 5;</code>
+     * <code>optional string local_date_time = 5;</code>
      */
     public java.lang.String getLocalDateTime() {
       java.lang.Object ref = localDateTime_;
@@ -1064,7 +1130,7 @@ public final class MPEntityProto {
       }
     }
     /**
-     * <code>optional string localDateTime = 5;</code>
+     * <code>optional string local_date_time = 5;</code>
      */
     public com.google.protobuf.ByteString
         getLocalDateTimeBytes() {
@@ -1080,10 +1146,10 @@ public final class MPEntityProto {
       }
     }
 
-    public static final int EPOCHMILLIS_FIELD_NUMBER = 6;
+    public static final int EPOCH_MILLIS_FIELD_NUMBER = 6;
     private long epochMillis_;
     /**
-     * <code>optional int64 epochMillis = 6;</code>
+     * <code>optional int64 epoch_millis = 6;</code>
      */
     public long getEpochMillis() {
       return epochMillis_;
@@ -1324,15 +1390,15 @@ public final class MPEntityProto {
       hash = (19 * hash) + getDescriptorForType().hashCode();
       hash = (37 * hash) + TYPE_FIELD_NUMBER;
       hash = (53 * hash) + getType().hashCode();
-      hash = (37 * hash) + HITID_FIELD_NUMBER;
+      hash = (37 * hash) + HIT_ID_FIELD_NUMBER;
       hash = (53 * hash) + getHitId().hashCode();
-      hash = (37 * hash) + CLIENTID_FIELD_NUMBER;
+      hash = (37 * hash) + CLIENT_ID_FIELD_NUMBER;
       hash = (53 * hash) + getClientId().hashCode();
-      hash = (37 * hash) + USERID_FIELD_NUMBER;
+      hash = (37 * hash) + USER_ID_FIELD_NUMBER;
       hash = (53 * hash) + getUserId().hashCode();
-      hash = (37 * hash) + LOCALDATETIME_FIELD_NUMBER;
+      hash = (37 * hash) + LOCAL_DATE_TIME_FIELD_NUMBER;
       hash = (53 * hash) + getLocalDateTime().hashCode();
-      hash = (37 * hash) + EPOCHMILLIS_FIELD_NUMBER;
+      hash = (37 * hash) + EPOCH_MILLIS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getEpochMillis());
       if (!internalGetParams().getMap().isEmpty()) {
@@ -1698,7 +1764,7 @@ public final class MPEntityProto {
 
       private java.lang.Object hitId_ = "";
       /**
-       * <code>optional string hitId = 2;</code>
+       * <code>optional string hit_id = 2;</code>
        */
       public java.lang.String getHitId() {
         java.lang.Object ref = hitId_;
@@ -1713,7 +1779,7 @@ public final class MPEntityProto {
         }
       }
       /**
-       * <code>optional string hitId = 2;</code>
+       * <code>optional string hit_id = 2;</code>
        */
       public com.google.protobuf.ByteString
           getHitIdBytes() {
@@ -1729,7 +1795,7 @@ public final class MPEntityProto {
         }
       }
       /**
-       * <code>optional string hitId = 2;</code>
+       * <code>optional string hit_id = 2;</code>
        */
       public Builder setHitId(
           java.lang.String value) {
@@ -1742,7 +1808,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional string hitId = 2;</code>
+       * <code>optional string hit_id = 2;</code>
        */
       public Builder clearHitId() {
         
@@ -1751,7 +1817,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional string hitId = 2;</code>
+       * <code>optional string hit_id = 2;</code>
        */
       public Builder setHitIdBytes(
           com.google.protobuf.ByteString value) {
@@ -1767,7 +1833,7 @@ public final class MPEntityProto {
 
       private java.lang.Object clientId_ = "";
       /**
-       * <code>optional string clientId = 3;</code>
+       * <code>optional string client_id = 3;</code>
        */
       public java.lang.String getClientId() {
         java.lang.Object ref = clientId_;
@@ -1782,7 +1848,7 @@ public final class MPEntityProto {
         }
       }
       /**
-       * <code>optional string clientId = 3;</code>
+       * <code>optional string client_id = 3;</code>
        */
       public com.google.protobuf.ByteString
           getClientIdBytes() {
@@ -1798,7 +1864,7 @@ public final class MPEntityProto {
         }
       }
       /**
-       * <code>optional string clientId = 3;</code>
+       * <code>optional string client_id = 3;</code>
        */
       public Builder setClientId(
           java.lang.String value) {
@@ -1811,7 +1877,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional string clientId = 3;</code>
+       * <code>optional string client_id = 3;</code>
        */
       public Builder clearClientId() {
         
@@ -1820,7 +1886,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional string clientId = 3;</code>
+       * <code>optional string client_id = 3;</code>
        */
       public Builder setClientIdBytes(
           com.google.protobuf.ByteString value) {
@@ -1836,7 +1902,7 @@ public final class MPEntityProto {
 
       private java.lang.Object userId_ = "";
       /**
-       * <code>optional string userId = 4;</code>
+       * <code>optional string user_id = 4;</code>
        */
       public java.lang.String getUserId() {
         java.lang.Object ref = userId_;
@@ -1851,7 +1917,7 @@ public final class MPEntityProto {
         }
       }
       /**
-       * <code>optional string userId = 4;</code>
+       * <code>optional string user_id = 4;</code>
        */
       public com.google.protobuf.ByteString
           getUserIdBytes() {
@@ -1867,7 +1933,7 @@ public final class MPEntityProto {
         }
       }
       /**
-       * <code>optional string userId = 4;</code>
+       * <code>optional string user_id = 4;</code>
        */
       public Builder setUserId(
           java.lang.String value) {
@@ -1880,7 +1946,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional string userId = 4;</code>
+       * <code>optional string user_id = 4;</code>
        */
       public Builder clearUserId() {
         
@@ -1889,7 +1955,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional string userId = 4;</code>
+       * <code>optional string user_id = 4;</code>
        */
       public Builder setUserIdBytes(
           com.google.protobuf.ByteString value) {
@@ -1905,7 +1971,7 @@ public final class MPEntityProto {
 
       private java.lang.Object localDateTime_ = "";
       /**
-       * <code>optional string localDateTime = 5;</code>
+       * <code>optional string local_date_time = 5;</code>
        */
       public java.lang.String getLocalDateTime() {
         java.lang.Object ref = localDateTime_;
@@ -1920,7 +1986,7 @@ public final class MPEntityProto {
         }
       }
       /**
-       * <code>optional string localDateTime = 5;</code>
+       * <code>optional string local_date_time = 5;</code>
        */
       public com.google.protobuf.ByteString
           getLocalDateTimeBytes() {
@@ -1936,7 +2002,7 @@ public final class MPEntityProto {
         }
       }
       /**
-       * <code>optional string localDateTime = 5;</code>
+       * <code>optional string local_date_time = 5;</code>
        */
       public Builder setLocalDateTime(
           java.lang.String value) {
@@ -1949,7 +2015,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional string localDateTime = 5;</code>
+       * <code>optional string local_date_time = 5;</code>
        */
       public Builder clearLocalDateTime() {
         
@@ -1958,7 +2024,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional string localDateTime = 5;</code>
+       * <code>optional string local_date_time = 5;</code>
        */
       public Builder setLocalDateTimeBytes(
           com.google.protobuf.ByteString value) {
@@ -1974,13 +2040,13 @@ public final class MPEntityProto {
 
       private long epochMillis_ ;
       /**
-       * <code>optional int64 epochMillis = 6;</code>
+       * <code>optional int64 epoch_millis = 6;</code>
        */
       public long getEpochMillis() {
         return epochMillis_;
       }
       /**
-       * <code>optional int64 epochMillis = 6;</code>
+       * <code>optional int64 epoch_millis = 6;</code>
        */
       public Builder setEpochMillis(long value) {
         
@@ -1989,7 +2055,7 @@ public final class MPEntityProto {
         return this;
       }
       /**
-       * <code>optional int64 epochMillis = 6;</code>
+       * <code>optional int64 epoch_millis = 6;</code>
        */
       public Builder clearEpochMillis() {
         
@@ -2259,17 +2325,18 @@ public final class MPEntityProto {
   static {
     java.lang.String[] descriptorData = {
       "\n$measurement_protocol_entity_v2.proto\022\024" +
-      "org.datahem.proto.v2\"F\n\tValEntity\022\023\n\013str" +
-      "ingValue\030\001 \001(\t\022\020\n\010intValue\030\002 \001(\003\022\022\n\nfloa" +
-      "tValue\030\003 \001(\001\"\217\002\n\010MPEntity\022\014\n\004type\030\001 \001(\t\022" +
-      "\r\n\005hitId\030\002 \001(\t\022\020\n\010clientId\030\003 \001(\t\022\016\n\006user" +
-      "Id\030\004 \001(\t\022\025\n\rlocalDateTime\030\005 \001(\t\022\023\n\013epoch" +
-      "Millis\030\006 \001(\003\022:\n\006params\030\007 \003(\0132*.org.datah" +
-      "em.proto.v2.MPEntity.ParamsEntry\022\014\n\004date" +
-      "\030\010 \001(\t\032N\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022.\n\005va" +
-      "lue\030\002 \001(\0132\037.org.datahem.proto.v2.ValEnti",
-      "ty:\0028\001B<\n+org.datahem.protobuf.measureme" +
-      "ntprotocol.v1B\rMPEntityProtob\006proto3"
+      "org.datahem.proto.v2\"_\n\tValEntity\022\024\n\014str" +
+      "ing_value\030\001 \001(\t\022\021\n\tint_value\030\002 \001(\003\022\024\n\014do" +
+      "uble_value\030\003 \001(\002\022\023\n\013float_value\030\004 \001(\002\"\225\002" +
+      "\n\010MPEntity\022\014\n\004type\030\001 \001(\t\022\016\n\006hit_id\030\002 \001(\t" +
+      "\022\021\n\tclient_id\030\003 \001(\t\022\017\n\007user_id\030\004 \001(\t\022\027\n\017" +
+      "local_date_time\030\005 \001(\t\022\024\n\014epoch_millis\030\006 " +
+      "\001(\003\022:\n\006params\030\007 \003(\0132*.org.datahem.proto." +
+      "v2.MPEntity.ParamsEntry\022\014\n\004date\030\010 \001(\t\032N\n" +
+      "\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022.\n\005value\030\002 \001(\013",
+      "2\037.org.datahem.proto.v2.ValEntity:\0028\001B<\n" +
+      "+org.datahem.protobuf.measurementprotoco" +
+      "l.v1B\rMPEntityProtob\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2288,7 +2355,7 @@ public final class MPEntityProto {
     internal_static_org_datahem_proto_v2_ValEntity_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_org_datahem_proto_v2_ValEntity_descriptor,
-        new java.lang.String[] { "StringValue", "IntValue", "FloatValue", });
+        new java.lang.String[] { "StringValue", "IntValue", "DoubleValue", "FloatValue", });
     internal_static_org_datahem_proto_v2_MPEntity_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_org_datahem_proto_v2_MPEntity_fieldAccessorTable = new
