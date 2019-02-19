@@ -61,13 +61,14 @@ public class ProductEntity extends BaseEntity{
 			new Parameter("(pr[0-9]{1,3}qt)", "Integer", null, 500, "product_quantity", false, "pr1qt", 2),
 			new Parameter("(pr[0-9]{1,3}cc)", "String", null, 500, "product_coupon_code", false, "pr1cc", "SUMMER_SALE13"),
 			new Parameter("(pr[0-9]{1,3}ps)", "Integer", null, 500, "product_position", false, "pr1ps", 2),
-			new Parameter("(pr[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "product_custom_dimension", false, "pr[0-9]{1,3}cd([0-9]{1,3})", "pr1cd1", "Member", "productCustomDimension1"),
-			new Parameter("(pr[0-9]{1,3}cm[0-9]{1,3})", "Integer", null, 500, "product_custom_metric", false, "pr[0-9]{1,3}cm([0-9]{1,3})", "pr1cm1", 28, "productCustomMetric1"),
+			new Parameter("(pr[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "product_custom_dimension_", false, "pr[0-9]{1,3}cd([0-9]{1,3})", "pr1cd1", "Member", "product_custom_dimension_1"),
+			new Parameter("(pr[0-9]{1,3}cm[0-9]{1,3})", "Integer", null, 500, "product_custom_metric_", false, "pr[0-9]{1,3}cm([0-9]{1,3})", "pr1cm1", 28, "product_custom_metric_1"),
 			new Parameter("pa", "String", null, 50, "product_action", true, "detail"),
 			new Parameter("pal", "String", null, 500, "product_action_list", false, "Search Results"), //If pa == detail || click
 			new Parameter("ti", "String", null, 50, "transaction_id", false, "T1234"), //If pa == purchase
 			new Parameter("cos", "Integer", null, 50, "checkout_step", false, 2), //If pa == checkout
-			new Parameter("col", "String", null, 50, "checkout_step_option", false, "Visa") //If pa == checkout
+			new Parameter("col", "String", null, 50, "checkout_step_option", false, "Visa"), //If pa == checkout
+            new Parameter("cu", "String", null, 10, "product_currency", false,"SEK")
 		);
 	}
 	

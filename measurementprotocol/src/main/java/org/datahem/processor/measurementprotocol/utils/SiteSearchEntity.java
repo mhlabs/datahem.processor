@@ -61,9 +61,9 @@ public class SiteSearchEntity extends BaseEntity{
 	public SiteSearchEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("sst", "String", null, 100, "site_search_term", false, "creme fraiche"),
-			new Parameter("dl", "String", null, 100, "site_search_url", false, "http://foo.com/home?q=creme%20fraiche"),
-			new Parameter("dp", "String", null, 100, "site_search_path", false, "/home")
+			new Parameter("sst", "String", null, 100, "search_term", false, "creme fraiche"),
+			new Parameter("dl", "String", null, 100, "search_url", false, "http://foo.com/home?q=creme%20fraiche"),
+			new Parameter("dp", "String", null, 100, "search_path", false, "/home")
 		);
 	}
 	
@@ -79,7 +79,7 @@ public class SiteSearchEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("et", "siteSearch");
+			paramMap.put("et", "search");
 			Pattern pattern = Pattern.compile(siteSearchPattern);
 			Matcher matcher = pattern.matcher(paramMap.get("dl"));
 			if(matcher.find()){

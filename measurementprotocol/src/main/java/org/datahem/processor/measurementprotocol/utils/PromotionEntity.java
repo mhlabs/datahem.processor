@@ -75,7 +75,7 @@ public class PromotionEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-    			paramMap.put("et", "promotion");
+    			paramMap.put("et", "promotion_" + paramMap.get("promoa"));
     			//create conditions and set parameters for different promotion actions
     			//Get map without product parameters
     			Pattern promoExclPattern = Pattern.compile("^(?!promo[0-9]{1,3}.*).*$");
