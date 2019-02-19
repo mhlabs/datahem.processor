@@ -73,7 +73,7 @@ public class BaseEntity{
 			new Parameter("dt", "String", null, 1500, "title", false,"Settings"),
 			new Parameter("tid", "String", null, 100, "tracking_id", true, "UA-XXXX-Y"),
 			new Parameter("ua|user-agent|User-Agent", "String", null, 1500, "user_agent", false, null, "ua","Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14", "userAgent"),
-			new Parameter("dl", "String", null, 2048, "url", false, "http://foo.com/home?a=b"),
+			new Parameter("dlu", "String", null, 2048, "url", false, "http://foo.com/home?a=b"),
 			new Parameter("uid", "String", null, 100, "user_id", false, "as8eknlll"),
 			new Parameter("v", "String", null, 100, "version", true, "1")
 		);
@@ -88,13 +88,23 @@ public class BaseEntity{
 	private void parse(Map<String, String> paramMap){
 		try{
 			//If document location parameter exist, extract host and path and add those as separate parameters
-			if(paramMap.get("dl") != null){
+            if (paramMap.get("dh") != null && paramMap.get("dp") != null){
+                paramMap.put("dlu",paramMap.get("dh") + paramMap.get("dp"));
+            } else if(paramMap.get("dl") != null){
+                URL url = new URL(paramMap.get("dl"));
+				if(paramMap.get("dh")==null) paramMap.put("dh", url.getHost());
+				if(paramMap.get("dp")==null) paramMap.put("dp", url.getPath());
+                paramMap.put("dlu", url.getHost()+url.getFile());
+            }
+            
+            /*
+            if(paramMap.get("dl") != null){
 				URL url = new URL(paramMap.get("dl"));
 				if(paramMap.get("dh")==null) paramMap.put("dh", url.getHost());
 				if(paramMap.get("dp")==null) paramMap.put("dp", url.getPath());
-			}
+			}*/
 		}catch (MalformedURLException e) {
-			LOG.error(e.toString());
+			LOG.error(e.toString() + " document location, paramMap:" + paramMap.toString());
 		}
 		try{
 			//If document referer parameter exist, extract host and path and add those as separate parameters
@@ -104,11 +114,12 @@ public class BaseEntity{
 				paramMap.put("drp", referer.getPath());
 			}
 		}catch (MalformedURLException e) {
-			LOG.error(e.toString());
+			//LOG.error(e.toString() + " referer, paramMap:" + paramMap.toString());
 		}
 	}
 	
 	public List<MPEntity> build(Map<String, String> paramMap){
+        //LOG.info("baseentity build 1");
 		List<MPEntity> mpEntities = new ArrayList<>();
 		if(trigger(paramMap)){
     		try{
@@ -126,17 +137,18 @@ public class BaseEntity{
 	}
 	
 	public MPEntity.Builder builder(Map<String, String> paramMap) throws IllegalArgumentException{
-		parse(paramMap);
+		//LOG.info("pageview builder 1");
+        parse(paramMap);
 		return builder(paramMap, MPEntity.newBuilder(), this.parameters);
 	}
 	
 	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder, List<Parameter> parameters) throws IllegalArgumentException {
-		
+		//LOG.info("pageview builder 2");
 		parameters.sort(Comparator.comparing(p -> p.getParameterName()));
 		
 		mpEntityBuilder
 			.setType(paramMap.get("et"))
-            .setHitId(paramMap.get("message_uuid"))
+            .setHitId(paramMap.get("MessageUuid"))
 			.setClientId(paramMap.get("cid"))
 			.setUserId(paramMap.getOrDefault("uid", ""))
 			.setEpochMillis(Long.parseLong(paramMap.get("cpem")))
@@ -199,7 +211,7 @@ public class BaseEntity{
 							break;
 				case "Boolean":	valBuilder.setIntValue(Integer.parseInt(val));
 							break;
-                case "Double":	 valBuilder.setDoubleValue(Float.parseFloat(val));
+                case "Double":	 valBuilder.setDoubleValue(Double.parseDouble(val));
 							break;
 				case "Float":	 valBuilder.setFloatValue(Float.parseFloat(val));
 							break;

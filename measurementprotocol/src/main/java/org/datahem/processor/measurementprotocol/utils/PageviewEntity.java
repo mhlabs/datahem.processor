@@ -68,11 +68,13 @@ public class PageviewEntity extends BaseEntity{
 	}
 	
 	public List<MPEntity> build(Map<String, String> paramMap){
+        //LOG.info("pageview build 1");
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
 			paramMap.put("et", "pageview");
     		try{
 				eventList.add(builder(paramMap).build());
+                //LOG.info("pageview build 2");
 				return eventList;
 			}
 			catch(IllegalArgumentException e){

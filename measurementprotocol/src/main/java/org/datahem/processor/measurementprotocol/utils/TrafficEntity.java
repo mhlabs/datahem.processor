@@ -97,7 +97,9 @@ public class TrafficEntity extends BaseEntity{
 	
 	
 	private boolean trigger(Map<String, String> paramMap){
-		parse(paramMap);
+		if(paramMap.get("t").equals("pageview")){
+            parse(paramMap);
+        }
 		return (null != campaignParameters.getOrDefault("cm", null));
 	}
 	
@@ -112,10 +114,21 @@ public class TrafficEntity extends BaseEntity{
 			else{
                 return;
             }
+            if(paramMap.get("dr") != null){
+                try{
+                    URL referer = new URL(paramMap.get("dr"));
+				    paramMap.put("drh", referer.getHost());
+				    paramMap.put("drp", referer.getPath());
+                }catch (MalformedURLException e) {
+				   	LOG.error("dr: " + e.toString() + ", paramMap: " + paramMap.toString());
+			    }
+			}
             //Fix for Single Page Applications where dl and referrer stays the same for each hit but dp is updated
             //String documentLocation = (url.getQuery != null ? url.getPath() + "?" + url.getQuery() : url.getPath());
-            if(url.getFile() != paramMap.get("dp") ? false : true){
-
+            //LOG.info(String.valueOf(url.getFile() == paramMap.get("dp")) + " url.getFile() " + url.getFile() + " paramMap.get(dp)" + paramMap.get("dp"));
+            if(url.getFile().equals(paramMap.get("dp")) || paramMap.get("dp") == null){
+                //LOG.info("traffic parsing, url.getFile() = " + url.getFile() + " and paramMap.get(dp) = " + paramMap.get("dp"));
+                //LOG.info("traffic parsing paramMap:" + paramMap.toString());
 				if(null != url.getQuery()){
 					Map<String, String> campaignMap = FieldMapper.fieldMapFromURL(url);
 					//Google Search Ads traffic
@@ -194,7 +207,7 @@ public class TrafficEntity extends BaseEntity{
             }
 			}
 			catch (MalformedURLException e) {
-				LOG.error(e.toString());
+				LOG.error(e.toString() + ", paramMap: " + paramMap.toString());
 			}
 			return;
 	}

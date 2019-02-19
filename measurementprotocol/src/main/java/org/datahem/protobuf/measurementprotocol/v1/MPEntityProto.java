@@ -60,9 +60,9 @@ public final class MPEntityProto {
     long getIntValue();
 
     /**
-     * <code>optional float double_value = 3;</code>
+     * <code>optional double double_value = 3;</code>
      */
-    float getDoubleValue();
+    double getDoubleValue();
 
     /**
      * <code>optional float float_value = 4;</code>
@@ -83,7 +83,7 @@ public final class MPEntityProto {
     private ValEntity() {
       stringValue_ = "";
       intValue_ = 0L;
-      doubleValue_ = 0F;
+      doubleValue_ = 0D;
       floatValue_ = 0F;
     }
 
@@ -123,9 +123,9 @@ public final class MPEntityProto {
               intValue_ = input.readInt64();
               break;
             }
-            case 29: {
+            case 25: {
 
-              doubleValue_ = input.readFloat();
+              doubleValue_ = input.readDouble();
               break;
             }
             case 37: {
@@ -200,11 +200,11 @@ public final class MPEntityProto {
     }
 
     public static final int DOUBLE_VALUE_FIELD_NUMBER = 3;
-    private float doubleValue_;
+    private double doubleValue_;
     /**
-     * <code>optional float double_value = 3;</code>
+     * <code>optional double double_value = 3;</code>
      */
-    public float getDoubleValue() {
+    public double getDoubleValue() {
       return doubleValue_;
     }
 
@@ -235,8 +235,8 @@ public final class MPEntityProto {
       if (intValue_ != 0L) {
         output.writeInt64(2, intValue_);
       }
-      if (doubleValue_ != 0F) {
-        output.writeFloat(3, doubleValue_);
+      if (doubleValue_ != 0D) {
+        output.writeDouble(3, doubleValue_);
       }
       if (floatValue_ != 0F) {
         output.writeFloat(4, floatValue_);
@@ -255,9 +255,9 @@ public final class MPEntityProto {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(2, intValue_);
       }
-      if (doubleValue_ != 0F) {
+      if (doubleValue_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(3, doubleValue_);
+          .computeDoubleSize(3, doubleValue_);
       }
       if (floatValue_ != 0F) {
         size += com.google.protobuf.CodedOutputStream
@@ -284,8 +284,8 @@ public final class MPEntityProto {
       result = result && (getIntValue()
           == other.getIntValue());
       result = result && (
-          java.lang.Float.floatToIntBits(getDoubleValue())
-          == java.lang.Float.floatToIntBits(
+          java.lang.Double.doubleToLongBits(getDoubleValue())
+          == java.lang.Double.doubleToLongBits(
               other.getDoubleValue()));
       result = result && (
           java.lang.Float.floatToIntBits(getFloatValue())
@@ -307,8 +307,8 @@ public final class MPEntityProto {
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getIntValue());
       hash = (37 * hash) + DOUBLE_VALUE_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getDoubleValue());
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getDoubleValue()));
       hash = (37 * hash) + FLOAT_VALUE_FIELD_NUMBER;
       hash = (53 * hash) + java.lang.Float.floatToIntBits(
           getFloatValue());
@@ -434,7 +434,7 @@ public final class MPEntityProto {
 
         intValue_ = 0L;
 
-        doubleValue_ = 0F;
+        doubleValue_ = 0D;
 
         floatValue_ = 0F;
 
@@ -512,7 +512,7 @@ public final class MPEntityProto {
         if (other.getIntValue() != 0L) {
           setIntValue(other.getIntValue());
         }
-        if (other.getDoubleValue() != 0F) {
+        if (other.getDoubleValue() != 0D) {
           setDoubleValue(other.getDoubleValue());
         }
         if (other.getFloatValue() != 0F) {
@@ -639,28 +639,28 @@ public final class MPEntityProto {
         return this;
       }
 
-      private float doubleValue_ ;
+      private double doubleValue_ ;
       /**
-       * <code>optional float double_value = 3;</code>
+       * <code>optional double double_value = 3;</code>
        */
-      public float getDoubleValue() {
+      public double getDoubleValue() {
         return doubleValue_;
       }
       /**
-       * <code>optional float double_value = 3;</code>
+       * <code>optional double double_value = 3;</code>
        */
-      public Builder setDoubleValue(float value) {
+      public Builder setDoubleValue(double value) {
         
         doubleValue_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional float double_value = 3;</code>
+       * <code>optional double double_value = 3;</code>
        */
       public Builder clearDoubleValue() {
         
-        doubleValue_ = 0F;
+        doubleValue_ = 0D;
         onChanged();
         return this;
       }
@@ -2327,7 +2327,7 @@ public final class MPEntityProto {
       "\n$measurement_protocol_entity_v2.proto\022\024" +
       "org.datahem.proto.v2\"_\n\tValEntity\022\024\n\014str" +
       "ing_value\030\001 \001(\t\022\021\n\tint_value\030\002 \001(\003\022\024\n\014do" +
-      "uble_value\030\003 \001(\002\022\023\n\013float_value\030\004 \001(\002\"\225\002" +
+      "uble_value\030\003 \001(\001\022\023\n\013float_value\030\004 \001(\002\"\225\002" +
       "\n\010MPEntity\022\014\n\004type\030\001 \001(\t\022\016\n\006hit_id\030\002 \001(\t" +
       "\022\021\n\tclient_id\030\003 \001(\t\022\017\n\007user_id\030\004 \001(\t\022\027\n\017" +
       "local_date_time\030\005 \001(\t\022\024\n\014epoch_millis\030\006 " +
