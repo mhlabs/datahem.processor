@@ -51,13 +51,13 @@ public class PageviewEntity extends BaseEntity{
 		super();
 		parameters = new ArrayList<>(Arrays.asList(
 			new Parameter("de", "String", "UTF-8", 20, "encoding", false, "UTF-8"),
-			new Parameter("fl", "String", null, 20, "flashVersion", false, "10 1 r103"),
-			new Parameter("sr", "String", null, 20, "screenResolution", false, "800x600"),
-			new Parameter("vp", "String", null, 20, "viewportSize", false, "123x456"),
-			new Parameter("sd", "String", null, 20, "screenColors", false, "24-bits"),
+			new Parameter("fl", "String", null, 20, "flash_version", false, "10 1 r103"),
+			new Parameter("sr", "String", null, 20, "screen_resolution", false, "800x600"),
+			new Parameter("vp", "String", null, 20, "viewport_size", false, "123x456"),
+			new Parameter("sd", "String", null, 20, "screen_colors", false, "24-bits"),
 			new Parameter("ul", "String", null, 20, "language", false, "en-us"),
-			new Parameter("je", "Integer", null, 20, "javaEnabled", false, 1),
-			new Parameter("linkid", "String", null, 2048, "linkId", false,"nav_bar")
+			new Parameter("je", "Integer", null, 20, "java_enabled", false, 1),
+			new Parameter("linkid", "String", null, 2048, "link_id", false,"nav_bar")
 		));
 	}
 	
@@ -68,11 +68,13 @@ public class PageviewEntity extends BaseEntity{
 	}
 	
 	public List<MPEntity> build(Map<String, String> paramMap){
+        //LOG.info("pageview build 1");
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
 			paramMap.put("et", "pageview");
     		try{
 				eventList.add(builder(paramMap).build());
+                //LOG.info("pageview build 2");
 				return eventList;
 			}
 			catch(IllegalArgumentException e){

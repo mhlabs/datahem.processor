@@ -46,8 +46,8 @@ public class ExceptionEntity extends BaseEntity{
 	public ExceptionEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("exd", "String", null, 150, "exceptionDescription", false, "DatabaseError"),
-			new Parameter("exf", "Boolean", null, 150, "exceptionFatal", false, 0)
+			new Parameter("exd", "String", null, 150, "exception_description", false, "Database Error"),
+			new Parameter("exf", "Boolean", null, 150, "exception_fatal", false, 0)
 		);
 	}
 	

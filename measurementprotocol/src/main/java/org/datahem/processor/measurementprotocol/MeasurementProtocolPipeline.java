@@ -102,7 +102,7 @@ public class MeasurementProtocolPipeline {
     	List<TableFieldSchema> fieldsList = eventSchema.getFields();
     	TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
     	fieldsList.set(fieldsList.indexOf(date), date.setType("DATE"));
-        TableFieldSchema localDateTime = new TableFieldSchema().setName("localDateTime").setType("STRING").setMode("NULLABLE");
+        TableFieldSchema localDateTime = new TableFieldSchema().setName("local_date_time").setType("STRING").setMode("NULLABLE");
     	fieldsList.set(fieldsList.indexOf(localDateTime), localDateTime.setType("DATETIME"));
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     

@@ -46,10 +46,10 @@ public class EventEntity extends BaseEntity{
 	public EventEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("ec", "String", null, 150, "eventCategory", true, "Category"),
-			new Parameter("ea", "String", null, 500, "eventAction", true, "Action"),
-			new Parameter("el", "String", null, 500, "eventLabel", false, "Label"),
-			new Parameter("ev", "Integer", null, 100, "eventValue", false, 55)
+			new Parameter("ec", "String", null, 150, "event_category", true, "Category"),
+			new Parameter("ea", "String", null, 500, "event_action", true, "Action"),
+			new Parameter("el", "String", null, 500, "event_label", false, "Label"),
+			new Parameter("ev", "Integer", null, 100, "event_value", false, 55)
 		);
 	}
 	

@@ -45,18 +45,18 @@ public class TimingEntity extends BaseEntity{
 	public TimingEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("utc", "String", null, 150, "userTimingCategory", true,"category"),
-			new Parameter("utv", "String", null, 500, "userTimingVariableName", true,"lookup"),
-			new Parameter("utt", "Integer", null, 500, "userTimingTime", true, 123),
-			new Parameter("utl", "String", null, 500, "userTimingLabel", false, "label"),
-			new Parameter("plt", "Integer", null, 500, "pageLoadTime", false, 3554),
-			new Parameter("dns", "Integer", null, 500, "dnsTime", false, 43),
-			new Parameter("pdt", "Integer", null, 500, "pageDownloadTime", false, 500),
-			new Parameter("rrt", "Integer", null, 500, "redirectResponseTime", false, 500),
-			new Parameter("tcp", "Integer", null, 500, "tcpConnectTime", false, 500),
-			new Parameter("srt", "Integer", null, 500, "serverResponseTime", false, 500),
-			new Parameter("dit", "Integer", null, 500, "domInteractiveTime", false, 500),
-			new Parameter("clt", "Integer", null, 500, "contentLoadTime", false, 500)
+			new Parameter("utc", "String", null, 150, "user_timing_category", true,"category"),
+			new Parameter("utv", "String", null, 500, "user_timing_variable_name", true,"lookup"),
+			new Parameter("utt", "Integer", null, 500, "user_timing_time", true, 123),
+			new Parameter("utl", "String", null, 500, "user_Timing_label", false, "label"),
+			new Parameter("plt", "Integer", null, 500, "page_load_time", false, 3554),
+			new Parameter("dns", "Integer", null, 500, "dns_time", false, 43),
+			new Parameter("pdt", "Integer", null, 500, "page_download_time", false, 500),
+			new Parameter("rrt", "Integer", null, 500, "redirect_response_time", false, 500),
+			new Parameter("tcp", "Integer", null, 500, "tcp_connect_time", false, 500),
+			new Parameter("srt", "Integer", null, 500, "server_response_time", false, 500),
+			new Parameter("dit", "Integer", null, 500, "dom_interactive_time", false, 500),
+			new Parameter("clt", "Integer", null, 500, "content_load_time", false, 500)
 		);
 	}
 	
