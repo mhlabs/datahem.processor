@@ -154,7 +154,7 @@ public class MeasurementProtocolBuilder{
 					paramMap.put("User-Agent", "");
 				}
 
-	        	if(!paramMap.get("User-Agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern())){
+	        	if(!paramMap.get("User-Agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern()) && !paramMap.get("t").equals("adtiming")){
 	                //Add epochMillis and timestamp to paramMap       
                     Instant payloadTimeStamp = new Instant(Long.parseLong(paramMap.get("MessageTimestamp")));
 					//DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
@@ -168,7 +168,7 @@ public class MeasurementProtocolBuilder{
 					
 					addAllIfNotNull(events, pageviewEntity.build(paramMap));
 					addAllIfNotNull(events, eventEntity.build(paramMap));
-					addAllIfNotNull(events, exceptionEntity.build(paramMap));
+                    addAllIfNotNull(events, exceptionEntity.build(paramMap));
 					addAllIfNotNull(events, siteSearchEntity.build(paramMap));
 					addAllIfNotNull(events, socialEntity.build(paramMap));
 					addAllIfNotNull(events, timingEntity.build(paramMap));
@@ -179,10 +179,12 @@ public class MeasurementProtocolBuilder{
 					addAllIfNotNull(events, productImpressionEntity.build(paramMap));
 					addAllIfNotNull(events, experimentEntity.build(paramMap));
 				}
-	        }
+	        }else{
+                LOG.info("not matching MeasurementProtocolBuilder conditions: User-Agent: " + paramMap.getOrDefault("User-Agent", "null") + ", document.location: " + paramMap.getOrDefault("dl", "null") + ", type:" + paramMap.getOrDefault("t", "null"));
+            }
         }
         catch (Exception e) {
-				LOG.error(e.toString());
+				LOG.error(e.toString() + " paramMap:" + paramMap.toString());
 		}
     	return events;   
     }

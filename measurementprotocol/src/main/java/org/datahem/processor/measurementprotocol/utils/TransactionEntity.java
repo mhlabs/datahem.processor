@@ -45,12 +45,13 @@ public class TransactionEntity extends BaseEntity{
 	public TransactionEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("ti", "String", null, 50, "transactionId", true, "OD564"),
-			new Parameter("ta", "String", null, 500, "affiliation", false, "Member"),
-			new Parameter("tr", "Double", null, 500, "revenue", false, 15.47),
-			new Parameter("tt", "Double", null, 500, "tax", false, 11.20),
-			new Parameter("ts", "Double", null, 500, "shipping", false, 3.50),
-			new Parameter("tcc", "String", null, 500, "couponCode", false, "SUMMER08")
+			new Parameter("ti", "String", null, 50, "transaction_id", true, "OD564"),
+			new Parameter("ta", "String", null, 500, "transaction_affiliation", false, "Member"),
+			new Parameter("tr", "Double", null, 500, "transaction_revenue", false, 15.47),
+			new Parameter("tt", "Double", null, 500, "transaction_tax", false, 11.20),
+			new Parameter("ts", "Double", null, 500, "transaction_shipping", false, 3.50),
+			new Parameter("tcc", "String", null, 500, "transaction_coupon_code", false, "SUMMER08"),
+            new Parameter("cu", "String", null, 10, "transaction_currency", false,"SEK")
 		);
 	}
 	
@@ -63,7 +64,7 @@ public class TransactionEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-			paramMap.put("et", "transaction");
+			paramMap.put("et", "ecommerce_" + paramMap.get("pa"));
     		try{
 				eventList.add(builder(paramMap).build());
 				return eventList;

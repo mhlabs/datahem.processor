@@ -82,14 +82,14 @@ public class TrafficEntity extends BaseEntity{
 	public TrafficEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("cn", "String", null, 100, "campaignName", false, "january_boots_promo"),
-			new Parameter("cs", "String", null, 100, "campaignSource", false, "email_promo"),
-			new Parameter("cm", "String", null, 50, "campaignMedium", false, "email"),
-			new Parameter("ck", "String", null, 500, "campaignKeyword", false, "winter boots"),
-			new Parameter("cc", "String", null, 500, "campaignContent", false, "email_variation1"),
-			new Parameter("ci", "String", null, 100, "campaignId", false, "12345"),
-			new Parameter("gclid", "String", null, 1500, "googleAdwordsId", false, "EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD"),
-			new Parameter("dclid", "String", null, 1500, "googleDisplayId", false, "EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwX")
+			new Parameter("cn", "String", null, 100, "campaign_name", false, "january_boots_promo"),
+			new Parameter("cs", "String", null, 100, "campaign_source", false, "email_promo"),
+			new Parameter("cm", "String", null, 50, "campaign_medium", false, "email"),
+			new Parameter("ck", "String", null, 500, "campaign_keyword", false, "winter boots"),
+			new Parameter("cc", "String", null, 500, "campaign_content", false, "email_variation1"),
+			new Parameter("ci", "String", null, 100, "campaign_id", false, "12345"),
+			new Parameter("gclid", "String", null, 1500, "google_adwords_id", false, "EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD"),
+			new Parameter("dclid", "String", null, 1500, "google_display_id", false, "EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwX")
 		);
 	}
 	
@@ -97,14 +97,38 @@ public class TrafficEntity extends BaseEntity{
 	
 	
 	private boolean trigger(Map<String, String> paramMap){
-		parse(paramMap);
+		if(paramMap.get("t").equals("pageview")){
+            parse(paramMap);
+        }
 		return (null != campaignParameters.getOrDefault("cm", null));
 	}
 	
 	private void parse(Map<String, String> paramMap){
 		try{
-				URL url = new URL(paramMap.get("dl"));
-
+            URL url;
+            if(paramMap.get("dl") != null){
+                url = new URL(paramMap.get("dl"));
+            } else if (paramMap.get("dh") != null && paramMap.get("dp") != null){
+                url = new URL("https://" + paramMap.get("dh") + paramMap.get("dp"));
+            }
+			else{
+                return;
+            }
+            if(paramMap.get("dr") != null){
+                try{
+                    URL referer = new URL(paramMap.get("dr"));
+				    paramMap.put("drh", referer.getHost());
+				    paramMap.put("drp", referer.getPath());
+                }catch (MalformedURLException e) {
+				   	LOG.error("dr: " + e.toString() + ", paramMap: " + paramMap.toString());
+			    }
+			}
+            //Fix for Single Page Applications where dl and referrer stays the same for each hit but dp is updated
+            //String documentLocation = (url.getQuery != null ? url.getPath() + "?" + url.getQuery() : url.getPath());
+            //LOG.info(String.valueOf(url.getFile() == paramMap.get("dp")) + " url.getFile() " + url.getFile() + " paramMap.get(dp)" + paramMap.get("dp"));
+            if(url.getFile().equals(paramMap.get("dp")) || paramMap.get("dp") == null){
+                //LOG.info("traffic parsing, url.getFile() = " + url.getFile() + " and paramMap.get(dp) = " + paramMap.get("dp"));
+                //LOG.info("traffic parsing paramMap:" + paramMap.toString());
 				if(null != url.getQuery()){
 					Map<String, String> campaignMap = FieldMapper.fieldMapFromURL(url);
 					//Google Search Ads traffic
@@ -180,10 +204,10 @@ public class TrafficEntity extends BaseEntity{
 					campaignParameters.put("cc", paramMap.get("drp"));
 					return;
         		}
-				
+            }
 			}
 			catch (MalformedURLException e) {
-				LOG.error(e.toString());
+				LOG.error(e.toString() + ", paramMap: " + paramMap.toString());
 			}
 			return;
 	}

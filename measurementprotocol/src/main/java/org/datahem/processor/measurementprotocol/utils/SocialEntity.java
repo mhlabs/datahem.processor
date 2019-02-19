@@ -45,9 +45,9 @@ public class SocialEntity extends BaseEntity{
 	public SocialEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("sn", "String", null, 50, "socialNetwork", true, "facebook"),
-			new Parameter("sa", "String", null, 50, "socialAction", true, "like"),
-			new Parameter("st", "String", null, 2048, "socialActionTarget", true, "http://foo.com")
+			new Parameter("sn", "String", null, 50, "social_network", true, "facebook"),
+			new Parameter("sa", "String", null, 50, "social_action", true, "like"),
+			new Parameter("st", "String", null, 2048, "social_action_target", true, "http://foo.com")
 		);
 	}
 	

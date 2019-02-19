@@ -52,22 +52,23 @@ public class ProductEntity extends BaseEntity{
 	public ProductEntity(){
 		super();
 		parameters = Arrays.asList(
-			new Parameter("(pr[0-9]{1,3}id)", "String", null, 500, "productSku", false, "pr1id", "P12345"),
-			new Parameter("(pr[0-9]{1,3}nm)", "String", null, 500, "productName", false, "pr1nm", "Android T-Shirt"),
-			new Parameter("(pr[0-9]{1,3}br)", "String", null, 500, "productBrand", false, "pr1br", "Google"),
-			new Parameter("(pr[0-9]{1,3}ca)", "String", null, 500, "productCategory", false, "pr1ca", "Apparel/Mens/T-Shirts"),
-			new Parameter("(pr[0-9]{1,3}va)", "String", null, 500, "productVariant", false, "pr1va", "Black"),
-			new Parameter("(pr[0-9]{1,3}pr)", "Double", null, 500, "productPrice", false, "pr1pr", 29.20),
-			new Parameter("(pr[0-9]{1,3}qt)", "Integer", null, 500, "productQuantity", false, "pr1qt", 2),
-			new Parameter("(pr[0-9]{1,3}cc)", "String", null, 500, "productCouponCode", false, "pr1cc", "SUMMER_SALE13"),
-			new Parameter("(pr[0-9]{1,3}ps)", "Integer", null, 500, "productPosition", false, "pr1ps", 2),
-			new Parameter("(pr[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "productCustomDimension", false, "pr[0-9]{1,3}cd([0-9]{1,3})", "pr1cd1", "Member", "productCustomDimension1"),
-			new Parameter("(pr[0-9]{1,3}cm[0-9]{1,3})", "Integer", null, 500, "productCustomMetric", false, "pr[0-9]{1,3}cm([0-9]{1,3})", "pr1cm1", 28, "productCustomMetric1"),
-			new Parameter("pa", "String", null, 50, "productAction", true, "detail"),
-			new Parameter("pal", "String", null, 500, "productActionList", false, "Search Results"), //If pa == detail || click
-			new Parameter("ti", "String", null, 50, "transactionId", false, "T1234"), //If pa == purchase
-			new Parameter("cos", "Integer", null, 50, "checkoutStep", false, 2), //If pa == checkout
-			new Parameter("col", "String", null, 50, "checkoutStepOption", false, "Visa") //If pa == checkout
+			new Parameter("(pr[0-9]{1,3}id)", "String", null, 500, "product_id", false, "pr1id", "P12345"),
+			new Parameter("(pr[0-9]{1,3}nm)", "String", null, 500, "product_name", false, "pr1nm", "Android T-Shirt"),
+			new Parameter("(pr[0-9]{1,3}br)", "String", null, 500, "product_brand", false, "pr1br", "Google"),
+			new Parameter("(pr[0-9]{1,3}ca)", "String", null, 500, "product_category", false, "pr1ca", "Apparel/Mens/T-Shirts"),
+			new Parameter("(pr[0-9]{1,3}va)", "String", null, 500, "product_variant", false, "pr1va", "Black"),
+			new Parameter("(pr[0-9]{1,3}pr)", "Double", null, 500, "product_price", false, "pr1pr", 29.20),
+			new Parameter("(pr[0-9]{1,3}qt)", "Integer", null, 500, "product_quantity", false, "pr1qt", 2),
+			new Parameter("(pr[0-9]{1,3}cc)", "String", null, 500, "product_coupon_code", false, "pr1cc", "SUMMER_SALE13"),
+			new Parameter("(pr[0-9]{1,3}ps)", "Integer", null, 500, "product_position", false, "pr1ps", 2),
+			new Parameter("(pr[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "product_custom_dimension_", false, "pr[0-9]{1,3}cd([0-9]{1,3})", "pr1cd1", "Member", "product_custom_dimension_1"),
+			new Parameter("(pr[0-9]{1,3}cm[0-9]{1,3})", "Integer", null, 500, "product_custom_metric_", false, "pr[0-9]{1,3}cm([0-9]{1,3})", "pr1cm1", 28, "product_custom_metric_1"),
+			new Parameter("pa", "String", null, 50, "product_action", true, "detail"),
+			new Parameter("pal", "String", null, 500, "product_action_list", false, "Search Results"), //If pa == detail || click
+			new Parameter("ti", "String", null, 50, "transaction_id", false, "T1234"), //If pa == purchase
+			new Parameter("cos", "Integer", null, 50, "checkout_step", false, 2), //If pa == checkout
+			new Parameter("col", "String", null, 50, "checkout_step_option", false, "Visa"), //If pa == checkout
+            new Parameter("cu", "String", null, 10, "product_currency", false,"SEK")
 		);
 	}
 	
@@ -80,7 +81,7 @@ public class ProductEntity extends BaseEntity{
 	public List<MPEntity> build(Map<String, String> paramMap){
 		List<MPEntity> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-    			paramMap.put("et", "product");
+    			paramMap.put("et", "product_" + paramMap.get("pa"));
     			
     			Pattern productExclPattern = Pattern.compile("^(?!pr[0-9]{1,3}.*).*$");
     			//final Matcher matcher;
@@ -103,7 +104,7 @@ public class ProductEntity extends BaseEntity{
         				}, Collectors.toList()));
     			
     			
-    			//Build a product hit for each produt
+    			//Build a product hit for each product
     			for(Map.Entry<String, List<String>> entry : entries.entrySet()){
 		            String prefix = entry.getKey();
 		            List<String> keys = entry.getValue();
