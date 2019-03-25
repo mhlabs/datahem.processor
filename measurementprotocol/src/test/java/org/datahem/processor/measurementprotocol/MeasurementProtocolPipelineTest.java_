@@ -1,0 +1,1045 @@
+package org.datahem.processor.measurementprotocol;
+
+/*-
+ * ========================LICENSE_START=================================
+ * Datahem.processor.measurementprotocol
+ * %%
+ * Copyright (C) 2018 - 2019 Robert Sahlin
+ * %%
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * =========================LICENSE_END==================================
+ */
+
+
+
+import com.google.api.services.bigquery.model.TableRow;
+
+import com.google.gson.Gson;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.stream.Stream;
+import org.datahem.processor.utils.FieldMapper;
+
+import org.apache.beam.sdk.testing.PAssert;
+import org.apache.beam.sdk.testing.TestPipeline;
+import org.apache.beam.sdk.testing.ValidatesRunner;
+import org.apache.beam.sdk.values.PCollection;
+import org.apache.beam.sdk.options.ValueProvider.StaticValueProvider;
+import org.apache.beam.sdk.transforms.Create;
+import org.apache.beam.sdk.transforms.Count;
+import org.apache.beam.sdk.transforms.DoFn;
+import org.apache.beam.sdk.transforms.MapElements;
+import org.apache.beam.sdk.transforms.PTransform;
+import org.apache.beam.sdk.transforms.ParDo;
+import org.apache.beam.sdk.transforms.SerializableFunction;
+import org.apache.beam.sdk.transforms.SimpleFunction;
+import org.apache.beam.sdk.transforms.windowing.FixedWindows;
+import org.apache.beam.sdk.transforms.windowing.Window;
+
+import org.datahem.processor.measurementprotocol.v1.utils.*;
+
+import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.CollectorPayloadEntity;
+import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
+import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
+
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
+import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@RunWith(JUnit4.class)
+public class MeasurementProtocolPipelineTest {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(MeasurementProtocolPipelineTest.class);
+	
+	@Rule public transient TestPipeline p = TestPipeline.create();
+
+	private static TableRow parameterToTR(Parameter parameter){
+		String s = "";
+		switch(parameter.getValueType()){
+			case "Integer":	s = "intValue";
+				break;
+			case "String":	s= "stringValue";
+				break;
+			case "Boolean":	s= "intValue";
+				break;
+			case "Double":	s= "floatValue";
+		}
+		return new TableRow()
+			.set("key",parameter.getExampleParameterName())
+			.set("value", new TableRow()
+				.set(s, parameter.getExampleValue()));
+	}
+
+	/*
+	 * User headers
+	 */
+	private static Map<String,String> user = new HashMap<String, String>(){
+		{
+			put("X-AppEngine-Country","SE");
+			put("X-AppEngine-Region","ab");
+			put("X-AppEngine-City","stockholm");
+			put("X-AppEngine-CityLatLong","59.422571,17.833131");
+			put("User-Agent","Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14");
+		}
+	};
+	
+	/*
+	 * Bot headers
+	 */
+	private static Map<String,String> bot = new HashMap<String, String>(){
+		{
+			put("X-AppEngine-Country","SE");
+			put("X-AppEngine-City","stockholm");
+			put("User-Agent","Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)");
+		}
+	};
+	
+	/*
+	 * Base entity
+	 */
+
+	private static BaseEntity baseEntity = new BaseEntity();
+	
+	private static TableRow baseTR = new TableRow()
+		.set("type","pageview")
+		.set("clientId","35009a79-1a05-49d7-b876-2b884d0f825b")
+		.set("userId","as8eknlll")
+		.set("utcTimestamp","2018-03-02 07:50:53")
+		.set("epochMillis",1519977053236L)
+		.set("date","2018-03-02");
+	
+	private static String basePayload = 
+		baseEntity
+		.getParameters()
+		.stream()
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+	/*
+	 * Pageview entity
+	 */
+
+	private static PageviewEntity pageviewEntity = new PageviewEntity();
+	
+	private static TableRow pageviewTR = baseTR.clone()
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.filter(o -> o.getExampleParameterName() != "campaignId")
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+			
+	private static String pageviewPayload =
+		Stream.concat(
+			pageviewEntity
+				.getParameters()
+				.stream(), 
+			baseEntity
+				.getParameters()
+				.stream()
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+	/*
+	 * Event entity
+	 */
+
+	private static EventEntity eventEntity = new EventEntity();
+	
+	private static List<Parameter> entityType = Arrays.asList(
+		new Parameter("t", "String", null, 50, "hitType", true, "event"),
+		new Parameter("et", "String", null, 50, "entityType", true, "event")
+	);
+	private static TableRow eventTR = baseTR.clone()
+		.set("type","event")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), eventEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "event") : o)
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "event") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+	private static String eventPayload =
+		Stream.concat(
+			eventEntity
+				.getParameters()
+				.stream(), 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "exception") : o)
+				.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "event") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+	/*
+	 * Exception entity
+	 */
+
+	private static ExceptionEntity exceptionEntity = new ExceptionEntity();
+	
+	private static TableRow exceptionTR = baseTR.clone()
+		.set("type","exception")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), exceptionEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "exception") : o)
+			.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "exception") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String exceptionPayload =
+		Stream.concat(
+			exceptionEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "exception") : o)
+				.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "exception") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+	/*
+	 * SiteSearch entity
+	 */
+
+	private static SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
+	
+	private static TableRow siteSearchTR = baseTR.clone()
+		.set("type","siteSearch")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), siteSearchEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "siteSearch") : o)
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?q=creme%20fraiche") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+	
+	private static TableRow siteSearchPageviewTR = baseTR.clone()
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?q=creme%20fraiche") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String siteSearchPayload =
+		Stream.concat(
+			pageviewEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "siteSearch") : o)
+				.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?q=creme%20fraiche") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+	/*
+	 * Social entity
+	 */
+
+	private static SocialEntity socialEntity = new SocialEntity();
+	
+	private static TableRow socialTR = baseTR.clone()
+		.set("type","social")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), socialEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "social") : o)
+			.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "social") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String socialPayload =
+		Stream.concat(
+			socialEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "social") : o)
+				.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "social") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+	/*
+	 * Social entity
+	 */
+
+	private static TimingEntity timingEntity = new TimingEntity();
+	
+	private static TableRow timingTR = baseTR.clone()
+		.set("type","timing")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), timingEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "timing") : o)
+			.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "timing") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String timingPayload =
+		Stream.concat(
+			timingEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "timing") : o)
+				.map(o -> o.getExampleParameterName() == "hitType" ? new Parameter("t", "String", null, 50, "hitType", true, "timing") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+	/*
+	 * Transaction entity
+	 */
+
+	private static TransactionEntity transactionEntity = new TransactionEntity();
+	
+	private static TableRow transactionTR = baseTR.clone()
+		.set("type","transaction")
+		.set("params", 
+			Stream.concat(
+				baseEntity.getParameters().stream(), 
+				transactionEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "transaction") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+			
+			
+		
+	private static String transactionPayload =
+		Stream.concat(
+			Stream.concat(
+				pageviewEntity
+					.getParameters()
+					.stream(),
+				transactionEntity
+					.getParameters()
+					.stream())
+			,
+			Stream.concat(
+				baseEntity
+					.getParameters()
+					.stream()
+					.filter(o -> o.getExampleParameterName() != "entityType"),
+				Arrays.asList(new Parameter("pa", "String", null, 50, "productAction", true,"purchase")).stream())
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+	/*
+	 * Product entity
+	 */
+
+	private static ProductEntity productEntity = new ProductEntity();
+	
+	private static TableRow productTR = baseTR.clone()
+		.set("type","product")
+		.set("params", 
+			Stream.concat(
+				baseEntity.getParameters().stream(), 
+				productEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "product") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+			
+			
+		
+	private static String productPayload =
+		Stream.concat(
+			Stream.concat(
+				pageviewEntity
+					.getParameters()
+					.stream(),
+				productEntity
+					.getParameters()
+					.stream())
+			,
+			baseEntity
+				.getParameters()
+				.stream()
+				.filter(o -> o.getExampleParameterName() != "entityType")
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+	/*
+	 * Product Impression entity
+	 */
+
+	private static ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
+	
+	private static TableRow productImpressionTR = baseTR.clone()
+		.set("type","productImpression")
+		.set("params", 
+			Stream.concat(
+				baseEntity.getParameters().stream(), 
+				productImpressionEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "productImpression") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+			
+			
+		
+	private static String productImpressionPayload =
+		Stream.concat(
+			Stream.concat(
+				pageviewEntity
+					.getParameters()
+					.stream(),
+				productImpressionEntity
+					.getParameters()
+					.stream())
+			,
+			baseEntity
+				.getParameters()
+				.stream()
+				.filter(o -> o.getExampleParameterName() != "entityType")
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+/*
+	 * Promotion entity
+	 */
+
+	private static PromotionEntity promotionEntity = new PromotionEntity();
+	
+	private static TableRow promotionTR = baseTR.clone()
+		.set("type","promotion")
+		.set("params", 
+			Stream.concat(
+				baseEntity.getParameters().stream(), 
+				promotionEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "promotion") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+			
+			
+		
+	private static String promotionPayload =
+		Stream.concat(
+			Stream.concat(
+				pageviewEntity
+					.getParameters()
+					.stream(),
+				promotionEntity
+					.getParameters()
+					.stream())
+			,
+			baseEntity
+				.getParameters()
+				.stream()
+				.filter(o -> o.getExampleParameterName() != "entityType")
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+/*
+	 * Traffic entity (pageview base)
+	 */
+
+	private static TableRow trafficPageviewTR = baseTR.clone()
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+			
+	private static String trafficPageviewPayload =
+		Stream.concat(
+			pageviewEntity
+				.getParameters()
+				.stream(), 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));		
+			
+			
+	/*
+	 * Traffic entity (Google Search Ads)
+	 */
+
+	private static TrafficEntity trafficEntity = new TrafficEntity();
+	
+	private static TableRow googleSearchAdsTR = baseTR.clone()
+		.set("type","traffic")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), trafficEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "traffic") : o)
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?gclid=EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD") : o)
+			.map(o -> o.getExampleParameterName() == "campaignName" ? new Parameter("cn", "String", null, 100, "campaignName", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignSource" ? new Parameter("cs", "String", null, 100, "campaignSource", false, "google search ads") : o)
+			.map(o -> o.getExampleParameterName() == "campaignMedium" ? new Parameter("cm", "String", null, 50, "campaignMedium", false, "cpc") : o)
+			.map(o -> o.getExampleParameterName() == "campaignKeyword" ? new Parameter("ck", "String", null, 500, "campaignKeyword", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignContent" ? new Parameter("cc", "String", null, 500, "campaignContent", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+			.filter(o -> o.getExampleParameterName() != "campaignId")
+			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+				
+	private static TableRow googleSearchAdsPageviewTR = baseTR.clone()
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?gclid=EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String googleSearchAdsPayload =
+		Stream.concat(
+			pageviewEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?gclid=EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD") : o)
+				.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+	/*
+	 * Traffic entity (Campaign)
+	 */
+
+	
+	private static TableRow campaignTR = baseTR.clone()
+		.set("type","traffic")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), trafficEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "traffic") : o)
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?utm_campaign=january_boots_promo&utm_source=email_promo&utm_medium=email&utm_term=winter%20boots&utm_content=email_variation1") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+			.filter(o -> o.getExampleParameterName() != "campaignId")
+			.filter(o -> o.getExampleParameterName() != "googleAdwordsId")
+			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+				
+	private static TableRow campaignPageviewTR = baseTR.clone()
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), pageviewEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?utm_campaign=january_boots_promo&utm_source=email_promo&utm_medium=email&utm_term=winter%20boots&utm_content=email_variation1") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));	
+
+		
+	private static String campaignPayload =
+		Stream.concat(
+			pageviewEntity
+				.getParameters()
+				.stream()
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "url" ? new Parameter("dl", "String", null, 100, "url", false, "http://foo.com/home?utm_campaign=january_boots_promo&utm_source=email_promo&utm_medium=email&utm_term=winter%20boots&utm_content=email_variation1") : o)
+				.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+				.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+	/*
+	 * Traffic entity (Referrer)
+	 */
+
+	private static TableRow refererTR = baseTR.clone()
+		.set("type","traffic")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), trafficEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "traffic") : o)
+			.map(o -> o.getExampleParameterName() == "campaignName" ? new Parameter("cn", "String", null, 100, "campaignName", false, "(referal)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignSource" ? new Parameter("cs", "String", null, 100, "campaignSource", false, "example.com") : o)
+			.map(o -> o.getExampleParameterName() == "campaignMedium" ? new Parameter("cm", "String", null, 50, "campaignMedium", false, "referal") : o)
+			.map(o -> o.getExampleParameterName() == "campaignKeyword" ? new Parameter("ck", "String", null, 500, "campaignKeyword", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignContent" ? new Parameter("cc", "String", null, 500, "campaignContent", false, "") : o)
+			.filter(o -> o.getExampleParameterName() != "campaignId")
+			.filter(o -> o.getExampleParameterName() != "googleAdwordsId")
+			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+
+
+	/*
+	 * Traffic entity (Organic search)
+	 */
+
+	private static TableRow organicSearchTR = baseTR.clone()
+		.set("type","traffic")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), trafficEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "traffic") : o)
+			.map(o -> o.getExampleParameterName() == "campaignName" ? new Parameter("cn", "String", null, 100, "campaignName", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignSource" ? new Parameter("cs", "String", null, 100, "campaignSource", false, "example.com") : o)
+			.map(o -> o.getExampleParameterName() == "campaignMedium" ? new Parameter("cm", "String", null, 50, "campaignMedium", false, "organic") : o)
+			.map(o -> o.getExampleParameterName() == "campaignKeyword" ? new Parameter("ck", "String", null, 500, "campaignKeyword", false, "(not provided)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignContent" ? new Parameter("cc", "String", null, 500, "campaignContent", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+			.filter(o -> o.getExampleParameterName() != "campaignId")
+			.filter(o -> o.getExampleParameterName() != "googleAdwordsId")
+			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+
+
+	/*
+	 * Traffic entity (Social Traffic)
+	 */
+
+	private static TableRow socialTrafficTR = baseTR.clone()
+		.set("type","traffic")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), trafficEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "traffic") : o)
+			.map(o -> o.getExampleParameterName() == "campaignName" ? new Parameter("cn", "String", null, 100, "campaignName", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignSource" ? new Parameter("cs", "String", null, 100, "campaignSource", false, "example.com") : o)
+			.map(o -> o.getExampleParameterName() == "campaignMedium" ? new Parameter("cm", "String", null, 50, "campaignMedium", false, "social") : o)
+			.map(o -> o.getExampleParameterName() == "campaignKeyword" ? new Parameter("ck", "String", null, 500, "campaignKeyword", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "campaignContent" ? new Parameter("cc", "String", null, 500, "campaignContent", false, "(not set)") : o)
+			.map(o -> o.getExampleParameterName() == "referer" ? new Parameter("dr", "String", null, 100, "referer", false,"http://example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererHost" ? new Parameter("drh", "String", null, 100, "refererHost", false,"example.com") : o)
+			.map(o -> o.getExampleParameterName() == "refererPath" ? new Parameter("drp", "String", null, 100, "refererPath", false,"") : o)
+			.filter(o -> o.getExampleParameterName() != "campaignId")
+			.filter(o -> o.getExampleParameterName() != "googleAdwordsId")
+			.filter(o -> o.getExampleParameterName() != "googleDisplayId")
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+
+
+	/*
+	 * Experiment entity
+	 */
+
+	private static ExperimentEntity experimentEntity = new ExperimentEntity();
+	
+	private static TableRow experimentTR = baseTR.clone()
+		.set("type","experiment")
+		.set("params", 
+			Stream.concat(baseEntity.getParameters().stream(), experimentEntity.getParameters().stream())
+			.sorted(Comparator.comparing(Parameter::getExampleParameterName))
+			.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "experiment") : o)
+			.map(p -> parameterToTR(p))
+			.collect(Collectors.toList()));
+		
+	private static String experimentPayload =
+		Stream.concat(
+			Stream.concat(
+				pageviewEntity
+					.getParameters()
+					.stream(),
+				experimentEntity
+					.getParameters()
+					.stream())
+					.map(o -> o.getExampleParameterName() == "experimentId" ? new Parameter("exp", "String", null, 50, "entityType", true, "fdslkjdflsj.0") : o)
+					.filter(o -> o.getExampleParameterName() != "experimentVariant")
+			, 
+			baseEntity
+				.getParameters()
+				.stream()
+				.map(o -> o.getExampleParameterName() == "entityType" ? new Parameter("et", "String", null, 50, "entityType", true, "experiment") : o)
+		)
+		.map(p -> p.getExampleParameter() + "=" + FieldMapper.encode(p.getExampleValue()))
+		.collect(Collectors.joining("&"));
+
+
+
+
+/*
+ * **************************************
+ */
+
+
+	private static CollectorPayloadEntity cpeBuilder(Map headers, String payload){
+			return CollectorPayloadEntity.newBuilder()
+				.setPayload(payload)
+				.putAllHeaders(headers)
+				.setEpochMillis("1519977053236")
+				.setUuid("5bd43e1a-8217-4020-826f-3c7f0b763c32")
+				.build();
+	}
+
+
+	@Test
+	public void userPageviewTest() throws Exception {
+		LOG.info(Integer.toString(pageviewTR.hashCode())+" : "+pageviewTR.toPrettyString());
+		LOG.info(Integer.toString(refererTR.hashCode())+" : "+refererTR.toPrettyString());
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, pageviewPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(pageviewTR);
+		p.run();
+	}
+	
+	@Test
+	public void botPageviewTest() throws Exception {
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(bot, pageviewPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder();
+		p.run();
+	}
+
+	@Test
+	public void userEventTest() throws Exception {
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, eventPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(eventTR);
+		p.run();
+	}
+
+
+	@Test
+	public void userExceptionTest() throws Exception {
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, exceptionPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(exceptionTR);
+		p.run();
+	}
+	
+	
+	@Test
+	public void userSiteSearchTest() throws Exception {
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, siteSearchPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(siteSearchTR, siteSearchPageviewTR);
+		p.run();
+	}
+	
+
+	@Test
+	public void userSocialTest() throws Exception {
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, socialPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(socialTR);
+		p.run();
+	}
+
+
+	@Test
+	public void userTimingTest() throws Exception {
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, timingPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(timingTR);
+		p.run();
+	}
+	
+	@Test
+	public void userTransactionTest() throws Exception {
+		LOG.info(Integer.toString(transactionTR.hashCode())+" : "+transactionTR.toPrettyString());	
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, transactionPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(transactionTR, pageviewTR);
+		p.run();
+	}
+
+
+	@Test
+	public void userProductTest() throws Exception {
+		LOG.info(Integer.toString(transactionTR.hashCode())+" : "+transactionTR.toPrettyString());	
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, productPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(productTR, pageviewTR);
+		p.run();
+	}
+
+	@Test
+	public void userProductImpressionTest() throws Exception {
+		LOG.info(Integer.toString(productImpressionTR.hashCode())+" : "+productImpressionTR.toPrettyString());	
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, productImpressionPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(productImpressionTR, pageviewTR);
+		p.run();
+	}
+
+	@Test
+	public void userPromotionTest() throws Exception {
+		LOG.info(Integer.toString(promotionTR.hashCode())+" : "+promotionTR.toPrettyString());	
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, promotionPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(promotionTR, pageviewTR);
+		p.run();
+	}
+	
+
+	@Test
+	public void userGoogleSearchAdsTest() throws Exception {
+		LOG.info(Integer.toString(googleSearchAdsTR.hashCode())+" : "+googleSearchAdsTR.toPrettyString());
+		LOG.info(Integer.toString(googleSearchAdsPageviewTR.hashCode())+" : "+googleSearchAdsPageviewTR.toPrettyString());
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, googleSearchAdsPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(googleSearchAdsTR, googleSearchAdsPageviewTR);
+		p.run();
+	}
+
+
+	@Test
+	public void userCampaignTest() throws Exception {
+		LOG.info(Integer.toString(campaignTR.hashCode())+" : "+campaignTR.toPrettyString());
+		LOG.info(Integer.toString(campaignPageviewTR.hashCode())+" : "+campaignPageviewTR.toPrettyString());
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, campaignPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(campaignTR, campaignPageviewTR);
+		p.run();
+	}
+
+
+	@Test
+	public void userOrganicSearchPageviewTest() throws Exception {
+		LOG.info(Integer.toString(trafficPageviewTR.hashCode())+" : "+trafficPageviewTR.toPrettyString());
+		LOG.info(Integer.toString(organicSearchTR.hashCode())+" : "+organicSearchTR.toPrettyString());
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, trafficPageviewPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(example.com).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(trafficPageviewTR, organicSearchTR);
+		p.run();
+	}
+	
+
+	@Test
+	public void userSocialTrafficPageviewTest() throws Exception {
+		LOG.info(Integer.toString(trafficPageviewTR.hashCode())+" : "+trafficPageviewTR.toPrettyString());
+		LOG.info(Integer.toString(socialTrafficTR.hashCode())+" : "+socialTrafficTR.toPrettyString());
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, trafficPageviewPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(example.com).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(trafficPageviewTR, socialTrafficTR);
+		p.run();
+	}
+	
+	@Test
+	public void userExperimentTest() throws Exception {
+		LOG.info(Integer.toString(pageviewTR.hashCode())+" : "+pageviewTR.toPrettyString());
+		LOG.info(Integer.toString(experimentTR.hashCode())+" : "+experimentTR.toPrettyString());
+		PCollection<TableRow> output = p
+			.apply(Create.of(Arrays.asList(cpeBuilder(user, experimentPayload))))
+			.apply(ParDo.of(new PayloadToMPEntityFn(
+				StaticValueProvider.of(".*(www.google.|www.bing.|search.yahoo.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(facebook.|instagram.|pinterest.|youtube.|linkedin.|twitter.).*"),
+				StaticValueProvider.of(".*(foo.com|www.foo.com).*"),
+				StaticValueProvider.of(".*(^$|bot|spider|crawler).*"),
+				StaticValueProvider.of(".*q=(([^&#]*)|&|#|$)"),
+				StaticValueProvider.of("Europe/Stockholm"))))
+			.apply(ParDo.of(new MPEntityToTableRowFn()));
+		PAssert.that(output).containsInAnyOrder(experimentTR, pageviewTR);
+		p.run();
+	}
+	
+}
