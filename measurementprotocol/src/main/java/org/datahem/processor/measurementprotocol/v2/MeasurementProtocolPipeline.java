@@ -14,12 +14,18 @@ package org.datahem.processor.measurementprotocol.v2;
  * =========================LICENSE_END==================================
  */
 
+/*
+import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.*;
+import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
 import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
-import org.datahem.processor.measurementprotocol.v1.utils.MeasurementProtocolBuilder;
+*/
+
 import org.datahem.processor.utils.ProtobufUtils;
-import org.datahem.processor.measurementprotocol.v2.utils.PayloadToMPEntityFn;
-import org.datahem.processor.measurementprotocol.v2.utils.MPEntityToTableRowFn;
+import org.datahem.processor.measurementprotocol.v2.utils.MeasurementProtocolBuilder;
+import org.datahem.processor.measurementprotocol.v2.utils.PayloadToMeasurementProtocolFn;
+import org.datahem.processor.measurementprotocol.v2.utils.MeasurementProtocolToTableRowFn;
+import org.datahem.protobuf.measurementprotocol.v2.*;
 
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
@@ -86,7 +92,7 @@ public class MeasurementProtocolPipeline {
     Pipeline pipeline = Pipeline.create(options);
     // Create schemas from protocol buffers
     
-    TableSchema eventSchema = ProtobufUtils.makeTableSchema(MPEntityProto.MPEntity.getDescriptor());
+    TableSchema eventSchema = ProtobufUtils.makeTableSchema(MeasurementProtocol.getDescriptor());
     	List<TableFieldSchema> fieldsList = eventSchema.getFields();
     	TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
     	fieldsList.set(fieldsList.indexOf(date), date.setType("DATE"));
@@ -106,21 +112,23 @@ public class MeasurementProtocolPipeline {
     			.fromSubscription(pubsubSubscription));
     
         for(Config.Account.Property.View view : property.views){ //Start view
-            PCollection<MPEntity> enrichedEntities = payload
-                .apply(view.id + " - Payload to multiple Events", 
-                    ParDo.of(new PayloadToMPEntityFn(
+            PCollection<MeasurementProtocol> enrichedEntities = payload
+                .apply(view.id + " - Payload to MeasurementProtocol", 
+                    ParDo.of(new PayloadToMeasurementProtocolFn(
+                        /*
                         StaticValueProvider.of(view.searchEnginesPattern),
                         StaticValueProvider.of(view.ignoredReferersPattern), 
                         StaticValueProvider.of(view.socialNetworksPattern),
+                        */
                         StaticValueProvider.of(view.includedHostnamesPattern),
                         StaticValueProvider.of(view.excludedBotsPattern),
-                        StaticValueProvider.of(view.siteSearchPattern),
+                        //StaticValueProvider.of(view.siteSearchPattern),
                         StaticValueProvider.of(view.timeZone)
                     )));
             
             enrichedEntities
                 .apply(view.id + " - Event to tablerow", 
-                    ParDo.of(new MPEntityToTableRowFn()))
+                    ParDo.of(new MeasurementProtocolToTableRowFn()))
                 .apply(view.id + " - Fixed Windows",
                     Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
                     .withAllowedLateness(Duration.standardDays(7))
@@ -139,7 +147,7 @@ public class MeasurementProtocolPipeline {
                 enrichedEntities
                     .apply(view.id + " - Write to pubsub",
                         PubsubIO
-                            .writeProtos(MPEntityProto.MPEntity.class)
+                            .writeProtos(MeasurementProtocol.class)
                             .to(pubSubTopic));
             }
         } //End View

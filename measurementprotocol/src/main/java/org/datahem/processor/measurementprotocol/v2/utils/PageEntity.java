@@ -23,6 +23,7 @@ import org.datahem.processor.measurementprotocol.v1.utils.Parameter;
 
 import java.util.Map;
 import org.datahem.protobuf.measurementprotocol.v2.Page;
+import java.util.Optional;
 /*
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class PageEntity{
 	}
 	
 	public Page build(Map<String, String> pm){
-		if(trigger(paramMap)){
+		if(trigger(pm)){
             try{
                 Page.Builder builder = Page.newBuilder();
                 Optional.ofNullable(pm.get("dt")).ifPresent(builder::setTitle);

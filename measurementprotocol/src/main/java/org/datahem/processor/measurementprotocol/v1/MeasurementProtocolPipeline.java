@@ -14,11 +14,21 @@ package org.datahem.processor.measurementprotocol.v1;
  * =========================LICENSE_END==================================
  */
 
+/*
 import org.datahem.protobuf.measurementprotocol.v2.*;
 import org.datahem.processor.measurementprotocol.v2.utils.MeasurementProtocolBuilder;
 import org.datahem.processor.utils.ProtobufUtils;
 import org.datahem.processor.measurementprotocol.v2.utils.PayloadToMeasurementProtocolFn;
 import org.datahem.processor.measurementprotocol.v2.utils.MeasurementProtocolToTableRowFn;
+*/
+
+import org.datahem.processor.measurementprotocol.v1.utils.PayloadToMPEntityFn;
+import org.datahem.processor.measurementprotocol.v1.utils.MPEntityToTableRowFn;
+import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.*;
+import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto;
+import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
+import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
+import org.datahem.processor.utils.ProtobufUtils;
 
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;

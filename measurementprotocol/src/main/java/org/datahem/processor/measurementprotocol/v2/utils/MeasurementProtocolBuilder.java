@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.Optional;
 
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
 
@@ -48,7 +49,7 @@ public class MeasurementProtocolBuilder{
 	
 	private Map<String, String> paramMap;
 	//private List<MPEntity> events = new ArrayList<>();
-	private PageEntity pageviewEntity = new PageEntity();
+	private PageEntity pageEntity = new PageEntity();
 	/*
     private EventEntity eventEntity = new EventEntity();
 	private ExceptionEntity exceptionEntity = new ExceptionEntity();
@@ -59,19 +60,18 @@ public class MeasurementProtocolBuilder{
 	private TrafficEntity trafficEntity = new TrafficEntity();
 	private PromotionEntity promotionEntity = new PromotionEntity();
 	private ExperimentEntity experimentEntity = new ExperimentEntity();
-	
 	private ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
-	*/
-/*
 	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
+    */
+    
     private static String excludedBotsPattern;
     private static String includedHostnamesPattern;
     private static String timeZone;
-  */  
+    
     public MeasurementProtocolBuilder(){
 	}
 	
-/*	
+	/*
   	public String getSearchEnginesPattern(){
     	return this.trafficEntity.getSearchEnginesPattern();
   	}
@@ -95,7 +95,7 @@ public class MeasurementProtocolBuilder{
 	public void setIgnoredReferersPattern(String pattern){
     	this.trafficEntity.setIgnoredReferersPattern(pattern);
   	}
-  	
+  	*/
   	
   	public String getExcludedBotsPattern(){
     	return this.excludedBotsPattern;
@@ -113,7 +113,7 @@ public class MeasurementProtocolBuilder{
     	this.includedHostnamesPattern = pattern;
   	}
   	
-  	
+  /*	
   	public String getSiteSearchPattern(){
     	return this.siteSearchEntity.getSiteSearchPattern();
   	}
@@ -121,7 +121,7 @@ public class MeasurementProtocolBuilder{
 	public void setSiteSearchPattern(String pattern){
     	this.siteSearchEntity.setSiteSearchPattern(pattern);
   	}
-  	
+*/  	
   	
   	public String getTimeZone(){
     	return this.timeZone;
@@ -130,10 +130,10 @@ public class MeasurementProtocolBuilder{
 	public void setTimeZone(String tz){
     	this.timeZone = tz;
   	}
-*/
 
-    public List<MeasurementProtocol> measurementProtocolFromPayload(PubsubMessage message){
-		try{
+
+    public MeasurementProtocol measurementProtocolFromPayload(PubsubMessage message){
+		//try{
             String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
 	        //Check if post body contains payload and add parameters in a map
 	        if (!"".equals(payload)) {
@@ -161,6 +161,8 @@ public class MeasurementProtocolBuilder{
                     MeasurementProtocol.Builder builder = MeasurementProtocol.newBuilder();
                     Optional.ofNullable(pageEntity.build(paramMap)).ifPresent(builder::setPage);
 
+                    MeasurementProtocol measurementProtocol = builder.build();
+                    return measurementProtocol; 
                     /*
 					addAllIfNotNull(events, pageviewEntity.build(paramMap));
                     addAllIfNotNull(events, eventEntity.build(paramMap));
@@ -179,11 +181,11 @@ public class MeasurementProtocolBuilder{
 	        }else{
                 LOG.info("not matching MeasurementProtocolBuilder conditions: User-Agent: " + paramMap.getOrDefault("User-Agent", "null") + ", document.location: " + paramMap.getOrDefault("dl", "null") + ", type:" + paramMap.getOrDefault("t", "null"));
             }
-        }
+       /* }
         catch (Exception e) {
 				LOG.error(e.toString() + " paramMap:" + paramMap.toString());
-		}
-    	return events;   
+		}*/
+    	return null;   
     }
         
 }

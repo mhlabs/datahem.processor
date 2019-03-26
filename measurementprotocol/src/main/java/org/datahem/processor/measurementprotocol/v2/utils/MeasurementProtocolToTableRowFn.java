@@ -34,8 +34,8 @@ public class MeasurementProtocolToTableRowFn extends DoFn<MeasurementProtocol,Ta
 
       	@ProcessElement      
       	public void processElement(ProcessContext c)  {
-      		MPEntity mpEntity = c.element();
-	        TableRow tRow = ProtobufUtils.makeTableRow(mpEntity);
+      		MeasurementProtocol measurementProtocol = c.element();
+	        TableRow tRow = ProtobufUtils.makeTableRow(measurementProtocol);
 	        c.output(tRow);
 	     	return;
 	    }

@@ -3,10 +3,10 @@ package org.datahem.processor.measurementprotocol.v2.utils;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.options.ValueProvider;
+import org.datahem.protobuf.measurementprotocol.v2.*;
 
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
 
+import java.util.Optional;
 import java.util.List;
 
 /*-
@@ -23,7 +23,7 @@ import java.util.List;
  * =========================LICENSE_END==================================
  */
 
-public class PayloadToMPEntityFn extends DoFn<PubsubMessage, MPEntity> {
+public class PayloadToMeasurementProtocolFn extends DoFn<PubsubMessage, MeasurementProtocol> {
 		ValueProvider<String> searchEnginesPattern;
 		ValueProvider<String> ignoredReferersPattern;
 		ValueProvider<String> socialNetworksPattern;
@@ -32,40 +32,51 @@ public class PayloadToMPEntityFn extends DoFn<PubsubMessage, MPEntity> {
 		ValueProvider<String> siteSearchPattern;
 		ValueProvider<String> timeZone;
 		
-	  	public PayloadToMPEntityFn(
-	  		ValueProvider<String> searchEnginesPattern, 
+	  	public PayloadToMeasurementProtocolFn(
+	  		/*ValueProvider<String> searchEnginesPattern, 
 	  		ValueProvider<String> ignoredReferersPattern, 
 	  		ValueProvider<String> socialNetworksPattern, 
-	  		ValueProvider<String> includedHostnamesPattern, 
+	  		*/
+            ValueProvider<String> includedHostnamesPattern, 
 	  		ValueProvider<String> excludedBotsPattern, 
-	  		ValueProvider<String> siteSearchPattern,
+	  		//ValueProvider<String> siteSearchPattern,
 	  		ValueProvider<String> timeZone) {
-		     	this.searchEnginesPattern = searchEnginesPattern;
+		     	/*
+                 this.searchEnginesPattern = searchEnginesPattern;
 		     	this.ignoredReferersPattern = ignoredReferersPattern;
 		     	this.socialNetworksPattern = socialNetworksPattern;
-		     	this.includedHostnamesPattern = includedHostnamesPattern;
+		     	*/
+                this.includedHostnamesPattern = includedHostnamesPattern;
 		     	this.excludedBotsPattern = excludedBotsPattern;
-		     	this.siteSearchPattern = siteSearchPattern;
+		     	//this.siteSearchPattern = siteSearchPattern;
 		     	this.timeZone = timeZone;
 	   	}
+        
+        
 
       	@ProcessElement      
       	public void processElement(ProcessContext c)  {
 	      	
 	      	PubsubMessage received = c.element();
 	        MeasurementProtocolBuilder mpb = new MeasurementProtocolBuilder();
+            /*
 	        mpb.setSearchEnginesPattern(searchEnginesPattern.get());
 	        mpb.setIgnoredReferersPattern(ignoredReferersPattern.get());
 	        mpb.setSocialNetworksPattern(socialNetworksPattern.get());
+            */
 	        mpb.setIncludedHostnamesPattern(includedHostnamesPattern.get());
 	        mpb.setExcludedBotsPattern(excludedBotsPattern.get());
-	        mpb.setSiteSearchPattern(siteSearchPattern.get());
+	        //mpb.setSiteSearchPattern(siteSearchPattern.get());
 	        mpb.setTimeZone(timeZone.get());
 	        
-	        List<MPEntity> mpEntities = mpb.mpEntitiesFromPayload(received);
-	        mpEntities.forEach(mpEntity -> {
-	        	c.output(mpEntity);
-        	});	
+            /*
+	        MeasurementProtocol measurementProtocol = mpb.measurementProtocolFromPayload(received);
+	        c.output(measurementProtocol);	
+            */
+            Optional<MeasurementProtocol> measurementProtocol = Optional.ofNullable(mpb.measurementProtocolFromPayload(received));
+	        if(measurementProtocol.isPresent()){
+                c.output(measurementProtocol.get());	
+            }
 	    	return;	
 		}
   }
