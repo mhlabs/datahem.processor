@@ -1,27 +1,10 @@
 package org.datahem.processor.utils;
 
 /*-
- * #%L
- * DataHem
- * %%
- * Copyright (C) 2018 - 2019 MatHem Sverige AB
- * %%
- * DataHem is a serverless real-time data platform built for reporting, analytics and data/ML-products.
- * Copyright (C) 2019 Robert Sahlin
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
- * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
- * #L%
- */
-
-/*-
  * ========================LICENSE_START=================================
- * DataHem
+ * Datahem.processor.measurementprotocol
  * %%
- * Copyright (C) 2018 Robert Sahlin and MatHem Sverige AB
+ * Copyright (C) 2018 - 2019 Robert Sahlin
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
@@ -32,9 +15,11 @@ package org.datahem.processor.utils;
  */
 
 
+
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Map;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
@@ -87,4 +72,28 @@ public class FieldMapper{
         	throw new RuntimeException("Impossible: UTF-8 is a required encoding", e);
     	}
 	}
+
+    public static String stringVal(Map<String, String> pm, String field){
+        return pm.get(field);
+    }
+
+    public static boolean booleanVal(Map<String, String> pm, String field){
+        return Boolean.parseBoolean(pm.get(field));
+    }
+
+    public static int intVal(Map<String, String> pm, String field){
+        return Integer.parseInt(pm.get(field));
+    }
+
+    public static double doubleVal(Map<String, String> pm, String field){
+        return Double.parseDouble(pm.get(field));
+    }
+
+    public static long longVal(Map<String, String> pm, String field){
+        return Long.parseLong(pm.get(field));
+    }
+    
+    public static float floatVal(Map<String, String> pm, String field){
+        return Float.parseFloat(pm.get(field));
+    }
 }

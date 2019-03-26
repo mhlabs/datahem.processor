@@ -50,16 +50,17 @@ public class PageEntity{
 	}
 	
 	public Page build(Map<String, String> pm){
+        LOG.info("Page");
 		if(trigger(pm)){
             try{
                 Page.Builder builder = Page.newBuilder();
                 Optional.ofNullable(pm.get("dt")).ifPresent(builder::setTitle);
-                //Optional.ofNullable(pm.get("url")).ifPresent(builder::setUrl);
+                Optional.ofNullable(pm.get("dlu")).ifPresent(builder::setUrl);
                 Optional.ofNullable(pm.get("dh")).ifPresent(builder::setHostname);
                 Optional.ofNullable(pm.get("dp")).ifPresent(builder::setPath);
                 Optional.ofNullable(pm.get("dr")).ifPresent(builder::setReferer);
-                //Optional.ofNullable(pm.get("drh")).ifPresent(builder::setRefererHost);
-                //Optional.ofNullable(pm.get("drp")).ifPresent(builder::setRefererPath);
+                Optional.ofNullable(pm.get("drh")).ifPresent(builder::setRefererHost);
+                Optional.ofNullable(pm.get("drp")).ifPresent(builder::setRefererPath);
                 //Optional.ofNullable(pm.get("sst")).ifPresent(builder::setSearchKeyword);
                 Optional.ofNullable(pm.get("de")).ifPresent(builder::setEncoding);
                 Optional.ofNullable(pm.get("linkid")).ifPresent(builder::setLinkId);

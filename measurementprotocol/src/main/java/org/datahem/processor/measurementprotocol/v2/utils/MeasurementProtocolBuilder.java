@@ -40,6 +40,9 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.Instant;
 import org.joda.time.DateTimeZone;
 
+import java.net.URL;
+import java.net.MalformedURLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +50,7 @@ public class MeasurementProtocolBuilder{
 	
 	private static final Logger LOG = LoggerFactory.getLogger(MeasurementProtocolBuilder.class);
 	
-	private Map<String, String> paramMap;
+	private Map<String, String> pm;
 	//private List<MPEntity> events = new ArrayList<>();
 	private PageEntity pageEntity = new PageEntity();
 	/*
@@ -133,58 +136,94 @@ public class MeasurementProtocolBuilder{
 
 
     public MeasurementProtocol measurementProtocolFromPayload(PubsubMessage message){
-		//try{
+		try{
+            LOG.info("start");
             String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
-	        //Check if post body contains payload and add parameters in a map
+	        LOG.info(payload);
+            //Check if post body contains payload and add parameters in a map
 	        if (!"".equals(payload)) {
-	            //Add header parameters to paramMap
-	            paramMap = FieldMapper.fieldMapFromQuery(payload);
-                paramMap.putAll(message.getAttributeMap());
-	            
+	            //Add header parameters to pm
+	            pm = FieldMapper.fieldMapFromQuery(payload);
+                pm.putAll(message.getAttributeMap());
+	            LOG.info(pm.toString());
 	            //Exclude bots, spiders and crawlers
-				if(paramMap.get("User-Agent") == null){
-					paramMap.put("User-Agent", "");
+				if(pm.get("User-Agent") == null){
+					pm.put("User-Agent", "");
 				}
 
-	        	if(!paramMap.get("User-Agent").matches(getExcludedBotsPattern()) && paramMap.get("dl").matches(getIncludedHostnamesPattern()) && !paramMap.get("t").equals("adtiming")){
-	                //Add epochMillis and timestamp to paramMap       
-                    Instant payloadTimeStamp = new Instant(Long.parseLong(paramMap.get("MessageTimestamp")));
+	        	if(!pm.get("User-Agent").matches(getExcludedBotsPattern()) && pm.get("dl").matches(getIncludedHostnamesPattern()) && !pm.get("t").equals("adtiming")){
+	                //Add epochMillis and timestamp to pm       
+                    Instant payloadTimeStamp = new Instant(Long.parseLong(pm.get("MessageTimestamp")));
 					//DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
 					DateTimeFormatter local_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZone(DateTimeZone.forID(getTimeZone()));
-		            paramMap.put("cpts", payloadTimeStamp.toString(local_timestamp));
-                    paramMap.put("cpem", paramMap.get("MessageTimestamp"));
+		            pm.put("cpts", payloadTimeStamp.toString(local_timestamp));
+                    pm.put("cpem", pm.get("MessageTimestamp"));
 
 					//Set local timezone for use as partition field
 					DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd").withZone(DateTimeZone.forID(getTimeZone()));
-					paramMap.put("cpd", payloadTimeStamp.toString(partition));
+					pm.put("cpd", payloadTimeStamp.toString(partition));
+
+                    try{
+                        //If document location parameter exist, extract host and path and add those as separate parameters
+                        if (pm.get("dh") != null && pm.get("dp") != null){
+                            pm.put("dlu",pm.get("dh") + pm.get("dp"));
+                        } else if(pm.get("dl") != null){
+                            URL url = new URL(pm.get("dl"));
+                            if(pm.get("dh")==null) pm.put("dh", url.getHost());
+                            if(pm.get("dp")==null) pm.put("dp", url.getPath());
+                            pm.put("dlu", url.getHost()+url.getFile());
+                        }
+                    }catch (MalformedURLException e) {
+                        LOG.error(e.toString() + " document location, pm:" + pm.toString());
+                    }
+                    
+                    try{
+                        //If document referer parameter exist, extract host and path and add those as separate parameters
+                        if(pm.get("dr") != null){
+                            URL referer = new URL(pm.get("dr"));
+                            pm.put("drh", referer.getHost());
+                            pm.put("drp", referer.getPath());
+                        }
+                    }catch (MalformedURLException e) {
+                        LOG.error(e.toString() + " referer, pm:" + pm.toString());
+                    }
 					
                     MeasurementProtocol.Builder builder = MeasurementProtocol.newBuilder();
-                    Optional.ofNullable(pageEntity.build(paramMap)).ifPresent(builder::setPage);
+                    Optional.ofNullable(pm.get("t")).ifPresent(builder::setHitType);
+                    Optional.ofNullable(pm.get("cid")).ifPresent(builder::setClientId);
+                    Optional.ofNullable(pm.get("uid")).ifPresent(builder::setUserId);
+                    Optional.ofNullable(pm.get("MessageUuid")).ifPresent(builder::setHitId);
+                    Optional.ofNullable(FieldMapper.booleanVal(pm, "ni")).ifPresent(builder::setNonInteraction);
+                    Optional.ofNullable(pm.get("v")).ifPresent(builder::setVersion);
+
+
+                    Optional.ofNullable(pageEntity.build(pm)).ifPresent(builder::setPage);
 
                     MeasurementProtocol measurementProtocol = builder.build();
+                    LOG.info(measurementProtocol.toString());
                     return measurementProtocol; 
                     /*
-					addAllIfNotNull(events, pageviewEntity.build(paramMap));
-                    addAllIfNotNull(events, eventEntity.build(paramMap));
-                    addAllIfNotNull(events, exceptionEntity.build(paramMap));
-					addAllIfNotNull(events, siteSearchEntity.build(paramMap));
-					addAllIfNotNull(events, socialEntity.build(paramMap));
-					addAllIfNotNull(events, timingEntity.build(paramMap));
-					addAllIfNotNull(events, transactionEntity.build(paramMap));
-					addAllIfNotNull(events, productEntity.build(paramMap));
-					addAllIfNotNull(events, trafficEntity.build(paramMap));
-					addAllIfNotNull(events, promotionEntity.build(paramMap));
-					addAllIfNotNull(events, productImpressionEntity.build(paramMap));
-					addAllIfNotNull(events, experimentEntity.build(paramMap));
+					addAllIfNotNull(events, pageviewEntity.build(pm));
+                    addAllIfNotNull(events, eventEntity.build(pm));
+                    addAllIfNotNull(events, exceptionEntity.build(pm));
+					addAllIfNotNull(events, siteSearchEntity.build(pm));
+					addAllIfNotNull(events, socialEntity.build(pm));
+					addAllIfNotNull(events, timingEntity.build(pm));
+					addAllIfNotNull(events, transactionEntity.build(pm));
+					addAllIfNotNull(events, productEntity.build(pm));
+					addAllIfNotNull(events, trafficEntity.build(pm));
+					addAllIfNotNull(events, promotionEntity.build(pm));
+					addAllIfNotNull(events, productImpressionEntity.build(pm));
+					addAllIfNotNull(events, experimentEntity.build(pm));
                     */
 				}
 	        }else{
-                LOG.info("not matching MeasurementProtocolBuilder conditions: User-Agent: " + paramMap.getOrDefault("User-Agent", "null") + ", document.location: " + paramMap.getOrDefault("dl", "null") + ", type:" + paramMap.getOrDefault("t", "null"));
+                LOG.info("not matching MeasurementProtocolBuilder conditions: User-Agent: " + pm.getOrDefault("User-Agent", "null") + ", document.location: " + pm.getOrDefault("dl", "null") + ", type:" + pm.getOrDefault("t", "null"));
             }
-       /* }
-        catch (Exception e) {
-				LOG.error(e.toString() + " paramMap:" + paramMap.toString());
-		}*/
+        }
+        catch (NullPointerException e) {
+				LOG.error(e.toString());// + " pm:" + pm.toString());
+		}
     	return null;   
     }
         
