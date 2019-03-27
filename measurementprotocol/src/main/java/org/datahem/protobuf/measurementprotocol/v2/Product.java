@@ -37,11 +37,11 @@ public  final class Product extends
     action_ = "";
     couponCode_ = "";
     currency_ = "";
-    quantity_ = 0L;
+    quantity_ = 0;
     price_ = 0D;
     refundAmount_ = 0D;
     list_ = "";
-    position_ = 0L;
+    position_ = 0;
     customDimensions_ = java.util.Collections.emptyList();
     customMetrics_ = java.util.Collections.emptyList();
   }
@@ -121,7 +121,7 @@ public  final class Product extends
           }
           case 72: {
 
-            quantity_ = input.readInt64();
+            quantity_ = input.readInt32();
             break;
           }
           case 81: {
@@ -142,7 +142,7 @@ public  final class Product extends
           }
           case 104: {
 
-            position_ = input.readInt64();
+            position_ = input.readInt32();
             break;
           }
           case 114: {
@@ -530,15 +530,15 @@ public  final class Product extends
   }
 
   public static final int QUANTITY_FIELD_NUMBER = 9;
-  private long quantity_;
+  private int quantity_;
   /**
    * <pre>
    *(pr[0-9]{1,3}qt)	The quantity of the product purchased.
    * </pre>
    *
-   * <code>optional int64 quantity = 9;</code>
+   * <code>optional int32 quantity = 9;</code>
    */
-  public long getQuantity() {
+  public int getQuantity() {
     return quantity_;
   }
 
@@ -611,15 +611,15 @@ public  final class Product extends
   }
 
   public static final int POSITION_FIELD_NUMBER = 13;
-  private long position_;
+  private int position_;
   /**
    * <pre>
    *(pr[0-9]{1,3}ps)  Position of the product in the list in which it is shown.
    * </pre>
    *
-   * <code>optional int64 position = 13;</code>
+   * <code>optional int32 position = 13;</code>
    */
-  public long getPosition() {
+  public int getPosition() {
     return position_;
   }
 
@@ -729,8 +729,8 @@ public  final class Product extends
     if (!getCurrencyBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 8, currency_);
     }
-    if (quantity_ != 0L) {
-      output.writeInt64(9, quantity_);
+    if (quantity_ != 0) {
+      output.writeInt32(9, quantity_);
     }
     if (price_ != 0D) {
       output.writeDouble(10, price_);
@@ -741,8 +741,8 @@ public  final class Product extends
     if (!getListBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 12, list_);
     }
-    if (position_ != 0L) {
-      output.writeInt64(13, position_);
+    if (position_ != 0) {
+      output.writeInt32(13, position_);
     }
     for (int i = 0; i < customDimensions_.size(); i++) {
       output.writeMessage(14, customDimensions_.get(i));
@@ -781,9 +781,9 @@ public  final class Product extends
     if (!getCurrencyBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, currency_);
     }
-    if (quantity_ != 0L) {
+    if (quantity_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(9, quantity_);
+        .computeInt32Size(9, quantity_);
     }
     if (price_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
@@ -796,9 +796,9 @@ public  final class Product extends
     if (!getListBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, list_);
     }
-    if (position_ != 0L) {
+    if (position_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(13, position_);
+        .computeInt32Size(13, position_);
     }
     for (int i = 0; i < customDimensions_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
@@ -885,8 +885,7 @@ public  final class Product extends
     hash = (37 * hash) + CURRENCY_FIELD_NUMBER;
     hash = (53 * hash) + getCurrency().hashCode();
     hash = (37 * hash) + QUANTITY_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getQuantity());
+    hash = (53 * hash) + getQuantity();
     hash = (37 * hash) + PRICE_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         java.lang.Double.doubleToLongBits(getPrice()));
@@ -896,8 +895,7 @@ public  final class Product extends
     hash = (37 * hash) + LIST_FIELD_NUMBER;
     hash = (53 * hash) + getList().hashCode();
     hash = (37 * hash) + POSITION_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getPosition());
+    hash = (53 * hash) + getPosition();
     if (getCustomDimensionsCount() > 0) {
       hash = (37 * hash) + CUSTOMDIMENSIONS_FIELD_NUMBER;
       hash = (53 * hash) + getCustomDimensionsList().hashCode();
@@ -1042,7 +1040,7 @@ public  final class Product extends
 
       currency_ = "";
 
-      quantity_ = 0L;
+      quantity_ = 0;
 
       price_ = 0D;
 
@@ -1050,7 +1048,7 @@ public  final class Product extends
 
       list_ = "";
 
-      position_ = 0L;
+      position_ = 0;
 
       if (customDimensionsBuilder_ == null) {
         customDimensions_ = java.util.Collections.emptyList();
@@ -1193,7 +1191,7 @@ public  final class Product extends
         currency_ = other.currency_;
         onChanged();
       }
-      if (other.getQuantity() != 0L) {
+      if (other.getQuantity() != 0) {
         setQuantity(other.getQuantity());
       }
       if (other.getPrice() != 0D) {
@@ -1206,7 +1204,7 @@ public  final class Product extends
         list_ = other.list_;
         onChanged();
       }
-      if (other.getPosition() != 0L) {
+      if (other.getPosition() != 0) {
         setPosition(other.getPosition());
       }
       if (customDimensionsBuilder_ == null) {
@@ -2000,15 +1998,15 @@ public  final class Product extends
       return this;
     }
 
-    private long quantity_ ;
+    private int quantity_ ;
     /**
      * <pre>
      *(pr[0-9]{1,3}qt)	The quantity of the product purchased.
      * </pre>
      *
-     * <code>optional int64 quantity = 9;</code>
+     * <code>optional int32 quantity = 9;</code>
      */
-    public long getQuantity() {
+    public int getQuantity() {
       return quantity_;
     }
     /**
@@ -2016,9 +2014,9 @@ public  final class Product extends
      *(pr[0-9]{1,3}qt)	The quantity of the product purchased.
      * </pre>
      *
-     * <code>optional int64 quantity = 9;</code>
+     * <code>optional int32 quantity = 9;</code>
      */
-    public Builder setQuantity(long value) {
+    public Builder setQuantity(int value) {
       
       quantity_ = value;
       onChanged();
@@ -2029,11 +2027,11 @@ public  final class Product extends
      *(pr[0-9]{1,3}qt)	The quantity of the product purchased.
      * </pre>
      *
-     * <code>optional int64 quantity = 9;</code>
+     * <code>optional int32 quantity = 9;</code>
      */
     public Builder clearQuantity() {
       
-      quantity_ = 0L;
+      quantity_ = 0;
       onChanged();
       return this;
     }
@@ -2203,15 +2201,15 @@ public  final class Product extends
       return this;
     }
 
-    private long position_ ;
+    private int position_ ;
     /**
      * <pre>
      *(pr[0-9]{1,3}ps)  Position of the product in the list in which it is shown.
      * </pre>
      *
-     * <code>optional int64 position = 13;</code>
+     * <code>optional int32 position = 13;</code>
      */
-    public long getPosition() {
+    public int getPosition() {
       return position_;
     }
     /**
@@ -2219,9 +2217,9 @@ public  final class Product extends
      *(pr[0-9]{1,3}ps)  Position of the product in the list in which it is shown.
      * </pre>
      *
-     * <code>optional int64 position = 13;</code>
+     * <code>optional int32 position = 13;</code>
      */
-    public Builder setPosition(long value) {
+    public Builder setPosition(int value) {
       
       position_ = value;
       onChanged();
@@ -2232,11 +2230,11 @@ public  final class Product extends
      *(pr[0-9]{1,3}ps)  Position of the product in the list in which it is shown.
      * </pre>
      *
-     * <code>optional int64 position = 13;</code>
+     * <code>optional int32 position = 13;</code>
      */
     public Builder clearPosition() {
       
-      position_ = 0L;
+      position_ = 0;
       onChanged();
       return this;
     }

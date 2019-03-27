@@ -170,9 +170,9 @@ public interface ProductOrBuilder extends
    *(pr[0-9]{1,3}qt)	The quantity of the product purchased.
    * </pre>
    *
-   * <code>optional int64 quantity = 9;</code>
+   * <code>optional int32 quantity = 9;</code>
    */
-  long getQuantity();
+  int getQuantity();
 
   /**
    * <pre>
@@ -215,9 +215,9 @@ public interface ProductOrBuilder extends
    *(pr[0-9]{1,3}ps)  Position of the product in the list in which it is shown.
    * </pre>
    *
-   * <code>optional int64 position = 13;</code>
+   * <code>optional int32 position = 13;</code>
    */
-  long getPosition();
+  int getPosition();
 
   /**
    * <code>repeated .datahem.protobuf.measurementprotocol.v2.CustomDimension customDimensions = 14;</code>

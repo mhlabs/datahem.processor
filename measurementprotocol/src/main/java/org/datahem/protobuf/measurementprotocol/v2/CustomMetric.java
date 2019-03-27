@@ -29,8 +29,8 @@ public  final class CustomMetric extends
     super(builder);
   }
   private CustomMetric() {
-    index_ = 0L;
-    value_ = 0L;
+    index_ = 0;
+    value_ = 0;
   }
 
   @java.lang.Override
@@ -60,12 +60,12 @@ public  final class CustomMetric extends
           }
           case 8: {
 
-            index_ = input.readInt64();
+            index_ = input.readInt32();
             break;
           }
           case 16: {
 
-            value_ = input.readInt64();
+            value_ = input.readInt32();
             break;
           }
         }
@@ -92,28 +92,28 @@ public  final class CustomMetric extends
   }
 
   public static final int INDEX_FIELD_NUMBER = 1;
-  private long index_;
+  private int index_;
   /**
    * <pre>
    *cm([0-9]{1,3}). The index of the custom metric.
    * </pre>
    *
-   * <code>optional int64 index = 1;</code>
+   * <code>optional int32 index = 1;</code>
    */
-  public long getIndex() {
+  public int getIndex() {
     return index_;
   }
 
   public static final int VALUE_FIELD_NUMBER = 2;
-  private long value_;
+  private int value_;
   /**
    * <pre>
    *(cm[0-9]{1,3}). The value of the custom metric.
    * </pre>
    *
-   * <code>optional int64 value = 2;</code>
+   * <code>optional int32 value = 2;</code>
    */
-  public long getValue() {
+  public int getValue() {
     return value_;
   }
 
@@ -129,11 +129,11 @@ public  final class CustomMetric extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (index_ != 0L) {
-      output.writeInt64(1, index_);
+    if (index_ != 0) {
+      output.writeInt32(1, index_);
     }
-    if (value_ != 0L) {
-      output.writeInt64(2, value_);
+    if (value_ != 0) {
+      output.writeInt32(2, value_);
     }
   }
 
@@ -142,13 +142,13 @@ public  final class CustomMetric extends
     if (size != -1) return size;
 
     size = 0;
-    if (index_ != 0L) {
+    if (index_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(1, index_);
+        .computeInt32Size(1, index_);
     }
-    if (value_ != 0L) {
+    if (value_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, value_);
+        .computeInt32Size(2, value_);
     }
     memoizedSize = size;
     return size;
@@ -181,11 +181,9 @@ public  final class CustomMetric extends
     int hash = 41;
     hash = (19 * hash) + getDescriptorForType().hashCode();
     hash = (37 * hash) + INDEX_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getIndex());
+    hash = (53 * hash) + getIndex();
     hash = (37 * hash) + VALUE_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getValue());
+    hash = (53 * hash) + getValue();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -304,9 +302,9 @@ public  final class CustomMetric extends
     }
     public Builder clear() {
       super.clear();
-      index_ = 0L;
+      index_ = 0;
 
-      value_ = 0L;
+      value_ = 0;
 
       return this;
     }
@@ -373,10 +371,10 @@ public  final class CustomMetric extends
 
     public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.CustomMetric other) {
       if (other == org.datahem.protobuf.measurementprotocol.v2.CustomMetric.getDefaultInstance()) return this;
-      if (other.getIndex() != 0L) {
+      if (other.getIndex() != 0) {
         setIndex(other.getIndex());
       }
-      if (other.getValue() != 0L) {
+      if (other.getValue() != 0) {
         setValue(other.getValue());
       }
       onChanged();
@@ -405,15 +403,15 @@ public  final class CustomMetric extends
       return this;
     }
 
-    private long index_ ;
+    private int index_ ;
     /**
      * <pre>
      *cm([0-9]{1,3}). The index of the custom metric.
      * </pre>
      *
-     * <code>optional int64 index = 1;</code>
+     * <code>optional int32 index = 1;</code>
      */
-    public long getIndex() {
+    public int getIndex() {
       return index_;
     }
     /**
@@ -421,9 +419,9 @@ public  final class CustomMetric extends
      *cm([0-9]{1,3}). The index of the custom metric.
      * </pre>
      *
-     * <code>optional int64 index = 1;</code>
+     * <code>optional int32 index = 1;</code>
      */
-    public Builder setIndex(long value) {
+    public Builder setIndex(int value) {
       
       index_ = value;
       onChanged();
@@ -434,24 +432,24 @@ public  final class CustomMetric extends
      *cm([0-9]{1,3}). The index of the custom metric.
      * </pre>
      *
-     * <code>optional int64 index = 1;</code>
+     * <code>optional int32 index = 1;</code>
      */
     public Builder clearIndex() {
       
-      index_ = 0L;
+      index_ = 0;
       onChanged();
       return this;
     }
 
-    private long value_ ;
+    private int value_ ;
     /**
      * <pre>
      *(cm[0-9]{1,3}). The value of the custom metric.
      * </pre>
      *
-     * <code>optional int64 value = 2;</code>
+     * <code>optional int32 value = 2;</code>
      */
-    public long getValue() {
+    public int getValue() {
       return value_;
     }
     /**
@@ -459,9 +457,9 @@ public  final class CustomMetric extends
      *(cm[0-9]{1,3}). The value of the custom metric.
      * </pre>
      *
-     * <code>optional int64 value = 2;</code>
+     * <code>optional int32 value = 2;</code>
      */
-    public Builder setValue(long value) {
+    public Builder setValue(int value) {
       
       value_ = value;
       onChanged();
@@ -472,11 +470,11 @@ public  final class CustomMetric extends
      *(cm[0-9]{1,3}). The value of the custom metric.
      * </pre>
      *
-     * <code>optional int64 value = 2;</code>
+     * <code>optional int32 value = 2;</code>
      */
     public Builder clearValue() {
       
-      value_ = 0L;
+      value_ = 0;
       onChanged();
       return this;
     }

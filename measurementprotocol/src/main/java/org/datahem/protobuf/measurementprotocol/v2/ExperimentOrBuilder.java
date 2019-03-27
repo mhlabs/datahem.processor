@@ -26,34 +26,34 @@ public interface ExperimentOrBuilder extends
    *expi. The ID of the experiment.
    * </pre>
    *
-   * <code>optional string experimentId = 1;</code>
+   * <code>optional string id = 1;</code>
    */
-  java.lang.String getExperimentId();
+  java.lang.String getId();
   /**
    * <pre>
    *expi. The ID of the experiment.
    * </pre>
    *
-   * <code>optional string experimentId = 1;</code>
+   * <code>optional string id = 1;</code>
    */
   com.google.protobuf.ByteString
-      getExperimentIdBytes();
+      getIdBytes();
 
   /**
    * <pre>
    *expv. The variation or combination of variations present in a hit for an experiment.
    * </pre>
    *
-   * <code>optional string experimentVariant = 2;</code>
+   * <code>optional string variant = 2;</code>
    */
-  java.lang.String getExperimentVariant();
+  java.lang.String getVariant();
   /**
    * <pre>
    *expv. The variation or combination of variations present in a hit for an experiment.
    * </pre>
    *
-   * <code>optional string experimentVariant = 2;</code>
+   * <code>optional string variant = 2;</code>
    */
   com.google.protobuf.ByteString
-      getExperimentVariantBytes();
+      getVariantBytes();
 }

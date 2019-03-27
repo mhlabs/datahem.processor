@@ -29,17 +29,17 @@ public  final class Latency extends
     super(builder);
   }
   private Latency() {
-    domainLookupTime_ = 0L;
-    domContentLoadedTime_ = 0L;
-    domInteractiveTime_ = 0L;
-    pageDownloadTime_ = 0L;
-    pageLoadTime_ = 0L;
-    redirectionTime_ = 0L;
-    serverConnectionTime_ = 0L;
-    serverResponseTime_ = 0L;
+    domainLookupTime_ = 0;
+    domContentLoadedTime_ = 0;
+    domInteractiveTime_ = 0;
+    pageDownloadTime_ = 0;
+    pageLoadTime_ = 0;
+    redirectionTime_ = 0;
+    serverConnectionTime_ = 0;
+    serverResponseTime_ = 0;
     userTimingCategory_ = "";
     userTimingLabel_ = "";
-    userTimingValue_ = 0L;
+    userTimingValue_ = 0;
     userTimingVariable_ = "";
   }
 
@@ -70,42 +70,42 @@ public  final class Latency extends
           }
           case 8: {
 
-            domainLookupTime_ = input.readInt64();
+            domainLookupTime_ = input.readInt32();
             break;
           }
           case 16: {
 
-            domContentLoadedTime_ = input.readInt64();
+            domContentLoadedTime_ = input.readInt32();
             break;
           }
           case 24: {
 
-            domInteractiveTime_ = input.readInt64();
+            domInteractiveTime_ = input.readInt32();
             break;
           }
           case 32: {
 
-            pageDownloadTime_ = input.readInt64();
+            pageDownloadTime_ = input.readInt32();
             break;
           }
           case 40: {
 
-            pageLoadTime_ = input.readInt64();
+            pageLoadTime_ = input.readInt32();
             break;
           }
           case 48: {
 
-            redirectionTime_ = input.readInt64();
+            redirectionTime_ = input.readInt32();
             break;
           }
           case 56: {
 
-            serverConnectionTime_ = input.readInt64();
+            serverConnectionTime_ = input.readInt32();
             break;
           }
           case 64: {
 
-            serverResponseTime_ = input.readInt64();
+            serverResponseTime_ = input.readInt32();
             break;
           }
           case 74: {
@@ -122,7 +122,7 @@ public  final class Latency extends
           }
           case 88: {
 
-            userTimingValue_ = input.readInt64();
+            userTimingValue_ = input.readInt32();
             break;
           }
           case 98: {
@@ -155,106 +155,106 @@ public  final class Latency extends
   }
 
   public static final int DOMAINLOOKUPTIME_FIELD_NUMBER = 1;
-  private long domainLookupTime_;
+  private int domainLookupTime_;
   /**
    * <pre>
    *dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
    * </pre>
    *
-   * <code>optional int64 domainLookupTime = 1;</code>
+   * <code>optional int32 domainLookupTime = 1;</code>
    */
-  public long getDomainLookupTime() {
+  public int getDomainLookupTime() {
     return domainLookupTime_;
   }
 
   public static final int DOMCONTENTLOADEDTIME_FIELD_NUMBER = 2;
-  private long domContentLoadedTime_;
+  private int domContentLoadedTime_;
   /**
    * <pre>
    *clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
    * </pre>
    *
-   * <code>optional int64 domContentLoadedTime = 2;</code>
+   * <code>optional int32 domContentLoadedTime = 2;</code>
    */
-  public long getDomContentLoadedTime() {
+  public int getDomContentLoadedTime() {
     return domContentLoadedTime_;
   }
 
   public static final int DOMINTERACTIVETIME_FIELD_NUMBER = 3;
-  private long domInteractiveTime_;
+  private int domInteractiveTime_;
   /**
    * <pre>
    *dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
    * </pre>
    *
-   * <code>optional int64 domInteractiveTime = 3;</code>
+   * <code>optional int32 domInteractiveTime = 3;</code>
    */
-  public long getDomInteractiveTime() {
+  public int getDomInteractiveTime() {
     return domInteractiveTime_;
   }
 
   public static final int PAGEDOWNLOADTIME_FIELD_NUMBER = 4;
-  private long pageDownloadTime_;
+  private int pageDownloadTime_;
   /**
    * <pre>
    *pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
    * </pre>
    *
-   * <code>optional int64 pageDownloadTime = 4;</code>
+   * <code>optional int32 pageDownloadTime = 4;</code>
    */
-  public long getPageDownloadTime() {
+  public int getPageDownloadTime() {
     return pageDownloadTime_;
   }
 
   public static final int PAGELOADTIME_FIELD_NUMBER = 5;
-  private long pageLoadTime_;
+  private int pageLoadTime_;
   /**
    * <pre>
    *plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
    * </pre>
    *
-   * <code>optional int64 pageLoadTime = 5;</code>
+   * <code>optional int32 pageLoadTime = 5;</code>
    */
-  public long getPageLoadTime() {
+  public int getPageLoadTime() {
     return pageLoadTime_;
   }
 
   public static final int REDIRECTIONTIME_FIELD_NUMBER = 6;
-  private long redirectionTime_;
+  private int redirectionTime_;
   /**
    * <pre>
    *rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
    * </pre>
    *
-   * <code>optional int64 redirectionTime = 6;</code>
+   * <code>optional int32 redirectionTime = 6;</code>
    */
-  public long getRedirectionTime() {
+  public int getRedirectionTime() {
     return redirectionTime_;
   }
 
   public static final int SERVERCONNECTIONTIME_FIELD_NUMBER = 7;
-  private long serverConnectionTime_;
+  private int serverConnectionTime_;
   /**
    * <pre>
    *tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
    * </pre>
    *
-   * <code>optional int64 serverConnectionTime = 7;</code>
+   * <code>optional int32 serverConnectionTime = 7;</code>
    */
-  public long getServerConnectionTime() {
+  public int getServerConnectionTime() {
     return serverConnectionTime_;
   }
 
   public static final int SERVERRESPONSETIME_FIELD_NUMBER = 8;
-  private long serverResponseTime_;
+  private int serverResponseTime_;
   /**
    * <pre>
    *srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
    * </pre>
    *
-   * <code>optional int64 serverResponseTime = 8;</code>
+   * <code>optional int32 serverResponseTime = 8;</code>
    */
-  public long getServerResponseTime() {
+  public int getServerResponseTime() {
     return serverResponseTime_;
   }
 
@@ -343,15 +343,15 @@ public  final class Latency extends
   }
 
   public static final int USERTIMINGVALUE_FIELD_NUMBER = 11;
-  private long userTimingValue_;
+  private int userTimingValue_;
   /**
    * <pre>
    *utt 	Total number of milliseconds for user timing.
    * </pre>
    *
-   * <code>optional int64 userTimingValue = 11;</code>
+   * <code>optional int32 userTimingValue = 11;</code>
    */
-  public long getUserTimingValue() {
+  public int getUserTimingValue() {
     return userTimingValue_;
   }
 
@@ -409,29 +409,29 @@ public  final class Latency extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (domainLookupTime_ != 0L) {
-      output.writeInt64(1, domainLookupTime_);
+    if (domainLookupTime_ != 0) {
+      output.writeInt32(1, domainLookupTime_);
     }
-    if (domContentLoadedTime_ != 0L) {
-      output.writeInt64(2, domContentLoadedTime_);
+    if (domContentLoadedTime_ != 0) {
+      output.writeInt32(2, domContentLoadedTime_);
     }
-    if (domInteractiveTime_ != 0L) {
-      output.writeInt64(3, domInteractiveTime_);
+    if (domInteractiveTime_ != 0) {
+      output.writeInt32(3, domInteractiveTime_);
     }
-    if (pageDownloadTime_ != 0L) {
-      output.writeInt64(4, pageDownloadTime_);
+    if (pageDownloadTime_ != 0) {
+      output.writeInt32(4, pageDownloadTime_);
     }
-    if (pageLoadTime_ != 0L) {
-      output.writeInt64(5, pageLoadTime_);
+    if (pageLoadTime_ != 0) {
+      output.writeInt32(5, pageLoadTime_);
     }
-    if (redirectionTime_ != 0L) {
-      output.writeInt64(6, redirectionTime_);
+    if (redirectionTime_ != 0) {
+      output.writeInt32(6, redirectionTime_);
     }
-    if (serverConnectionTime_ != 0L) {
-      output.writeInt64(7, serverConnectionTime_);
+    if (serverConnectionTime_ != 0) {
+      output.writeInt32(7, serverConnectionTime_);
     }
-    if (serverResponseTime_ != 0L) {
-      output.writeInt64(8, serverResponseTime_);
+    if (serverResponseTime_ != 0) {
+      output.writeInt32(8, serverResponseTime_);
     }
     if (!getUserTimingCategoryBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 9, userTimingCategory_);
@@ -439,8 +439,8 @@ public  final class Latency extends
     if (!getUserTimingLabelBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 10, userTimingLabel_);
     }
-    if (userTimingValue_ != 0L) {
-      output.writeInt64(11, userTimingValue_);
+    if (userTimingValue_ != 0) {
+      output.writeInt32(11, userTimingValue_);
     }
     if (!getUserTimingVariableBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 12, userTimingVariable_);
@@ -452,37 +452,37 @@ public  final class Latency extends
     if (size != -1) return size;
 
     size = 0;
-    if (domainLookupTime_ != 0L) {
+    if (domainLookupTime_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(1, domainLookupTime_);
+        .computeInt32Size(1, domainLookupTime_);
     }
-    if (domContentLoadedTime_ != 0L) {
+    if (domContentLoadedTime_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, domContentLoadedTime_);
+        .computeInt32Size(2, domContentLoadedTime_);
     }
-    if (domInteractiveTime_ != 0L) {
+    if (domInteractiveTime_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(3, domInteractiveTime_);
+        .computeInt32Size(3, domInteractiveTime_);
     }
-    if (pageDownloadTime_ != 0L) {
+    if (pageDownloadTime_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(4, pageDownloadTime_);
+        .computeInt32Size(4, pageDownloadTime_);
     }
-    if (pageLoadTime_ != 0L) {
+    if (pageLoadTime_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(5, pageLoadTime_);
+        .computeInt32Size(5, pageLoadTime_);
     }
-    if (redirectionTime_ != 0L) {
+    if (redirectionTime_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(6, redirectionTime_);
+        .computeInt32Size(6, redirectionTime_);
     }
-    if (serverConnectionTime_ != 0L) {
+    if (serverConnectionTime_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(7, serverConnectionTime_);
+        .computeInt32Size(7, serverConnectionTime_);
     }
-    if (serverResponseTime_ != 0L) {
+    if (serverResponseTime_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(8, serverResponseTime_);
+        .computeInt32Size(8, serverResponseTime_);
     }
     if (!getUserTimingCategoryBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, userTimingCategory_);
@@ -490,9 +490,9 @@ public  final class Latency extends
     if (!getUserTimingLabelBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, userTimingLabel_);
     }
-    if (userTimingValue_ != 0L) {
+    if (userTimingValue_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(11, userTimingValue_);
+        .computeInt32Size(11, userTimingValue_);
     }
     if (!getUserTimingVariableBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, userTimingVariable_);
@@ -548,36 +548,27 @@ public  final class Latency extends
     int hash = 41;
     hash = (19 * hash) + getDescriptorForType().hashCode();
     hash = (37 * hash) + DOMAINLOOKUPTIME_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getDomainLookupTime());
+    hash = (53 * hash) + getDomainLookupTime();
     hash = (37 * hash) + DOMCONTENTLOADEDTIME_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getDomContentLoadedTime());
+    hash = (53 * hash) + getDomContentLoadedTime();
     hash = (37 * hash) + DOMINTERACTIVETIME_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getDomInteractiveTime());
+    hash = (53 * hash) + getDomInteractiveTime();
     hash = (37 * hash) + PAGEDOWNLOADTIME_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getPageDownloadTime());
+    hash = (53 * hash) + getPageDownloadTime();
     hash = (37 * hash) + PAGELOADTIME_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getPageLoadTime());
+    hash = (53 * hash) + getPageLoadTime();
     hash = (37 * hash) + REDIRECTIONTIME_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getRedirectionTime());
+    hash = (53 * hash) + getRedirectionTime();
     hash = (37 * hash) + SERVERCONNECTIONTIME_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getServerConnectionTime());
+    hash = (53 * hash) + getServerConnectionTime();
     hash = (37 * hash) + SERVERRESPONSETIME_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getServerResponseTime());
+    hash = (53 * hash) + getServerResponseTime();
     hash = (37 * hash) + USERTIMINGCATEGORY_FIELD_NUMBER;
     hash = (53 * hash) + getUserTimingCategory().hashCode();
     hash = (37 * hash) + USERTIMINGLABEL_FIELD_NUMBER;
     hash = (53 * hash) + getUserTimingLabel().hashCode();
     hash = (37 * hash) + USERTIMINGVALUE_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getUserTimingValue());
+    hash = (53 * hash) + getUserTimingValue();
     hash = (37 * hash) + USERTIMINGVARIABLE_FIELD_NUMBER;
     hash = (53 * hash) + getUserTimingVariable().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
@@ -698,27 +689,27 @@ public  final class Latency extends
     }
     public Builder clear() {
       super.clear();
-      domainLookupTime_ = 0L;
+      domainLookupTime_ = 0;
 
-      domContentLoadedTime_ = 0L;
+      domContentLoadedTime_ = 0;
 
-      domInteractiveTime_ = 0L;
+      domInteractiveTime_ = 0;
 
-      pageDownloadTime_ = 0L;
+      pageDownloadTime_ = 0;
 
-      pageLoadTime_ = 0L;
+      pageLoadTime_ = 0;
 
-      redirectionTime_ = 0L;
+      redirectionTime_ = 0;
 
-      serverConnectionTime_ = 0L;
+      serverConnectionTime_ = 0;
 
-      serverResponseTime_ = 0L;
+      serverResponseTime_ = 0;
 
       userTimingCategory_ = "";
 
       userTimingLabel_ = "";
 
-      userTimingValue_ = 0L;
+      userTimingValue_ = 0;
 
       userTimingVariable_ = "";
 
@@ -797,28 +788,28 @@ public  final class Latency extends
 
     public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Latency other) {
       if (other == org.datahem.protobuf.measurementprotocol.v2.Latency.getDefaultInstance()) return this;
-      if (other.getDomainLookupTime() != 0L) {
+      if (other.getDomainLookupTime() != 0) {
         setDomainLookupTime(other.getDomainLookupTime());
       }
-      if (other.getDomContentLoadedTime() != 0L) {
+      if (other.getDomContentLoadedTime() != 0) {
         setDomContentLoadedTime(other.getDomContentLoadedTime());
       }
-      if (other.getDomInteractiveTime() != 0L) {
+      if (other.getDomInteractiveTime() != 0) {
         setDomInteractiveTime(other.getDomInteractiveTime());
       }
-      if (other.getPageDownloadTime() != 0L) {
+      if (other.getPageDownloadTime() != 0) {
         setPageDownloadTime(other.getPageDownloadTime());
       }
-      if (other.getPageLoadTime() != 0L) {
+      if (other.getPageLoadTime() != 0) {
         setPageLoadTime(other.getPageLoadTime());
       }
-      if (other.getRedirectionTime() != 0L) {
+      if (other.getRedirectionTime() != 0) {
         setRedirectionTime(other.getRedirectionTime());
       }
-      if (other.getServerConnectionTime() != 0L) {
+      if (other.getServerConnectionTime() != 0) {
         setServerConnectionTime(other.getServerConnectionTime());
       }
-      if (other.getServerResponseTime() != 0L) {
+      if (other.getServerResponseTime() != 0) {
         setServerResponseTime(other.getServerResponseTime());
       }
       if (!other.getUserTimingCategory().isEmpty()) {
@@ -829,7 +820,7 @@ public  final class Latency extends
         userTimingLabel_ = other.userTimingLabel_;
         onChanged();
       }
-      if (other.getUserTimingValue() != 0L) {
+      if (other.getUserTimingValue() != 0) {
         setUserTimingValue(other.getUserTimingValue());
       }
       if (!other.getUserTimingVariable().isEmpty()) {
@@ -862,15 +853,15 @@ public  final class Latency extends
       return this;
     }
 
-    private long domainLookupTime_ ;
+    private int domainLookupTime_ ;
     /**
      * <pre>
      *dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
      * </pre>
      *
-     * <code>optional int64 domainLookupTime = 1;</code>
+     * <code>optional int32 domainLookupTime = 1;</code>
      */
-    public long getDomainLookupTime() {
+    public int getDomainLookupTime() {
       return domainLookupTime_;
     }
     /**
@@ -878,9 +869,9 @@ public  final class Latency extends
      *dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
      * </pre>
      *
-     * <code>optional int64 domainLookupTime = 1;</code>
+     * <code>optional int32 domainLookupTime = 1;</code>
      */
-    public Builder setDomainLookupTime(long value) {
+    public Builder setDomainLookupTime(int value) {
       
       domainLookupTime_ = value;
       onChanged();
@@ -891,24 +882,24 @@ public  final class Latency extends
      *dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
      * </pre>
      *
-     * <code>optional int64 domainLookupTime = 1;</code>
+     * <code>optional int32 domainLookupTime = 1;</code>
      */
     public Builder clearDomainLookupTime() {
       
-      domainLookupTime_ = 0L;
+      domainLookupTime_ = 0;
       onChanged();
       return this;
     }
 
-    private long domContentLoadedTime_ ;
+    private int domContentLoadedTime_ ;
     /**
      * <pre>
      *clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
      * </pre>
      *
-     * <code>optional int64 domContentLoadedTime = 2;</code>
+     * <code>optional int32 domContentLoadedTime = 2;</code>
      */
-    public long getDomContentLoadedTime() {
+    public int getDomContentLoadedTime() {
       return domContentLoadedTime_;
     }
     /**
@@ -916,9 +907,9 @@ public  final class Latency extends
      *clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
      * </pre>
      *
-     * <code>optional int64 domContentLoadedTime = 2;</code>
+     * <code>optional int32 domContentLoadedTime = 2;</code>
      */
-    public Builder setDomContentLoadedTime(long value) {
+    public Builder setDomContentLoadedTime(int value) {
       
       domContentLoadedTime_ = value;
       onChanged();
@@ -929,24 +920,24 @@ public  final class Latency extends
      *clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
      * </pre>
      *
-     * <code>optional int64 domContentLoadedTime = 2;</code>
+     * <code>optional int32 domContentLoadedTime = 2;</code>
      */
     public Builder clearDomContentLoadedTime() {
       
-      domContentLoadedTime_ = 0L;
+      domContentLoadedTime_ = 0;
       onChanged();
       return this;
     }
 
-    private long domInteractiveTime_ ;
+    private int domInteractiveTime_ ;
     /**
      * <pre>
      *dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
      * </pre>
      *
-     * <code>optional int64 domInteractiveTime = 3;</code>
+     * <code>optional int32 domInteractiveTime = 3;</code>
      */
-    public long getDomInteractiveTime() {
+    public int getDomInteractiveTime() {
       return domInteractiveTime_;
     }
     /**
@@ -954,9 +945,9 @@ public  final class Latency extends
      *dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
      * </pre>
      *
-     * <code>optional int64 domInteractiveTime = 3;</code>
+     * <code>optional int32 domInteractiveTime = 3;</code>
      */
-    public Builder setDomInteractiveTime(long value) {
+    public Builder setDomInteractiveTime(int value) {
       
       domInteractiveTime_ = value;
       onChanged();
@@ -967,24 +958,24 @@ public  final class Latency extends
      *dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
      * </pre>
      *
-     * <code>optional int64 domInteractiveTime = 3;</code>
+     * <code>optional int32 domInteractiveTime = 3;</code>
      */
     public Builder clearDomInteractiveTime() {
       
-      domInteractiveTime_ = 0L;
+      domInteractiveTime_ = 0;
       onChanged();
       return this;
     }
 
-    private long pageDownloadTime_ ;
+    private int pageDownloadTime_ ;
     /**
      * <pre>
      *pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
      * </pre>
      *
-     * <code>optional int64 pageDownloadTime = 4;</code>
+     * <code>optional int32 pageDownloadTime = 4;</code>
      */
-    public long getPageDownloadTime() {
+    public int getPageDownloadTime() {
       return pageDownloadTime_;
     }
     /**
@@ -992,9 +983,9 @@ public  final class Latency extends
      *pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
      * </pre>
      *
-     * <code>optional int64 pageDownloadTime = 4;</code>
+     * <code>optional int32 pageDownloadTime = 4;</code>
      */
-    public Builder setPageDownloadTime(long value) {
+    public Builder setPageDownloadTime(int value) {
       
       pageDownloadTime_ = value;
       onChanged();
@@ -1005,24 +996,24 @@ public  final class Latency extends
      *pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
      * </pre>
      *
-     * <code>optional int64 pageDownloadTime = 4;</code>
+     * <code>optional int32 pageDownloadTime = 4;</code>
      */
     public Builder clearPageDownloadTime() {
       
-      pageDownloadTime_ = 0L;
+      pageDownloadTime_ = 0;
       onChanged();
       return this;
     }
 
-    private long pageLoadTime_ ;
+    private int pageLoadTime_ ;
     /**
      * <pre>
      *plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
      * </pre>
      *
-     * <code>optional int64 pageLoadTime = 5;</code>
+     * <code>optional int32 pageLoadTime = 5;</code>
      */
-    public long getPageLoadTime() {
+    public int getPageLoadTime() {
       return pageLoadTime_;
     }
     /**
@@ -1030,9 +1021,9 @@ public  final class Latency extends
      *plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
      * </pre>
      *
-     * <code>optional int64 pageLoadTime = 5;</code>
+     * <code>optional int32 pageLoadTime = 5;</code>
      */
-    public Builder setPageLoadTime(long value) {
+    public Builder setPageLoadTime(int value) {
       
       pageLoadTime_ = value;
       onChanged();
@@ -1043,24 +1034,24 @@ public  final class Latency extends
      *plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
      * </pre>
      *
-     * <code>optional int64 pageLoadTime = 5;</code>
+     * <code>optional int32 pageLoadTime = 5;</code>
      */
     public Builder clearPageLoadTime() {
       
-      pageLoadTime_ = 0L;
+      pageLoadTime_ = 0;
       onChanged();
       return this;
     }
 
-    private long redirectionTime_ ;
+    private int redirectionTime_ ;
     /**
      * <pre>
      *rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
      * </pre>
      *
-     * <code>optional int64 redirectionTime = 6;</code>
+     * <code>optional int32 redirectionTime = 6;</code>
      */
-    public long getRedirectionTime() {
+    public int getRedirectionTime() {
       return redirectionTime_;
     }
     /**
@@ -1068,9 +1059,9 @@ public  final class Latency extends
      *rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
      * </pre>
      *
-     * <code>optional int64 redirectionTime = 6;</code>
+     * <code>optional int32 redirectionTime = 6;</code>
      */
-    public Builder setRedirectionTime(long value) {
+    public Builder setRedirectionTime(int value) {
       
       redirectionTime_ = value;
       onChanged();
@@ -1081,24 +1072,24 @@ public  final class Latency extends
      *rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
      * </pre>
      *
-     * <code>optional int64 redirectionTime = 6;</code>
+     * <code>optional int32 redirectionTime = 6;</code>
      */
     public Builder clearRedirectionTime() {
       
-      redirectionTime_ = 0L;
+      redirectionTime_ = 0;
       onChanged();
       return this;
     }
 
-    private long serverConnectionTime_ ;
+    private int serverConnectionTime_ ;
     /**
      * <pre>
      *tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
      * </pre>
      *
-     * <code>optional int64 serverConnectionTime = 7;</code>
+     * <code>optional int32 serverConnectionTime = 7;</code>
      */
-    public long getServerConnectionTime() {
+    public int getServerConnectionTime() {
       return serverConnectionTime_;
     }
     /**
@@ -1106,9 +1097,9 @@ public  final class Latency extends
      *tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
      * </pre>
      *
-     * <code>optional int64 serverConnectionTime = 7;</code>
+     * <code>optional int32 serverConnectionTime = 7;</code>
      */
-    public Builder setServerConnectionTime(long value) {
+    public Builder setServerConnectionTime(int value) {
       
       serverConnectionTime_ = value;
       onChanged();
@@ -1119,24 +1110,24 @@ public  final class Latency extends
      *tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
      * </pre>
      *
-     * <code>optional int64 serverConnectionTime = 7;</code>
+     * <code>optional int32 serverConnectionTime = 7;</code>
      */
     public Builder clearServerConnectionTime() {
       
-      serverConnectionTime_ = 0L;
+      serverConnectionTime_ = 0;
       onChanged();
       return this;
     }
 
-    private long serverResponseTime_ ;
+    private int serverResponseTime_ ;
     /**
      * <pre>
      *srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
      * </pre>
      *
-     * <code>optional int64 serverResponseTime = 8;</code>
+     * <code>optional int32 serverResponseTime = 8;</code>
      */
-    public long getServerResponseTime() {
+    public int getServerResponseTime() {
       return serverResponseTime_;
     }
     /**
@@ -1144,9 +1135,9 @@ public  final class Latency extends
      *srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
      * </pre>
      *
-     * <code>optional int64 serverResponseTime = 8;</code>
+     * <code>optional int32 serverResponseTime = 8;</code>
      */
-    public Builder setServerResponseTime(long value) {
+    public Builder setServerResponseTime(int value) {
       
       serverResponseTime_ = value;
       onChanged();
@@ -1157,11 +1148,11 @@ public  final class Latency extends
      *srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
      * </pre>
      *
-     * <code>optional int64 serverResponseTime = 8;</code>
+     * <code>optional int32 serverResponseTime = 8;</code>
      */
     public Builder clearServerResponseTime() {
       
-      serverResponseTime_ = 0L;
+      serverResponseTime_ = 0;
       onChanged();
       return this;
     }
@@ -1344,15 +1335,15 @@ public  final class Latency extends
       return this;
     }
 
-    private long userTimingValue_ ;
+    private int userTimingValue_ ;
     /**
      * <pre>
      *utt 	Total number of milliseconds for user timing.
      * </pre>
      *
-     * <code>optional int64 userTimingValue = 11;</code>
+     * <code>optional int32 userTimingValue = 11;</code>
      */
-    public long getUserTimingValue() {
+    public int getUserTimingValue() {
       return userTimingValue_;
     }
     /**
@@ -1360,9 +1351,9 @@ public  final class Latency extends
      *utt 	Total number of milliseconds for user timing.
      * </pre>
      *
-     * <code>optional int64 userTimingValue = 11;</code>
+     * <code>optional int32 userTimingValue = 11;</code>
      */
-    public Builder setUserTimingValue(long value) {
+    public Builder setUserTimingValue(int value) {
       
       userTimingValue_ = value;
       onChanged();
@@ -1373,11 +1364,11 @@ public  final class Latency extends
      *utt 	Total number of milliseconds for user timing.
      * </pre>
      *
-     * <code>optional int64 userTimingValue = 11;</code>
+     * <code>optional int32 userTimingValue = 11;</code>
      */
     public Builder clearUserTimingValue() {
       
-      userTimingValue_ = 0L;
+      userTimingValue_ = 0;
       onChanged();
       return this;
     }

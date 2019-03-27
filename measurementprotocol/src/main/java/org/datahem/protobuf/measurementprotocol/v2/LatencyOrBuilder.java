@@ -26,72 +26,72 @@ public interface LatencyOrBuilder extends
    *dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
    * </pre>
    *
-   * <code>optional int64 domainLookupTime = 1;</code>
+   * <code>optional int32 domainLookupTime = 1;</code>
    */
-  long getDomainLookupTime();
+  int getDomainLookupTime();
 
   /**
    * <pre>
    *clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
    * </pre>
    *
-   * <code>optional int64 domContentLoadedTime = 2;</code>
+   * <code>optional int32 domContentLoadedTime = 2;</code>
    */
-  long getDomContentLoadedTime();
+  int getDomContentLoadedTime();
 
   /**
    * <pre>
    *dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
    * </pre>
    *
-   * <code>optional int64 domInteractiveTime = 3;</code>
+   * <code>optional int32 domInteractiveTime = 3;</code>
    */
-  long getDomInteractiveTime();
+  int getDomInteractiveTime();
 
   /**
    * <pre>
    *pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
    * </pre>
    *
-   * <code>optional int64 pageDownloadTime = 4;</code>
+   * <code>optional int32 pageDownloadTime = 4;</code>
    */
-  long getPageDownloadTime();
+  int getPageDownloadTime();
 
   /**
    * <pre>
    *plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
    * </pre>
    *
-   * <code>optional int64 pageLoadTime = 5;</code>
+   * <code>optional int32 pageLoadTime = 5;</code>
    */
-  long getPageLoadTime();
+  int getPageLoadTime();
 
   /**
    * <pre>
    *rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
    * </pre>
    *
-   * <code>optional int64 redirectionTime = 6;</code>
+   * <code>optional int32 redirectionTime = 6;</code>
    */
-  long getRedirectionTime();
+  int getRedirectionTime();
 
   /**
    * <pre>
    *tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
    * </pre>
    *
-   * <code>optional int64 serverConnectionTime = 7;</code>
+   * <code>optional int32 serverConnectionTime = 7;</code>
    */
-  long getServerConnectionTime();
+  int getServerConnectionTime();
 
   /**
    * <pre>
    *srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
    * </pre>
    *
-   * <code>optional int64 serverResponseTime = 8;</code>
+   * <code>optional int32 serverResponseTime = 8;</code>
    */
-  long getServerResponseTime();
+  int getServerResponseTime();
 
   /**
    * <pre>
@@ -134,9 +134,9 @@ public interface LatencyOrBuilder extends
    *utt 	Total number of milliseconds for user timing.
    * </pre>
    *
-   * <code>optional int64 userTimingValue = 11;</code>
+   * <code>optional int32 userTimingValue = 11;</code>
    */
-  long getUserTimingValue();
+  int getUserTimingValue();
 
   /**
    * <pre>

@@ -41,7 +41,9 @@ public class EventEntity{
                 Optional.ofNullable(FieldMapper.stringVal(pm.get("ec"))).ifPresent(builder::setCategory);
                 Optional.ofNullable(FieldMapper.stringVal(pm.get("ea"))).ifPresent(builder::setAction);
                 Optional.ofNullable(FieldMapper.stringVal(pm.get("el"))).ifPresent(builder::setLabel);
-                Optional.ofNullable(FieldMapper.intVal(pm.get("ev"))).ifPresent(builder::setValue);
+                //Optional.ofNullable(FieldMapper.intVal(pm.get("ev"))).ifPresent(builder::setValue);
+                //Optional.ofNullable(FieldMapper.intVal(pm.get("ev"))).ifPresent(g -> builder.setValue(g.get().intValue()));
+                FieldMapper.intVal(pm.get("ev")).ifPresent(g -> builder.setValue(g.intValue()));
                 return builder.build();
 			}
 			catch(IllegalArgumentException e){

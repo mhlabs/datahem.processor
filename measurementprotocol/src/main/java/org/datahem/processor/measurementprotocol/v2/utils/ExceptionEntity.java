@@ -38,7 +38,9 @@ public class ExceptionEntity{
             try{
                 Exception.Builder builder = Exception.newBuilder();
                 Optional.ofNullable(FieldMapper.stringVal(pm.get("exd"))).ifPresent(builder::setDescription);
-                Optional.ofNullable(FieldMapper.booleanVal(pm.get("exf"))).ifPresent(builder::setIsFatal);
+                //Optional.ofNullable(FieldMapper.intVal(pm.get("exf"))).ifPresent(builder::setIsFatal);
+                //Optional.ofNullable(FieldMapper.intVal(pm.get("exf"))).ifPresent(g -> builder.setIsFatal(g.get().intValue()));
+                FieldMapper.intVal(pm.get("exf")).ifPresent(g -> builder.setIsFatal(g.intValue()));
                 return builder.build();
 			}
 			catch(IllegalArgumentException e){

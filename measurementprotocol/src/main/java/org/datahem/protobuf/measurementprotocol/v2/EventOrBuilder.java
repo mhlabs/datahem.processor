@@ -26,61 +26,61 @@ public interface EventOrBuilder extends
    *ec.	The event category.
    * </pre>
    *
-   * <code>optional string eventCategory = 1;</code>
+   * <code>optional string category = 1;</code>
    */
-  java.lang.String getEventCategory();
+  java.lang.String getCategory();
   /**
    * <pre>
    *ec.	The event category.
    * </pre>
    *
-   * <code>optional string eventCategory = 1;</code>
+   * <code>optional string category = 1;</code>
    */
   com.google.protobuf.ByteString
-      getEventCategoryBytes();
+      getCategoryBytes();
 
   /**
    * <pre>
    *ea.	The event action.
    * </pre>
    *
-   * <code>optional string eventAction = 2;</code>
+   * <code>optional string action = 2;</code>
    */
-  java.lang.String getEventAction();
+  java.lang.String getAction();
   /**
    * <pre>
    *ea.	The event action.
    * </pre>
    *
-   * <code>optional string eventAction = 2;</code>
+   * <code>optional string action = 2;</code>
    */
   com.google.protobuf.ByteString
-      getEventActionBytes();
+      getActionBytes();
 
   /**
    * <pre>
    *el	The event label.
    * </pre>
    *
-   * <code>optional string eventLabel = 3;</code>
+   * <code>optional string label = 3;</code>
    */
-  java.lang.String getEventLabel();
+  java.lang.String getLabel();
   /**
    * <pre>
    *el	The event label.
    * </pre>
    *
-   * <code>optional string eventLabel = 3;</code>
+   * <code>optional string label = 3;</code>
    */
   com.google.protobuf.ByteString
-      getEventLabelBytes();
+      getLabelBytes();
 
   /**
    * <pre>
    *ev	The event value.        
    * </pre>
    *
-   * <code>optional int64 eventValue = 4;</code>
+   * <code>optional int32 value = 4;</code>
    */
-  long getEventValue();
+  int getValue();
 }

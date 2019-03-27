@@ -108,9 +108,9 @@ public interface MeasurementProtocolOrBuilder extends
    *ni	If this hit was a non-interaction hit, this is true.
    * </pre>
    *
-   * <code>optional bool nonInteraction = 6;</code>
+   * <code>optional int32 nonInteraction = 6;</code>
    */
-  boolean getNonInteraction();
+  int getNonInteraction();
 
   /**
    * <pre>

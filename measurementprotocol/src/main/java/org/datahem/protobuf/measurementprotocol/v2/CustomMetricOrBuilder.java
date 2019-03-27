@@ -26,16 +26,16 @@ public interface CustomMetricOrBuilder extends
    *cm([0-9]{1,3}). The index of the custom metric.
    * </pre>
    *
-   * <code>optional int64 index = 1;</code>
+   * <code>optional int32 index = 1;</code>
    */
-  long getIndex();
+  int getIndex();
 
   /**
    * <pre>
    *(cm[0-9]{1,3}). The value of the custom metric.
    * </pre>
    *
-   * <code>optional int64 value = 2;</code>
+   * <code>optional int32 value = 2;</code>
    */
-  long getValue();
+  int getValue();
 }

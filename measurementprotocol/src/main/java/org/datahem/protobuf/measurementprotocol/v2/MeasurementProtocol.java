@@ -34,7 +34,7 @@ public  final class MeasurementProtocol extends
     userId_ = "";
     hitId_ = "";
     date_ = "";
-    nonInteraction_ = false;
+    nonInteraction_ = 0;
     version_ = "";
     customDimensions_ = java.util.Collections.emptyList();
     customMetrics_ = java.util.Collections.emptyList();
@@ -100,7 +100,7 @@ public  final class MeasurementProtocol extends
           }
           case 48: {
 
-            nonInteraction_ = input.readBool();
+            nonInteraction_ = input.readInt32();
             break;
           }
           case 58: {
@@ -565,15 +565,15 @@ public  final class MeasurementProtocol extends
   }
 
   public static final int NONINTERACTION_FIELD_NUMBER = 6;
-  private boolean nonInteraction_;
+  private int nonInteraction_;
   /**
    * <pre>
    *ni	If this hit was a non-interaction hit, this is true.
    * </pre>
    *
-   * <code>optional bool nonInteraction = 6;</code>
+   * <code>optional int32 nonInteraction = 6;</code>
    */
-  public boolean getNonInteraction() {
+  public int getNonInteraction() {
     return nonInteraction_;
   }
 
@@ -1094,8 +1094,8 @@ public  final class MeasurementProtocol extends
     if (!getDateBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 5, date_);
     }
-    if (nonInteraction_ != false) {
-      output.writeBool(6, nonInteraction_);
+    if (nonInteraction_ != 0) {
+      output.writeInt32(6, nonInteraction_);
     }
     if (!getVersionBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 7, version_);
@@ -1176,9 +1176,9 @@ public  final class MeasurementProtocol extends
     if (!getDateBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, date_);
     }
-    if (nonInteraction_ != false) {
+    if (nonInteraction_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(6, nonInteraction_);
+        .computeInt32Size(6, nonInteraction_);
     }
     if (!getVersionBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, version_);
@@ -1381,8 +1381,7 @@ public  final class MeasurementProtocol extends
     hash = (37 * hash) + DATE_FIELD_NUMBER;
     hash = (53 * hash) + getDate().hashCode();
     hash = (37 * hash) + NONINTERACTION_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getNonInteraction());
+    hash = (53 * hash) + getNonInteraction();
     hash = (37 * hash) + VERSION_FIELD_NUMBER;
     hash = (53 * hash) + getVersion().hashCode();
     if (getCustomDimensionsCount() > 0) {
@@ -1590,7 +1589,7 @@ public  final class MeasurementProtocol extends
 
       date_ = "";
 
-      nonInteraction_ = false;
+      nonInteraction_ = 0;
 
       version_ = "";
 
@@ -1905,7 +1904,7 @@ public  final class MeasurementProtocol extends
         date_ = other.date_;
         onChanged();
       }
-      if (other.getNonInteraction() != false) {
+      if (other.getNonInteraction() != 0) {
         setNonInteraction(other.getNonInteraction());
       }
       if (!other.getVersion().isEmpty()) {
@@ -2533,15 +2532,15 @@ public  final class MeasurementProtocol extends
       return this;
     }
 
-    private boolean nonInteraction_ ;
+    private int nonInteraction_ ;
     /**
      * <pre>
      *ni	If this hit was a non-interaction hit, this is true.
      * </pre>
      *
-     * <code>optional bool nonInteraction = 6;</code>
+     * <code>optional int32 nonInteraction = 6;</code>
      */
-    public boolean getNonInteraction() {
+    public int getNonInteraction() {
       return nonInteraction_;
     }
     /**
@@ -2549,9 +2548,9 @@ public  final class MeasurementProtocol extends
      *ni	If this hit was a non-interaction hit, this is true.
      * </pre>
      *
-     * <code>optional bool nonInteraction = 6;</code>
+     * <code>optional int32 nonInteraction = 6;</code>
      */
-    public Builder setNonInteraction(boolean value) {
+    public Builder setNonInteraction(int value) {
       
       nonInteraction_ = value;
       onChanged();
@@ -2562,11 +2561,11 @@ public  final class MeasurementProtocol extends
      *ni	If this hit was a non-interaction hit, this is true.
      * </pre>
      *
-     * <code>optional bool nonInteraction = 6;</code>
+     * <code>optional int32 nonInteraction = 6;</code>
      */
     public Builder clearNonInteraction() {
       
-      nonInteraction_ = false;
+      nonInteraction_ = 0;
       onChanged();
       return this;
     }

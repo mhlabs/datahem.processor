@@ -137,7 +137,7 @@ public final class MeasurementProtocolOuterClass {
       "otobuf.measurementprotocol.v2\"\354\n\n\023Measur" +
       "ementProtocol\022\017\n\007hitType\030\001 \001(\t\022\020\n\010client" +
       "Id\030\002 \001(\t\022\016\n\006userId\030\003 \001(\t\022\r\n\005hitId\030\004 \001(\t\022" +
-      "\014\n\004date\030\005 \001(\t\022\026\n\016nonInteraction\030\006 \001(\010\022\017\n" +
+      "\014\n\004date\030\005 \001(\t\022\026\n\016nonInteraction\030\006 \001(\005\022\017\n" +
       "\007version\030\007 \001(\t\022R\n\020customDimensions\030\010 \003(\013" +
       "28.datahem.protobuf.measurementprotocol." +
       "v2.CustomDimension\022L\n\rcustomMetrics\030\t \003(" +
@@ -172,8 +172,8 @@ public final class MeasurementProtocolOuterClass {
       "tocol.v2.Transaction\"J\n\010Property\022\022\n\ndata" +
       "Source\030\001 \001(\t\022\026\n\016gtmContainerId\030\002 \001(\t\022\022\n\n" +
       "trackingId\030\003 \001(\t\"/\n\017CustomDimension\022\r\n\005i",
-      "ndex\030\001 \001(\003\022\r\n\005value\030\002 \001(\t\",\n\014CustomMetri" +
-      "c\022\r\n\005index\030\001 \001(\003\022\r\n\005value\030\002 \001(\003\"\266\001\n\004Page" +
+      "ndex\030\001 \001(\005\022\r\n\005value\030\002 \001(\t\",\n\014CustomMetri" +
+      "c\022\r\n\005index\030\001 \001(\005\022\r\n\005value\030\002 \001(\005\"\266\001\n\004Page" +
       "\022\r\n\005title\030\001 \001(\t\022\013\n\003url\030\002 \001(\t\022\020\n\010hostname" +
       "\030\003 \001(\t\022\014\n\004path\030\004 \001(\t\022\017\n\007referer\030\005 \001(\t\022\023\n" +
       "\013refererHost\030\006 \001(\t\022\023\n\013refererPath\030\007 \001(\t\022" +
@@ -183,46 +183,45 @@ public final class MeasurementProtocolOuterClass {
       "\006medium\030\004 \001(\t\022\016\n\006source\030\005 \001(\t\022\017\n\007keyword" +
       "\030\006 \001(\t\022\r\n\005gclId\030\007 \001(\t\022\r\n\005dclId\030\010 \001(\t\"\235\001\n",
       "\006Device\022\023\n\013browserSize\030\001 \001(\t\022\024\n\014flashVer" +
-      "sion\030\002 \001(\t\022\023\n\013javaEnabled\030\003 \001(\010\022\020\n\010langu" +
+      "sion\030\002 \001(\t\022\023\n\013javaEnabled\030\003 \001(\005\022\020\n\010langu" +
       "age\030\004 \001(\t\022\024\n\014screenColors\030\005 \001(\t\022\030\n\020scree" +
       "nResolution\030\006 \001(\t\022\021\n\tuserAgent\030\007 \001(\t\"Y\n\003" +
       "Geo\022\017\n\007country\030\001 \001(\t\022\016\n\006region\030\002 \001(\t\022\014\n\004" +
       "city\030\003 \001(\t\022\020\n\010latitude\030\004 \001(\t\022\021\n\tlongitud" +
-      "e\030\005 \001(\t\")\n\tEcommerce\022\014\n\004step\030\001 \001(\003\022\016\n\006op" +
-      "tion\030\002 \001(\t\"=\n\nExperiment\022\024\n\014experimentId" +
-      "\030\001 \001(\t\022\031\n\021experimentVariant\030\002 \001(\t\"\312\002\n\007La" +
-      "tency\022\030\n\020domainLookupTime\030\001 \001(\003\022\034\n\024domCo",
-      "ntentLoadedTime\030\002 \001(\003\022\032\n\022domInteractiveT" +
-      "ime\030\003 \001(\003\022\030\n\020pageDownloadTime\030\004 \001(\003\022\024\n\014p" +
-      "ageLoadTime\030\005 \001(\003\022\027\n\017redirectionTime\030\006 \001" +
-      "(\003\022\034\n\024serverConnectionTime\030\007 \001(\003\022\032\n\022serv" +
-      "erResponseTime\030\010 \001(\003\022\032\n\022userTimingCatego" +
-      "ry\030\t \001(\t\022\027\n\017userTimingLabel\030\n \001(\t\022\027\n\017use" +
-      "rTimingValue\030\013 \001(\003\022\032\n\022userTimingVariable" +
-      "\030\014 \001(\t\"*\n\006Refund\022\016\n\006amount\030\001 \001(\001\022\020\n\010curr" +
-      "ency\030\002 \001(\t\"\204\003\n\007Product\022\n\n\002id\030\001 \001(\t\022\014\n\004na" +
-      "me\030\002 \001(\t\022\r\n\005brand\030\003 \001(\t\022\017\n\007variant\030\004 \001(\t",
-      "\022\020\n\010category\030\005 \001(\t\022\016\n\006action\030\006 \001(\t\022\022\n\nco" +
-      "uponCode\030\007 \001(\t\022\020\n\010currency\030\010 \001(\t\022\020\n\010quan" +
-      "tity\030\t \001(\003\022\r\n\005price\030\n \001(\001\022\024\n\014refundAmoun" +
-      "t\030\013 \001(\001\022\014\n\004list\030\014 \001(\t\022\020\n\010position\030\r \001(\003\022" +
-      "R\n\020customDimensions\030\016 \003(\01328.datahem.prot" +
-      "obuf.measurementprotocol.v2.CustomDimens" +
-      "ion\022L\n\rcustomMetrics\030\017 \003(\01325.datahem.pro" +
-      "tobuf.measurementprotocol.v2.CustomMetri" +
-      "c\"9\n\006Social\022\016\n\006action\030\001 \001(\t\022\016\n\006target\030\002 " +
-      "\001(\t\022\017\n\007network\030\003 \001(\t\"Y\n\tPromotion\022\n\n\002id\030",
-      "\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\016\n\006action\030\003 \001(\t\022\020\n\010c" +
-      "reative\030\004 \001(\t\022\020\n\010position\030\005 \001(\t\"\200\001\n\013Tran" +
-      "saction\022\n\n\002id\030\001 \001(\t\022\017\n\007revenue\030\002 \001(\001\022\013\n\003" +
-      "tax\030\003 \001(\001\022\020\n\010shipping\030\004 \001(\001\022\023\n\013affiliati" +
-      "on\030\005 \001(\t\022\020\n\010currency\030\006 \001(\t\022\016\n\006coupon\030\007 \001" +
-      "(\t\"[\n\005Event\022\025\n\reventCategory\030\001 \001(\t\022\023\n\013ev" +
-      "entAction\030\002 \001(\t\022\022\n\neventLabel\030\003 \001(\t\022\022\n\ne" +
-      "ventValue\030\004 \001(\003\"1\n\tException\022\023\n\013descript" +
-      "ion\030\001 \001(\t\022\017\n\007isFatal\030\002 \001(\010\"<\n\004Time\022\020\n\010da" +
-      "teTime\030\001 \001(\t\022\021\n\ttimestamp\030\002 \001(\t\022\017\n\007insta",
-      "nt\030\003 \001(\003B/\n+org.datahem.protobuf.measure" +
+      "e\030\005 \001(\t\")\n\tEcommerce\022\014\n\004step\030\001 \001(\005\022\016\n\006op" +
+      "tion\030\002 \001(\t\")\n\nExperiment\022\n\n\002id\030\001 \001(\t\022\017\n\007" +
+      "variant\030\002 \001(\t\"\312\002\n\007Latency\022\030\n\020domainLooku" +
+      "pTime\030\001 \001(\005\022\034\n\024domContentLoadedTime\030\002 \001(",
+      "\005\022\032\n\022domInteractiveTime\030\003 \001(\005\022\030\n\020pageDow" +
+      "nloadTime\030\004 \001(\005\022\024\n\014pageLoadTime\030\005 \001(\005\022\027\n" +
+      "\017redirectionTime\030\006 \001(\005\022\034\n\024serverConnecti" +
+      "onTime\030\007 \001(\005\022\032\n\022serverResponseTime\030\010 \001(\005" +
+      "\022\032\n\022userTimingCategory\030\t \001(\t\022\027\n\017userTimi" +
+      "ngLabel\030\n \001(\t\022\027\n\017userTimingValue\030\013 \001(\005\022\032" +
+      "\n\022userTimingVariable\030\014 \001(\t\"*\n\006Refund\022\016\n\006" +
+      "amount\030\001 \001(\001\022\020\n\010currency\030\002 \001(\t\"\204\003\n\007Produ" +
+      "ct\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\r\n\005brand\030\003 " +
+      "\001(\t\022\017\n\007variant\030\004 \001(\t\022\020\n\010category\030\005 \001(\t\022\016",
+      "\n\006action\030\006 \001(\t\022\022\n\ncouponCode\030\007 \001(\t\022\020\n\010cu" +
+      "rrency\030\010 \001(\t\022\020\n\010quantity\030\t \001(\005\022\r\n\005price\030" +
+      "\n \001(\001\022\024\n\014refundAmount\030\013 \001(\001\022\014\n\004list\030\014 \001(" +
+      "\t\022\020\n\010position\030\r \001(\005\022R\n\020customDimensions\030" +
+      "\016 \003(\01328.datahem.protobuf.measurementprot" +
+      "ocol.v2.CustomDimension\022L\n\rcustomMetrics" +
+      "\030\017 \003(\01325.datahem.protobuf.measurementpro" +
+      "tocol.v2.CustomMetric\"9\n\006Social\022\016\n\006actio" +
+      "n\030\001 \001(\t\022\016\n\006target\030\002 \001(\t\022\017\n\007network\030\003 \001(\t" +
+      "\"Y\n\tPromotion\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022",
+      "\016\n\006action\030\003 \001(\t\022\020\n\010creative\030\004 \001(\t\022\020\n\010pos" +
+      "ition\030\005 \001(\t\"\200\001\n\013Transaction\022\n\n\002id\030\001 \001(\t\022" +
+      "\017\n\007revenue\030\002 \001(\001\022\013\n\003tax\030\003 \001(\001\022\020\n\010shippin" +
+      "g\030\004 \001(\001\022\023\n\013affiliation\030\005 \001(\t\022\020\n\010currency" +
+      "\030\006 \001(\t\022\016\n\006coupon\030\007 \001(\t\"G\n\005Event\022\020\n\010categ" +
+      "ory\030\001 \001(\t\022\016\n\006action\030\002 \001(\t\022\r\n\005label\030\003 \001(\t" +
+      "\022\r\n\005value\030\004 \001(\005\"1\n\tException\022\023\n\013descript" +
+      "ion\030\001 \001(\t\022\017\n\007isFatal\030\002 \001(\005\"<\n\004Time\022\020\n\010da" +
+      "teTime\030\001 \001(\t\022\021\n\ttimestamp\030\002 \001(\t\022\017\n\007insta" +
+      "nt\030\003 \001(\003B/\n+org.datahem.protobuf.measure",
       "mentprotocol.v2P\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
@@ -296,7 +295,7 @@ public final class MeasurementProtocolOuterClass {
     internal_static_datahem_protobuf_measurementprotocol_v2_Experiment_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_datahem_protobuf_measurementprotocol_v2_Experiment_descriptor,
-        new java.lang.String[] { "ExperimentId", "ExperimentVariant", });
+        new java.lang.String[] { "Id", "Variant", });
     internal_static_datahem_protobuf_measurementprotocol_v2_Latency_descriptor =
       getDescriptor().getMessageTypes().get(10);
     internal_static_datahem_protobuf_measurementprotocol_v2_Latency_fieldAccessorTable = new
@@ -338,7 +337,7 @@ public final class MeasurementProtocolOuterClass {
     internal_static_datahem_protobuf_measurementprotocol_v2_Event_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_datahem_protobuf_measurementprotocol_v2_Event_descriptor,
-        new java.lang.String[] { "EventCategory", "EventAction", "EventLabel", "EventValue", });
+        new java.lang.String[] { "Category", "Action", "Label", "Value", });
     internal_static_datahem_protobuf_measurementprotocol_v2_Exception_descriptor =
       getDescriptor().getMessageTypes().get(17);
     internal_static_datahem_protobuf_measurementprotocol_v2_Exception_fieldAccessorTable = new

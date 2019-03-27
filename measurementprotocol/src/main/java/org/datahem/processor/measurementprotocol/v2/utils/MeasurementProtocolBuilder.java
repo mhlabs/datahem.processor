@@ -193,7 +193,7 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(FieldMapper.stringVal(pm.get("cid"))).ifPresent(builder::setClientId);
                     Optional.ofNullable(FieldMapper.stringVal(pm.get("uid"))).ifPresent(builder::setUserId);
                     Optional.ofNullable(FieldMapper.stringVal(pm.get("MessageUuid"))).ifPresent(builder::setHitId);
-                    Optional.ofNullable(FieldMapper.booleanVal(pm.get("ni"))).ifPresent(builder::setNonInteraction);
+                    FieldMapper.intVal(pm.get("ni")).ifPresent(g -> builder.setNonInteraction(g.intValue()));
                     Optional.ofNullable(FieldMapper.stringVal(pm.get("v"))).ifPresent(builder::setVersion);
 
                     Optional.ofNullable(pageEntity.build(pm)).ifPresent(builder::setPage);

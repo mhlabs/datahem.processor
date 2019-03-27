@@ -29,7 +29,7 @@ public  final class Ecommerce extends
     super(builder);
   }
   private Ecommerce() {
-    step_ = 0L;
+    step_ = 0;
     option_ = "";
   }
 
@@ -60,7 +60,7 @@ public  final class Ecommerce extends
           }
           case 8: {
 
-            step_ = input.readInt64();
+            step_ = input.readInt32();
             break;
           }
           case 18: {
@@ -93,15 +93,15 @@ public  final class Ecommerce extends
   }
 
   public static final int STEP_FIELD_NUMBER = 1;
-  private long step_;
+  private int step_;
   /**
    * <pre>
    *cos 	This field is populated when a checkout step is specified with the hit.
    * </pre>
    *
-   * <code>optional int64 step = 1;</code>
+   * <code>optional int32 step = 1;</code>
    */
-  public long getStep() {
+  public int getStep() {
     return step_;
   }
 
@@ -159,8 +159,8 @@ public  final class Ecommerce extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (step_ != 0L) {
-      output.writeInt64(1, step_);
+    if (step_ != 0) {
+      output.writeInt32(1, step_);
     }
     if (!getOptionBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, option_);
@@ -172,9 +172,9 @@ public  final class Ecommerce extends
     if (size != -1) return size;
 
     size = 0;
-    if (step_ != 0L) {
+    if (step_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(1, step_);
+        .computeInt32Size(1, step_);
     }
     if (!getOptionBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, option_);
@@ -210,8 +210,7 @@ public  final class Ecommerce extends
     int hash = 41;
     hash = (19 * hash) + getDescriptorForType().hashCode();
     hash = (37 * hash) + STEP_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getStep());
+    hash = (53 * hash) + getStep();
     hash = (37 * hash) + OPTION_FIELD_NUMBER;
     hash = (53 * hash) + getOption().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
@@ -332,7 +331,7 @@ public  final class Ecommerce extends
     }
     public Builder clear() {
       super.clear();
-      step_ = 0L;
+      step_ = 0;
 
       option_ = "";
 
@@ -401,7 +400,7 @@ public  final class Ecommerce extends
 
     public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Ecommerce other) {
       if (other == org.datahem.protobuf.measurementprotocol.v2.Ecommerce.getDefaultInstance()) return this;
-      if (other.getStep() != 0L) {
+      if (other.getStep() != 0) {
         setStep(other.getStep());
       }
       if (!other.getOption().isEmpty()) {
@@ -434,15 +433,15 @@ public  final class Ecommerce extends
       return this;
     }
 
-    private long step_ ;
+    private int step_ ;
     /**
      * <pre>
      *cos 	This field is populated when a checkout step is specified with the hit.
      * </pre>
      *
-     * <code>optional int64 step = 1;</code>
+     * <code>optional int32 step = 1;</code>
      */
-    public long getStep() {
+    public int getStep() {
       return step_;
     }
     /**
@@ -450,9 +449,9 @@ public  final class Ecommerce extends
      *cos 	This field is populated when a checkout step is specified with the hit.
      * </pre>
      *
-     * <code>optional int64 step = 1;</code>
+     * <code>optional int32 step = 1;</code>
      */
-    public Builder setStep(long value) {
+    public Builder setStep(int value) {
       
       step_ = value;
       onChanged();
@@ -463,11 +462,11 @@ public  final class Ecommerce extends
      *cos 	This field is populated when a checkout step is specified with the hit.
      * </pre>
      *
-     * <code>optional int64 step = 1;</code>
+     * <code>optional int32 step = 1;</code>
      */
     public Builder clearStep() {
       
-      step_ = 0L;
+      step_ = 0;
       onChanged();
       return this;
     }

@@ -31,7 +31,7 @@ public  final class Device extends
   private Device() {
     browserSize_ = "";
     flashVersion_ = "";
-    javaEnabled_ = false;
+    javaEnabled_ = 0;
     language_ = "";
     screenColors_ = "";
     screenResolution_ = "";
@@ -77,7 +77,7 @@ public  final class Device extends
           }
           case 24: {
 
-            javaEnabled_ = input.readBool();
+            javaEnabled_ = input.readInt32();
             break;
           }
           case 34: {
@@ -212,15 +212,15 @@ public  final class Device extends
   }
 
   public static final int JAVAENABLED_FIELD_NUMBER = 3;
-  private boolean javaEnabled_;
+  private int javaEnabled_;
   /**
    * <pre>
    *je. Whether or not Java is enabled in the browser.
    * </pre>
    *
-   * <code>optional bool javaEnabled = 3;</code>
+   * <code>optional int32 javaEnabled = 3;</code>
    */
-  public boolean getJavaEnabled() {
+  public int getJavaEnabled() {
     return javaEnabled_;
   }
 
@@ -410,8 +410,8 @@ public  final class Device extends
     if (!getFlashVersionBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, flashVersion_);
     }
-    if (javaEnabled_ != false) {
-      output.writeBool(3, javaEnabled_);
+    if (javaEnabled_ != 0) {
+      output.writeInt32(3, javaEnabled_);
     }
     if (!getLanguageBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, language_);
@@ -438,9 +438,9 @@ public  final class Device extends
     if (!getFlashVersionBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, flashVersion_);
     }
-    if (javaEnabled_ != false) {
+    if (javaEnabled_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(3, javaEnabled_);
+        .computeInt32Size(3, javaEnabled_);
     }
     if (!getLanguageBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, language_);
@@ -499,8 +499,7 @@ public  final class Device extends
     hash = (37 * hash) + FLASHVERSION_FIELD_NUMBER;
     hash = (53 * hash) + getFlashVersion().hashCode();
     hash = (37 * hash) + JAVAENABLED_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getJavaEnabled());
+    hash = (53 * hash) + getJavaEnabled();
     hash = (37 * hash) + LANGUAGE_FIELD_NUMBER;
     hash = (53 * hash) + getLanguage().hashCode();
     hash = (37 * hash) + SCREENCOLORS_FIELD_NUMBER;
@@ -631,7 +630,7 @@ public  final class Device extends
 
       flashVersion_ = "";
 
-      javaEnabled_ = false;
+      javaEnabled_ = 0;
 
       language_ = "";
 
@@ -719,7 +718,7 @@ public  final class Device extends
         flashVersion_ = other.flashVersion_;
         onChanged();
       }
-      if (other.getJavaEnabled() != false) {
+      if (other.getJavaEnabled() != 0) {
         setJavaEnabled(other.getJavaEnabled());
       }
       if (!other.getLanguage().isEmpty()) {
@@ -942,15 +941,15 @@ public  final class Device extends
       return this;
     }
 
-    private boolean javaEnabled_ ;
+    private int javaEnabled_ ;
     /**
      * <pre>
      *je. Whether or not Java is enabled in the browser.
      * </pre>
      *
-     * <code>optional bool javaEnabled = 3;</code>
+     * <code>optional int32 javaEnabled = 3;</code>
      */
-    public boolean getJavaEnabled() {
+    public int getJavaEnabled() {
       return javaEnabled_;
     }
     /**
@@ -958,9 +957,9 @@ public  final class Device extends
      *je. Whether or not Java is enabled in the browser.
      * </pre>
      *
-     * <code>optional bool javaEnabled = 3;</code>
+     * <code>optional int32 javaEnabled = 3;</code>
      */
-    public Builder setJavaEnabled(boolean value) {
+    public Builder setJavaEnabled(int value) {
       
       javaEnabled_ = value;
       onChanged();
@@ -971,11 +970,11 @@ public  final class Device extends
      *je. Whether or not Java is enabled in the browser.
      * </pre>
      *
-     * <code>optional bool javaEnabled = 3;</code>
+     * <code>optional int32 javaEnabled = 3;</code>
      */
     public Builder clearJavaEnabled() {
       
-      javaEnabled_ = false;
+      javaEnabled_ = 0;
       onChanged();
       return this;
     }

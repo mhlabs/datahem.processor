@@ -44,7 +44,7 @@ public interface ExceptionOrBuilder extends
    *exf	If the exception was fatal, this is set to true.        
    * </pre>
    *
-   * <code>optional bool isFatal = 2;</code>
+   * <code>optional int32 isFatal = 2;</code>
    */
-  boolean getIsFatal();
+  int getIsFatal();
 }

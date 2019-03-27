@@ -26,9 +26,9 @@ public interface EcommerceOrBuilder extends
    *cos 	This field is populated when a checkout step is specified with the hit.
    * </pre>
    *
-   * <code>optional int64 step = 1;</code>
+   * <code>optional int32 step = 1;</code>
    */
-  long getStep();
+  int getStep();
 
   /**
    * <pre>

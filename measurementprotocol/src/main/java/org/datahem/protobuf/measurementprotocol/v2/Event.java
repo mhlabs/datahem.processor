@@ -29,10 +29,10 @@ public  final class Event extends
     super(builder);
   }
   private Event() {
-    eventCategory_ = "";
-    eventAction_ = "";
-    eventLabel_ = "";
-    eventValue_ = 0L;
+    category_ = "";
+    action_ = "";
+    label_ = "";
+    value_ = 0;
   }
 
   @java.lang.Override
@@ -63,24 +63,24 @@ public  final class Event extends
           case 10: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            eventCategory_ = s;
+            category_ = s;
             break;
           }
           case 18: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            eventAction_ = s;
+            action_ = s;
             break;
           }
           case 26: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            eventLabel_ = s;
+            label_ = s;
             break;
           }
           case 32: {
 
-            eventValue_ = input.readInt64();
+            value_ = input.readInt32();
             break;
           }
         }
@@ -106,24 +106,24 @@ public  final class Event extends
             org.datahem.protobuf.measurementprotocol.v2.Event.class, org.datahem.protobuf.measurementprotocol.v2.Event.Builder.class);
   }
 
-  public static final int EVENTCATEGORY_FIELD_NUMBER = 1;
-  private volatile java.lang.Object eventCategory_;
+  public static final int CATEGORY_FIELD_NUMBER = 1;
+  private volatile java.lang.Object category_;
   /**
    * <pre>
    *ec.	The event category.
    * </pre>
    *
-   * <code>optional string eventCategory = 1;</code>
+   * <code>optional string category = 1;</code>
    */
-  public java.lang.String getEventCategory() {
-    java.lang.Object ref = eventCategory_;
+  public java.lang.String getCategory() {
+    java.lang.Object ref = category_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      eventCategory_ = s;
+      category_ = s;
       return s;
     }
   }
@@ -132,40 +132,40 @@ public  final class Event extends
    *ec.	The event category.
    * </pre>
    *
-   * <code>optional string eventCategory = 1;</code>
+   * <code>optional string category = 1;</code>
    */
   public com.google.protobuf.ByteString
-      getEventCategoryBytes() {
-    java.lang.Object ref = eventCategory_;
+      getCategoryBytes() {
+    java.lang.Object ref = category_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      eventCategory_ = b;
+      category_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int EVENTACTION_FIELD_NUMBER = 2;
-  private volatile java.lang.Object eventAction_;
+  public static final int ACTION_FIELD_NUMBER = 2;
+  private volatile java.lang.Object action_;
   /**
    * <pre>
    *ea.	The event action.
    * </pre>
    *
-   * <code>optional string eventAction = 2;</code>
+   * <code>optional string action = 2;</code>
    */
-  public java.lang.String getEventAction() {
-    java.lang.Object ref = eventAction_;
+  public java.lang.String getAction() {
+    java.lang.Object ref = action_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      eventAction_ = s;
+      action_ = s;
       return s;
     }
   }
@@ -174,40 +174,40 @@ public  final class Event extends
    *ea.	The event action.
    * </pre>
    *
-   * <code>optional string eventAction = 2;</code>
+   * <code>optional string action = 2;</code>
    */
   public com.google.protobuf.ByteString
-      getEventActionBytes() {
-    java.lang.Object ref = eventAction_;
+      getActionBytes() {
+    java.lang.Object ref = action_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      eventAction_ = b;
+      action_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int EVENTLABEL_FIELD_NUMBER = 3;
-  private volatile java.lang.Object eventLabel_;
+  public static final int LABEL_FIELD_NUMBER = 3;
+  private volatile java.lang.Object label_;
   /**
    * <pre>
    *el	The event label.
    * </pre>
    *
-   * <code>optional string eventLabel = 3;</code>
+   * <code>optional string label = 3;</code>
    */
-  public java.lang.String getEventLabel() {
-    java.lang.Object ref = eventLabel_;
+  public java.lang.String getLabel() {
+    java.lang.Object ref = label_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      eventLabel_ = s;
+      label_ = s;
       return s;
     }
   }
@@ -216,33 +216,33 @@ public  final class Event extends
    *el	The event label.
    * </pre>
    *
-   * <code>optional string eventLabel = 3;</code>
+   * <code>optional string label = 3;</code>
    */
   public com.google.protobuf.ByteString
-      getEventLabelBytes() {
-    java.lang.Object ref = eventLabel_;
+      getLabelBytes() {
+    java.lang.Object ref = label_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      eventLabel_ = b;
+      label_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int EVENTVALUE_FIELD_NUMBER = 4;
-  private long eventValue_;
+  public static final int VALUE_FIELD_NUMBER = 4;
+  private int value_;
   /**
    * <pre>
    *ev	The event value.        
    * </pre>
    *
-   * <code>optional int64 eventValue = 4;</code>
+   * <code>optional int32 value = 4;</code>
    */
-  public long getEventValue() {
-    return eventValue_;
+  public int getValue() {
+    return value_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -257,17 +257,17 @@ public  final class Event extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getEventCategoryBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, eventCategory_);
+    if (!getCategoryBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, category_);
     }
-    if (!getEventActionBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, eventAction_);
+    if (!getActionBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, action_);
     }
-    if (!getEventLabelBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, eventLabel_);
+    if (!getLabelBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, label_);
     }
-    if (eventValue_ != 0L) {
-      output.writeInt64(4, eventValue_);
+    if (value_ != 0) {
+      output.writeInt32(4, value_);
     }
   }
 
@@ -276,18 +276,18 @@ public  final class Event extends
     if (size != -1) return size;
 
     size = 0;
-    if (!getEventCategoryBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, eventCategory_);
+    if (!getCategoryBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, category_);
     }
-    if (!getEventActionBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, eventAction_);
+    if (!getActionBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, action_);
     }
-    if (!getEventLabelBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, eventLabel_);
+    if (!getLabelBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, label_);
     }
-    if (eventValue_ != 0L) {
+    if (value_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(4, eventValue_);
+        .computeInt32Size(4, value_);
     }
     memoizedSize = size;
     return size;
@@ -305,14 +305,14 @@ public  final class Event extends
     org.datahem.protobuf.measurementprotocol.v2.Event other = (org.datahem.protobuf.measurementprotocol.v2.Event) obj;
 
     boolean result = true;
-    result = result && getEventCategory()
-        .equals(other.getEventCategory());
-    result = result && getEventAction()
-        .equals(other.getEventAction());
-    result = result && getEventLabel()
-        .equals(other.getEventLabel());
-    result = result && (getEventValue()
-        == other.getEventValue());
+    result = result && getCategory()
+        .equals(other.getCategory());
+    result = result && getAction()
+        .equals(other.getAction());
+    result = result && getLabel()
+        .equals(other.getLabel());
+    result = result && (getValue()
+        == other.getValue());
     return result;
   }
 
@@ -323,15 +323,14 @@ public  final class Event extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptorForType().hashCode();
-    hash = (37 * hash) + EVENTCATEGORY_FIELD_NUMBER;
-    hash = (53 * hash) + getEventCategory().hashCode();
-    hash = (37 * hash) + EVENTACTION_FIELD_NUMBER;
-    hash = (53 * hash) + getEventAction().hashCode();
-    hash = (37 * hash) + EVENTLABEL_FIELD_NUMBER;
-    hash = (53 * hash) + getEventLabel().hashCode();
-    hash = (37 * hash) + EVENTVALUE_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getEventValue());
+    hash = (37 * hash) + CATEGORY_FIELD_NUMBER;
+    hash = (53 * hash) + getCategory().hashCode();
+    hash = (37 * hash) + ACTION_FIELD_NUMBER;
+    hash = (53 * hash) + getAction().hashCode();
+    hash = (37 * hash) + LABEL_FIELD_NUMBER;
+    hash = (53 * hash) + getLabel().hashCode();
+    hash = (37 * hash) + VALUE_FIELD_NUMBER;
+    hash = (53 * hash) + getValue();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -450,13 +449,13 @@ public  final class Event extends
     }
     public Builder clear() {
       super.clear();
-      eventCategory_ = "";
+      category_ = "";
 
-      eventAction_ = "";
+      action_ = "";
 
-      eventLabel_ = "";
+      label_ = "";
 
-      eventValue_ = 0L;
+      value_ = 0;
 
       return this;
     }
@@ -480,10 +479,10 @@ public  final class Event extends
 
     public org.datahem.protobuf.measurementprotocol.v2.Event buildPartial() {
       org.datahem.protobuf.measurementprotocol.v2.Event result = new org.datahem.protobuf.measurementprotocol.v2.Event(this);
-      result.eventCategory_ = eventCategory_;
-      result.eventAction_ = eventAction_;
-      result.eventLabel_ = eventLabel_;
-      result.eventValue_ = eventValue_;
+      result.category_ = category_;
+      result.action_ = action_;
+      result.label_ = label_;
+      result.value_ = value_;
       onBuilt();
       return result;
     }
@@ -525,20 +524,20 @@ public  final class Event extends
 
     public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Event other) {
       if (other == org.datahem.protobuf.measurementprotocol.v2.Event.getDefaultInstance()) return this;
-      if (!other.getEventCategory().isEmpty()) {
-        eventCategory_ = other.eventCategory_;
+      if (!other.getCategory().isEmpty()) {
+        category_ = other.category_;
         onChanged();
       }
-      if (!other.getEventAction().isEmpty()) {
-        eventAction_ = other.eventAction_;
+      if (!other.getAction().isEmpty()) {
+        action_ = other.action_;
         onChanged();
       }
-      if (!other.getEventLabel().isEmpty()) {
-        eventLabel_ = other.eventLabel_;
+      if (!other.getLabel().isEmpty()) {
+        label_ = other.label_;
         onChanged();
       }
-      if (other.getEventValue() != 0L) {
-        setEventValue(other.getEventValue());
+      if (other.getValue() != 0) {
+        setValue(other.getValue());
       }
       onChanged();
       return this;
@@ -566,21 +565,21 @@ public  final class Event extends
       return this;
     }
 
-    private java.lang.Object eventCategory_ = "";
+    private java.lang.Object category_ = "";
     /**
      * <pre>
      *ec.	The event category.
      * </pre>
      *
-     * <code>optional string eventCategory = 1;</code>
+     * <code>optional string category = 1;</code>
      */
-    public java.lang.String getEventCategory() {
-      java.lang.Object ref = eventCategory_;
+    public java.lang.String getCategory() {
+      java.lang.Object ref = category_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        eventCategory_ = s;
+        category_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
@@ -591,16 +590,16 @@ public  final class Event extends
      *ec.	The event category.
      * </pre>
      *
-     * <code>optional string eventCategory = 1;</code>
+     * <code>optional string category = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getEventCategoryBytes() {
-      java.lang.Object ref = eventCategory_;
+        getCategoryBytes() {
+      java.lang.Object ref = category_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        eventCategory_ = b;
+        category_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -611,15 +610,15 @@ public  final class Event extends
      *ec.	The event category.
      * </pre>
      *
-     * <code>optional string eventCategory = 1;</code>
+     * <code>optional string category = 1;</code>
      */
-    public Builder setEventCategory(
+    public Builder setCategory(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      eventCategory_ = value;
+      category_ = value;
       onChanged();
       return this;
     }
@@ -628,11 +627,11 @@ public  final class Event extends
      *ec.	The event category.
      * </pre>
      *
-     * <code>optional string eventCategory = 1;</code>
+     * <code>optional string category = 1;</code>
      */
-    public Builder clearEventCategory() {
+    public Builder clearCategory() {
       
-      eventCategory_ = getDefaultInstance().getEventCategory();
+      category_ = getDefaultInstance().getCategory();
       onChanged();
       return this;
     }
@@ -641,35 +640,35 @@ public  final class Event extends
      *ec.	The event category.
      * </pre>
      *
-     * <code>optional string eventCategory = 1;</code>
+     * <code>optional string category = 1;</code>
      */
-    public Builder setEventCategoryBytes(
+    public Builder setCategoryBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      eventCategory_ = value;
+      category_ = value;
       onChanged();
       return this;
     }
 
-    private java.lang.Object eventAction_ = "";
+    private java.lang.Object action_ = "";
     /**
      * <pre>
      *ea.	The event action.
      * </pre>
      *
-     * <code>optional string eventAction = 2;</code>
+     * <code>optional string action = 2;</code>
      */
-    public java.lang.String getEventAction() {
-      java.lang.Object ref = eventAction_;
+    public java.lang.String getAction() {
+      java.lang.Object ref = action_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        eventAction_ = s;
+        action_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
@@ -680,16 +679,16 @@ public  final class Event extends
      *ea.	The event action.
      * </pre>
      *
-     * <code>optional string eventAction = 2;</code>
+     * <code>optional string action = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getEventActionBytes() {
-      java.lang.Object ref = eventAction_;
+        getActionBytes() {
+      java.lang.Object ref = action_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        eventAction_ = b;
+        action_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -700,15 +699,15 @@ public  final class Event extends
      *ea.	The event action.
      * </pre>
      *
-     * <code>optional string eventAction = 2;</code>
+     * <code>optional string action = 2;</code>
      */
-    public Builder setEventAction(
+    public Builder setAction(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      eventAction_ = value;
+      action_ = value;
       onChanged();
       return this;
     }
@@ -717,11 +716,11 @@ public  final class Event extends
      *ea.	The event action.
      * </pre>
      *
-     * <code>optional string eventAction = 2;</code>
+     * <code>optional string action = 2;</code>
      */
-    public Builder clearEventAction() {
+    public Builder clearAction() {
       
-      eventAction_ = getDefaultInstance().getEventAction();
+      action_ = getDefaultInstance().getAction();
       onChanged();
       return this;
     }
@@ -730,35 +729,35 @@ public  final class Event extends
      *ea.	The event action.
      * </pre>
      *
-     * <code>optional string eventAction = 2;</code>
+     * <code>optional string action = 2;</code>
      */
-    public Builder setEventActionBytes(
+    public Builder setActionBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      eventAction_ = value;
+      action_ = value;
       onChanged();
       return this;
     }
 
-    private java.lang.Object eventLabel_ = "";
+    private java.lang.Object label_ = "";
     /**
      * <pre>
      *el	The event label.
      * </pre>
      *
-     * <code>optional string eventLabel = 3;</code>
+     * <code>optional string label = 3;</code>
      */
-    public java.lang.String getEventLabel() {
-      java.lang.Object ref = eventLabel_;
+    public java.lang.String getLabel() {
+      java.lang.Object ref = label_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        eventLabel_ = s;
+        label_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
@@ -769,16 +768,16 @@ public  final class Event extends
      *el	The event label.
      * </pre>
      *
-     * <code>optional string eventLabel = 3;</code>
+     * <code>optional string label = 3;</code>
      */
     public com.google.protobuf.ByteString
-        getEventLabelBytes() {
-      java.lang.Object ref = eventLabel_;
+        getLabelBytes() {
+      java.lang.Object ref = label_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        eventLabel_ = b;
+        label_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -789,15 +788,15 @@ public  final class Event extends
      *el	The event label.
      * </pre>
      *
-     * <code>optional string eventLabel = 3;</code>
+     * <code>optional string label = 3;</code>
      */
-    public Builder setEventLabel(
+    public Builder setLabel(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      eventLabel_ = value;
+      label_ = value;
       onChanged();
       return this;
     }
@@ -806,11 +805,11 @@ public  final class Event extends
      *el	The event label.
      * </pre>
      *
-     * <code>optional string eventLabel = 3;</code>
+     * <code>optional string label = 3;</code>
      */
-    public Builder clearEventLabel() {
+    public Builder clearLabel() {
       
-      eventLabel_ = getDefaultInstance().getEventLabel();
+      label_ = getDefaultInstance().getLabel();
       onChanged();
       return this;
     }
@@ -819,41 +818,41 @@ public  final class Event extends
      *el	The event label.
      * </pre>
      *
-     * <code>optional string eventLabel = 3;</code>
+     * <code>optional string label = 3;</code>
      */
-    public Builder setEventLabelBytes(
+    public Builder setLabelBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      eventLabel_ = value;
+      label_ = value;
       onChanged();
       return this;
     }
 
-    private long eventValue_ ;
+    private int value_ ;
     /**
      * <pre>
      *ev	The event value.        
      * </pre>
      *
-     * <code>optional int64 eventValue = 4;</code>
+     * <code>optional int32 value = 4;</code>
      */
-    public long getEventValue() {
-      return eventValue_;
+    public int getValue() {
+      return value_;
     }
     /**
      * <pre>
      *ev	The event value.        
      * </pre>
      *
-     * <code>optional int64 eventValue = 4;</code>
+     * <code>optional int32 value = 4;</code>
      */
-    public Builder setEventValue(long value) {
+    public Builder setValue(int value) {
       
-      eventValue_ = value;
+      value_ = value;
       onChanged();
       return this;
     }
@@ -862,11 +861,11 @@ public  final class Event extends
      *ev	The event value.        
      * </pre>
      *
-     * <code>optional int64 eventValue = 4;</code>
+     * <code>optional int32 value = 4;</code>
      */
-    public Builder clearEventValue() {
+    public Builder clearValue() {
       
-      eventValue_ = 0L;
+      value_ = 0;
       onChanged();
       return this;
     }

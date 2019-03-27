@@ -26,9 +26,9 @@ public interface CustomDimensionOrBuilder extends
    *cd([0-9]{1,3}).The index of the custom dimension.
    * </pre>
    *
-   * <code>optional int64 index = 1;</code>
+   * <code>optional int32 index = 1;</code>
    */
-  long getIndex();
+  int getIndex();
 
   /**
    * <pre>

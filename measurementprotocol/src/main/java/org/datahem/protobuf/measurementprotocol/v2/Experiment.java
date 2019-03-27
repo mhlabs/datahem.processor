@@ -29,8 +29,8 @@ public  final class Experiment extends
     super(builder);
   }
   private Experiment() {
-    experimentId_ = "";
-    experimentVariant_ = "";
+    id_ = "";
+    variant_ = "";
   }
 
   @java.lang.Override
@@ -61,13 +61,13 @@ public  final class Experiment extends
           case 10: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            experimentId_ = s;
+            id_ = s;
             break;
           }
           case 18: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            experimentVariant_ = s;
+            variant_ = s;
             break;
           }
         }
@@ -93,24 +93,24 @@ public  final class Experiment extends
             org.datahem.protobuf.measurementprotocol.v2.Experiment.class, org.datahem.protobuf.measurementprotocol.v2.Experiment.Builder.class);
   }
 
-  public static final int EXPERIMENTID_FIELD_NUMBER = 1;
-  private volatile java.lang.Object experimentId_;
+  public static final int ID_FIELD_NUMBER = 1;
+  private volatile java.lang.Object id_;
   /**
    * <pre>
    *expi. The ID of the experiment.
    * </pre>
    *
-   * <code>optional string experimentId = 1;</code>
+   * <code>optional string id = 1;</code>
    */
-  public java.lang.String getExperimentId() {
-    java.lang.Object ref = experimentId_;
+  public java.lang.String getId() {
+    java.lang.Object ref = id_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      experimentId_ = s;
+      id_ = s;
       return s;
     }
   }
@@ -119,40 +119,40 @@ public  final class Experiment extends
    *expi. The ID of the experiment.
    * </pre>
    *
-   * <code>optional string experimentId = 1;</code>
+   * <code>optional string id = 1;</code>
    */
   public com.google.protobuf.ByteString
-      getExperimentIdBytes() {
-    java.lang.Object ref = experimentId_;
+      getIdBytes() {
+    java.lang.Object ref = id_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      experimentId_ = b;
+      id_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int EXPERIMENTVARIANT_FIELD_NUMBER = 2;
-  private volatile java.lang.Object experimentVariant_;
+  public static final int VARIANT_FIELD_NUMBER = 2;
+  private volatile java.lang.Object variant_;
   /**
    * <pre>
    *expv. The variation or combination of variations present in a hit for an experiment.
    * </pre>
    *
-   * <code>optional string experimentVariant = 2;</code>
+   * <code>optional string variant = 2;</code>
    */
-  public java.lang.String getExperimentVariant() {
-    java.lang.Object ref = experimentVariant_;
+  public java.lang.String getVariant() {
+    java.lang.Object ref = variant_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      experimentVariant_ = s;
+      variant_ = s;
       return s;
     }
   }
@@ -161,16 +161,16 @@ public  final class Experiment extends
    *expv. The variation or combination of variations present in a hit for an experiment.
    * </pre>
    *
-   * <code>optional string experimentVariant = 2;</code>
+   * <code>optional string variant = 2;</code>
    */
   public com.google.protobuf.ByteString
-      getExperimentVariantBytes() {
-    java.lang.Object ref = experimentVariant_;
+      getVariantBytes() {
+    java.lang.Object ref = variant_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      experimentVariant_ = b;
+      variant_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -189,11 +189,11 @@ public  final class Experiment extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getExperimentIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, experimentId_);
+    if (!getIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
     }
-    if (!getExperimentVariantBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, experimentVariant_);
+    if (!getVariantBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, variant_);
     }
   }
 
@@ -202,11 +202,11 @@ public  final class Experiment extends
     if (size != -1) return size;
 
     size = 0;
-    if (!getExperimentIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, experimentId_);
+    if (!getIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
     }
-    if (!getExperimentVariantBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, experimentVariant_);
+    if (!getVariantBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, variant_);
     }
     memoizedSize = size;
     return size;
@@ -224,10 +224,10 @@ public  final class Experiment extends
     org.datahem.protobuf.measurementprotocol.v2.Experiment other = (org.datahem.protobuf.measurementprotocol.v2.Experiment) obj;
 
     boolean result = true;
-    result = result && getExperimentId()
-        .equals(other.getExperimentId());
-    result = result && getExperimentVariant()
-        .equals(other.getExperimentVariant());
+    result = result && getId()
+        .equals(other.getId());
+    result = result && getVariant()
+        .equals(other.getVariant());
     return result;
   }
 
@@ -238,10 +238,10 @@ public  final class Experiment extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptorForType().hashCode();
-    hash = (37 * hash) + EXPERIMENTID_FIELD_NUMBER;
-    hash = (53 * hash) + getExperimentId().hashCode();
-    hash = (37 * hash) + EXPERIMENTVARIANT_FIELD_NUMBER;
-    hash = (53 * hash) + getExperimentVariant().hashCode();
+    hash = (37 * hash) + ID_FIELD_NUMBER;
+    hash = (53 * hash) + getId().hashCode();
+    hash = (37 * hash) + VARIANT_FIELD_NUMBER;
+    hash = (53 * hash) + getVariant().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -360,9 +360,9 @@ public  final class Experiment extends
     }
     public Builder clear() {
       super.clear();
-      experimentId_ = "";
+      id_ = "";
 
-      experimentVariant_ = "";
+      variant_ = "";
 
       return this;
     }
@@ -386,8 +386,8 @@ public  final class Experiment extends
 
     public org.datahem.protobuf.measurementprotocol.v2.Experiment buildPartial() {
       org.datahem.protobuf.measurementprotocol.v2.Experiment result = new org.datahem.protobuf.measurementprotocol.v2.Experiment(this);
-      result.experimentId_ = experimentId_;
-      result.experimentVariant_ = experimentVariant_;
+      result.id_ = id_;
+      result.variant_ = variant_;
       onBuilt();
       return result;
     }
@@ -429,12 +429,12 @@ public  final class Experiment extends
 
     public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Experiment other) {
       if (other == org.datahem.protobuf.measurementprotocol.v2.Experiment.getDefaultInstance()) return this;
-      if (!other.getExperimentId().isEmpty()) {
-        experimentId_ = other.experimentId_;
+      if (!other.getId().isEmpty()) {
+        id_ = other.id_;
         onChanged();
       }
-      if (!other.getExperimentVariant().isEmpty()) {
-        experimentVariant_ = other.experimentVariant_;
+      if (!other.getVariant().isEmpty()) {
+        variant_ = other.variant_;
         onChanged();
       }
       onChanged();
@@ -463,21 +463,21 @@ public  final class Experiment extends
       return this;
     }
 
-    private java.lang.Object experimentId_ = "";
+    private java.lang.Object id_ = "";
     /**
      * <pre>
      *expi. The ID of the experiment.
      * </pre>
      *
-     * <code>optional string experimentId = 1;</code>
+     * <code>optional string id = 1;</code>
      */
-    public java.lang.String getExperimentId() {
-      java.lang.Object ref = experimentId_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        experimentId_ = s;
+        id_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
@@ -488,16 +488,16 @@ public  final class Experiment extends
      *expi. The ID of the experiment.
      * </pre>
      *
-     * <code>optional string experimentId = 1;</code>
+     * <code>optional string id = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getExperimentIdBytes() {
-      java.lang.Object ref = experimentId_;
+        getIdBytes() {
+      java.lang.Object ref = id_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        experimentId_ = b;
+        id_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -508,15 +508,15 @@ public  final class Experiment extends
      *expi. The ID of the experiment.
      * </pre>
      *
-     * <code>optional string experimentId = 1;</code>
+     * <code>optional string id = 1;</code>
      */
-    public Builder setExperimentId(
+    public Builder setId(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      experimentId_ = value;
+      id_ = value;
       onChanged();
       return this;
     }
@@ -525,11 +525,11 @@ public  final class Experiment extends
      *expi. The ID of the experiment.
      * </pre>
      *
-     * <code>optional string experimentId = 1;</code>
+     * <code>optional string id = 1;</code>
      */
-    public Builder clearExperimentId() {
+    public Builder clearId() {
       
-      experimentId_ = getDefaultInstance().getExperimentId();
+      id_ = getDefaultInstance().getId();
       onChanged();
       return this;
     }
@@ -538,35 +538,35 @@ public  final class Experiment extends
      *expi. The ID of the experiment.
      * </pre>
      *
-     * <code>optional string experimentId = 1;</code>
+     * <code>optional string id = 1;</code>
      */
-    public Builder setExperimentIdBytes(
+    public Builder setIdBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      experimentId_ = value;
+      id_ = value;
       onChanged();
       return this;
     }
 
-    private java.lang.Object experimentVariant_ = "";
+    private java.lang.Object variant_ = "";
     /**
      * <pre>
      *expv. The variation or combination of variations present in a hit for an experiment.
      * </pre>
      *
-     * <code>optional string experimentVariant = 2;</code>
+     * <code>optional string variant = 2;</code>
      */
-    public java.lang.String getExperimentVariant() {
-      java.lang.Object ref = experimentVariant_;
+    public java.lang.String getVariant() {
+      java.lang.Object ref = variant_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        experimentVariant_ = s;
+        variant_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
@@ -577,16 +577,16 @@ public  final class Experiment extends
      *expv. The variation or combination of variations present in a hit for an experiment.
      * </pre>
      *
-     * <code>optional string experimentVariant = 2;</code>
+     * <code>optional string variant = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getExperimentVariantBytes() {
-      java.lang.Object ref = experimentVariant_;
+        getVariantBytes() {
+      java.lang.Object ref = variant_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        experimentVariant_ = b;
+        variant_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -597,15 +597,15 @@ public  final class Experiment extends
      *expv. The variation or combination of variations present in a hit for an experiment.
      * </pre>
      *
-     * <code>optional string experimentVariant = 2;</code>
+     * <code>optional string variant = 2;</code>
      */
-    public Builder setExperimentVariant(
+    public Builder setVariant(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      experimentVariant_ = value;
+      variant_ = value;
       onChanged();
       return this;
     }
@@ -614,11 +614,11 @@ public  final class Experiment extends
      *expv. The variation or combination of variations present in a hit for an experiment.
      * </pre>
      *
-     * <code>optional string experimentVariant = 2;</code>
+     * <code>optional string variant = 2;</code>
      */
-    public Builder clearExperimentVariant() {
+    public Builder clearVariant() {
       
-      experimentVariant_ = getDefaultInstance().getExperimentVariant();
+      variant_ = getDefaultInstance().getVariant();
       onChanged();
       return this;
     }
@@ -627,16 +627,16 @@ public  final class Experiment extends
      *expv. The variation or combination of variations present in a hit for an experiment.
      * </pre>
      *
-     * <code>optional string experimentVariant = 2;</code>
+     * <code>optional string variant = 2;</code>
      */
-    public Builder setExperimentVariantBytes(
+    public Builder setVariantBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      experimentVariant_ = value;
+      variant_ = value;
       onChanged();
       return this;
     }

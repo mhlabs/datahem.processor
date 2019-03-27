@@ -62,9 +62,9 @@ public interface DeviceOrBuilder extends
    *je. Whether or not Java is enabled in the browser.
    * </pre>
    *
-   * <code>optional bool javaEnabled = 3;</code>
+   * <code>optional int32 javaEnabled = 3;</code>
    */
-  boolean getJavaEnabled();
+  int getJavaEnabled();
 
   /**
    * <pre>

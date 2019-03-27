@@ -30,7 +30,7 @@ public  final class Exception extends
   }
   private Exception() {
     description_ = "";
-    isFatal_ = false;
+    isFatal_ = 0;
   }
 
   @java.lang.Override
@@ -66,7 +66,7 @@ public  final class Exception extends
           }
           case 16: {
 
-            isFatal_ = input.readBool();
+            isFatal_ = input.readInt32();
             break;
           }
         }
@@ -135,15 +135,15 @@ public  final class Exception extends
   }
 
   public static final int ISFATAL_FIELD_NUMBER = 2;
-  private boolean isFatal_;
+  private int isFatal_;
   /**
    * <pre>
    *exf	If the exception was fatal, this is set to true.        
    * </pre>
    *
-   * <code>optional bool isFatal = 2;</code>
+   * <code>optional int32 isFatal = 2;</code>
    */
-  public boolean getIsFatal() {
+  public int getIsFatal() {
     return isFatal_;
   }
 
@@ -162,8 +162,8 @@ public  final class Exception extends
     if (!getDescriptionBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, description_);
     }
-    if (isFatal_ != false) {
-      output.writeBool(2, isFatal_);
+    if (isFatal_ != 0) {
+      output.writeInt32(2, isFatal_);
     }
   }
 
@@ -175,9 +175,9 @@ public  final class Exception extends
     if (!getDescriptionBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, description_);
     }
-    if (isFatal_ != false) {
+    if (isFatal_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(2, isFatal_);
+        .computeInt32Size(2, isFatal_);
     }
     memoizedSize = size;
     return size;
@@ -212,8 +212,7 @@ public  final class Exception extends
     hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
     hash = (53 * hash) + getDescription().hashCode();
     hash = (37 * hash) + ISFATAL_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getIsFatal());
+    hash = (53 * hash) + getIsFatal();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -334,7 +333,7 @@ public  final class Exception extends
       super.clear();
       description_ = "";
 
-      isFatal_ = false;
+      isFatal_ = 0;
 
       return this;
     }
@@ -405,7 +404,7 @@ public  final class Exception extends
         description_ = other.description_;
         onChanged();
       }
-      if (other.getIsFatal() != false) {
+      if (other.getIsFatal() != 0) {
         setIsFatal(other.getIsFatal());
       }
       onChanged();
@@ -523,15 +522,15 @@ public  final class Exception extends
       return this;
     }
 
-    private boolean isFatal_ ;
+    private int isFatal_ ;
     /**
      * <pre>
      *exf	If the exception was fatal, this is set to true.        
      * </pre>
      *
-     * <code>optional bool isFatal = 2;</code>
+     * <code>optional int32 isFatal = 2;</code>
      */
-    public boolean getIsFatal() {
+    public int getIsFatal() {
       return isFatal_;
     }
     /**
@@ -539,9 +538,9 @@ public  final class Exception extends
      *exf	If the exception was fatal, this is set to true.        
      * </pre>
      *
-     * <code>optional bool isFatal = 2;</code>
+     * <code>optional int32 isFatal = 2;</code>
      */
-    public Builder setIsFatal(boolean value) {
+    public Builder setIsFatal(int value) {
       
       isFatal_ = value;
       onChanged();
@@ -552,11 +551,11 @@ public  final class Exception extends
      *exf	If the exception was fatal, this is set to true.        
      * </pre>
      *
-     * <code>optional bool isFatal = 2;</code>
+     * <code>optional int32 isFatal = 2;</code>
      */
     public Builder clearIsFatal() {
       
-      isFatal_ = false;
+      isFatal_ = 0;
       onChanged();
       return this;
     }
