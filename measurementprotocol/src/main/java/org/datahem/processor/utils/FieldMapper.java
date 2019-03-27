@@ -83,6 +83,7 @@ public class FieldMapper{
     public static Optional<Boolean> booleanVal(String field){
         try{
             return Optional.of(Boolean.parseBoolean(field));
+            
         }
         catch(NumberFormatException e){
             LOG.error(e.toString());
@@ -91,9 +92,9 @@ public class FieldMapper{
         }
     }
 
-    public static Optional<int> intVal(String field){
+    public static OptionalInt intVal(String field){
         try{
-            return Optional.of(Integer.parseInt(field));
+            return OptionalInt.of(Integer.parseInt(field));
         }
         catch(NumberFormatException e){
             LOG.error(e.toString());
