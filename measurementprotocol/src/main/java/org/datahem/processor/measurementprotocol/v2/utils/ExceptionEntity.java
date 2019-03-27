@@ -14,46 +14,32 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * =========================LICENSE_END==================================
  */
 
+import org.datahem.protobuf.measurementprotocol.v2.Exception;
 
-import org.datahem.processor.measurementprotocol.v1.utils.BaseEntity;
-import org.datahem.processor.measurementprotocol.v1.utils.Parameter;
 import java.util.Map;
-import java.util.List;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
+import java.util.Optional;
+import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 
-public class ExceptionEntity extends BaseEntity{
-	private List<Parameter> parameters;
+public class ExceptionEntity{
 	private static final Logger LOG = LoggerFactory.getLogger(ExceptionEntity.class);
 	
-	public ExceptionEntity(){
-		super();
-		parameters = Arrays.asList(
-			new Parameter("exd", "String", null, 150, "exception_description", false, "Database Error"),
-			new Parameter("exf", "Boolean", null, 150, "exception_fatal", false, 0)
-		);
-	}
-	
-	public List<Parameter> getParameters(){return parameters;}
-
+	public ExceptionEntity(){}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return (null != paramMap.get("exd") || null != paramMap.get("exf"));
 	}
 	
-	public List<MPEntity> build(Map<String, String> paramMap){
-		List<MPEntity> mpEntities = new ArrayList<>();
-		if(trigger(paramMap)){
-			paramMap.put("et", "exception");
-			try{
-				mpEntities.add(builder(paramMap).build());
-				return mpEntities;
+	public Exception build(Map<String, String> pm){
+		if(trigger(pm)){
+            try{
+                Exception.Builder builder = Exception.newBuilder();
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("exd"))).ifPresent(builder::setDescription);
+                Optional.ofNullable(FieldMapper.booleanVal(pm.get("exf"))).ifPresent(builder::setIsFatal);
+                return builder.build();
 			}
 			catch(IllegalArgumentException e){
 				LOG.error(e.toString());
@@ -64,13 +50,4 @@ public class ExceptionEntity extends BaseEntity{
 			return null;
 		}
 	}	
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap) throws IllegalArgumentException{
-		return builder(paramMap, super.builder(paramMap));
-	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder) throws IllegalArgumentException{
-		return super.builder(paramMap, mpEntityBuilder, this.parameters);
-	}	
-	
 }

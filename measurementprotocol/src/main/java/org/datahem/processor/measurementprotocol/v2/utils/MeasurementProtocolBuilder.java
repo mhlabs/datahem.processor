@@ -51,11 +51,11 @@ public class MeasurementProtocolBuilder{
 	private static final Logger LOG = LoggerFactory.getLogger(MeasurementProtocolBuilder.class);
 	
 	private Map<String, String> pm;
-	//private List<MPEntity> events = new ArrayList<>();
+	
 	private PageEntity pageEntity = new PageEntity();
-	/*
     private EventEntity eventEntity = new EventEntity();
 	private ExceptionEntity exceptionEntity = new ExceptionEntity();
+    /*
 	private SocialEntity socialEntity = new SocialEntity();
 	private TimingEntity timingEntity = new TimingEntity();
 	private TransactionEntity transactionEntity = new TransactionEntity();
@@ -189,15 +189,16 @@ public class MeasurementProtocolBuilder{
                     }
 					
                     MeasurementProtocol.Builder builder = MeasurementProtocol.newBuilder();
-                    Optional.ofNullable(pm.get("t")).ifPresent(builder::setHitType);
-                    Optional.ofNullable(pm.get("cid")).ifPresent(builder::setClientId);
-                    Optional.ofNullable(pm.get("uid")).ifPresent(builder::setUserId);
-                    Optional.ofNullable(pm.get("MessageUuid")).ifPresent(builder::setHitId);
-                    Optional.ofNullable(FieldMapper.booleanVal(pm, "ni")).ifPresent(builder::setNonInteraction);
-                    Optional.ofNullable(pm.get("v")).ifPresent(builder::setVersion);
-
+                    Optional.ofNullable(FieldMapper.stringVal(pm.get("t"))).ifPresent(builder::setHitType);
+                    Optional.ofNullable(FieldMapper.stringVal(pm.get("cid"))).ifPresent(builder::setClientId);
+                    Optional.ofNullable(FieldMapper.stringVal(pm.get("uid"))).ifPresent(builder::setUserId);
+                    Optional.ofNullable(FieldMapper.stringVal(pm.get("MessageUuid"))).ifPresent(builder::setHitId);
+                    Optional.ofNullable(FieldMapper.booleanVal(pm.get("ni"))).ifPresent(builder::setNonInteraction);
+                    Optional.ofNullable(FieldMapper.stringVal(pm.get("v"))).ifPresent(builder::setVersion);
 
                     Optional.ofNullable(pageEntity.build(pm)).ifPresent(builder::setPage);
+                    Optional.ofNullable(eventEntity.build(pm)).ifPresent(builder::setEvent);
+                    Optional.ofNullable(exceptionEntity.build(pm)).ifPresent(builder::setException);
 
                     MeasurementProtocol measurementProtocol = builder.build();
                     LOG.info(measurementProtocol.toString());

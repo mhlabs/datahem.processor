@@ -14,46 +14,35 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * =========================LICENSE_END==================================
  */
 
-import org.datahem.processor.measurementprotocol.v1.utils.BaseEntity;
-import org.datahem.processor.measurementprotocol.v1.utils.Parameter;
+
+import org.datahem.protobuf.measurementprotocol.v2.Event;
+
 import java.util.Map;
-import java.util.List;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
+import java.util.Optional;
+import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class EventEntity extends BaseEntity{
+public class EventEntity{
 	
-	private List<Parameter> parameters;
 	private static final Logger LOG = LoggerFactory.getLogger(EventEntity.class);
 	
-	public EventEntity(){
-		super();
-		parameters = Arrays.asList(
-			new Parameter("ec", "String", null, 150, "event_category", true, "Category"),
-			new Parameter("ea", "String", null, 500, "event_action", true, "Action"),
-			new Parameter("el", "String", null, 500, "event_label", false, "Label"),
-			new Parameter("ev", "Integer", null, 100, "event_value", false, 55)
-		);
-	}
-	
-	public List<Parameter> getParameters(){return parameters;}
+	public EventEntity(){}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return "event".equals(paramMap.get("t"));
 	}
 	
-	public List<MPEntity> build(Map<String, String> paramMap){
-		List<MPEntity> mpEntities = new ArrayList<>();
-		if(trigger(paramMap)){
-			paramMap.put("et", "event");
-    		try{
-				mpEntities.add(builder(paramMap).build());
-				return mpEntities;
+	public Event build(Map<String, String> pm){
+		if(trigger(pm)){
+            try{
+                Event.Builder builder = Event.newBuilder();
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("ec"))).ifPresent(builder::setCategory);
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("ea"))).ifPresent(builder::setAction);
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("el"))).ifPresent(builder::setLabel);
+                Optional.ofNullable(FieldMapper.intVal(pm.get("ev"))).ifPresent(builder::setValue);
+                return builder.build();
 			}
 			catch(IllegalArgumentException e){
 				LOG.error(e.toString());
@@ -64,12 +53,4 @@ public class EventEntity extends BaseEntity{
 			return null;
 		}
 	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap) throws IllegalArgumentException{
-		return builder(paramMap, super.builder(paramMap));
-	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder mpEntityBuilder) throws IllegalArgumentException{
-		return super.builder(paramMap, mpEntityBuilder, this.parameters);
-	}	
 }

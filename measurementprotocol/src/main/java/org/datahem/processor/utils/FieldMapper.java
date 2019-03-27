@@ -44,6 +44,7 @@ public class FieldMapper{
 	        	.map(s -> Arrays.copyOf(s.split("="), 2))
 	        	.collect(Collectors.toMap(s -> decode(s[0]), s -> decode(s[1])));
         }catch(NullPointerException e) {
+            LOG.error(e.toString());
     		return null;
 		}
     }
@@ -61,6 +62,7 @@ public class FieldMapper{
     	try {
         	return encoded == null ? "(not set)" : URLDecoder.decode(encoded, "UTF-8");
     	} catch(final UnsupportedEncodingException e) {
+            LOG.error(e.toString());
         	throw new RuntimeException("Impossible: UTF-8 is a required encoding", e);
     	}
 	}
@@ -69,10 +71,71 @@ public class FieldMapper{
     	try {
         	return decoded == null ? "" : URLEncoder.encode(String.valueOf(decoded), "UTF-8").replace("+", "%20");
     	} catch(final UnsupportedEncodingException e) {
+            LOG.error(e.toString());
         	throw new RuntimeException("Impossible: UTF-8 is a required encoding", e);
     	}
 	}
 
+    public static String stringVal(String field){
+        return field;
+    }
+
+    public static Optional<Boolean> booleanVal(String field){
+        try{
+            return Optional.of(Boolean.parseBoolean(field));
+        }
+        catch(NumberFormatException e){
+            LOG.error(e.toString());
+            //return null;
+            return Optional.ofNullable(null);
+        }
+    }
+
+    public static Optional<int> intVal(String field){
+        try{
+            return Optional.of(Integer.parseInt(field));
+        }
+        catch(NumberFormatException e){
+            LOG.error(e.toString());
+            //return null;
+            return Optional.ofNullable(null);
+        }
+    }
+
+    public static Optional<double> doubleVal(String field){
+        try{
+            return Optional.of(Double.parseDouble(field));
+        }
+        catch(NumberFormatException e){
+            LOG.error(e.toString());
+            //return null;
+            return Optional.ofNullable(null);
+        }
+    }
+
+    public static Optional<long> longVal(String field){
+        try{
+            return Optional.of(Long.parseLong(field));
+        }
+        catch(NumberFormatException e){
+            LOG.error(e.toString());
+            //return null;
+            return Optional.ofNullable(null);
+        }
+    }
+    
+    public static Optional<float> floatVal(String field){
+        try{
+            return Optional.of(Float.parseFloat(field));
+        }
+        catch(NumberFormatException e){
+            LOG.error(e.toString());
+            //return null;
+            return Optional.ofNullable(null);
+        }
+    }
+
+    /*
     public static String stringVal(Map<String, String> pm, String field){
         return pm.get(field);
     }
@@ -96,4 +159,5 @@ public class FieldMapper{
     public static float floatVal(Map<String, String> pm, String field){
         return Float.parseFloat(pm.get(field));
     }
+    */
 }

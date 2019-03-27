@@ -14,29 +14,10 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * =========================LICENSE_END==================================
  */
 
-
-/*
-import org.datahem.processor.measurementprotocol.v1.utils.BaseEntity;
-import org.datahem.processor.measurementprotocol.v1.utils.Parameter;
-*/
-
-
 import java.util.Map;
 import org.datahem.protobuf.measurementprotocol.v2.Page;
 import java.util.Optional;
-/*
-import java.util.List;
-
-import java.util.HashMap;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.Collections;
-import java.util.stream.Stream;
-*/
-//import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
+import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,21 +31,19 @@ public class PageEntity{
 	}
 	
 	public Page build(Map<String, String> pm){
-        LOG.info("Page");
 		if(trigger(pm)){
             try{
                 Page.Builder builder = Page.newBuilder();
-                Optional.ofNullable(pm.get("dt")).ifPresent(builder::setTitle);
-                Optional.ofNullable(pm.get("dlu")).ifPresent(builder::setUrl);
-                Optional.ofNullable(pm.get("dh")).ifPresent(builder::setHostname);
-                Optional.ofNullable(pm.get("dp")).ifPresent(builder::setPath);
-                Optional.ofNullable(pm.get("dr")).ifPresent(builder::setReferer);
-                Optional.ofNullable(pm.get("drh")).ifPresent(builder::setRefererHost);
-                Optional.ofNullable(pm.get("drp")).ifPresent(builder::setRefererPath);
-                //Optional.ofNullable(pm.get("sst")).ifPresent(builder::setSearchKeyword);
-                Optional.ofNullable(pm.get("de")).ifPresent(builder::setEncoding);
-                Optional.ofNullable(pm.get("linkid")).ifPresent(builder::setLinkId);
-
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("dt"))).ifPresent(builder::setTitle);
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("dlu"))).ifPresent(builder::setUrl);
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("dh"))).ifPresent(builder::setHostname);
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("dp"))).ifPresent(builder::setPath);
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("dr"))).ifPresent(builder::setReferer);
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("drh"))).ifPresent(builder::setRefererHost);
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("drp"))).ifPresent(builder::setRefererPath);
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("de"))).ifPresent(builder::setEncoding);
+                Optional.ofNullable(FieldMapper.stringVal(pm.get("linkid"))).ifPresent(builder::setLinkId);
+                //Optional.ofNullable(FieldMapper.stringVal(pm.get("sst"))).ifPresent(builder::setSearchKeyword);
                 return builder.build();
 			}
 			catch(IllegalArgumentException e){
