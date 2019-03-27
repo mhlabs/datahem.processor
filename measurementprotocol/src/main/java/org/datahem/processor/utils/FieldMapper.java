@@ -76,82 +76,77 @@ public class FieldMapper{
     	}
 	}
 
+    /*
     public static String stringVal(String field){
         return field;
-    }
-
-/*
-    //public static Optional<Boolean> booleanVal(String field){
-    //public static OptionalBool booleanVal(String field){
-    public static <T> T  booleanVal(String field){
+    }*/
+    
+    public static Optional<String> stringVal(String field){
         try{
-            return Boolean.parseBoolean(field);
-            //return Optional.of(Boolean.parseBoolean(field));
+            String s = new String(field);
+            return Optional.of(s);
         }
         catch(NumberFormatException e){
             LOG.error(e.toString());
-            return null;
-            //return Optional.ofNullable(null);
+            return Optional.empty();
         }
-    }*/
+    }
+
+    public static Optional<Boolean> booleanVal(String field){
+        try{
+            Boolean b = new Boolean(field);
+            return Optional.of(b);
+        }
+        catch(NumberFormatException e){
+            LOG.error(e.toString());
+            return Optional.empty();
+        }
+    }
 
     public static Optional<Integer> intVal(String field){
-        LOG.info("field:" + field);
         try{
             Integer i = new Integer(field);
             return Optional.of(i);
         }
         catch(NumberFormatException e){
             LOG.error(e.toString());
-            return Optional.empty(); //ofNullable(null);
+            return Optional.empty();
         }
     }
 
-/*
-    public static OptionalInt intVal(String field){
-        LOG.info("field:" + field);
+    public static Optional<Double> doubleVal(String field){
         try{
-            return OptionalInt.of(Integer.parseInt(field));
+            Double d = new Double(field);
+            return Optional.of(d);
         }
         catch(NumberFormatException e){
             LOG.error(e.toString());
-            //return null;
-            return OptionalInt.empty(); //.ofNullable(null);
-        }
-    }*/
-
-    public static OptionalDouble doubleVal(String field){
-        try{
-            return OptionalDouble.of(Double.parseDouble(field));
-        }
-        catch(NumberFormatException e){
-            LOG.error(e.toString());
-            //return null;
-            return OptionalDouble.empty(); //ofNullable(null);
+            return Optional.empty();
         }
     }
 
-    public static OptionalLong longVal(String field){
+    public static Optional<Long> longVal(String field){
         try{
-            return OptionalLong.of(Long.parseLong(field));
+            Long l = new Long(field);
+            return Optional.of(l);
         }
         catch(NumberFormatException e){
             LOG.error(e.toString());
-            //return null;
-            return OptionalLong.empty(); //.ofNullable(null);
+            return Optional.empty();
         }
     }
-    /*
-    public static Optional<float> floatVal(String field){
+
+    
+    public static Optional<Float> floatVal(String field){
         try{
-            return Optional.of(Float.parseFloat(field));
+            Float f = new Float(field);
+            return Optional.of(f);
         }
         catch(NumberFormatException e){
             LOG.error(e.toString());
-            //return null;
-            return Optional.ofNullable(null);
+            return Optional.empty();
         }
-    }*/
+    }
 
     /*
     public static String stringVal(Map<String, String> pm, String field){

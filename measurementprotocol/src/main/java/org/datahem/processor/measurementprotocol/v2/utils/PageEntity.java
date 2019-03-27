@@ -34,16 +34,16 @@ public class PageEntity{
 		if(trigger(pm)){
             try{
                 Page.Builder builder = Page.newBuilder();
-                Optional.ofNullable(FieldMapper.stringVal(pm.get("dt"))).ifPresent(builder::setTitle);
-                Optional.ofNullable(FieldMapper.stringVal(pm.get("dlu"))).ifPresent(builder::setUrl);
-                Optional.ofNullable(FieldMapper.stringVal(pm.get("dh"))).ifPresent(builder::setHostname);
-                Optional.ofNullable(FieldMapper.stringVal(pm.get("dp"))).ifPresent(builder::setPath);
-                Optional.ofNullable(FieldMapper.stringVal(pm.get("dr"))).ifPresent(builder::setReferer);
-                Optional.ofNullable(FieldMapper.stringVal(pm.get("drh"))).ifPresent(builder::setRefererHost);
-                Optional.ofNullable(FieldMapper.stringVal(pm.get("drp"))).ifPresent(builder::setRefererPath);
-                Optional.ofNullable(FieldMapper.stringVal(pm.get("de"))).ifPresent(builder::setEncoding);
-                Optional.ofNullable(FieldMapper.stringVal(pm.get("linkid"))).ifPresent(builder::setLinkId);
-                //Optional.ofNullable(FieldMapper.stringVal(pm.get("sst"))).ifPresent(builder::setSearchKeyword);
+                Optional.ofNullable(pm.get("dt")).ifPresent(builder::setTitle);
+                Optional.ofNullable(pm.get("dlu")).ifPresent(builder::setUrl);
+                Optional.ofNullable(pm.get("dh")).ifPresent(builder::setHostname);
+                Optional.ofNullable(pm.get("dp")).ifPresent(builder::setPath);
+                Optional.ofNullable(pm.get("dr")).ifPresent(builder::setReferer);
+                Optional.ofNullable(pm.get("drh")).ifPresent(builder::setRefererHost);
+                Optional.ofNullable(pm.get("drp")).ifPresent(builder::setRefererPath);
+                Optional.ofNullable(pm.get("de")).ifPresent(builder::setEncoding);
+                Optional.ofNullable(pm.get("linkid")).ifPresent(builder::setLinkId);
+                //Optional.ofNullable(pm.get("sst")).ifPresent(builder::setSearchKeyword);
                 return builder.build();
 			}
 			catch(IllegalArgumentException e){

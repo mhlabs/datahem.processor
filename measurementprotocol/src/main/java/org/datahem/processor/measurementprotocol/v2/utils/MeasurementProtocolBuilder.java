@@ -189,12 +189,12 @@ public class MeasurementProtocolBuilder{
                     }
 					
                     MeasurementProtocol.Builder builder = MeasurementProtocol.newBuilder();
-                    Optional.ofNullable(FieldMapper.stringVal(pm.get("t"))).ifPresent(builder::setHitType);
-                    Optional.ofNullable(FieldMapper.stringVal(pm.get("cid"))).ifPresent(builder::setClientId);
-                    Optional.ofNullable(FieldMapper.stringVal(pm.get("uid"))).ifPresent(builder::setUserId);
-                    Optional.ofNullable(FieldMapper.stringVal(pm.get("MessageUuid"))).ifPresent(builder::setHitId);
+                    Optional.ofNullable(pm.get("t")).ifPresent(builder::setHitType);
+                    Optional.ofNullable(pm.get("cid")).ifPresent(builder::setClientId);
+                    Optional.ofNullable(pm.get("uid")).ifPresent(builder::setUserId);
+                    Optional.ofNullable(pm.get("MessageUuid")).ifPresent(builder::setHitId);
+                    Optional.ofNullable(pm.get("v")).ifPresent(builder::setVersion);
                     FieldMapper.intVal(pm.get("ni")).ifPresent(g -> builder.setNonInteraction(g.intValue()));
-                    Optional.ofNullable(FieldMapper.stringVal(pm.get("v"))).ifPresent(builder::setVersion);
 
                     Optional.ofNullable(pageEntity.build(pm)).ifPresent(builder::setPage);
                     Optional.ofNullable(eventEntity.build(pm)).ifPresent(builder::setEvent);

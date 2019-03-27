@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -49,8 +49,8 @@ public class ExperimentEntity{
 	        				.map(s -> Arrays.copyOf(s.split("\\."), 2))
 	        				.forEach(s -> {
                                 Experiment.Builder builder = Experiment.newBuilder();
-                                Optional.ofNullable(FieldMapper.stringVal(pm.get("dt"))).ifPresent(builder::setId);
-                                Optional.ofNullable(FieldMapper.stringVal(pm.get("dlu"))).ifPresent(builder::setVariant);
+                                Optional.ofNullable(pm.get("dt")).ifPresent(builder::setId);
+                                Optional.ofNullable(pm.get("dlu")).ifPresent(builder::setVariant);
 	        					eventList.add(builder.build());
 	        				});
         			}catch(NullPointerException e) {
@@ -61,8 +61,8 @@ public class ExperimentEntity{
 				if((null != pm.get("xid") && (null != pm.get("xvar")))){
 					try{
                         Experiment.Builder builder = Experiment.newBuilder();
-                        Optional.ofNullable(FieldMapper.stringVal(pm.get("xid"))).ifPresent(builder::setId);
-                        Optional.ofNullable(FieldMapper.stringVal(pm.get("xvar"))).ifPresent(builder::setVariant);
+                        Optional.ofNullable(pm.get("xid")).ifPresent(builder::setId);
+                        Optional.ofNullable(pm.get("xvar")).ifPresent(builder::setVariant);
 	        			eventList.add(builder.build());
 	        		}
         			catch(NullPointerException e) {

@@ -37,9 +37,7 @@ public class ExceptionEntity{
 		if(trigger(pm)){
             try{
                 Exception.Builder builder = Exception.newBuilder();
-                Optional.ofNullable(FieldMapper.stringVal(pm.get("exd"))).ifPresent(builder::setDescription);
-                //Optional.ofNullable(FieldMapper.intVal(pm.get("exf"))).ifPresent(builder::setIsFatal);
-                //Optional.ofNullable(FieldMapper.intVal(pm.get("exf"))).ifPresent(g -> builder.setIsFatal(g.get().intValue()));
+                Optional.ofNullable(pm.get("exd")).ifPresent(builder::setDescription);
                 FieldMapper.intVal(pm.get("exf")).ifPresent(g -> builder.setIsFatal(g.intValue()));
                 return builder.build();
 			}
