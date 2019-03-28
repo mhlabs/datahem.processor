@@ -18,6 +18,7 @@ import org.datahem.protobuf.measurementprotocol.v2.Product;
 import org.datahem.protobuf.measurementprotocol.v2.CustomDimension;
 import org.datahem.protobuf.measurementprotocol.v2.CustomMetric;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.datahem.processor.utils.FieldMapper;
@@ -39,15 +40,25 @@ public class ProductEntity{
 	
 	
 	private boolean trigger(Map<String, String> paramMap){
-		return Stream.of("detail", "click", "add", "remove", "checkout", "purchase", "refund").collect(Collectors.toList()).contains(paramMap.get("pa"));
+        //check if payload contains product impression
+        Pattern productImpressionIndexPattern = Pattern.compile("^il[0-9]{1,3}pi[0-9]{1,3}.*");
+		Map<String, List<String>> entries = paramMap
+					.keySet()
+        			.stream()
+        			.filter(productImpressionIndexPattern.asPredicate())
+        			.collect(Collectors.groupingBy(s -> s, Collectors.toList()));
+        
+        //check if product impression or product action
+		return (entries.size() > 0 || Stream.of("detail", "click", "add", "remove", "checkout", "purchase", "refund").collect(Collectors.toList()).contains(paramMap.get("pa")));
 	}
 	
 	public ArrayList<Product> build(Map<String, String> paramMap){
 		ArrayList<Product> eventList = new ArrayList<>();
-		if(trigger(paramMap)){
+		Map<String, String> impressionMap = new HashMap<>(paramMap);
+        if(trigger(paramMap)){
     			
+                //START product action
     			Pattern productExclPattern = Pattern.compile("^(?!pr[0-9]{1,3}.*).*$");
-    			//final Matcher matcher;
     			Map<String, String> paramMapExclPr = paramMap
 					.keySet()
         			.stream()
@@ -100,6 +111,54 @@ public class ProductEntity{
 					}catch(IllegalArgumentException e){
 						LOG.error(e.toString());
 					}
+                //END product action
+
+                //START product impression
+                
+    			//Group product parameters by list and product index 
+    			final Pattern productImpressionIndexPattern = Pattern.compile("^il([0-9]{1,3})pi([0-9]{1,3}).*");
+				LOG.info(impressionMap.toString());
+                Map<String, List<String>> ilEntries = impressionMap
+					.keySet()
+        			.stream()
+        			.filter(productImpressionIndexPattern.asPredicate())
+        			.collect(Collectors.groupingBy(s -> {
+        				final Matcher matcher = productImpressionIndexPattern.matcher(s);
+        				matcher.find();
+        				return matcher.group(1)+matcher.group(2);
+        				}, Collectors.toList()));
+    			LOG.info(ilEntries.toString());
+    			//Build a product hit for each produt
+    			for(Map.Entry<String, List<String>> ilEntry : ilEntries.entrySet()){
+		            List<String> ilKeys = ilEntry.getValue();
+		            Map<String, String> ilParamMap = ilKeys
+		            	.stream()
+		            	.collect(Collectors.toMap(s -> s, s -> impressionMap.get(s)));
+		            try{
+                        LOG.info(ilParamMap.toString());
+                        Product.Builder builder = Product.newBuilder();
+                        //Optional.ofNullable(getFirstParameter(ilParamMap, "il[0-9]{1,3}nm")).ifPresent(builder::setList);
+                        Optional.ofNullable(getFirstParameter(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}id")).ifPresent(builder::setId);
+                        Optional.ofNullable(getFirstParameter(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}nm")).ifPresent(builder::setName);
+                        Optional.ofNullable(getFirstParameter(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}br")).ifPresent(builder::setBrand);
+                        Optional.ofNullable(getFirstParameter(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}va")).ifPresent(builder::setVariant);
+                        Optional.ofNullable(getFirstParameter(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}ca")).ifPresent(builder::setCategory);
+                        FieldMapper.doubleVal(getFirstParameter(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}pr")).ifPresent(g -> builder.setPrice(g.doubleValue()));
+                        FieldMapper.intVal(getFirstParameter(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}pr")).ifPresent(g -> builder.setPosition(g.intValue()));
+                        Optional.ofNullable("impression").ifPresent(builder::setAction);
+                        /*
+                        Optional.ofNullable(getCustomDimensions(prParamMap)).ifPresent(builder::addAllCustomDimensions);
+                        Optional.ofNullable(getCustomMetrics(prParamMap)).ifPresent(builder::addAllCustomMetrics);
+                        */
+                        eventList.add(builder.build());
+					}
+					catch(IllegalArgumentException e){
+						LOG.error(e.toString());
+					}
+				}
+
+
+
 				}
 				return eventList;
 		}
@@ -130,6 +189,16 @@ public class ProductEntity{
                 customMetrics.add(builder.build());
             }
             return customMetrics;
+    }
+
+    private String getFirstParameter(Map<String, String> prParamMap, String parameterPattern){
+        Pattern pattern = Pattern.compile(parameterPattern);
+ 		Optional<String> firstElement = prParamMap
+ 			.keySet()
+ 			.stream()
+ 			.filter(pattern.asPredicate())
+			.findFirst();
+        return prParamMap.get(firstElement.orElse(null));    
     }
 
     private List<String> getParameters(Map<String, String> prParamMap, String parameterPattern){
