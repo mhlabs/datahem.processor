@@ -14,7 +14,7 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * =========================LICENSE_END==================================
  */
 
-
+/*
 import org.datahem.processor.measurementprotocol.v1.utils.BaseEntity;
 import org.datahem.processor.measurementprotocol.v1.utils.Parameter;
 import java.util.Map;
@@ -32,13 +32,31 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+*/
+import org.datahem.protobuf.measurementprotocol.v2.Product;
+
+import java.util.Map;
+import java.util.Optional;
+import org.datahem.processor.utils.FieldMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+//import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.stream.Stream;
 
 
-public class ProductEntity extends BaseEntity{
-	private List<Parameter> parameters;
+public class ProductEntity{
 	private static final Logger LOG = LoggerFactory.getLogger(ProductEntity.class);
 	
 	public ProductEntity(){
+        /*
 		super();
 		parameters = Arrays.asList(
 			new Parameter("(pr[0-9]{1,3}id)", "String", null, 500, "product_id", false, "pr1id", "P12345"),
@@ -58,19 +76,17 @@ public class ProductEntity extends BaseEntity{
 			new Parameter("cos", "Integer", null, 50, "checkout_step", false, 2), //If pa == checkout
 			new Parameter("col", "String", null, 50, "checkout_step_option", false, "Visa"), //If pa == checkout
             new Parameter("cu", "String", null, 10, "product_currency", false,"SEK")
-		);
+		);*/
 	}
 	
-	public List<Parameter> getParameters(){return parameters;}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return Stream.of("detail", "click", "add", "remove", "checkout", "purchase", "refund").collect(Collectors.toList()).contains(paramMap.get("pa"));
 	}
 	
-	public List<MPEntity> build(Map<String, String> paramMap){
-		List<MPEntity> eventList = new ArrayList<>();
+	public ArrayList<Product> build(Map<String, String> paramMap){
+		ArrayList<Product> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-    			paramMap.put("et", "product_" + paramMap.get("pa"));
     			
     			Pattern productExclPattern = Pattern.compile("^(?!pr[0-9]{1,3}.*).*$");
     			//final Matcher matcher;
@@ -106,8 +122,12 @@ public class ProductEntity extends BaseEntity{
 		            		(null != prParamMap.get("pr" + prefix + "nm")) || 
 		            		(null != paramMap.get("ti") && "refund".equals(paramMap.get("pa")))
 		            	){
-		            		MPEntity evp = builder(prParamMap).build();
-							eventList.add(evp);
+		            		//MPEntity evp = builder(prParamMap).build();
+							Product.Builder builder = Product.newBuilder();
+                                Optional.ofNullable(prParamMap.get("pr" + prefix + "id")).ifPresent(builder::setId);
+                                Optional.ofNullable(prParamMap.get("pr" + prefix + "nm")).ifPresent(builder::setName);
+	        					eventList.add(builder.build());
+                            //eventList.add(evp);
 						}
 					}catch(IllegalArgumentException e){
 						LOG.error(e.toString());
@@ -118,13 +138,5 @@ public class ProductEntity extends BaseEntity{
 		else{
 			return null;
 		}
-	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap) throws IllegalArgumentException{
-		return builder(paramMap, super.builder(paramMap));
-	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder eventBuilder) throws IllegalArgumentException{
-		return super.builder(paramMap, eventBuilder, this.parameters);
 	}	
 }

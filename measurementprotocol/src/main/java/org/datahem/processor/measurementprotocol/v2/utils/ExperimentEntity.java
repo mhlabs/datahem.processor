@@ -38,8 +38,8 @@ public class ExperimentEntity{
 		return (null != paramMap.get("exp") || (null != paramMap.get("xid") && (null != paramMap.get("xvar"))));
 	}
 	
-	public List<Experiment> build(Map<String, String> pm){
-		List<Experiment> eventList = new ArrayList<>();
+	public ArrayList<Experiment> build(Map<String, String> pm){
+		ArrayList<Experiment> eventList = new ArrayList<>();
 		if(trigger(pm)){
     		try{
 				if(null != pm.get("exp")){

@@ -55,14 +55,16 @@ public class MeasurementProtocolBuilder{
 	private PageEntity pageEntity = new PageEntity();
     private EventEntity eventEntity = new EventEntity();
 	private ExceptionEntity exceptionEntity = new ExceptionEntity();
+    private ExperimentEntity experimentEntity = new ExperimentEntity();
+    private ProductEntity productEntity = new ProductEntity();
+
     /*
 	private SocialEntity socialEntity = new SocialEntity();
 	private TimingEntity timingEntity = new TimingEntity();
 	private TransactionEntity transactionEntity = new TransactionEntity();
-	private ProductEntity productEntity = new ProductEntity();
+	
 	private TrafficEntity trafficEntity = new TrafficEntity();
 	private PromotionEntity promotionEntity = new PromotionEntity();
-	private ExperimentEntity experimentEntity = new ExperimentEntity();
 	private ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
 	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
     */
@@ -199,6 +201,8 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(pageEntity.build(pm)).ifPresent(builder::setPage);
                     Optional.ofNullable(eventEntity.build(pm)).ifPresent(builder::setEvent);
                     Optional.ofNullable(exceptionEntity.build(pm)).ifPresent(builder::setException);
+                    Optional.ofNullable(experimentEntity.build(pm)).ifPresent(builder::addAllExperiment);
+                    Optional.ofNullable(productEntity.build(pm)).ifPresent(builder::addAllProducts);
 
                     MeasurementProtocol measurementProtocol = builder.build();
                     LOG.info(measurementProtocol.toString());
