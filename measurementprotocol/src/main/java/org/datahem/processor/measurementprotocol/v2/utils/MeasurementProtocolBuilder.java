@@ -58,11 +58,12 @@ public class MeasurementProtocolBuilder{
     private ExperimentEntity experimentEntity = new ExperimentEntity();
     private ProductEntity productEntity = new ProductEntity();
     private TrafficSourceEntity trafficSourceEntity = new TrafficSourceEntity();
+    private TransactionEntity transactionEntity = new TransactionEntity();
 
     /*
 	private SocialEntity socialEntity = new SocialEntity();
 	private TimingEntity timingEntity = new TimingEntity();
-	private TransactionEntity transactionEntity = new TransactionEntity();
+	
 	
 	
 	private PromotionEntity promotionEntity = new PromotionEntity();
@@ -204,6 +205,7 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(experimentEntity.build(pm)).ifPresent(builder::addAllExperiment);
                     Optional.ofNullable(productEntity.build(pm)).ifPresent(builder::addAllProducts);
                     Optional.ofNullable(trafficSourceEntity.build(pm)).ifPresent(builder::setTrafficSource);
+                    Optional.ofNullable(transactionEntity.build(pm)).ifPresent(builder::setTransaction);
 
                     MeasurementProtocol measurementProtocol = builder.build();
                     LOG.info(measurementProtocol.toString());

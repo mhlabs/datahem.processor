@@ -14,50 +14,35 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * =========================LICENSE_END==================================
  */
 
+import org.datahem.protobuf.measurementprotocol.v2.Transaction;
 
-
-import org.datahem.processor.measurementprotocol.v1.utils.BaseEntity;
-import org.datahem.processor.measurementprotocol.v1.utils.Parameter;
 import java.util.Map;
-import java.util.List;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
+import java.util.Optional;
+import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-public class TransactionEntity extends BaseEntity{
-	private List<Parameter> parameters;
+public class TransactionEntity{
 	private static final Logger LOG = LoggerFactory.getLogger(TransactionEntity.class);
 
-	public TransactionEntity(){
-		super();
-		parameters = Arrays.asList(
-			new Parameter("ti", "String", null, 50, "transaction_id", true, "OD564"),
-			new Parameter("ta", "String", null, 500, "transaction_affiliation", false, "Member"),
-			new Parameter("tr", "Double", null, 500, "transaction_revenue", false, 15.47),
-			new Parameter("tt", "Double", null, 500, "transaction_tax", false, 11.20),
-			new Parameter("ts", "Double", null, 500, "transaction_shipping", false, 3.50),
-			new Parameter("tcc", "String", null, 500, "transaction_coupon_code", false, "SUMMER08"),
-            new Parameter("cu", "String", null, 10, "transaction_currency", false,"SEK")
-		);
-	}
-	
-	public List<Parameter> getParameters(){return parameters;}
+	public TransactionEntity(){}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return (null != paramMap.get("ti") && "purchase".equals(paramMap.get("pa")));
 	}
 	
-	public List<MPEntity> build(Map<String, String> paramMap){
-		List<MPEntity> eventList = new ArrayList<>();
-		if(trigger(paramMap)){
-			paramMap.put("et", "ecommerce_" + paramMap.get("pa"));
+	public Transaction build(Map<String, String> pm){
+		if(trigger(pm)){
     		try{
-				eventList.add(builder(paramMap).build());
-				return eventList;
+                Transaction.Builder builder = Transaction.newBuilder();
+                Optional.ofNullable(pm.get("ti")).ifPresent(builder::setId);
+                FieldMapper.doubleVal(pm.get("tr")).ifPresent(g -> builder.setRevenue(g.doubleValue()));
+                FieldMapper.doubleVal(pm.get("tt")).ifPresent(g -> builder.setTax(g.doubleValue()));
+                FieldMapper.doubleVal(pm.get("ts")).ifPresent(g -> builder.setShipping(g.doubleValue()));
+                Optional.ofNullable(pm.get("ta")).ifPresent(builder::setAffiliation);
+                Optional.ofNullable(pm.get("cu")).ifPresent(builder::setCurrency);
+                Optional.ofNullable(pm.get("tcc")).ifPresent(builder::setCoupon);
+                return builder.build();
 			}
 			catch(IllegalArgumentException e){
 				LOG.error(e.toString());
@@ -68,12 +53,4 @@ public class TransactionEntity extends BaseEntity{
 			return null;
 		}
 	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap) throws IllegalArgumentException{
-		return builder(paramMap, super.builder(paramMap));
-	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder eventBuilder) throws IllegalArgumentException{
-		return super.builder(paramMap, eventBuilder, this.parameters);
-	}	
 }
