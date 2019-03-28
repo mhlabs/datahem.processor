@@ -34,6 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 */
 import org.datahem.protobuf.measurementprotocol.v2.Product;
+import org.datahem.protobuf.measurementprotocol.v2.CustomDimension;
+import org.datahem.protobuf.measurementprotocol.v2.CustomMetric;
 
 import java.util.Map;
 import java.util.Optional;
@@ -42,42 +44,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-//import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-import java.util.Collections;
 import java.util.stream.Stream;
 
 
 public class ProductEntity{
 	private static final Logger LOG = LoggerFactory.getLogger(ProductEntity.class);
 	
-	public ProductEntity(){
-        /*
-		super();
-		parameters = Arrays.asList(
-			new Parameter("(pr[0-9]{1,3}id)", "String", null, 500, "product_id", false, "pr1id", "P12345"),
-			new Parameter("(pr[0-9]{1,3}nm)", "String", null, 500, "product_name", false, "pr1nm", "Android T-Shirt"),
-			new Parameter("(pr[0-9]{1,3}br)", "String", null, 500, "product_brand", false, "pr1br", "Google"),
-			new Parameter("(pr[0-9]{1,3}ca)", "String", null, 500, "product_category", false, "pr1ca", "Apparel/Mens/T-Shirts"),
-			new Parameter("(pr[0-9]{1,3}va)", "String", null, 500, "product_variant", false, "pr1va", "Black"),
-			new Parameter("(pr[0-9]{1,3}pr)", "Double", null, 500, "product_price", false, "pr1pr", 29.20),
-			new Parameter("(pr[0-9]{1,3}qt)", "Integer", null, 500, "product_quantity", false, "pr1qt", 2),
-			new Parameter("(pr[0-9]{1,3}cc)", "String", null, 500, "product_coupon_code", false, "pr1cc", "SUMMER_SALE13"),
-			new Parameter("(pr[0-9]{1,3}ps)", "Integer", null, 500, "product_position", false, "pr1ps", 2),
-			new Parameter("(pr[0-9]{1,3}cd[0-9]{1,3})", "String", null, 500, "product_custom_dimension_", false, "pr[0-9]{1,3}cd([0-9]{1,3})", "pr1cd1", "Member", "product_custom_dimension_1"),
-			new Parameter("(pr[0-9]{1,3}cm[0-9]{1,3})", "Integer", null, 500, "product_custom_metric_", false, "pr[0-9]{1,3}cm([0-9]{1,3})", "pr1cm1", 28, "product_custom_metric_1"),
-			new Parameter("pa", "String", null, 50, "product_action", true, "detail"),
-			new Parameter("pal", "String", null, 500, "product_action_list", false, "Search Results"), //If pa == detail || click
-			new Parameter("ti", "String", null, 50, "transaction_id", false, "T1234"), //If pa == purchase
-			new Parameter("cos", "Integer", null, 50, "checkout_step", false, 2), //If pa == checkout
-			new Parameter("col", "String", null, 50, "checkout_step_option", false, "Visa"), //If pa == checkout
-            new Parameter("cu", "String", null, 10, "product_currency", false,"SEK")
-		);*/
-	}
+	public ProductEntity(){}
 	
 	
 	private boolean trigger(Map<String, String> paramMap){
@@ -108,7 +85,6 @@ public class ProductEntity{
         				return matcher.group(1);
         				}, Collectors.toList()));
     			
-    			
     			//Build a product hit for each product
     			for(Map.Entry<String, List<String>> entry : entries.entrySet()){
 		            String prefix = entry.getKey();
@@ -137,7 +113,9 @@ public class ProductEntity{
                                 //FieldMapper.doubleVal(prParamMap.get("pr" + prefix + "pr")).ifPresent(g -> builder.setRefundAmount(g.doubleValue()));
                                 Optional.ofNullable(prParamMap.get("pal")).ifPresent(builder::setList);
                                 FieldMapper.intVal(prParamMap.get("pr" + prefix + "ps")).ifPresent(g -> builder.setPosition(g.intValue()));
-	        					eventList.add(builder.build());
+	        					Optional.ofNullable(getCustomDimensions(prParamMap)).ifPresent(builder::addAllCustomDimensions);
+                                Optional.ofNullable(getCustomMetrics(prParamMap)).ifPresent(builder::addAllCustomMetrics);
+                                eventList.add(builder.build());
                                 
         
                             //eventList.add(evp);
@@ -152,4 +130,54 @@ public class ProductEntity{
 			return null;
 		}
 	}	
+
+    private ArrayList<CustomDimension> getCustomDimensions(Map<String, String> prParamMap){
+			ArrayList<CustomDimension> customDimensions = new ArrayList<>();
+            List<String> params = getParameters(prParamMap, "^(pr[0-9]{1,3}cd[0-9]{1,3})$");
+            for(String p : params){
+                CustomDimension.Builder builder = CustomDimension.newBuilder();
+                FieldMapper.intVal(getParameterIndex(p, "^pr[0-9]{1,3}cd([0-9]{1,3})$")).ifPresent(g -> builder.setIndex(g.intValue()));
+                Optional.ofNullable(prParamMap.get(p)).ifPresent(builder::setValue);
+                customDimensions.add(builder.build());
+            }
+            return customDimensions;
+    }
+
+    private ArrayList<CustomMetric> getCustomMetrics(Map<String, String> prParamMap){
+			ArrayList<CustomMetric> customMetrics = new ArrayList<>();
+            List<String> params = getParameters(prParamMap, "^(pr[0-9]{1,3}cm[0-9]{1,3})$");
+            for(String p : params){
+                CustomMetric.Builder builder = CustomMetric.newBuilder();
+                FieldMapper.intVal(getParameterIndex(p, "^pr[0-9]{1,3}cm([0-9]{1,3})$")).ifPresent(g -> builder.setIndex(g.intValue()));
+                FieldMapper.intVal(prParamMap.get(p)).ifPresent(g -> builder.setValue(g.intValue()));
+                customMetrics.add(builder.build());
+            }
+            return customMetrics;
+    }
+
+    private List<String> getParameters(Map<String, String> prParamMap, String parameterPattern){
+        Pattern pattern = Pattern.compile(parameterPattern);
+ 		List<String> params = prParamMap
+ 			.keySet()
+ 			.stream()
+ 			.filter(pattern.asPredicate())
+			.collect(Collectors.toList());
+        return params;    
+    }
+
+    private String getParameterIndex(String param, String indexPattern){
+		if(null == param){
+			return null;
+		}
+		else{
+			Pattern pattern = Pattern.compile(indexPattern);
+			Matcher matcher = pattern.matcher(param);
+			if(matcher.find() && matcher.group(1) != null){
+				return matcher.group(1);
+			}
+			else {
+				return null;
+			}
+		}
+	}
 }

@@ -80,7 +80,7 @@ public class MeasurementProtocolPipelineTest {
 	
 	@Rule public transient TestPipeline p = TestPipeline.create();
 
-    String mpPayload = "v=1&_v=j73&aip=1&uid=123456&a=1786234232&t=pageview&_s=1&dl=https%3A%2F%2Fwww.foo.com%2F&dp=%2F&ul=en-us&de=UTF-8&dt=-&sd=24-bit&sr=1745x981&vp=1020x855&je=0&exp=Sa5K9MPeRXOmyHvW_zss6Q.1!6T0EqjhiQsedsWpXlts-jA.1&_u=yCCAAEAjQAAAg~&jid=&gjid=&cid=1653181724.1547722779&tid=UA-7391864-1&_gid=1874693131.1553603015&gtm=2wg3i1P9BRHCJ&cd13=7b2e603d-3166-45c2-861d-8fa0f828f81f&cd14=Mozilla%2F5.0%20(X11%3B%20CrOS%20aarch64%2011316.165.0)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F72.0.3626.122%20Safari%2F537.36&z=2064930086&pa=add&pr1id=26392&pr1nm=Klassikerl%C3%A5da%2020-p%20GB%20Glace&pr1pr=114&pr1br=GB%20Glace&pr1ca=Glasspinnar&pr1qt=1";
+    String mpPayload = "v=1&_v=j73&aip=1&uid=123456&a=1786234232&t=pageview&_s=1&dl=https%3A%2F%2Fwww.foo.com%2F&dp=%2F&ul=en-us&de=UTF-8&dt=-&sd=24-bit&sr=1745x981&vp=1020x855&je=0&exp=Sa5K9MPeRXOmyHvW_zss6Q.1!6T0EqjhiQsedsWpXlts-jA.1&_u=yCCAAEAjQAAAg~&jid=&gjid=&cid=1653181724.1547722779&tid=UA-7391864-1&_gid=1874693131.1553603015&gtm=2wg3i1P9BRHCJ&cd13=7b2e603d-3166-45c2-861d-8fa0f828f81f&cd14=Mozilla%2F5.0%20(X11%3B%20CrOS%20aarch64%2011316.165.0)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F72.0.3626.122%20Safari%2F537.36&z=2064930086&pa=add&pr1id=26392&pr1nm=Klassikerl%C3%A5da%2020-p%20GB%20Glace&pr1pr=114&pr1br=GB%20Glace&pr1ca=Glasspinnar&pr1qt=1&pr1cd1=gb&pr1cd2=red&pr1cm1=12";
     
     byte[] payload = mpPayload.getBytes(StandardCharsets.UTF_8);
 	private static Map<String,String> attributes = new HashMap<String, String>(){
