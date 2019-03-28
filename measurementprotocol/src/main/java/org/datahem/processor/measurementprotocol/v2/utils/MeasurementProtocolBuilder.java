@@ -57,13 +57,14 @@ public class MeasurementProtocolBuilder{
 	private ExceptionEntity exceptionEntity = new ExceptionEntity();
     private ExperimentEntity experimentEntity = new ExperimentEntity();
     private ProductEntity productEntity = new ProductEntity();
+    private TrafficSourceEntity trafficSourceEntity = new TrafficSourceEntity();
 
     /*
 	private SocialEntity socialEntity = new SocialEntity();
 	private TimingEntity timingEntity = new TimingEntity();
 	private TransactionEntity transactionEntity = new TransactionEntity();
 	
-	private TrafficEntity trafficEntity = new TrafficEntity();
+	
 	private PromotionEntity promotionEntity = new PromotionEntity();
 	private ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
 	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
@@ -76,31 +77,30 @@ public class MeasurementProtocolBuilder{
     public MeasurementProtocolBuilder(){
 	}
 	
-	/*
+	
   	public String getSearchEnginesPattern(){
-    	return this.trafficEntity.getSearchEnginesPattern();
+    	return this.trafficSourceEntity.getSearchEnginesPattern();
   	}
 
 	public void setSearchEnginesPattern(String pattern){
-    	this.trafficEntity.setSearchEnginesPattern(pattern);
+    	this.trafficSourceEntity.setSearchEnginesPattern(pattern);
   	}
   	
   	public String getSocialNetworksPattern(){
-    	return this.trafficEntity.getSocialNetworksPattern();
+    	return this.trafficSourceEntity.getSocialNetworksPattern();
   	}
 
 	public void setSocialNetworksPattern(String pattern){
-    	this.trafficEntity.setSocialNetworksPattern(pattern);
+    	this.trafficSourceEntity.setSocialNetworksPattern(pattern);
   	}
   	
   	public String getIgnoredReferersPattern(){
-    	return this.trafficEntity.getIgnoredReferersPattern();
+    	return this.trafficSourceEntity.getIgnoredReferersPattern();
   	}
 
 	public void setIgnoredReferersPattern(String pattern){
-    	this.trafficEntity.setIgnoredReferersPattern(pattern);
+    	this.trafficSourceEntity.setIgnoredReferersPattern(pattern);
   	}
-  	*/
   	
   	public String getExcludedBotsPattern(){
     	return this.excludedBotsPattern;
@@ -203,6 +203,7 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(exceptionEntity.build(pm)).ifPresent(builder::setException);
                     Optional.ofNullable(experimentEntity.build(pm)).ifPresent(builder::addAllExperiment);
                     Optional.ofNullable(productEntity.build(pm)).ifPresent(builder::addAllProducts);
+                    Optional.ofNullable(trafficSourceEntity.build(pm)).ifPresent(builder::setTrafficSource);
 
                     MeasurementProtocol measurementProtocol = builder.build();
                     LOG.info(measurementProtocol.toString());

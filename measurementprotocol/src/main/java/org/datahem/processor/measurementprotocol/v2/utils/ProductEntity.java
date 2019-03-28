@@ -14,25 +14,6 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * =========================LICENSE_END==================================
  */
 
-/*
-import org.datahem.processor.measurementprotocol.v1.utils.BaseEntity;
-import org.datahem.processor.measurementprotocol.v1.utils.Parameter;
-import java.util.Map;
-import java.util.List;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.stream.Collectors;
-import java.util.Collections;
-import java.util.stream.Stream;
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-*/
 import org.datahem.protobuf.measurementprotocol.v2.Product;
 import org.datahem.protobuf.measurementprotocol.v2.CustomDimension;
 import org.datahem.protobuf.measurementprotocol.v2.CustomMetric;
@@ -98,7 +79,6 @@ public class ProductEntity{
 		            		(null != prParamMap.get("pr" + prefix + "nm")) || 
 		            		(null != paramMap.get("ti") && "refund".equals(paramMap.get("pa")))
 		            	){
-		            		//MPEntity evp = builder(prParamMap).build();
 							Product.Builder builder = Product.newBuilder();
                                 Optional.ofNullable(prParamMap.get("pr" + prefix + "id")).ifPresent(builder::setId);
                                 Optional.ofNullable(prParamMap.get("pr" + prefix + "nm")).ifPresent(builder::setName);
@@ -116,9 +96,6 @@ public class ProductEntity{
 	        					Optional.ofNullable(getCustomDimensions(prParamMap)).ifPresent(builder::addAllCustomDimensions);
                                 Optional.ofNullable(getCustomMetrics(prParamMap)).ifPresent(builder::addAllCustomMetrics);
                                 eventList.add(builder.build());
-                                
-        
-                            //eventList.add(evp);
 						}
 					}catch(IllegalArgumentException e){
 						LOG.error(e.toString());

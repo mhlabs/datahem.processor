@@ -33,19 +33,16 @@ public class PayloadToMeasurementProtocolFn extends DoFn<PubsubMessage, Measurem
 		ValueProvider<String> timeZone;
 		
 	  	public PayloadToMeasurementProtocolFn(
-	  		/*ValueProvider<String> searchEnginesPattern, 
+	  		ValueProvider<String> searchEnginesPattern, 
 	  		ValueProvider<String> ignoredReferersPattern, 
 	  		ValueProvider<String> socialNetworksPattern, 
-	  		*/
             ValueProvider<String> includedHostnamesPattern, 
 	  		ValueProvider<String> excludedBotsPattern, 
 	  		//ValueProvider<String> siteSearchPattern,
 	  		ValueProvider<String> timeZone) {
-		     	/*
-                 this.searchEnginesPattern = searchEnginesPattern;
+                this.searchEnginesPattern = searchEnginesPattern;
 		     	this.ignoredReferersPattern = ignoredReferersPattern;
 		     	this.socialNetworksPattern = socialNetworksPattern;
-		     	*/
                 this.includedHostnamesPattern = includedHostnamesPattern;
 		     	this.excludedBotsPattern = excludedBotsPattern;
 		     	//this.siteSearchPattern = siteSearchPattern;

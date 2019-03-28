@@ -14,13 +14,6 @@ package org.datahem.processor.measurementprotocol.v2;
  * =========================LICENSE_END==================================
  */
 
-/*
-import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto.*;
-import org.datahem.protobuf.collector.v1.CollectorPayloadEntityProto;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto;
-*/
-
 import org.datahem.processor.utils.ProtobufUtils;
 import org.datahem.processor.measurementprotocol.v2.utils.MeasurementProtocolBuilder;
 import org.datahem.processor.measurementprotocol.v2.utils.PayloadToMeasurementProtocolFn;
@@ -115,11 +108,11 @@ public class MeasurementProtocolPipeline {
             PCollection<MeasurementProtocol> enrichedEntities = payload
                 .apply(view.id + " - Payload to MeasurementProtocol", 
                     ParDo.of(new PayloadToMeasurementProtocolFn(
-                        /*
+                        
                         StaticValueProvider.of(view.searchEnginesPattern),
                         StaticValueProvider.of(view.ignoredReferersPattern), 
                         StaticValueProvider.of(view.socialNetworksPattern),
-                        */
+                        
                         StaticValueProvider.of(view.includedHostnamesPattern),
                         StaticValueProvider.of(view.excludedBotsPattern),
                         //StaticValueProvider.of(view.siteSearchPattern),

@@ -16,8 +16,8 @@ package org.datahem.processor.measurementprotocol.v2.utils;
 
 
 
-import org.datahem.processor.measurementprotocol.v1.utils.BaseEntity;
-import org.datahem.processor.measurementprotocol.v1.utils.Parameter;
+import org.datahem.protobuf.measurementprotocol.v2.TrafficSource;
+
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
@@ -27,18 +27,18 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.net.URL;
 import java.net.MalformedURLException;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
+import java.util.Optional;
 import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class TrafficEntity extends BaseEntity{
-	private List<Parameter> parameters;
+public class TrafficSourceEntity{
+	
 	private Map<String, String> campaignParameters = new HashMap<String, String>();
 	private Pattern pattern;
     private Matcher matcher;
-	private static final Logger LOG = LoggerFactory.getLogger(TrafficEntity.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TrafficSourceEntity.class);
 	private static String searchEnginesPattern = "";
 	private static String ignoredReferersPattern = "";
 	private static String socialNetworksPattern = "";
@@ -69,27 +69,14 @@ public class TrafficEntity extends BaseEntity{
   	}
 	
 	
-	public TrafficEntity(){
-		super();
-		parameters = Arrays.asList(
-			new Parameter("cn", "String", null, 100, "campaign_name", false, "january_boots_promo"),
-			new Parameter("cs", "String", null, 100, "campaign_source", false, "email_promo"),
-			new Parameter("cm", "String", null, 50, "campaign_medium", false, "email"),
-			new Parameter("ck", "String", null, 500, "campaign_keyword", false, "winter boots"),
-			new Parameter("cc", "String", null, 500, "campaign_content", false, "email_variation1"),
-			new Parameter("ci", "String", null, 100, "campaign_id", false, "12345"),
-			new Parameter("gclid", "String", null, 1500, "google_adwords_id", false, "EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwD"),
-			new Parameter("dclid", "String", null, 1500, "google_display_id", false, "EAIaIQobChMI9unWrdjG3QIVXceyCh3cgAQ_EAEYASAAEgIQBfD_BwX")
-		);
-	}
-	
-	public List<Parameter> getParameters(){return parameters;}
+	public TrafficSourceEntity(){}
 	
 	
 	private boolean trigger(Map<String, String> paramMap){
 		if(paramMap.get("t").equals("pageview")){
             parse(paramMap);
         }
+        paramMap.putAll(campaignParameters);
 		return (null != campaignParameters.getOrDefault("cm", null));
 	}
 	
@@ -116,9 +103,8 @@ public class TrafficEntity extends BaseEntity{
             //Fix for Single Page Applications where dl and referrer stays the same for each hit but dp is updated
             //String documentLocation = (url.getQuery != null ? url.getPath() + "?" + url.getQuery() : url.getPath());
             //LOG.info(String.valueOf(url.getFile() == paramMap.get("dp")) + " url.getFile() " + url.getFile() + " paramMap.get(dp)" + paramMap.get("dp"));
+            //LOG.info("traffic parsing, url.getFile() = " + url.getFile() + " and paramMap.get(dp) = " + paramMap.get("dp"));
             if(url.getFile().equals(paramMap.get("dp")) || paramMap.get("dp") == null){
-                //LOG.info("traffic parsing, url.getFile() = " + url.getFile() + " and paramMap.get(dp) = " + paramMap.get("dp"));
-                //LOG.info("traffic parsing paramMap:" + paramMap.toString());
 				if(null != url.getQuery()){
 					Map<String, String> campaignMap = FieldMapper.fieldMapFromURL(url);
 					//Google Search Ads traffic
@@ -202,13 +188,18 @@ public class TrafficEntity extends BaseEntity{
 			return;
 	}
 	
-	public List<MPEntity> build(Map<String, String> paramMap){
-		List<MPEntity> eventList = new ArrayList<>();
-		if(trigger(paramMap)){
-			paramMap.put("et", "traffic");   		
-			try{	
-				eventList.add(builder(paramMap).build());
-				return eventList;
+	public TrafficSource build(Map<String, String> pm){
+		if(trigger(pm)){
+			try{
+				TrafficSource.Builder builder = TrafficSource.newBuilder();
+                Optional.ofNullable(pm.get("ci")).ifPresent(builder::setId);
+                Optional.ofNullable(pm.get("cn")).ifPresent(builder::setName);
+                Optional.ofNullable(pm.get("cc")).ifPresent(builder::setMedium);
+                Optional.ofNullable(pm.get("cs")).ifPresent(builder::setSource);
+                Optional.ofNullable(pm.get("ck")).ifPresent(builder::setKeyword);
+                Optional.ofNullable(pm.get("gclid")).ifPresent(builder::setGclId);
+                Optional.ofNullable(pm.get("dclid")).ifPresent(builder::setDclId);
+                return builder.build();
 			}
 			catch(IllegalArgumentException e){
 				LOG.error(e.toString());
@@ -220,12 +211,4 @@ public class TrafficEntity extends BaseEntity{
 		}
 	}
 	
-	public MPEntity.Builder builder(Map<String, String> paramMap) throws IllegalArgumentException{
-		return builder(paramMap, super.builder(paramMap));
-	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder eventBuilder) throws IllegalArgumentException{
-		paramMap.putAll(campaignParameters);
-		return super.builder(paramMap, eventBuilder, this.parameters);
-	}
 }
