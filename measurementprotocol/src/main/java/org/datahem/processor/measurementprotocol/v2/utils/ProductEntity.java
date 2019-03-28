@@ -126,7 +126,20 @@ public class ProductEntity{
 							Product.Builder builder = Product.newBuilder();
                                 Optional.ofNullable(prParamMap.get("pr" + prefix + "id")).ifPresent(builder::setId);
                                 Optional.ofNullable(prParamMap.get("pr" + prefix + "nm")).ifPresent(builder::setName);
+                                Optional.ofNullable(prParamMap.get("pr" + prefix + "br")).ifPresent(builder::setBrand);
+                                Optional.ofNullable(prParamMap.get("pr" + prefix + "va")).ifPresent(builder::setVariant);
+                                Optional.ofNullable(prParamMap.get("pr" + prefix + "ca")).ifPresent(builder::setCategory);
+                                Optional.ofNullable(prParamMap.get("pa")).ifPresent(builder::setAction);
+                                Optional.ofNullable(prParamMap.get("pr" + prefix + "cc")).ifPresent(builder::setCouponCode);
+                                Optional.ofNullable(prParamMap.get("pr" + prefix + "cu")).ifPresent(builder::setCurrency);
+                                FieldMapper.intVal(prParamMap.get("pr" + prefix + "qt")).ifPresent(g -> builder.setQuantity(g.intValue()));
+                                FieldMapper.doubleVal(prParamMap.get("pr" + prefix + "pr")).ifPresent(g -> builder.setPrice(g.doubleValue()));
+                                //FieldMapper.doubleVal(prParamMap.get("pr" + prefix + "pr")).ifPresent(g -> builder.setRefundAmount(g.doubleValue()));
+                                Optional.ofNullable(prParamMap.get("pal")).ifPresent(builder::setList);
+                                FieldMapper.intVal(prParamMap.get("pr" + prefix + "ps")).ifPresent(g -> builder.setPosition(g.intValue()));
 	        					eventList.add(builder.build());
+                                
+        
                             //eventList.add(evp);
 						}
 					}catch(IllegalArgumentException e){

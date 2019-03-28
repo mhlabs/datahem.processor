@@ -49,8 +49,8 @@ public class ExperimentEntity{
 	        				.map(s -> Arrays.copyOf(s.split("\\."), 2))
 	        				.forEach(s -> {
                                 Experiment.Builder builder = Experiment.newBuilder();
-                                Optional.ofNullable(pm.get("dt")).ifPresent(builder::setId);
-                                Optional.ofNullable(pm.get("dlu")).ifPresent(builder::setVariant);
+                                Optional.ofNullable(s[0]).ifPresent(builder::setId);
+                                Optional.ofNullable(s[1]).ifPresent(builder::setVariant);
 	        					eventList.add(builder.build());
 	        				});
         			}catch(NullPointerException e) {
