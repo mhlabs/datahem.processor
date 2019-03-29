@@ -15,57 +15,46 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  */
 
 
+import org.datahem.protobuf.measurementprotocol.v2.Promotion;
 
-import org.datahem.processor.measurementprotocol.v1.utils.BaseEntity;
-import org.datahem.processor.measurementprotocol.v1.utils.Parameter;
-import java.util.Map;
-import java.util.List;
 import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.stream.Collectors;
-import java.util.Collections;
-import java.util.stream.Stream;
-
-
+import java.util.Map;
+import java.util.Optional;
+import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class PromotionEntity extends BaseEntity{
-	private List<Parameter> parameters;
+
+public class PromotionEntity{
+
 	private static final Logger LOG = LoggerFactory.getLogger(PromotionEntity.class);
 	
-	public PromotionEntity(){
-		super();
-		parameters = Arrays.asList(
-			new Parameter("(promo[0-9]{1,3}id)", "String", null, 500, "promotion_id", false, "promo1id", "SHIP"),
-			new Parameter("(promo[0-9]{1,3}nm)", "String", null, 500, "promotion_name", false, "promo1nm", "Shipping"),
-			new Parameter("(promo[0-9]{1,3}cr)", "String", null, 500, "promotion_creative", false, "promo1cr", "Shipping Banner"),
-			new Parameter("(promo[0-9]{1,3}ps)", "String", null, 500, "promotion_position", false, "promo1ps", "banner_slot_1"),
-			new Parameter("promoa", "String", "view", 50, "promotion_action", false, "click")
-		);
-	}
-	
-	public List<Parameter> getParameters(){return parameters;}
+	public PromotionEntity(){}
 	
 	private boolean trigger(Map<String, String> paramMap){
-		Pattern promoIndexPattern = Pattern.compile("^promo[0-9]{1,3}.*");
-		Map<String, List<String>> entries = paramMap
+       final Pattern promoIndexPattern = Pattern.compile("^promo([0-9]{1,3}).*");
+				Map<String, List<String>> entries = paramMap
 					.keySet()
         			.stream()
         			.filter(promoIndexPattern.asPredicate())
-        			.collect(Collectors.groupingBy(s -> s, Collectors.toList()));
+        			.collect(Collectors.groupingBy(s -> {
+        				final Matcher matcher = promoIndexPattern.matcher(s);
+        				matcher.find();
+        				return matcher.group(1);
+        				}, Collectors.toList()));
 		return (entries.size() > 0);
 	}
 	
-	public List<MPEntity> build(Map<String, String> paramMap){
-		List<MPEntity> eventList = new ArrayList<>();
+	public List<Promotion> build(Map<String, String> paramMap){
+		List<Promotion> eventList = new ArrayList<>();
 		if(trigger(paramMap)){
-    			paramMap.put("et", "promotion_" + (paramMap.get("promoa") != null ? paramMap.get("promoa") : "view"));
     			//create conditions and set parameters for different promotion actions
     			//Get map without product parameters
     			Pattern promoExclPattern = Pattern.compile("^(?!promo[0-9]{1,3}.*).*$");
@@ -86,7 +75,7 @@ public class PromotionEntity extends BaseEntity{
         				matcher.find();
         				return matcher.group(1);
         				}, Collectors.toList()));
-    			
+
     			//Build a promotion hit for each promotion
     			for(Map.Entry<String, List<String>> entry : entries.entrySet()){
 		            List<String> keys = entry.getValue();
@@ -95,8 +84,13 @@ public class PromotionEntity extends BaseEntity{
 		            	.collect(Collectors.toMap(s -> s, s -> paramMap.get(s)));
 		            prParamMap.putAll(paramMapExclPromo);
 		            try{
-		            		MPEntity evp = builder(prParamMap).build();
-							eventList.add(evp);
+                        Promotion.Builder builder = Promotion.newBuilder();
+                        Optional.ofNullable(FieldMapper.getFirstParameterValue(paramMap, "promo[0-9]{1,3}id")).ifPresent(builder::setId);
+                        Optional.ofNullable(FieldMapper.getFirstParameterValue(paramMap, "promo[0-9]{1,3}nm")).ifPresent(builder::setName);
+                        Optional.ofNullable(paramMap.get("promoa")).ifPresent(builder::setAction);
+                        Optional.ofNullable(FieldMapper.getFirstParameterValue(paramMap, "promo[0-9]{1,3}cr")).ifPresent(builder::setCreative);
+                        Optional.ofNullable(FieldMapper.getFirstParameterValue(paramMap, "promo[0-9]{1,3}ps")).ifPresent(builder::setPosition);
+                        eventList.add(builder.build());
 					}
 					catch(IllegalArgumentException e){
 						LOG.error(e.toString());
@@ -108,12 +102,4 @@ public class PromotionEntity extends BaseEntity{
 			return null;
 		}
 	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap) throws IllegalArgumentException{
-		return builder(paramMap, super.builder(paramMap));
-	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder eventBuilder) throws IllegalArgumentException{
-		return super.builder(paramMap, eventBuilder, this.parameters);
-	}	
 }

@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.*;
@@ -31,6 +32,9 @@ import java.net.MalformedURLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.datahem.protobuf.measurementprotocol.v2.CustomDimension;
+import org.datahem.protobuf.measurementprotocol.v2.CustomMetric;
 
 public class FieldMapper{
 	
@@ -49,7 +53,7 @@ public class FieldMapper{
 		}
     }
 
-    public static Map<String, String> fieldMapFromQuery(String query){ 
+    public static HashMap<String, String> fieldMapFromQuery(String query){ 
     	return   
      		Pattern
      			.compile("&")
@@ -62,7 +66,7 @@ public class FieldMapper{
     	try {
         	return encoded == null ? "(not set)" : URLDecoder.decode(encoded, "UTF-8");
     	} catch(final UnsupportedEncodingException e) {
-            LOG.error(e.toString());
+            //LOG.error(e.toString());
         	throw new RuntimeException("Impossible: UTF-8 is a required encoding", e);
     	}
 	}
@@ -71,106 +75,150 @@ public class FieldMapper{
     	try {
         	return decoded == null ? "" : URLEncoder.encode(String.valueOf(decoded), "UTF-8").replace("+", "%20");
     	} catch(final UnsupportedEncodingException e) {
-            LOG.error(e.toString());
+            //LOG.error(e.toString());
         	throw new RuntimeException("Impossible: UTF-8 is a required encoding", e);
     	}
 	}
-
-    /*
-    public static String stringVal(String field){
-        return field;
-    }*/
     
-    public static Optional<String> stringVal(String field){
+    public static Optional<String> stringVal(String f){
+        String field = Optional.ofNullable(f).orElse("");
         try{
             String s = new String(field);
             return Optional.of(s);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            //LOG.error("FieldMapper.stringVal: " + e.toString());
             return Optional.empty();
         }
     }
 
-    public static Optional<Boolean> booleanVal(String field){
+    public static Optional<Boolean> booleanVal(String f){
+        String field = Optional.ofNullable(f).orElse("");
         try{
             Boolean b = new Boolean(field);
             return Optional.of(b);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            //LOG.error("FieldMapper.booleanVal: " + e.toString());
             return Optional.empty();
         }
     }
 
-    public static Optional<Integer> intVal(String field){
+    public static Optional<Integer> intVal(String f){
+        String field = Optional.ofNullable(f).orElse("");
         try{
             Integer i = new Integer(field);
             return Optional.of(i);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            //LOG.error("FieldMapper.intVal: " + e.toString());
             return Optional.empty();
         }
     }
 
-    public static Optional<Double> doubleVal(String field){
+    public static Optional<Double> doubleVal(String f){
+        String field = Optional.ofNullable(f).orElse("");
         try{
             Double d = new Double(field);
             return Optional.of(d);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            //LOG.error("FieldMapper.doubleVal: " + e.toString());
             return Optional.empty();
         }
     }
 
-    public static Optional<Long> longVal(String field){
+    public static Optional<Long> longVal(String f){
+        String field = Optional.ofNullable(f).orElse("");
         try{
             Long l = new Long(field);
             return Optional.of(l);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            //LOG.error("FieldMapper.longVal: " + e.toString());
             return Optional.empty();
         }
     }
-
     
-    public static Optional<Float> floatVal(String field){
+    public static Optional<Float> floatVal(String fl){
+        String field = Optional.ofNullable(fl).orElse("");
         try{
             Float f = new Float(field);
             return Optional.of(f);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            LOG.error("FieldMapper.floatVal: " + e.toString());
             return Optional.empty();
         }
     }
 
-    /*
-    public static String stringVal(Map<String, String> pm, String field){
-        return pm.get(field);
+    public static ArrayList<CustomDimension> getCustomDimensions(Map<String, String> prParamMap, String parameterPattern, String indexPattern){
+			ArrayList<CustomDimension> customDimensions = new ArrayList<>();
+            List<String> params = getParameters(prParamMap, parameterPattern);
+            for(String p : params){
+                CustomDimension.Builder builder = CustomDimension.newBuilder();
+                FieldMapper.intVal(getParameterIndex(p, indexPattern)).ifPresent(g -> builder.setIndex(g.intValue()));
+                Optional.ofNullable(prParamMap.get(p)).ifPresent(builder::setValue);
+                customDimensions.add(builder.build());
+            }
+            return customDimensions;
     }
 
-    public static boolean booleanVal(Map<String, String> pm, String field){
-        return Boolean.parseBoolean(pm.get(field));
+    public static ArrayList<CustomMetric> getCustomMetrics(Map<String, String> prParamMap, String parameterPattern, String indexPattern){
+			ArrayList<CustomMetric> customMetrics = new ArrayList<>();
+            List<String> params = getParameters(prParamMap, parameterPattern);
+            for(String p : params){
+                CustomMetric.Builder builder = CustomMetric.newBuilder();
+                FieldMapper.intVal(getParameterIndex(p, indexPattern)).ifPresent(g -> builder.setIndex(g.intValue()));
+                FieldMapper.intVal(prParamMap.get(p)).ifPresent(g -> builder.setValue(g.intValue()));
+                customMetrics.add(builder.build());
+            }
+            return customMetrics;
     }
 
-    public static int intVal(Map<String, String> pm, String field){
-        return Integer.parseInt(pm.get(field));
+    public static String getFirstParameterValue(Map<String, String> prParamMap, String parameterPattern){
+        Pattern pattern = Pattern.compile(parameterPattern);
+ 		Optional<String> firstElement = prParamMap
+ 			.keySet()
+ 			.stream()
+ 			.filter(pattern.asPredicate())
+			.findFirst();
+        return prParamMap.get(firstElement.orElse(null));    
     }
 
-    public static double doubleVal(Map<String, String> pm, String field){
-        return Double.parseDouble(pm.get(field));
+    public static String getFirstParameterName(Map<String, String> prParamMap, String parameterPattern){
+        Pattern pattern = Pattern.compile(parameterPattern);
+ 		Optional<String> firstElement = prParamMap
+ 			.keySet()
+ 			.stream()
+ 			.filter(pattern.asPredicate())
+			.findFirst();
+        return firstElement.orElse(null);    
     }
 
-    public static long longVal(Map<String, String> pm, String field){
-        return Long.parseLong(pm.get(field));
+    public static List<String> getParameters(Map<String, String> prParamMap, String parameterPattern){
+        Pattern pattern = Pattern.compile(parameterPattern);
+ 		List<String> params = prParamMap
+ 			.keySet()
+ 			.stream()
+ 			.filter(pattern.asPredicate())
+			.collect(Collectors.toList());
+        return params;    
     }
-    
-    public static float floatVal(Map<String, String> pm, String field){
-        return Float.parseFloat(pm.get(field));
-    }
-    */
+
+    public static String getParameterIndex(String param, String indexPattern){
+		if(null == param){
+			return null;
+		}
+		else{
+			Pattern pattern = Pattern.compile(indexPattern);
+			Matcher matcher = pattern.matcher(param);
+			if(matcher.find() && matcher.group(1) != null){
+				return matcher.group(1);
+			}
+			else {
+				return null;
+			}
+		}
+	}
 }
