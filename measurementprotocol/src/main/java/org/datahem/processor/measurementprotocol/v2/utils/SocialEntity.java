@@ -29,7 +29,7 @@ public class SocialEntity{
 	public SocialEntity(){}
 	
 	private boolean trigger(Map<String, String> paramMap){
-		return ("social" == paramMap.get("t") && null != paramMap.get("sn") && null != paramMap.get("sa") && null != paramMap.get("st"));
+		return ("social".equals(paramMap.get("t")) && null != paramMap.get("sn") && null != paramMap.get("sa") && null != paramMap.get("st"));
 	}
 	
 	public Social build(Map<String, String> paramMap){

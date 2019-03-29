@@ -26,12 +26,12 @@ import org.slf4j.LoggerFactory;
 
 public class LatencyEntity{
 
-	private static final Logger LOG = LoggerFactory.getLogger(TimingEntity.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LatencyEntity.class);
 
 	public LatencyEntity(){}
 	
 	private boolean trigger(Map<String, String> paramMap){
-		return (null != paramMap.get("utc") && null != paramMap.get("utv") && null != paramMap.get("utt"));
+		return ("timing".equals(paramMap.get("utc")) && null != paramMap.get("utc") && null != paramMap.get("utv") && null != paramMap.get("utt"));
 	}
 	
 	public Latency build(Map<String, String> pm){
