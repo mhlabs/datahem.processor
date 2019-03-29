@@ -204,9 +204,7 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(eventEntity.build(pm)).ifPresent(builder::setEvent);
                     Optional.ofNullable(exceptionEntity.build(pm)).ifPresent(builder::setException);
                     Optional.ofNullable(experimentEntity.build(pm)).ifPresent(builder::addAllExperiment);
-                    LOG.info("ok");
                     Optional.ofNullable(productEntity.build(pm)).ifPresent(builder::addAllProducts);
-                    
                     Optional.ofNullable(trafficSourceEntity.build(pm)).ifPresent(builder::setTrafficSource);
                     Optional.ofNullable(transactionEntity.build(pm)).ifPresent(builder::setTransaction);
                     Optional.ofNullable(deviceEntity.build(pm)).ifPresent(builder::setDevice);

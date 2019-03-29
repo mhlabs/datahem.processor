@@ -62,7 +62,7 @@ public class FieldMapper{
     	try {
         	return encoded == null ? "(not set)" : URLDecoder.decode(encoded, "UTF-8");
     	} catch(final UnsupportedEncodingException e) {
-            LOG.error(e.toString());
+            //LOG.error(e.toString());
         	throw new RuntimeException("Impossible: UTF-8 is a required encoding", e);
     	}
 	}
@@ -71,15 +71,10 @@ public class FieldMapper{
     	try {
         	return decoded == null ? "" : URLEncoder.encode(String.valueOf(decoded), "UTF-8").replace("+", "%20");
     	} catch(final UnsupportedEncodingException e) {
-            LOG.error(e.toString());
+            //LOG.error(e.toString());
         	throw new RuntimeException("Impossible: UTF-8 is a required encoding", e);
     	}
 	}
-
-    /*
-    public static String stringVal(String field){
-        return field;
-    }*/
     
     public static Optional<String> stringVal(String f){
         String field = Optional.ofNullable(f).orElse("");
@@ -88,7 +83,7 @@ public class FieldMapper{
             return Optional.of(s);
         }
         catch(NumberFormatException e){
-            LOG.error("FieldMapper.stringVal: " + e.toString());
+            //LOG.error("FieldMapper.stringVal: " + e.toString());
             return Optional.empty();
         }
     }
@@ -100,7 +95,7 @@ public class FieldMapper{
             return Optional.of(b);
         }
         catch(NumberFormatException e){
-            LOG.error("FieldMapper.booleanVal: " + e.toString());
+            //LOG.error("FieldMapper.booleanVal: " + e.toString());
             return Optional.empty();
         }
     }
@@ -112,12 +107,7 @@ public class FieldMapper{
             return Optional.of(i);
         }
         catch(NumberFormatException e){
-            LOG.error("FieldMapper.intVal: " + e.toString());
-            //Optional<Integer> opt1 = Optional.ofNullable(null);
-            //LOG.info("opt1 is:" + opt1.isPresent());
-            //Optional<Integer> opt2 = Optional.empty();
-            //LOG.info("opt2 is:" + opt2.isPresent());
-            //return Optional.ofNullable(null);
+            //LOG.error("FieldMapper.intVal: " + e.toString());
             return Optional.empty();
         }
     }
@@ -125,13 +115,11 @@ public class FieldMapper{
     public static Optional<Double> doubleVal(String f){
         String field = Optional.ofNullable(f).orElse("");
         try{
-            // LOG.info("doubleVal: " + field);
             Double d = new Double(field);
-            // LOG.info("doubleVal: " + d.toString());
             return Optional.of(d);
         }
         catch(NumberFormatException e){
-            LOG.error("FieldMapper.doubleVal: " + e.toString());
+            //LOG.error("FieldMapper.doubleVal: " + e.toString());
             return Optional.empty();
         }
     }
@@ -143,11 +131,10 @@ public class FieldMapper{
             return Optional.of(l);
         }
         catch(NumberFormatException e){
-            LOG.error("FieldMapper.longVal: " + e.toString());
+            //LOG.error("FieldMapper.longVal: " + e.toString());
             return Optional.empty();
         }
     }
-
     
     public static Optional<Float> floatVal(String fl){
         String field = Optional.ofNullable(fl).orElse("");
@@ -160,30 +147,4 @@ public class FieldMapper{
             return Optional.empty();
         }
     }
-
-    /*
-    public static String stringVal(Map<String, String> pm, String field){
-        return pm.get(field);
-    }
-
-    public static boolean booleanVal(Map<String, String> pm, String field){
-        return Boolean.parseBoolean(pm.get(field));
-    }
-
-    public static int intVal(Map<String, String> pm, String field){
-        return Integer.parseInt(pm.get(field));
-    }
-
-    public static double doubleVal(Map<String, String> pm, String field){
-        return Double.parseDouble(pm.get(field));
-    }
-
-    public static long longVal(Map<String, String> pm, String field){
-        return Long.parseLong(pm.get(field));
-    }
-    
-    public static float floatVal(Map<String, String> pm, String field){
-        return Float.parseFloat(pm.get(field));
-    }
-    */
 }
