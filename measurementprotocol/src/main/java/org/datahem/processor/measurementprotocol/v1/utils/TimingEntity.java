@@ -14,7 +14,6 @@ package org.datahem.processor.measurementprotocol.v1.utils;
  * =========================LICENSE_END==================================
  */
 
-
 import org.datahem.processor.measurementprotocol.v1.utils.BaseEntity;
 import org.datahem.processor.measurementprotocol.v1.utils.Parameter;
 import java.util.Map;
