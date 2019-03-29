@@ -41,12 +41,16 @@ public class ProductEntity{
 	
 	private boolean trigger(Map<String, String> paramMap){
         //check if payload contains product impression
-        Pattern productImpressionIndexPattern = Pattern.compile("^il[0-9]{1,3}pi[0-9]{1,3}.*");
-		Map<String, List<String>> entries = paramMap
+        final Pattern productImpressionIndexPattern = Pattern.compile("^il([0-9]{1,3})pi([0-9]{1,3}).*");
+                Map<String, List<String>> entries = paramMap
 					.keySet()
         			.stream()
         			.filter(productImpressionIndexPattern.asPredicate())
-        			.collect(Collectors.groupingBy(s -> s, Collectors.toList()));
+        			.collect(Collectors.groupingBy(s -> {
+        				final Matcher matcher = productImpressionIndexPattern.matcher(s);
+        				matcher.find();
+        				return matcher.group(1)+matcher.group(2);
+        				}, Collectors.toList()));
         
         //check if product impression or product action
 		return (entries.size() > 0 || Stream.of("detail", "click", "add", "remove", "checkout", "purchase", "refund").collect(Collectors.toList()).contains(paramMap.get("pa")));
@@ -100,8 +104,8 @@ public class ProductEntity{
                         //FieldMapper.doubleVal(prParamMap.get("pr" + prefix + "pr")).ifPresent(g -> builder.setRefundAmount(g.doubleValue()));
                         Optional.ofNullable(prParamMap.get("pal")).ifPresent(builder::setList);
                         FieldMapper.intVal(prParamMap.get("pr" + prefix + "ps")).ifPresent(g -> builder.setPosition(g.intValue()));
-                        Optional.ofNullable(getCustomDimensions(prParamMap, "^(pr[0-9]{1,3}cd[0-9]{1,3})$", "^pr[0-9]{1,3}cd([0-9]{1,3})$")).ifPresent(builder::addAllCustomDimensions);
-                        Optional.ofNullable(getCustomMetrics(prParamMap,"^(pr[0-9]{1,3}cm[0-9]{1,3})$","^pr[0-9]{1,3}cm([0-9]{1,3})$")).ifPresent(builder::addAllCustomMetrics);
+                        Optional.ofNullable(FieldMapper.getCustomDimensions(prParamMap, "^(pr[0-9]{1,3}cd[0-9]{1,3})$", "^pr[0-9]{1,3}cd([0-9]{1,3})$")).ifPresent(builder::addAllCustomDimensions);
+                        Optional.ofNullable(FieldMapper.getCustomMetrics(prParamMap,"^(pr[0-9]{1,3}cm[0-9]{1,3})$","^pr[0-9]{1,3}cm([0-9]{1,3})$")).ifPresent(builder::addAllCustomMetrics);
                         eventList.add(builder.build());
 					}catch(IllegalArgumentException e){
 						LOG.error(e.toString());
@@ -113,7 +117,6 @@ public class ProductEntity{
                 
     			//Group product parameters by list and product index 
     			final Pattern productImpressionIndexPattern = Pattern.compile("^il([0-9]{1,3})pi([0-9]{1,3}).*");
-				LOG.info(impressionMap.toString());
                 Map<String, List<String>> ilEntries = impressionMap
 					.keySet()
         			.stream()
@@ -123,37 +126,32 @@ public class ProductEntity{
         				matcher.find();
         				return matcher.group(1)+matcher.group(2);
         				}, Collectors.toList()));
-    			LOG.info(ilEntries.toString());
-    			//Build a product hit for each produt
+    			//Build a product hit for each product
     			for(Map.Entry<String, List<String>> ilEntry : ilEntries.entrySet()){
 		            List<String> ilKeys = ilEntry.getValue();
 		            Map<String, String> ilParamMap = ilKeys
 		            	.stream()
 		            	.collect(Collectors.toMap(s -> s, s -> impressionMap.get(s)));
 		            try{
-                        LOG.info(ilParamMap.toString());
                         Product.Builder builder = Product.newBuilder();
-                        String ilIndex = getParameterIndex(getFirstParameterName(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}.*"), "^il([0-9]{1,3})pi[0-9]{1,3}.*");
+                        String ilIndex = FieldMapper.getParameterIndex(FieldMapper.getFirstParameterName(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}.*"), "^il([0-9]{1,3})pi[0-9]{1,3}.*");
                         Optional.ofNullable(impressionMap.get("il" + ilIndex + "nm")).ifPresent(builder::setList);
-                        Optional.ofNullable(getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}id")).ifPresent(builder::setId);
-                        Optional.ofNullable(getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}nm")).ifPresent(builder::setName);
-                        Optional.ofNullable(getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}br")).ifPresent(builder::setBrand);
-                        Optional.ofNullable(getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}va")).ifPresent(builder::setVariant);
-                        Optional.ofNullable(getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}ca")).ifPresent(builder::setCategory);
-                        FieldMapper.doubleVal(getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}pr")).ifPresent(g -> builder.setPrice(g.doubleValue()));
-                        FieldMapper.intVal(getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}ps")).ifPresent(g -> builder.setPosition(g.intValue()));
-                        Optional.ofNullable("impression").ifPresent(builder::setAction);
-                            
-                        
-                        Optional.ofNullable(getCustomDimensions(ilParamMap,"(il[0-9]{1,3}pi[0-9]{1,3}cd[0-9]{1,3})","il[0-9]{1,3}pi[0-9]{1,3}cd([0-9]{1,3})")).ifPresent(builder::addAllCustomDimensions);
-                        Optional.ofNullable(getCustomMetrics(ilParamMap, "(il[0-9]{1,3}pi[0-9]{1,3}cm[0-9]{1,3})","il[0-9]{1,3}pi[0-9]{1,3}cm([0-9]{1,3})")).ifPresent(builder::addAllCustomMetrics);
+                        Optional.ofNullable(FieldMapper.getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}id")).ifPresent(builder::setId);
+                        Optional.ofNullable(FieldMapper.getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}nm")).ifPresent(builder::setName);
+                        Optional.ofNullable(FieldMapper.getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}br")).ifPresent(builder::setBrand);
+                        Optional.ofNullable(FieldMapper.getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}va")).ifPresent(builder::setVariant);
+                        Optional.ofNullable(FieldMapper.getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}ca")).ifPresent(builder::setCategory);
+                        FieldMapper.doubleVal(FieldMapper.getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}pr")).ifPresent(g -> builder.setPrice(g.doubleValue()));
+                        FieldMapper.intVal(FieldMapper.getFirstParameterValue(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}ps")).ifPresent(g -> builder.setPosition(g.intValue()));
+                        Optional.ofNullable("impression").ifPresent(builder::setAction);          
+                        Optional.ofNullable(FieldMapper.getCustomDimensions(ilParamMap,"(il[0-9]{1,3}pi[0-9]{1,3}cd[0-9]{1,3})","il[0-9]{1,3}pi[0-9]{1,3}cd([0-9]{1,3})")).ifPresent(builder::addAllCustomDimensions);
+                        Optional.ofNullable(FieldMapper.getCustomMetrics(ilParamMap, "(il[0-9]{1,3}pi[0-9]{1,3}cm[0-9]{1,3})","il[0-9]{1,3}pi[0-9]{1,3}cm([0-9]{1,3})")).ifPresent(builder::addAllCustomMetrics);
                         eventList.add(builder.build());
 					}
 					catch(IllegalArgumentException e){
 						LOG.error(e.toString());
 					}
 				}
-            LOG.info("productimpression eventlist return");
 			return eventList;
 		}
 		else{
@@ -161,13 +159,12 @@ public class ProductEntity{
 		}
 	}	
 
+    /*
     private ArrayList<CustomDimension> getCustomDimensions(Map<String, String> prParamMap, String parameterPattern, String indexPattern){
 			ArrayList<CustomDimension> customDimensions = new ArrayList<>();
-            //List<String> params = getParameters(prParamMap, "^(pr[0-9]{1,3}cd[0-9]{1,3})$");
             List<String> params = getParameters(prParamMap, parameterPattern);
             for(String p : params){
                 CustomDimension.Builder builder = CustomDimension.newBuilder();
-                //FieldMapper.intVal(getParameterIndex(p, "^pr[0-9]{1,3}cd([0-9]{1,3})$")).ifPresent(g -> builder.setIndex(g.intValue()));
                 FieldMapper.intVal(getParameterIndex(p, indexPattern)).ifPresent(g -> builder.setIndex(g.intValue()));
                 Optional.ofNullable(prParamMap.get(p)).ifPresent(builder::setValue);
                 customDimensions.add(builder.build());
@@ -177,11 +174,9 @@ public class ProductEntity{
 
     private ArrayList<CustomMetric> getCustomMetrics(Map<String, String> prParamMap, String parameterPattern, String indexPattern){
 			ArrayList<CustomMetric> customMetrics = new ArrayList<>();
-            //List<String> params = getParameters(prParamMap, "^(pr[0-9]{1,3}cm[0-9]{1,3})$");
             List<String> params = getParameters(prParamMap, parameterPattern);
             for(String p : params){
                 CustomMetric.Builder builder = CustomMetric.newBuilder();
-                //FieldMapper.intVal(getParameterIndex(p, "^pr[0-9]{1,3}cm([0-9]{1,3})$")).ifPresent(g -> builder.setIndex(g.intValue()));
                 FieldMapper.intVal(getParameterIndex(p, indexPattern)).ifPresent(g -> builder.setIndex(g.intValue()));
                 FieldMapper.intVal(prParamMap.get(p)).ifPresent(g -> builder.setValue(g.intValue()));
                 customMetrics.add(builder.build());
@@ -196,7 +191,6 @@ public class ProductEntity{
  			.stream()
  			.filter(pattern.asPredicate())
 			.findFirst();
-            //LOG.info("getFirstParameterValue: " + prParamMap.get(firstElement.orElse(null)));
         return prParamMap.get(firstElement.orElse(null));    
     }
 
@@ -235,4 +229,5 @@ public class ProductEntity{
 			}
 		}
 	}
+    */
 }

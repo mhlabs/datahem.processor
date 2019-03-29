@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.*;
@@ -31,6 +32,9 @@ import java.net.MalformedURLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.datahem.protobuf.measurementprotocol.v2.CustomDimension;
+import org.datahem.protobuf.measurementprotocol.v2.CustomMetric;
 
 public class FieldMapper{
 	
@@ -49,7 +53,7 @@ public class FieldMapper{
 		}
     }
 
-    public static Map<String, String> fieldMapFromQuery(String query){ 
+    public static HashMap<String, String> fieldMapFromQuery(String query){ 
     	return   
      		Pattern
      			.compile("&")
@@ -147,4 +151,74 @@ public class FieldMapper{
             return Optional.empty();
         }
     }
+
+    public static ArrayList<CustomDimension> getCustomDimensions(Map<String, String> prParamMap, String parameterPattern, String indexPattern){
+			ArrayList<CustomDimension> customDimensions = new ArrayList<>();
+            List<String> params = getParameters(prParamMap, parameterPattern);
+            for(String p : params){
+                CustomDimension.Builder builder = CustomDimension.newBuilder();
+                FieldMapper.intVal(getParameterIndex(p, indexPattern)).ifPresent(g -> builder.setIndex(g.intValue()));
+                Optional.ofNullable(prParamMap.get(p)).ifPresent(builder::setValue);
+                customDimensions.add(builder.build());
+            }
+            return customDimensions;
+    }
+
+    public static ArrayList<CustomMetric> getCustomMetrics(Map<String, String> prParamMap, String parameterPattern, String indexPattern){
+			ArrayList<CustomMetric> customMetrics = new ArrayList<>();
+            List<String> params = getParameters(prParamMap, parameterPattern);
+            for(String p : params){
+                CustomMetric.Builder builder = CustomMetric.newBuilder();
+                FieldMapper.intVal(getParameterIndex(p, indexPattern)).ifPresent(g -> builder.setIndex(g.intValue()));
+                FieldMapper.intVal(prParamMap.get(p)).ifPresent(g -> builder.setValue(g.intValue()));
+                customMetrics.add(builder.build());
+            }
+            return customMetrics;
+    }
+
+    public static String getFirstParameterValue(Map<String, String> prParamMap, String parameterPattern){
+        Pattern pattern = Pattern.compile(parameterPattern);
+ 		Optional<String> firstElement = prParamMap
+ 			.keySet()
+ 			.stream()
+ 			.filter(pattern.asPredicate())
+			.findFirst();
+        return prParamMap.get(firstElement.orElse(null));    
+    }
+
+    public static String getFirstParameterName(Map<String, String> prParamMap, String parameterPattern){
+        Pattern pattern = Pattern.compile(parameterPattern);
+ 		Optional<String> firstElement = prParamMap
+ 			.keySet()
+ 			.stream()
+ 			.filter(pattern.asPredicate())
+			.findFirst();
+        return firstElement.orElse(null);    
+    }
+
+    public static List<String> getParameters(Map<String, String> prParamMap, String parameterPattern){
+        Pattern pattern = Pattern.compile(parameterPattern);
+ 		List<String> params = prParamMap
+ 			.keySet()
+ 			.stream()
+ 			.filter(pattern.asPredicate())
+			.collect(Collectors.toList());
+        return params;    
+    }
+
+    public static String getParameterIndex(String param, String indexPattern){
+		if(null == param){
+			return null;
+		}
+		else{
+			Pattern pattern = Pattern.compile(indexPattern);
+			Matcher matcher = pattern.matcher(param);
+			if(matcher.find() && matcher.group(1) != null){
+				return matcher.group(1);
+			}
+			else {
+				return null;
+			}
+		}
+	}
 }

@@ -50,7 +50,7 @@ public class MeasurementProtocolBuilder{
 	
 	private static final Logger LOG = LoggerFactory.getLogger(MeasurementProtocolBuilder.class);
 	
-	private Map<String, String> pm;
+	private HashMap<String, String> pm;
 	
 	private PageEntity pageEntity = new PageEntity();
     private EventEntity eventEntity = new EventEntity();
@@ -60,15 +60,11 @@ public class MeasurementProtocolBuilder{
     private TrafficSourceEntity trafficSourceEntity = new TrafficSourceEntity();
     private TransactionEntity transactionEntity = new TransactionEntity();
     private DeviceEntity deviceEntity = new DeviceEntity();
+    private PromotionEntity promotionEntity = new PromotionEntity();
 
     /*
 	private SocialEntity socialEntity = new SocialEntity();
 	private TimingEntity timingEntity = new TimingEntity();
-	
-	
-	
-	private PromotionEntity promotionEntity = new PromotionEntity();
-	private ProductImpressionEntity productImpressionEntity = new ProductImpressionEntity();
 	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
     */
     
@@ -141,7 +137,6 @@ public class MeasurementProtocolBuilder{
 
     public MeasurementProtocol measurementProtocolFromPayload(PubsubMessage message){
 		try{
-            LOG.info("start");
             String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
 	        LOG.info(payload);
             //Check if post body contains payload and add parameters in a map
@@ -149,7 +144,7 @@ public class MeasurementProtocolBuilder{
 	            //Add header parameters to pm
 	            pm = FieldMapper.fieldMapFromQuery(payload);
                 pm.putAll(message.getAttributeMap());
-	            LOG.info(pm.toString());
+	            //LOG.info(pm.toString());
 	            //Exclude bots, spiders and crawlers
 				if(pm.get("User-Agent") == null){
 					pm.put("User-Agent", "");
@@ -199,16 +194,17 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(pm.get("MessageUuid")).ifPresent(builder::setHitId);
                     Optional.ofNullable(pm.get("v")).ifPresent(builder::setVersion);
                     FieldMapper.intVal(pm.get("ni")).ifPresent(g -> builder.setNonInteraction(g.intValue()));
-
-                    Optional.ofNullable(pageEntity.build(pm)).ifPresent(builder::setPage);
-                    Optional.ofNullable(eventEntity.build(pm)).ifPresent(builder::setEvent);
-                    Optional.ofNullable(exceptionEntity.build(pm)).ifPresent(builder::setException);
-                    Optional.ofNullable(experimentEntity.build(pm)).ifPresent(builder::addAllExperiment);
-                    Optional.ofNullable(productEntity.build(pm)).ifPresent(builder::addAllProducts);
-                    Optional.ofNullable(trafficSourceEntity.build(pm)).ifPresent(builder::setTrafficSource);
-                    Optional.ofNullable(transactionEntity.build(pm)).ifPresent(builder::setTransaction);
-                    Optional.ofNullable(deviceEntity.build(pm)).ifPresent(builder::setDevice);
                     
+                    Optional.ofNullable(pageEntity.build((HashMap)pm.clone())).ifPresent(builder::setPage);
+                    Optional.ofNullable(eventEntity.build((HashMap)pm.clone())).ifPresent(builder::setEvent);
+                    Optional.ofNullable(exceptionEntity.build((HashMap)pm.clone())).ifPresent(builder::setException);
+                    Optional.ofNullable(experimentEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllExperiment);
+                    Optional.ofNullable(productEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllProducts);
+                    Optional.ofNullable(trafficSourceEntity.build((HashMap)pm.clone())).ifPresent(builder::setTrafficSource);
+                    Optional.ofNullable(transactionEntity.build((HashMap)pm.clone())).ifPresent(builder::setTransaction);
+                    Optional.ofNullable(deviceEntity.build((HashMap)pm.clone())).ifPresent(builder::setDevice);
+                    Optional.ofNullable(promotionEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllPromitions);
+
                     MeasurementProtocol measurementProtocol = builder.build();
                     LOG.info(measurementProtocol.toString());
                     return measurementProtocol; 
