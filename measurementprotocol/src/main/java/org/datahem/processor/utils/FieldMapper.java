@@ -81,69 +81,82 @@ public class FieldMapper{
         return field;
     }*/
     
-    public static Optional<String> stringVal(String field){
+    public static Optional<String> stringVal(String f){
+        String field = Optional.ofNullable(f).orElse("");
         try{
             String s = new String(field);
             return Optional.of(s);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            LOG.error("FieldMapper.stringVal: " + e.toString());
             return Optional.empty();
         }
     }
 
-    public static Optional<Boolean> booleanVal(String field){
+    public static Optional<Boolean> booleanVal(String f){
+        String field = Optional.ofNullable(f).orElse("");
         try{
             Boolean b = new Boolean(field);
             return Optional.of(b);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            LOG.error("FieldMapper.booleanVal: " + e.toString());
             return Optional.empty();
         }
     }
 
-    public static Optional<Integer> intVal(String field){
+    public static Optional<Integer> intVal(String f){
+        String field = Optional.ofNullable(f).orElse("");
         try{
             Integer i = new Integer(field);
             return Optional.of(i);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            LOG.error("FieldMapper.intVal: " + e.toString());
+            //Optional<Integer> opt1 = Optional.ofNullable(null);
+            //LOG.info("opt1 is:" + opt1.isPresent());
+            //Optional<Integer> opt2 = Optional.empty();
+            //LOG.info("opt2 is:" + opt2.isPresent());
+            //return Optional.ofNullable(null);
             return Optional.empty();
         }
     }
 
-    public static Optional<Double> doubleVal(String field){
+    public static Optional<Double> doubleVal(String f){
+        String field = Optional.ofNullable(f).orElse("");
         try{
+            // LOG.info("doubleVal: " + field);
             Double d = new Double(field);
+            // LOG.info("doubleVal: " + d.toString());
             return Optional.of(d);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            LOG.error("FieldMapper.doubleVal: " + e.toString());
             return Optional.empty();
         }
     }
 
-    public static Optional<Long> longVal(String field){
+    public static Optional<Long> longVal(String f){
+        String field = Optional.ofNullable(f).orElse("");
         try{
             Long l = new Long(field);
             return Optional.of(l);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            LOG.error("FieldMapper.longVal: " + e.toString());
             return Optional.empty();
         }
     }
 
     
-    public static Optional<Float> floatVal(String field){
+    public static Optional<Float> floatVal(String fl){
+        String field = Optional.ofNullable(fl).orElse("");
         try{
             Float f = new Float(field);
             return Optional.of(f);
         }
         catch(NumberFormatException e){
-            LOG.error(e.toString());
+            LOG.error("FieldMapper.floatVal: " + e.toString());
             return Optional.empty();
         }
     }
