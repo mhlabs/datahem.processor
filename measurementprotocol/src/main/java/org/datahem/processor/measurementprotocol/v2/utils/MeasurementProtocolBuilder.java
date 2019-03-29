@@ -61,9 +61,10 @@ public class MeasurementProtocolBuilder{
     private TransactionEntity transactionEntity = new TransactionEntity();
     private DeviceEntity deviceEntity = new DeviceEntity();
     private PromotionEntity promotionEntity = new PromotionEntity();
+    private SocialEntity socialEntity = new SocialEntity();
 
     /*
-	private SocialEntity socialEntity = new SocialEntity();
+	
 	private TimingEntity timingEntity = new TimingEntity();
 	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
     */
@@ -204,6 +205,7 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(transactionEntity.build((HashMap)pm.clone())).ifPresent(builder::setTransaction);
                     Optional.ofNullable(deviceEntity.build((HashMap)pm.clone())).ifPresent(builder::setDevice);
                     Optional.ofNullable(promotionEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllPromitions);
+                    Optional.ofNullable(socialEntity.build((HashMap)pm.clone())).ifPresent(builder::setSocial);
 
                     MeasurementProtocol measurementProtocol = builder.build();
                     LOG.info(measurementProtocol.toString());

@@ -14,44 +14,32 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * =========================LICENSE_END==================================
  */
 
-import org.datahem.processor.measurementprotocol.v1.utils.BaseEntity;
-import org.datahem.processor.measurementprotocol.v1.utils.Parameter;
+import org.datahem.protobuf.measurementprotocol.v2.Social;
+
 import java.util.Map;
-import java.util.List;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.*;
+import java.util.Optional;
+import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SocialEntity extends BaseEntity{
-	private List<Parameter> parameters;
+public class SocialEntity{
 	private static final Logger LOG = LoggerFactory.getLogger(SocialEntity.class);
 
 	
-	public SocialEntity(){
-		super();
-		parameters = Arrays.asList(
-			new Parameter("sn", "String", null, 50, "social_network", true, "facebook"),
-			new Parameter("sa", "String", null, 50, "social_action", true, "like"),
-			new Parameter("st", "String", null, 2048, "social_action_target", true, "http://foo.com")
-		);
-	}
-	
-	public List<Parameter> getParameters(){return parameters;}
+	public SocialEntity(){}
 	
 	private boolean trigger(Map<String, String> paramMap){
-		return (null != paramMap.get("sn") && null != paramMap.get("sa") && null != paramMap.get("st"));
+		return ("social" == paramMap.get("t") && null != paramMap.get("sn") && null != paramMap.get("sa") && null != paramMap.get("st"));
 	}
 	
-	public List<MPEntity> build(Map<String, String> paramMap){
-		List<MPEntity> eventList = new ArrayList<>();
+	public Social build(Map<String, String> paramMap){
 		if(trigger(paramMap)){
-			paramMap.put("et", "social");
     		try{
-				eventList.add(builder(paramMap).build());
-				return eventList;
+                Social.Builder builder = Social.newBuilder();
+                Optional.ofNullable(paramMap.get("sn")).ifPresent(builder::setNetwork);
+                Optional.ofNullable(paramMap.get("sa")).ifPresent(builder::setAction);
+                Optional.ofNullable(paramMap.get("st")).ifPresent(builder::setTarget);
+                return builder.build();
 			}
 			catch(IllegalArgumentException e){
 				LOG.error(e.toString());
@@ -62,12 +50,4 @@ public class SocialEntity extends BaseEntity{
 			return null;
 		}
 	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap) throws IllegalArgumentException{
-		return builder(paramMap, super.builder(paramMap));
-	}
-	
-	public MPEntity.Builder builder(Map<String, String> paramMap, MPEntity.Builder eventBuilder) throws IllegalArgumentException{
-		return super.builder(paramMap, eventBuilder, this.parameters);
-	}	
 }
