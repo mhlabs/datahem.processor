@@ -32,8 +32,7 @@ public  final class Geo extends
     country_ = "";
     region_ = "";
     city_ = "";
-    latitude_ = "";
-    longitude_ = "";
+    cityLatLong_ = "";
   }
 
   @java.lang.Override
@@ -82,13 +81,7 @@ public  final class Geo extends
           case 34: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            latitude_ = s;
-            break;
-          }
-          case 42: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            longitude_ = s;
+            cityLatLong_ = s;
             break;
           }
         }
@@ -240,84 +233,42 @@ public  final class Geo extends
     }
   }
 
-  public static final int LATITUDE_FIELD_NUMBER = 4;
-  private volatile java.lang.Object latitude_;
+  public static final int CITYLATLONG_FIELD_NUMBER = 4;
+  private volatile java.lang.Object cityLatLong_;
   /**
    * <pre>
-   *X-AppEngine-CityLatLong. The approximate latitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
+   *X-AppEngine-CityLatLong. The approximate latitude and longitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
    * </pre>
    *
-   * <code>optional string latitude = 4;</code>
+   * <code>optional string cityLatLong = 4;</code>
    */
-  public java.lang.String getLatitude() {
-    java.lang.Object ref = latitude_;
+  public java.lang.String getCityLatLong() {
+    java.lang.Object ref = cityLatLong_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      latitude_ = s;
+      cityLatLong_ = s;
       return s;
     }
   }
   /**
    * <pre>
-   *X-AppEngine-CityLatLong. The approximate latitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
+   *X-AppEngine-CityLatLong. The approximate latitude and longitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
    * </pre>
    *
-   * <code>optional string latitude = 4;</code>
+   * <code>optional string cityLatLong = 4;</code>
    */
   public com.google.protobuf.ByteString
-      getLatitudeBytes() {
-    java.lang.Object ref = latitude_;
+      getCityLatLongBytes() {
+    java.lang.Object ref = cityLatLong_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      latitude_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int LONGITUDE_FIELD_NUMBER = 5;
-  private volatile java.lang.Object longitude_;
-  /**
-   * <pre>
-   *X-AppEngine-CityLatLong. The approximate longitude of users' city, derived from their IP addresses or Geographical IDs. Locations east of the prime meridian have positive longitudes and locations west of the prime meridian have negative longitudes.
-   * </pre>
-   *
-   * <code>optional string longitude = 5;</code>
-   */
-  public java.lang.String getLongitude() {
-    java.lang.Object ref = longitude_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      longitude_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *X-AppEngine-CityLatLong. The approximate longitude of users' city, derived from their IP addresses or Geographical IDs. Locations east of the prime meridian have positive longitudes and locations west of the prime meridian have negative longitudes.
-   * </pre>
-   *
-   * <code>optional string longitude = 5;</code>
-   */
-  public com.google.protobuf.ByteString
-      getLongitudeBytes() {
-    java.lang.Object ref = longitude_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      longitude_ = b;
+      cityLatLong_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -345,11 +296,8 @@ public  final class Geo extends
     if (!getCityBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, city_);
     }
-    if (!getLatitudeBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, latitude_);
-    }
-    if (!getLongitudeBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, longitude_);
+    if (!getCityLatLongBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, cityLatLong_);
     }
   }
 
@@ -367,11 +315,8 @@ public  final class Geo extends
     if (!getCityBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, city_);
     }
-    if (!getLatitudeBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, latitude_);
-    }
-    if (!getLongitudeBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, longitude_);
+    if (!getCityLatLongBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, cityLatLong_);
     }
     memoizedSize = size;
     return size;
@@ -395,10 +340,8 @@ public  final class Geo extends
         .equals(other.getRegion());
     result = result && getCity()
         .equals(other.getCity());
-    result = result && getLatitude()
-        .equals(other.getLatitude());
-    result = result && getLongitude()
-        .equals(other.getLongitude());
+    result = result && getCityLatLong()
+        .equals(other.getCityLatLong());
     return result;
   }
 
@@ -415,10 +358,8 @@ public  final class Geo extends
     hash = (53 * hash) + getRegion().hashCode();
     hash = (37 * hash) + CITY_FIELD_NUMBER;
     hash = (53 * hash) + getCity().hashCode();
-    hash = (37 * hash) + LATITUDE_FIELD_NUMBER;
-    hash = (53 * hash) + getLatitude().hashCode();
-    hash = (37 * hash) + LONGITUDE_FIELD_NUMBER;
-    hash = (53 * hash) + getLongitude().hashCode();
+    hash = (37 * hash) + CITYLATLONG_FIELD_NUMBER;
+    hash = (53 * hash) + getCityLatLong().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -543,9 +484,7 @@ public  final class Geo extends
 
       city_ = "";
 
-      latitude_ = "";
-
-      longitude_ = "";
+      cityLatLong_ = "";
 
       return this;
     }
@@ -572,8 +511,7 @@ public  final class Geo extends
       result.country_ = country_;
       result.region_ = region_;
       result.city_ = city_;
-      result.latitude_ = latitude_;
-      result.longitude_ = longitude_;
+      result.cityLatLong_ = cityLatLong_;
       onBuilt();
       return result;
     }
@@ -627,12 +565,8 @@ public  final class Geo extends
         city_ = other.city_;
         onChanged();
       }
-      if (!other.getLatitude().isEmpty()) {
-        latitude_ = other.latitude_;
-        onChanged();
-      }
-      if (!other.getLongitude().isEmpty()) {
-        longitude_ = other.longitude_;
+      if (!other.getCityLatLong().isEmpty()) {
+        cityLatLong_ = other.cityLatLong_;
         onChanged();
       }
       onChanged();
@@ -928,21 +862,21 @@ public  final class Geo extends
       return this;
     }
 
-    private java.lang.Object latitude_ = "";
+    private java.lang.Object cityLatLong_ = "";
     /**
      * <pre>
-     *X-AppEngine-CityLatLong. The approximate latitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
+     *X-AppEngine-CityLatLong. The approximate latitude and longitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
      * </pre>
      *
-     * <code>optional string latitude = 4;</code>
+     * <code>optional string cityLatLong = 4;</code>
      */
-    public java.lang.String getLatitude() {
-      java.lang.Object ref = latitude_;
+    public java.lang.String getCityLatLong() {
+      java.lang.Object ref = cityLatLong_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        latitude_ = s;
+        cityLatLong_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
@@ -950,19 +884,19 @@ public  final class Geo extends
     }
     /**
      * <pre>
-     *X-AppEngine-CityLatLong. The approximate latitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
+     *X-AppEngine-CityLatLong. The approximate latitude and longitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
      * </pre>
      *
-     * <code>optional string latitude = 4;</code>
+     * <code>optional string cityLatLong = 4;</code>
      */
     public com.google.protobuf.ByteString
-        getLatitudeBytes() {
-      java.lang.Object ref = latitude_;
+        getCityLatLongBytes() {
+      java.lang.Object ref = cityLatLong_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        latitude_ = b;
+        cityLatLong_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -970,138 +904,49 @@ public  final class Geo extends
     }
     /**
      * <pre>
-     *X-AppEngine-CityLatLong. The approximate latitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
+     *X-AppEngine-CityLatLong. The approximate latitude and longitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
      * </pre>
      *
-     * <code>optional string latitude = 4;</code>
+     * <code>optional string cityLatLong = 4;</code>
      */
-    public Builder setLatitude(
+    public Builder setCityLatLong(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      latitude_ = value;
+      cityLatLong_ = value;
       onChanged();
       return this;
     }
     /**
      * <pre>
-     *X-AppEngine-CityLatLong. The approximate latitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
+     *X-AppEngine-CityLatLong. The approximate latitude and longitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
      * </pre>
      *
-     * <code>optional string latitude = 4;</code>
+     * <code>optional string cityLatLong = 4;</code>
      */
-    public Builder clearLatitude() {
+    public Builder clearCityLatLong() {
       
-      latitude_ = getDefaultInstance().getLatitude();
+      cityLatLong_ = getDefaultInstance().getCityLatLong();
       onChanged();
       return this;
     }
     /**
      * <pre>
-     *X-AppEngine-CityLatLong. The approximate latitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
+     *X-AppEngine-CityLatLong. The approximate latitude and longitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
      * </pre>
      *
-     * <code>optional string latitude = 4;</code>
+     * <code>optional string cityLatLong = 4;</code>
      */
-    public Builder setLatitudeBytes(
+    public Builder setCityLatLongBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      latitude_ = value;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object longitude_ = "";
-    /**
-     * <pre>
-     *X-AppEngine-CityLatLong. The approximate longitude of users' city, derived from their IP addresses or Geographical IDs. Locations east of the prime meridian have positive longitudes and locations west of the prime meridian have negative longitudes.
-     * </pre>
-     *
-     * <code>optional string longitude = 5;</code>
-     */
-    public java.lang.String getLongitude() {
-      java.lang.Object ref = longitude_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        longitude_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <pre>
-     *X-AppEngine-CityLatLong. The approximate longitude of users' city, derived from their IP addresses or Geographical IDs. Locations east of the prime meridian have positive longitudes and locations west of the prime meridian have negative longitudes.
-     * </pre>
-     *
-     * <code>optional string longitude = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getLongitudeBytes() {
-      java.lang.Object ref = longitude_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        longitude_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *X-AppEngine-CityLatLong. The approximate longitude of users' city, derived from their IP addresses or Geographical IDs. Locations east of the prime meridian have positive longitudes and locations west of the prime meridian have negative longitudes.
-     * </pre>
-     *
-     * <code>optional string longitude = 5;</code>
-     */
-    public Builder setLongitude(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      longitude_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *X-AppEngine-CityLatLong. The approximate longitude of users' city, derived from their IP addresses or Geographical IDs. Locations east of the prime meridian have positive longitudes and locations west of the prime meridian have negative longitudes.
-     * </pre>
-     *
-     * <code>optional string longitude = 5;</code>
-     */
-    public Builder clearLongitude() {
-      
-      longitude_ = getDefaultInstance().getLongitude();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *X-AppEngine-CityLatLong. The approximate longitude of users' city, derived from their IP addresses or Geographical IDs. Locations east of the prime meridian have positive longitudes and locations west of the prime meridian have negative longitudes.
-     * </pre>
-     *
-     * <code>optional string longitude = 5;</code>
-     */
-    public Builder setLongitudeBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      longitude_ = value;
+      cityLatLong_ = value;
       onChanged();
       return this;
     }

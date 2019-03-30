@@ -63,7 +63,7 @@ public class MeasurementProtocolBuilder{
     private PromotionEntity promotionEntity = new PromotionEntity();
     private SocialEntity socialEntity = new SocialEntity();
     private LatencyEntity latencyEntity = new LatencyEntity();
-
+    private PropertyEntity propertyEntity = new PropertyEntity();
 
     /*
 	
@@ -201,14 +201,15 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(pageEntity.build((HashMap)pm.clone())).ifPresent(builder::setPage);
                     Optional.ofNullable(eventEntity.build((HashMap)pm.clone())).ifPresent(builder::setEvent);
                     Optional.ofNullable(exceptionEntity.build((HashMap)pm.clone())).ifPresent(builder::setException);
-                    Optional.ofNullable(experimentEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllExperiment);
+                    Optional.ofNullable(experimentEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllExperiments);
                     Optional.ofNullable(productEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllProducts);
                     Optional.ofNullable(trafficSourceEntity.build((HashMap)pm.clone())).ifPresent(builder::setTrafficSource);
                     Optional.ofNullable(transactionEntity.build((HashMap)pm.clone())).ifPresent(builder::setTransaction);
                     Optional.ofNullable(deviceEntity.build((HashMap)pm.clone())).ifPresent(builder::setDevice);
-                    Optional.ofNullable(promotionEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllPromitions);
+                    Optional.ofNullable(promotionEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllPromotions);
                     Optional.ofNullable(socialEntity.build((HashMap)pm.clone())).ifPresent(builder::setSocial);
                     Optional.ofNullable(latencyEntity.build((HashMap)pm.clone())).ifPresent(builder::setLatency);
+                    Optional.ofNullable(propertyEntity.build((HashMap)pm.clone())).ifPresent(builder::setProperty);
 
                     MeasurementProtocol measurementProtocol = builder.build();
                     LOG.info(measurementProtocol.toString());

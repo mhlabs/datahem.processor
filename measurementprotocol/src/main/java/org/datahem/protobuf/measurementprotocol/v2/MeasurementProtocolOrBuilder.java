@@ -231,27 +231,27 @@ public interface MeasurementProtocolOrBuilder extends
   org.datahem.protobuf.measurementprotocol.v2.ExceptionOrBuilder getExceptionOrBuilder();
 
   /**
-   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Experiment experiment = 14;</code>
+   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Experiment experiments = 14;</code>
    */
   java.util.List<org.datahem.protobuf.measurementprotocol.v2.Experiment> 
-      getExperimentList();
+      getExperimentsList();
   /**
-   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Experiment experiment = 14;</code>
+   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Experiment experiments = 14;</code>
    */
-  org.datahem.protobuf.measurementprotocol.v2.Experiment getExperiment(int index);
+  org.datahem.protobuf.measurementprotocol.v2.Experiment getExperiments(int index);
   /**
-   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Experiment experiment = 14;</code>
+   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Experiment experiments = 14;</code>
    */
-  int getExperimentCount();
+  int getExperimentsCount();
   /**
-   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Experiment experiment = 14;</code>
+   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Experiment experiments = 14;</code>
    */
   java.util.List<? extends org.datahem.protobuf.measurementprotocol.v2.ExperimentOrBuilder> 
-      getExperimentOrBuilderList();
+      getExperimentsOrBuilderList();
   /**
-   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Experiment experiment = 14;</code>
+   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Experiment experiments = 14;</code>
    */
-  org.datahem.protobuf.measurementprotocol.v2.ExperimentOrBuilder getExperimentOrBuilder(
+  org.datahem.protobuf.measurementprotocol.v2.ExperimentOrBuilder getExperimentsOrBuilder(
       int index);
 
   /**
@@ -318,27 +318,27 @@ public interface MeasurementProtocolOrBuilder extends
       int index);
 
   /**
-   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Promotion promitions = 19;</code>
+   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Promotion promotions = 19;</code>
    */
   java.util.List<org.datahem.protobuf.measurementprotocol.v2.Promotion> 
-      getPromitionsList();
+      getPromotionsList();
   /**
-   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Promotion promitions = 19;</code>
+   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Promotion promotions = 19;</code>
    */
-  org.datahem.protobuf.measurementprotocol.v2.Promotion getPromitions(int index);
+  org.datahem.protobuf.measurementprotocol.v2.Promotion getPromotions(int index);
   /**
-   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Promotion promitions = 19;</code>
+   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Promotion promotions = 19;</code>
    */
-  int getPromitionsCount();
+  int getPromotionsCount();
   /**
-   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Promotion promitions = 19;</code>
+   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Promotion promotions = 19;</code>
    */
   java.util.List<? extends org.datahem.protobuf.measurementprotocol.v2.PromotionOrBuilder> 
-      getPromitionsOrBuilderList();
+      getPromotionsOrBuilderList();
   /**
-   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Promotion promitions = 19;</code>
+   * <code>repeated .datahem.protobuf.measurementprotocol.v2.Promotion promotions = 19;</code>
    */
-  org.datahem.protobuf.measurementprotocol.v2.PromotionOrBuilder getPromitionsOrBuilder(
+  org.datahem.protobuf.measurementprotocol.v2.PromotionOrBuilder getPromotionsOrBuilder(
       int index);
 
   /**
