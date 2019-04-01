@@ -210,6 +210,8 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(socialEntity.build((HashMap)pm.clone())).ifPresent(builder::setSocial);
                     Optional.ofNullable(latencyEntity.build((HashMap)pm.clone())).ifPresent(builder::setLatency);
                     Optional.ofNullable(propertyEntity.build((HashMap)pm.clone())).ifPresent(builder::setProperty);
+                    Optional.ofNullable(FieldMapper.getCustomDimensions((HashMap)pm.clone(), "^(cd[0-9]{1,3})$", "^cd([0-9]{1,3})$")).ifPresent(builder::addAllCustomDimensions);
+                    Optional.ofNullable(FieldMapper.getCustomMetrics((HashMap)pm.clone(),"^(cm[0-9]{1,3})$","^([0-9]{1,3})$")).ifPresent(builder::addAllCustomMetrics);
 
                     MeasurementProtocol measurementProtocol = builder.build();
                     LOG.info(measurementProtocol.toString());

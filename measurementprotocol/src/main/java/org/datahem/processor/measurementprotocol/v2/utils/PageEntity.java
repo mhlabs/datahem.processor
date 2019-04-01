@@ -23,8 +23,17 @@ import org.slf4j.LoggerFactory;
 
 public class PageEntity{
 	private static final Logger LOG = LoggerFactory.getLogger(PageEntity.class);
+    private static String siteSearchPattern = ".*q=(([^&#]*)|&|#|$)";
 	
 	public PageEntity(){}
+
+    public String getSiteSearchPattern(){
+    	return this.siteSearchPattern;
+  	}
+
+	public void setSiteSearchPattern(String pattern){
+    	this.siteSearchPattern = pattern;
+  	}
 	
 	private boolean trigger(Map<String, String> paramMap){
 		return "pageview".equals(paramMap.get("t"));
@@ -34,6 +43,12 @@ public class PageEntity{
 		if(trigger(pm)){
             try{
                 Page.Builder builder = Page.newBuilder();
+                Pattern pattern = Pattern.compile(siteSearchPattern);
+			    Matcher matcher = pattern.matcher(paramMap.get("dl"));
+			    if(matcher.find()){
+				    //paramMap.put("sst", FieldMapper.decode(matcher.group(1)));
+                    Optional.ofNullable(FieldMapper.decode(matcher.group(1))).ifPresent(builder::setSearchKeyword);
+			    }
                 Optional.ofNullable(pm.get("dt")).ifPresent(builder::setTitle);
                 Optional.ofNullable(pm.get("dlu")).ifPresent(builder::setUrl);
                 Optional.ofNullable(pm.get("dh")).ifPresent(builder::setHostname);
