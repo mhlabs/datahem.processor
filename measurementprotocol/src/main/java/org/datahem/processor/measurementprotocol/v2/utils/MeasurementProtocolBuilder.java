@@ -37,7 +37,7 @@ import org.datahem.protobuf.measurementprotocol.v2.*;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.Instant;
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.net.URL;
@@ -64,13 +64,9 @@ public class MeasurementProtocolBuilder{
     private SocialEntity socialEntity = new SocialEntity();
     private LatencyEntity latencyEntity = new LatencyEntity();
     private PropertyEntity propertyEntity = new PropertyEntity();
+    private AttributesEntity attributesEntity = new AttributesEntity();
+    private TimeEntity timeEntity = new TimeEntity();
 
-    /*
-	
-	
-	private SiteSearchEntity siteSearchEntity = new SiteSearchEntity();
-    */
-    
     private static String excludedBotsPattern;
     private static String includedHostnamesPattern;
     private static String timeZone;
@@ -119,15 +115,14 @@ public class MeasurementProtocolBuilder{
     	this.includedHostnamesPattern = pattern;
   	}
   	
-  /*	
+  	
   	public String getSiteSearchPattern(){
-    	return this.siteSearchEntity.getSiteSearchPattern();
+    	return this.pageEntity.getSiteSearchPattern();
   	}
 
 	public void setSiteSearchPattern(String pattern){
-    	this.siteSearchEntity.setSiteSearchPattern(pattern);
-  	}
-*/  	
+    	this.pageEntity.setSiteSearchPattern(pattern);
+  	}  	
   	
   	public String getTimeZone(){
     	return this.timeZone;
@@ -154,26 +149,31 @@ public class MeasurementProtocolBuilder{
 				}
 
 	        	if(!pm.get("User-Agent").matches(getExcludedBotsPattern()) && pm.get("dl").matches(getIncludedHostnamesPattern()) && !pm.get("t").equals("adtiming")){
-	                //Add epochMillis and timestamp to pm       
-                    Instant payloadTimeStamp = new Instant(Long.parseLong(pm.get("MessageTimestamp")));
+	                DateTime utcDateTime = DateTime.parse(pm.get("timestamp"));
+                    
+                    
+                    //Add epochMillis and timestamp to pm       
+                    //Instant payloadTimeStamp = new Instant(Long.parseLong(pm.get("MessageTimestamp")));
 					//DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
 					DateTimeFormatter local_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZone(DateTimeZone.forID(getTimeZone()));
-		            pm.put("cpts", payloadTimeStamp.toString(local_timestamp));
-                    pm.put("cpem", pm.get("MessageTimestamp"));
+		            //pm.put("cpts", payloadTimeStamp.toString(local_timestamp));
+                    //pm.put("cpem", pm.get("MessageTimestamp"));
 
 					//Set local timezone for use as partition field
 					DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd").withZone(DateTimeZone.forID(getTimeZone()));
-					pm.put("cpd", payloadTimeStamp.toString(partition));
+					pm.put("cpd", utcDateTime.toString(partition));
+                    pm.put("ctz", getTimeZone());
 
                     try{
                         //If document location parameter exist, extract host and path and add those as separate parameters
                         if (pm.get("dh") != null && pm.get("dp") != null){
-                            pm.put("dlu",pm.get("dh") + pm.get("dp"));
+                            pm.put("dlu","https://" + pm.get("dh") + pm.get("dp"));
                         } else if(pm.get("dl") != null){
                             URL url = new URL(pm.get("dl"));
                             if(pm.get("dh")==null) pm.put("dh", url.getHost());
-                            if(pm.get("dp")==null) pm.put("dp", url.getPath());
-                            pm.put("dlu", url.getHost()+url.getFile());
+                            if(pm.get("dp")==null) pm.put("dp", url.getFile());
+                            //pm.put("dlu", url.getHost()+url.getFile());
+                            pm.put("dlu", "https://" + pm.get("dh") + pm.get("dp"));
                         }
                     }catch (MalformedURLException e) {
                         LOG.error(e.toString() + " document location, pm:" + pm.toString());
@@ -194,10 +194,11 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(pm.get("t")).ifPresent(builder::setHitType);
                     Optional.ofNullable(pm.get("cid")).ifPresent(builder::setClientId);
                     Optional.ofNullable(pm.get("uid")).ifPresent(builder::setUserId);
-                    Optional.ofNullable(pm.get("MessageUuid")).ifPresent(builder::setHitId);
+                    //Optional.ofNullable(pm.get("MessageUuid")).ifPresent(builder::setHitId);
                     Optional.ofNullable(pm.get("v")).ifPresent(builder::setVersion);
                     FieldMapper.intVal(pm.get("ni")).ifPresent(g -> builder.setNonInteraction(g.intValue()));
-                    
+                    Optional.ofNullable(pm.get("cpd")).ifPresent(builder::setDate);
+
                     Optional.ofNullable(pageEntity.build((HashMap)pm.clone())).ifPresent(builder::setPage);
                     Optional.ofNullable(eventEntity.build((HashMap)pm.clone())).ifPresent(builder::setEvent);
                     Optional.ofNullable(exceptionEntity.build((HashMap)pm.clone())).ifPresent(builder::setException);
@@ -212,6 +213,8 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(propertyEntity.build((HashMap)pm.clone())).ifPresent(builder::setProperty);
                     Optional.ofNullable(FieldMapper.getCustomDimensions((HashMap)pm.clone(), "^(cd[0-9]{1,3})$", "^cd([0-9]{1,3})$")).ifPresent(builder::addAllCustomDimensions);
                     Optional.ofNullable(FieldMapper.getCustomMetrics((HashMap)pm.clone(),"^(cm[0-9]{1,3})$","^([0-9]{1,3})$")).ifPresent(builder::addAllCustomMetrics);
+                    Optional.ofNullable(attributesEntity.build((HashMap)pm.clone())).ifPresent(builder::setATTRIBUTES);
+                    Optional.ofNullable(timeEntity.build((HashMap)pm.clone())).ifPresent(builder::setTime);
 
                     MeasurementProtocol measurementProtocol = builder.build();
                     LOG.info(measurementProtocol.toString());

@@ -76,18 +76,8 @@ public interface MeasurementProtocolOrBuilder extends
       getUserIdBytes();
 
   /**
-   * <code>optional string hitId = 4;</code>
-   */
-  java.lang.String getHitId();
-  /**
-   * <code>optional string hitId = 4;</code>
-   */
-  com.google.protobuf.ByteString
-      getHitIdBytes();
-
-  /**
    * <pre>
-   *local date as partition field.
+   *string hitId = 4;
    * </pre>
    *
    * <code>optional string date = 5;</code>
@@ -95,7 +85,7 @@ public interface MeasurementProtocolOrBuilder extends
   java.lang.String getDate();
   /**
    * <pre>
-   *local date as partition field.
+   *string hitId = 4;
    * </pre>
    *
    * <code>optional string date = 5;</code>
@@ -418,4 +408,17 @@ public interface MeasurementProtocolOrBuilder extends
    * <code>optional .datahem.protobuf.measurementprotocol.v2.Transaction transaction = 25;</code>
    */
   org.datahem.protobuf.measurementprotocol.v2.TransactionOrBuilder getTransactionOrBuilder();
+
+  /**
+   * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+   */
+  boolean hasATTRIBUTES();
+  /**
+   * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+   */
+  org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES getATTRIBUTES();
+  /**
+   * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+   */
+  org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTESOrBuilder getATTRIBUTESOrBuilder();
 }

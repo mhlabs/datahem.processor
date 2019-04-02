@@ -30,8 +30,17 @@ public  final class Time extends
   }
   private Time() {
     dateTime_ = "";
-    timestamp_ = "";
-    instant_ = 0L;
+    date_ = "";
+    time_ = "";
+    year_ = 0;
+    month_ = 0;
+    week_ = 0;
+    day_ = 0;
+    hour_ = 0;
+    minute_ = 0;
+    second_ = 0;
+    weekDay_ = "";
+    timeZone_ = "";
   }
 
   @java.lang.Override
@@ -68,12 +77,60 @@ public  final class Time extends
           case 18: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            timestamp_ = s;
+            date_ = s;
             break;
           }
-          case 24: {
+          case 26: {
+            java.lang.String s = input.readStringRequireUtf8();
 
-            instant_ = input.readInt64();
+            time_ = s;
+            break;
+          }
+          case 32: {
+
+            year_ = input.readInt32();
+            break;
+          }
+          case 40: {
+
+            month_ = input.readInt32();
+            break;
+          }
+          case 48: {
+
+            week_ = input.readInt32();
+            break;
+          }
+          case 56: {
+
+            day_ = input.readInt32();
+            break;
+          }
+          case 64: {
+
+            hour_ = input.readInt32();
+            break;
+          }
+          case 72: {
+
+            minute_ = input.readInt32();
+            break;
+          }
+          case 80: {
+
+            second_ = input.readInt32();
+            break;
+          }
+          case 90: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            weekDay_ = s;
+            break;
+          }
+          case 98: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            timeZone_ = s;
             break;
           }
         }
@@ -102,6 +159,10 @@ public  final class Time extends
   public static final int DATETIME_FIELD_NUMBER = 1;
   private volatile java.lang.Object dateTime_;
   /**
+   * <pre>
+   * local datetime YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
+   * </pre>
+   *
    * <code>optional string dateTime = 1;</code>
    */
   public java.lang.String getDateTime() {
@@ -117,6 +178,10 @@ public  final class Time extends
     }
   }
   /**
+   * <pre>
+   * local datetime YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
+   * </pre>
+   *
    * <code>optional string dateTime = 1;</code>
    */
   public com.google.protobuf.ByteString
@@ -133,51 +198,263 @@ public  final class Time extends
     }
   }
 
-  public static final int TIMESTAMP_FIELD_NUMBER = 2;
-  private volatile java.lang.Object timestamp_;
+  public static final int DATE_FIELD_NUMBER = 2;
+  private volatile java.lang.Object date_;
   /**
-   * <code>optional string timestamp = 2;</code>
+   * <pre>
+   * local date
+   * </pre>
+   *
+   * <code>optional string date = 2;</code>
    */
-  public java.lang.String getTimestamp() {
-    java.lang.Object ref = timestamp_;
+  public java.lang.String getDate() {
+    java.lang.Object ref = date_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      timestamp_ = s;
+      date_ = s;
       return s;
     }
   }
   /**
-   * <code>optional string timestamp = 2;</code>
+   * <pre>
+   * local date
+   * </pre>
+   *
+   * <code>optional string date = 2;</code>
    */
   public com.google.protobuf.ByteString
-      getTimestampBytes() {
-    java.lang.Object ref = timestamp_;
+      getDateBytes() {
+    java.lang.Object ref = date_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      timestamp_ = b;
+      date_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int INSTANT_FIELD_NUMBER = 3;
-  private long instant_;
+  public static final int TIME_FIELD_NUMBER = 3;
+  private volatile java.lang.Object time_;
   /**
    * <pre>
-   *epoch millis
+   * local time
    * </pre>
    *
-   * <code>optional int64 instant = 3;</code>
+   * <code>optional string time = 3;</code>
    */
-  public long getInstant() {
-    return instant_;
+  public java.lang.String getTime() {
+    java.lang.Object ref = time_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      time_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * local time
+   * </pre>
+   *
+   * <code>optional string time = 3;</code>
+   */
+  public com.google.protobuf.ByteString
+      getTimeBytes() {
+    java.lang.Object ref = time_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      time_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int YEAR_FIELD_NUMBER = 4;
+  private int year_;
+  /**
+   * <pre>
+   * local year
+   * </pre>
+   *
+   * <code>optional int32 year = 4;</code>
+   */
+  public int getYear() {
+    return year_;
+  }
+
+  public static final int MONTH_FIELD_NUMBER = 5;
+  private int month_;
+  /**
+   * <pre>
+   * local month
+   * </pre>
+   *
+   * <code>optional int32 month = 5;</code>
+   */
+  public int getMonth() {
+    return month_;
+  }
+
+  public static final int WEEK_FIELD_NUMBER = 6;
+  private int week_;
+  /**
+   * <pre>
+   * local week number
+   * </pre>
+   *
+   * <code>optional int32 week = 6;</code>
+   */
+  public int getWeek() {
+    return week_;
+  }
+
+  public static final int DAY_FIELD_NUMBER = 7;
+  private int day_;
+  /**
+   * <pre>
+   * local day number
+   * </pre>
+   *
+   * <code>optional int32 day = 7;</code>
+   */
+  public int getDay() {
+    return day_;
+  }
+
+  public static final int HOUR_FIELD_NUMBER = 8;
+  private int hour_;
+  /**
+   * <pre>
+   * local hour in which the hit occurred (0 to 23).
+   * </pre>
+   *
+   * <code>optional int32 hour = 8;</code>
+   */
+  public int getHour() {
+    return hour_;
+  }
+
+  public static final int MINUTE_FIELD_NUMBER = 9;
+  private int minute_;
+  /**
+   * <pre>
+   * local minute in which the hit occurred (0 to 59).
+   * </pre>
+   *
+   * <code>optional int32 minute = 9;</code>
+   */
+  public int getMinute() {
+    return minute_;
+  }
+
+  public static final int SECOND_FIELD_NUMBER = 10;
+  private int second_;
+  /**
+   * <pre>
+   * local second
+   * </pre>
+   *
+   * <code>optional int32 second = 10;</code>
+   */
+  public int getSecond() {
+    return second_;
+  }
+
+  public static final int WEEKDAY_FIELD_NUMBER = 11;
+  private volatile java.lang.Object weekDay_;
+  /**
+   * <pre>
+   * local day of week
+   * </pre>
+   *
+   * <code>optional string weekDay = 11;</code>
+   */
+  public java.lang.String getWeekDay() {
+    java.lang.Object ref = weekDay_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      weekDay_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * local day of week
+   * </pre>
+   *
+   * <code>optional string weekDay = 11;</code>
+   */
+  public com.google.protobuf.ByteString
+      getWeekDayBytes() {
+    java.lang.Object ref = weekDay_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      weekDay_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int TIMEZONE_FIELD_NUMBER = 12;
+  private volatile java.lang.Object timeZone_;
+  /**
+   * <pre>
+   * local timeZone
+   * </pre>
+   *
+   * <code>optional string timeZone = 12;</code>
+   */
+  public java.lang.String getTimeZone() {
+    java.lang.Object ref = timeZone_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      timeZone_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * local timeZone
+   * </pre>
+   *
+   * <code>optional string timeZone = 12;</code>
+   */
+  public com.google.protobuf.ByteString
+      getTimeZoneBytes() {
+    java.lang.Object ref = timeZone_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      timeZone_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -195,11 +472,38 @@ public  final class Time extends
     if (!getDateTimeBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, dateTime_);
     }
-    if (!getTimestampBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, timestamp_);
+    if (!getDateBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, date_);
     }
-    if (instant_ != 0L) {
-      output.writeInt64(3, instant_);
+    if (!getTimeBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, time_);
+    }
+    if (year_ != 0) {
+      output.writeInt32(4, year_);
+    }
+    if (month_ != 0) {
+      output.writeInt32(5, month_);
+    }
+    if (week_ != 0) {
+      output.writeInt32(6, week_);
+    }
+    if (day_ != 0) {
+      output.writeInt32(7, day_);
+    }
+    if (hour_ != 0) {
+      output.writeInt32(8, hour_);
+    }
+    if (minute_ != 0) {
+      output.writeInt32(9, minute_);
+    }
+    if (second_ != 0) {
+      output.writeInt32(10, second_);
+    }
+    if (!getWeekDayBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 11, weekDay_);
+    }
+    if (!getTimeZoneBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 12, timeZone_);
     }
   }
 
@@ -211,12 +515,45 @@ public  final class Time extends
     if (!getDateTimeBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, dateTime_);
     }
-    if (!getTimestampBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, timestamp_);
+    if (!getDateBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, date_);
     }
-    if (instant_ != 0L) {
+    if (!getTimeBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, time_);
+    }
+    if (year_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(3, instant_);
+        .computeInt32Size(4, year_);
+    }
+    if (month_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(5, month_);
+    }
+    if (week_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(6, week_);
+    }
+    if (day_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(7, day_);
+    }
+    if (hour_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(8, hour_);
+    }
+    if (minute_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(9, minute_);
+    }
+    if (second_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(10, second_);
+    }
+    if (!getWeekDayBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, weekDay_);
+    }
+    if (!getTimeZoneBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, timeZone_);
     }
     memoizedSize = size;
     return size;
@@ -236,10 +573,28 @@ public  final class Time extends
     boolean result = true;
     result = result && getDateTime()
         .equals(other.getDateTime());
-    result = result && getTimestamp()
-        .equals(other.getTimestamp());
-    result = result && (getInstant()
-        == other.getInstant());
+    result = result && getDate()
+        .equals(other.getDate());
+    result = result && getTime()
+        .equals(other.getTime());
+    result = result && (getYear()
+        == other.getYear());
+    result = result && (getMonth()
+        == other.getMonth());
+    result = result && (getWeek()
+        == other.getWeek());
+    result = result && (getDay()
+        == other.getDay());
+    result = result && (getHour()
+        == other.getHour());
+    result = result && (getMinute()
+        == other.getMinute());
+    result = result && (getSecond()
+        == other.getSecond());
+    result = result && getWeekDay()
+        .equals(other.getWeekDay());
+    result = result && getTimeZone()
+        .equals(other.getTimeZone());
     return result;
   }
 
@@ -252,11 +607,28 @@ public  final class Time extends
     hash = (19 * hash) + getDescriptorForType().hashCode();
     hash = (37 * hash) + DATETIME_FIELD_NUMBER;
     hash = (53 * hash) + getDateTime().hashCode();
-    hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
-    hash = (53 * hash) + getTimestamp().hashCode();
-    hash = (37 * hash) + INSTANT_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getInstant());
+    hash = (37 * hash) + DATE_FIELD_NUMBER;
+    hash = (53 * hash) + getDate().hashCode();
+    hash = (37 * hash) + TIME_FIELD_NUMBER;
+    hash = (53 * hash) + getTime().hashCode();
+    hash = (37 * hash) + YEAR_FIELD_NUMBER;
+    hash = (53 * hash) + getYear();
+    hash = (37 * hash) + MONTH_FIELD_NUMBER;
+    hash = (53 * hash) + getMonth();
+    hash = (37 * hash) + WEEK_FIELD_NUMBER;
+    hash = (53 * hash) + getWeek();
+    hash = (37 * hash) + DAY_FIELD_NUMBER;
+    hash = (53 * hash) + getDay();
+    hash = (37 * hash) + HOUR_FIELD_NUMBER;
+    hash = (53 * hash) + getHour();
+    hash = (37 * hash) + MINUTE_FIELD_NUMBER;
+    hash = (53 * hash) + getMinute();
+    hash = (37 * hash) + SECOND_FIELD_NUMBER;
+    hash = (53 * hash) + getSecond();
+    hash = (37 * hash) + WEEKDAY_FIELD_NUMBER;
+    hash = (53 * hash) + getWeekDay().hashCode();
+    hash = (37 * hash) + TIMEZONE_FIELD_NUMBER;
+    hash = (53 * hash) + getTimeZone().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -377,9 +749,27 @@ public  final class Time extends
       super.clear();
       dateTime_ = "";
 
-      timestamp_ = "";
+      date_ = "";
 
-      instant_ = 0L;
+      time_ = "";
+
+      year_ = 0;
+
+      month_ = 0;
+
+      week_ = 0;
+
+      day_ = 0;
+
+      hour_ = 0;
+
+      minute_ = 0;
+
+      second_ = 0;
+
+      weekDay_ = "";
+
+      timeZone_ = "";
 
       return this;
     }
@@ -404,8 +794,17 @@ public  final class Time extends
     public org.datahem.protobuf.measurementprotocol.v2.Time buildPartial() {
       org.datahem.protobuf.measurementprotocol.v2.Time result = new org.datahem.protobuf.measurementprotocol.v2.Time(this);
       result.dateTime_ = dateTime_;
-      result.timestamp_ = timestamp_;
-      result.instant_ = instant_;
+      result.date_ = date_;
+      result.time_ = time_;
+      result.year_ = year_;
+      result.month_ = month_;
+      result.week_ = week_;
+      result.day_ = day_;
+      result.hour_ = hour_;
+      result.minute_ = minute_;
+      result.second_ = second_;
+      result.weekDay_ = weekDay_;
+      result.timeZone_ = timeZone_;
       onBuilt();
       return result;
     }
@@ -451,12 +850,42 @@ public  final class Time extends
         dateTime_ = other.dateTime_;
         onChanged();
       }
-      if (!other.getTimestamp().isEmpty()) {
-        timestamp_ = other.timestamp_;
+      if (!other.getDate().isEmpty()) {
+        date_ = other.date_;
         onChanged();
       }
-      if (other.getInstant() != 0L) {
-        setInstant(other.getInstant());
+      if (!other.getTime().isEmpty()) {
+        time_ = other.time_;
+        onChanged();
+      }
+      if (other.getYear() != 0) {
+        setYear(other.getYear());
+      }
+      if (other.getMonth() != 0) {
+        setMonth(other.getMonth());
+      }
+      if (other.getWeek() != 0) {
+        setWeek(other.getWeek());
+      }
+      if (other.getDay() != 0) {
+        setDay(other.getDay());
+      }
+      if (other.getHour() != 0) {
+        setHour(other.getHour());
+      }
+      if (other.getMinute() != 0) {
+        setMinute(other.getMinute());
+      }
+      if (other.getSecond() != 0) {
+        setSecond(other.getSecond());
+      }
+      if (!other.getWeekDay().isEmpty()) {
+        weekDay_ = other.weekDay_;
+        onChanged();
+      }
+      if (!other.getTimeZone().isEmpty()) {
+        timeZone_ = other.timeZone_;
+        onChanged();
       }
       onChanged();
       return this;
@@ -486,6 +915,10 @@ public  final class Time extends
 
     private java.lang.Object dateTime_ = "";
     /**
+     * <pre>
+     * local datetime YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
+     * </pre>
+     *
      * <code>optional string dateTime = 1;</code>
      */
     public java.lang.String getDateTime() {
@@ -501,6 +934,10 @@ public  final class Time extends
       }
     }
     /**
+     * <pre>
+     * local datetime YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
+     * </pre>
+     *
      * <code>optional string dateTime = 1;</code>
      */
     public com.google.protobuf.ByteString
@@ -517,6 +954,10 @@ public  final class Time extends
       }
     }
     /**
+     * <pre>
+     * local datetime YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
+     * </pre>
+     *
      * <code>optional string dateTime = 1;</code>
      */
     public Builder setDateTime(
@@ -530,6 +971,10 @@ public  final class Time extends
       return this;
     }
     /**
+     * <pre>
+     * local datetime YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
+     * </pre>
+     *
      * <code>optional string dateTime = 1;</code>
      */
     public Builder clearDateTime() {
@@ -539,6 +984,10 @@ public  final class Time extends
       return this;
     }
     /**
+     * <pre>
+     * local datetime YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
+     * </pre>
+     *
      * <code>optional string dateTime = 1;</code>
      */
     public Builder setDateTimeBytes(
@@ -553,109 +1002,624 @@ public  final class Time extends
       return this;
     }
 
-    private java.lang.Object timestamp_ = "";
+    private java.lang.Object date_ = "";
     /**
-     * <code>optional string timestamp = 2;</code>
+     * <pre>
+     * local date
+     * </pre>
+     *
+     * <code>optional string date = 2;</code>
      */
-    public java.lang.String getTimestamp() {
-      java.lang.Object ref = timestamp_;
+    public java.lang.String getDate() {
+      java.lang.Object ref = date_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        timestamp_ = s;
+        date_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>optional string timestamp = 2;</code>
+     * <pre>
+     * local date
+     * </pre>
+     *
+     * <code>optional string date = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getTimestampBytes() {
-      java.lang.Object ref = timestamp_;
+        getDateBytes() {
+      java.lang.Object ref = date_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        timestamp_ = b;
+        date_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>optional string timestamp = 2;</code>
+     * <pre>
+     * local date
+     * </pre>
+     *
+     * <code>optional string date = 2;</code>
      */
-    public Builder setTimestamp(
+    public Builder setDate(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      timestamp_ = value;
+      date_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional string timestamp = 2;</code>
+     * <pre>
+     * local date
+     * </pre>
+     *
+     * <code>optional string date = 2;</code>
      */
-    public Builder clearTimestamp() {
+    public Builder clearDate() {
       
-      timestamp_ = getDefaultInstance().getTimestamp();
+      date_ = getDefaultInstance().getDate();
       onChanged();
       return this;
     }
     /**
-     * <code>optional string timestamp = 2;</code>
+     * <pre>
+     * local date
+     * </pre>
+     *
+     * <code>optional string date = 2;</code>
      */
-    public Builder setTimestampBytes(
+    public Builder setDateBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      timestamp_ = value;
+      date_ = value;
       onChanged();
       return this;
     }
 
-    private long instant_ ;
+    private java.lang.Object time_ = "";
     /**
      * <pre>
-     *epoch millis
+     * local time
      * </pre>
      *
-     * <code>optional int64 instant = 3;</code>
+     * <code>optional string time = 3;</code>
      */
-    public long getInstant() {
-      return instant_;
+    public java.lang.String getTime() {
+      java.lang.Object ref = time_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        time_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
      * <pre>
-     *epoch millis
+     * local time
      * </pre>
      *
-     * <code>optional int64 instant = 3;</code>
+     * <code>optional string time = 3;</code>
      */
-    public Builder setInstant(long value) {
-      
-      instant_ = value;
+    public com.google.protobuf.ByteString
+        getTimeBytes() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        time_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * local time
+     * </pre>
+     *
+     * <code>optional string time = 3;</code>
+     */
+    public Builder setTime(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      time_ = value;
       onChanged();
       return this;
     }
     /**
      * <pre>
-     *epoch millis
+     * local time
      * </pre>
      *
-     * <code>optional int64 instant = 3;</code>
+     * <code>optional string time = 3;</code>
      */
-    public Builder clearInstant() {
+    public Builder clearTime() {
       
-      instant_ = 0L;
+      time_ = getDefaultInstance().getTime();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local time
+     * </pre>
+     *
+     * <code>optional string time = 3;</code>
+     */
+    public Builder setTimeBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      time_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int year_ ;
+    /**
+     * <pre>
+     * local year
+     * </pre>
+     *
+     * <code>optional int32 year = 4;</code>
+     */
+    public int getYear() {
+      return year_;
+    }
+    /**
+     * <pre>
+     * local year
+     * </pre>
+     *
+     * <code>optional int32 year = 4;</code>
+     */
+    public Builder setYear(int value) {
+      
+      year_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local year
+     * </pre>
+     *
+     * <code>optional int32 year = 4;</code>
+     */
+    public Builder clearYear() {
+      
+      year_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int month_ ;
+    /**
+     * <pre>
+     * local month
+     * </pre>
+     *
+     * <code>optional int32 month = 5;</code>
+     */
+    public int getMonth() {
+      return month_;
+    }
+    /**
+     * <pre>
+     * local month
+     * </pre>
+     *
+     * <code>optional int32 month = 5;</code>
+     */
+    public Builder setMonth(int value) {
+      
+      month_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local month
+     * </pre>
+     *
+     * <code>optional int32 month = 5;</code>
+     */
+    public Builder clearMonth() {
+      
+      month_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int week_ ;
+    /**
+     * <pre>
+     * local week number
+     * </pre>
+     *
+     * <code>optional int32 week = 6;</code>
+     */
+    public int getWeek() {
+      return week_;
+    }
+    /**
+     * <pre>
+     * local week number
+     * </pre>
+     *
+     * <code>optional int32 week = 6;</code>
+     */
+    public Builder setWeek(int value) {
+      
+      week_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local week number
+     * </pre>
+     *
+     * <code>optional int32 week = 6;</code>
+     */
+    public Builder clearWeek() {
+      
+      week_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int day_ ;
+    /**
+     * <pre>
+     * local day number
+     * </pre>
+     *
+     * <code>optional int32 day = 7;</code>
+     */
+    public int getDay() {
+      return day_;
+    }
+    /**
+     * <pre>
+     * local day number
+     * </pre>
+     *
+     * <code>optional int32 day = 7;</code>
+     */
+    public Builder setDay(int value) {
+      
+      day_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local day number
+     * </pre>
+     *
+     * <code>optional int32 day = 7;</code>
+     */
+    public Builder clearDay() {
+      
+      day_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int hour_ ;
+    /**
+     * <pre>
+     * local hour in which the hit occurred (0 to 23).
+     * </pre>
+     *
+     * <code>optional int32 hour = 8;</code>
+     */
+    public int getHour() {
+      return hour_;
+    }
+    /**
+     * <pre>
+     * local hour in which the hit occurred (0 to 23).
+     * </pre>
+     *
+     * <code>optional int32 hour = 8;</code>
+     */
+    public Builder setHour(int value) {
+      
+      hour_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local hour in which the hit occurred (0 to 23).
+     * </pre>
+     *
+     * <code>optional int32 hour = 8;</code>
+     */
+    public Builder clearHour() {
+      
+      hour_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int minute_ ;
+    /**
+     * <pre>
+     * local minute in which the hit occurred (0 to 59).
+     * </pre>
+     *
+     * <code>optional int32 minute = 9;</code>
+     */
+    public int getMinute() {
+      return minute_;
+    }
+    /**
+     * <pre>
+     * local minute in which the hit occurred (0 to 59).
+     * </pre>
+     *
+     * <code>optional int32 minute = 9;</code>
+     */
+    public Builder setMinute(int value) {
+      
+      minute_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local minute in which the hit occurred (0 to 59).
+     * </pre>
+     *
+     * <code>optional int32 minute = 9;</code>
+     */
+    public Builder clearMinute() {
+      
+      minute_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int second_ ;
+    /**
+     * <pre>
+     * local second
+     * </pre>
+     *
+     * <code>optional int32 second = 10;</code>
+     */
+    public int getSecond() {
+      return second_;
+    }
+    /**
+     * <pre>
+     * local second
+     * </pre>
+     *
+     * <code>optional int32 second = 10;</code>
+     */
+    public Builder setSecond(int value) {
+      
+      second_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local second
+     * </pre>
+     *
+     * <code>optional int32 second = 10;</code>
+     */
+    public Builder clearSecond() {
+      
+      second_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object weekDay_ = "";
+    /**
+     * <pre>
+     * local day of week
+     * </pre>
+     *
+     * <code>optional string weekDay = 11;</code>
+     */
+    public java.lang.String getWeekDay() {
+      java.lang.Object ref = weekDay_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        weekDay_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <pre>
+     * local day of week
+     * </pre>
+     *
+     * <code>optional string weekDay = 11;</code>
+     */
+    public com.google.protobuf.ByteString
+        getWeekDayBytes() {
+      java.lang.Object ref = weekDay_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        weekDay_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * local day of week
+     * </pre>
+     *
+     * <code>optional string weekDay = 11;</code>
+     */
+    public Builder setWeekDay(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      weekDay_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local day of week
+     * </pre>
+     *
+     * <code>optional string weekDay = 11;</code>
+     */
+    public Builder clearWeekDay() {
+      
+      weekDay_ = getDefaultInstance().getWeekDay();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local day of week
+     * </pre>
+     *
+     * <code>optional string weekDay = 11;</code>
+     */
+    public Builder setWeekDayBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      weekDay_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object timeZone_ = "";
+    /**
+     * <pre>
+     * local timeZone
+     * </pre>
+     *
+     * <code>optional string timeZone = 12;</code>
+     */
+    public java.lang.String getTimeZone() {
+      java.lang.Object ref = timeZone_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        timeZone_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <pre>
+     * local timeZone
+     * </pre>
+     *
+     * <code>optional string timeZone = 12;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTimeZoneBytes() {
+      java.lang.Object ref = timeZone_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        timeZone_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * local timeZone
+     * </pre>
+     *
+     * <code>optional string timeZone = 12;</code>
+     */
+    public Builder setTimeZone(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      timeZone_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local timeZone
+     * </pre>
+     *
+     * <code>optional string timeZone = 12;</code>
+     */
+    public Builder clearTimeZone() {
+      
+      timeZone_ = getDefaultInstance().getTimeZone();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * local timeZone
+     * </pre>
+     *
+     * <code>optional string timeZone = 12;</code>
+     */
+    public Builder setTimeZoneBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      timeZone_ = value;
       onChanged();
       return this;
     }

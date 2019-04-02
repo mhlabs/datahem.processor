@@ -18,6 +18,8 @@ import java.util.Map;
 import org.datahem.protobuf.measurementprotocol.v2.Page;
 import java.util.Optional;
 import org.datahem.processor.utils.FieldMapper;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +46,7 @@ public class PageEntity{
             try{
                 Page.Builder builder = Page.newBuilder();
                 Pattern pattern = Pattern.compile(siteSearchPattern);
-			    Matcher matcher = pattern.matcher(paramMap.get("dl"));
+			    Matcher matcher = pattern.matcher(pm.get("dlu"));
 			    if(matcher.find()){
 				    //paramMap.put("sst", FieldMapper.decode(matcher.group(1)));
                     Optional.ofNullable(FieldMapper.decode(matcher.group(1))).ifPresent(builder::setSearchKeyword);
@@ -52,7 +54,7 @@ public class PageEntity{
                 Optional.ofNullable(pm.get("dt")).ifPresent(builder::setTitle);
                 Optional.ofNullable(pm.get("dlu")).ifPresent(builder::setUrl);
                 Optional.ofNullable(pm.get("dh")).ifPresent(builder::setHostname);
-                Optional.ofNullable(pm.get("dp")).ifPresent(builder::setPath);
+                Optional.ofNullable(pm.get("dp").split("\\?")[0]).ifPresent(builder::setPath);
                 Optional.ofNullable(pm.get("dr")).ifPresent(builder::setReferer);
                 Optional.ofNullable(pm.get("drh")).ifPresent(builder::setRefererHost);
                 Optional.ofNullable(pm.get("drp")).ifPresent(builder::setRefererPath);

@@ -38,14 +38,14 @@ public class PayloadToMeasurementProtocolFn extends DoFn<PubsubMessage, Measurem
 	  		ValueProvider<String> socialNetworksPattern, 
             ValueProvider<String> includedHostnamesPattern, 
 	  		ValueProvider<String> excludedBotsPattern, 
-	  		//ValueProvider<String> siteSearchPattern,
+	  		ValueProvider<String> siteSearchPattern,
 	  		ValueProvider<String> timeZone) {
                 this.searchEnginesPattern = searchEnginesPattern;
 		     	this.ignoredReferersPattern = ignoredReferersPattern;
 		     	this.socialNetworksPattern = socialNetworksPattern;
                 this.includedHostnamesPattern = includedHostnamesPattern;
 		     	this.excludedBotsPattern = excludedBotsPattern;
-		     	//this.siteSearchPattern = siteSearchPattern;
+		     	this.siteSearchPattern = siteSearchPattern;
 		     	this.timeZone = timeZone;
 	   	}
         
@@ -56,14 +56,14 @@ public class PayloadToMeasurementProtocolFn extends DoFn<PubsubMessage, Measurem
 	      	
 	      	PubsubMessage received = c.element();
 	        MeasurementProtocolBuilder mpb = new MeasurementProtocolBuilder();
-            /*
+            
 	        mpb.setSearchEnginesPattern(searchEnginesPattern.get());
 	        mpb.setIgnoredReferersPattern(ignoredReferersPattern.get());
 	        mpb.setSocialNetworksPattern(socialNetworksPattern.get());
-            */
+            
 	        mpb.setIncludedHostnamesPattern(includedHostnamesPattern.get());
 	        mpb.setExcludedBotsPattern(excludedBotsPattern.get());
-	        //mpb.setSiteSearchPattern(siteSearchPattern.get());
+	        mpb.setSiteSearchPattern(siteSearchPattern.get());
 	        mpb.setTimeZone(timeZone.get());
 	        
             /*

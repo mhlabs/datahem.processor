@@ -32,7 +32,6 @@ public  final class MeasurementProtocol extends
     hitType_ = "";
     clientId_ = "";
     userId_ = "";
-    hitId_ = "";
     date_ = "";
     nonInteraction_ = 0;
     version_ = "";
@@ -86,12 +85,6 @@ public  final class MeasurementProtocol extends
             userId_ = s;
             break;
           }
-          case 34: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            hitId_ = s;
-            break;
-          }
           case 42: {
             java.lang.String s = input.readStringRequireUtf8();
 
@@ -110,18 +103,18 @@ public  final class MeasurementProtocol extends
             break;
           }
           case 66: {
-            if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+            if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
               customDimensions_ = new java.util.ArrayList<org.datahem.protobuf.measurementprotocol.v2.CustomDimension>();
-              mutable_bitField0_ |= 0x00000080;
+              mutable_bitField0_ |= 0x00000040;
             }
             customDimensions_.add(
                 input.readMessage(org.datahem.protobuf.measurementprotocol.v2.CustomDimension.parser(), extensionRegistry));
             break;
           }
           case 74: {
-            if (!((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+            if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
               customMetrics_ = new java.util.ArrayList<org.datahem.protobuf.measurementprotocol.v2.CustomMetric>();
-              mutable_bitField0_ |= 0x00000100;
+              mutable_bitField0_ |= 0x00000080;
             }
             customMetrics_.add(
                 input.readMessage(org.datahem.protobuf.measurementprotocol.v2.CustomMetric.parser(), extensionRegistry));
@@ -180,9 +173,9 @@ public  final class MeasurementProtocol extends
             break;
           }
           case 114: {
-            if (!((mutable_bitField0_ & 0x00002000) == 0x00002000)) {
+            if (!((mutable_bitField0_ & 0x00001000) == 0x00001000)) {
               experiments_ = new java.util.ArrayList<org.datahem.protobuf.measurementprotocol.v2.Experiment>();
-              mutable_bitField0_ |= 0x00002000;
+              mutable_bitField0_ |= 0x00001000;
             }
             experiments_.add(
                 input.readMessage(org.datahem.protobuf.measurementprotocol.v2.Experiment.parser(), extensionRegistry));
@@ -228,18 +221,18 @@ public  final class MeasurementProtocol extends
             break;
           }
           case 146: {
-            if (!((mutable_bitField0_ & 0x00020000) == 0x00020000)) {
+            if (!((mutable_bitField0_ & 0x00010000) == 0x00010000)) {
               products_ = new java.util.ArrayList<org.datahem.protobuf.measurementprotocol.v2.Product>();
-              mutable_bitField0_ |= 0x00020000;
+              mutable_bitField0_ |= 0x00010000;
             }
             products_.add(
                 input.readMessage(org.datahem.protobuf.measurementprotocol.v2.Product.parser(), extensionRegistry));
             break;
           }
           case 154: {
-            if (!((mutable_bitField0_ & 0x00040000) == 0x00040000)) {
+            if (!((mutable_bitField0_ & 0x00020000) == 0x00020000)) {
               promotions_ = new java.util.ArrayList<org.datahem.protobuf.measurementprotocol.v2.Promotion>();
-              mutable_bitField0_ |= 0x00040000;
+              mutable_bitField0_ |= 0x00020000;
             }
             promotions_.add(
                 input.readMessage(org.datahem.protobuf.measurementprotocol.v2.Promotion.parser(), extensionRegistry));
@@ -323,6 +316,19 @@ public  final class MeasurementProtocol extends
 
             break;
           }
+          case 210: {
+            org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES.Builder subBuilder = null;
+            if (ATTRIBUTES_ != null) {
+              subBuilder = ATTRIBUTES_.toBuilder();
+            }
+            ATTRIBUTES_ = input.readMessage(org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(ATTRIBUTES_);
+              ATTRIBUTES_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -331,19 +337,19 @@ public  final class MeasurementProtocol extends
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
-      if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+      if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
         customDimensions_ = java.util.Collections.unmodifiableList(customDimensions_);
       }
-      if (((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+      if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
         customMetrics_ = java.util.Collections.unmodifiableList(customMetrics_);
       }
-      if (((mutable_bitField0_ & 0x00002000) == 0x00002000)) {
+      if (((mutable_bitField0_ & 0x00001000) == 0x00001000)) {
         experiments_ = java.util.Collections.unmodifiableList(experiments_);
       }
-      if (((mutable_bitField0_ & 0x00020000) == 0x00020000)) {
+      if (((mutable_bitField0_ & 0x00010000) == 0x00010000)) {
         products_ = java.util.Collections.unmodifiableList(products_);
       }
-      if (((mutable_bitField0_ & 0x00040000) == 0x00040000)) {
+      if (((mutable_bitField0_ & 0x00020000) == 0x00020000)) {
         promotions_ = java.util.Collections.unmodifiableList(promotions_);
       }
       makeExtensionsImmutable();
@@ -488,45 +494,11 @@ public  final class MeasurementProtocol extends
     }
   }
 
-  public static final int HITID_FIELD_NUMBER = 4;
-  private volatile java.lang.Object hitId_;
-  /**
-   * <code>optional string hitId = 4;</code>
-   */
-  public java.lang.String getHitId() {
-    java.lang.Object ref = hitId_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      hitId_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>optional string hitId = 4;</code>
-   */
-  public com.google.protobuf.ByteString
-      getHitIdBytes() {
-    java.lang.Object ref = hitId_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      hitId_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
   public static final int DATE_FIELD_NUMBER = 5;
   private volatile java.lang.Object date_;
   /**
    * <pre>
-   *local date as partition field.
+   *string hitId = 4;
    * </pre>
    *
    * <code>optional string date = 5;</code>
@@ -545,7 +517,7 @@ public  final class MeasurementProtocol extends
   }
   /**
    * <pre>
-   *local date as partition field.
+   *string hitId = 4;
    * </pre>
    *
    * <code>optional string date = 5;</code>
@@ -1067,6 +1039,27 @@ public  final class MeasurementProtocol extends
     return getTransaction();
   }
 
+  public static final int _ATTRIBUTES_FIELD_NUMBER = 26;
+  private org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES ATTRIBUTES_;
+  /**
+   * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+   */
+  public boolean hasATTRIBUTES() {
+    return ATTRIBUTES_ != null;
+  }
+  /**
+   * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+   */
+  public org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES getATTRIBUTES() {
+    return ATTRIBUTES_ == null ? org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES.getDefaultInstance() : ATTRIBUTES_;
+  }
+  /**
+   * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+   */
+  public org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTESOrBuilder getATTRIBUTESOrBuilder() {
+    return getATTRIBUTES();
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -1087,9 +1080,6 @@ public  final class MeasurementProtocol extends
     }
     if (!getUserIdBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, userId_);
-    }
-    if (!getHitIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, hitId_);
     }
     if (!getDateBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 5, date_);
@@ -1154,6 +1144,9 @@ public  final class MeasurementProtocol extends
     if (transaction_ != null) {
       output.writeMessage(25, getTransaction());
     }
+    if (ATTRIBUTES_ != null) {
+      output.writeMessage(26, getATTRIBUTES());
+    }
   }
 
   public int getSerializedSize() {
@@ -1169,9 +1162,6 @@ public  final class MeasurementProtocol extends
     }
     if (!getUserIdBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, userId_);
-    }
-    if (!getHitIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, hitId_);
     }
     if (!getDateBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, date_);
@@ -1255,6 +1245,10 @@ public  final class MeasurementProtocol extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(25, getTransaction());
     }
+    if (ATTRIBUTES_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(26, getATTRIBUTES());
+    }
     memoizedSize = size;
     return size;
   }
@@ -1277,8 +1271,6 @@ public  final class MeasurementProtocol extends
         .equals(other.getClientId());
     result = result && getUserId()
         .equals(other.getUserId());
-    result = result && getHitId()
-        .equals(other.getHitId());
     result = result && getDate()
         .equals(other.getDate());
     result = result && (getNonInteraction()
@@ -1360,6 +1352,11 @@ public  final class MeasurementProtocol extends
       result = result && getTransaction()
           .equals(other.getTransaction());
     }
+    result = result && (hasATTRIBUTES() == other.hasATTRIBUTES());
+    if (hasATTRIBUTES()) {
+      result = result && getATTRIBUTES()
+          .equals(other.getATTRIBUTES());
+    }
     return result;
   }
 
@@ -1376,8 +1373,6 @@ public  final class MeasurementProtocol extends
     hash = (53 * hash) + getClientId().hashCode();
     hash = (37 * hash) + USERID_FIELD_NUMBER;
     hash = (53 * hash) + getUserId().hashCode();
-    hash = (37 * hash) + HITID_FIELD_NUMBER;
-    hash = (53 * hash) + getHitId().hashCode();
     hash = (37 * hash) + DATE_FIELD_NUMBER;
     hash = (53 * hash) + getDate().hashCode();
     hash = (37 * hash) + NONINTERACTION_FIELD_NUMBER;
@@ -1455,6 +1450,10 @@ public  final class MeasurementProtocol extends
     if (hasTransaction()) {
       hash = (37 * hash) + TRANSACTION_FIELD_NUMBER;
       hash = (53 * hash) + getTransaction().hashCode();
+    }
+    if (hasATTRIBUTES()) {
+      hash = (37 * hash) + _ATTRIBUTES_FIELD_NUMBER;
+      hash = (53 * hash) + getATTRIBUTES().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -1585,8 +1584,6 @@ public  final class MeasurementProtocol extends
 
       userId_ = "";
 
-      hitId_ = "";
-
       date_ = "";
 
       nonInteraction_ = 0;
@@ -1595,13 +1592,13 @@ public  final class MeasurementProtocol extends
 
       if (customDimensionsBuilder_ == null) {
         customDimensions_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ = (bitField0_ & ~0x00000040);
       } else {
         customDimensionsBuilder_.clear();
       }
       if (customMetricsBuilder_ == null) {
         customMetrics_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000100);
+        bitField0_ = (bitField0_ & ~0x00000080);
       } else {
         customMetricsBuilder_.clear();
       }
@@ -1631,7 +1628,7 @@ public  final class MeasurementProtocol extends
       }
       if (experimentsBuilder_ == null) {
         experiments_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00002000);
+        bitField0_ = (bitField0_ & ~0x00001000);
       } else {
         experimentsBuilder_.clear();
       }
@@ -1655,13 +1652,13 @@ public  final class MeasurementProtocol extends
       }
       if (productsBuilder_ == null) {
         products_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00020000);
+        bitField0_ = (bitField0_ & ~0x00010000);
       } else {
         productsBuilder_.clear();
       }
       if (promotionsBuilder_ == null) {
         promotions_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00040000);
+        bitField0_ = (bitField0_ & ~0x00020000);
       } else {
         promotionsBuilder_.clear();
       }
@@ -1701,6 +1698,12 @@ public  final class MeasurementProtocol extends
         transaction_ = null;
         transactionBuilder_ = null;
       }
+      if (ATTRIBUTESBuilder_ == null) {
+        ATTRIBUTES_ = null;
+      } else {
+        ATTRIBUTES_ = null;
+        ATTRIBUTESBuilder_ = null;
+      }
       return this;
     }
 
@@ -1728,23 +1731,22 @@ public  final class MeasurementProtocol extends
       result.hitType_ = hitType_;
       result.clientId_ = clientId_;
       result.userId_ = userId_;
-      result.hitId_ = hitId_;
       result.date_ = date_;
       result.nonInteraction_ = nonInteraction_;
       result.version_ = version_;
       if (customDimensionsBuilder_ == null) {
-        if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        if (((bitField0_ & 0x00000040) == 0x00000040)) {
           customDimensions_ = java.util.Collections.unmodifiableList(customDimensions_);
-          bitField0_ = (bitField0_ & ~0x00000080);
+          bitField0_ = (bitField0_ & ~0x00000040);
         }
         result.customDimensions_ = customDimensions_;
       } else {
         result.customDimensions_ = customDimensionsBuilder_.build();
       }
       if (customMetricsBuilder_ == null) {
-        if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        if (((bitField0_ & 0x00000080) == 0x00000080)) {
           customMetrics_ = java.util.Collections.unmodifiableList(customMetrics_);
-          bitField0_ = (bitField0_ & ~0x00000100);
+          bitField0_ = (bitField0_ & ~0x00000080);
         }
         result.customMetrics_ = customMetrics_;
       } else {
@@ -1771,9 +1773,9 @@ public  final class MeasurementProtocol extends
         result.exception_ = exceptionBuilder_.build();
       }
       if (experimentsBuilder_ == null) {
-        if (((bitField0_ & 0x00002000) == 0x00002000)) {
+        if (((bitField0_ & 0x00001000) == 0x00001000)) {
           experiments_ = java.util.Collections.unmodifiableList(experiments_);
-          bitField0_ = (bitField0_ & ~0x00002000);
+          bitField0_ = (bitField0_ & ~0x00001000);
         }
         result.experiments_ = experiments_;
       } else {
@@ -1795,18 +1797,18 @@ public  final class MeasurementProtocol extends
         result.page_ = pageBuilder_.build();
       }
       if (productsBuilder_ == null) {
-        if (((bitField0_ & 0x00020000) == 0x00020000)) {
+        if (((bitField0_ & 0x00010000) == 0x00010000)) {
           products_ = java.util.Collections.unmodifiableList(products_);
-          bitField0_ = (bitField0_ & ~0x00020000);
+          bitField0_ = (bitField0_ & ~0x00010000);
         }
         result.products_ = products_;
       } else {
         result.products_ = productsBuilder_.build();
       }
       if (promotionsBuilder_ == null) {
-        if (((bitField0_ & 0x00040000) == 0x00040000)) {
+        if (((bitField0_ & 0x00020000) == 0x00020000)) {
           promotions_ = java.util.Collections.unmodifiableList(promotions_);
-          bitField0_ = (bitField0_ & ~0x00040000);
+          bitField0_ = (bitField0_ & ~0x00020000);
         }
         result.promotions_ = promotions_;
       } else {
@@ -1841,6 +1843,11 @@ public  final class MeasurementProtocol extends
         result.transaction_ = transaction_;
       } else {
         result.transaction_ = transactionBuilder_.build();
+      }
+      if (ATTRIBUTESBuilder_ == null) {
+        result.ATTRIBUTES_ = ATTRIBUTES_;
+      } else {
+        result.ATTRIBUTES_ = ATTRIBUTESBuilder_.build();
       }
       result.bitField0_ = to_bitField0_;
       onBuilt();
@@ -1896,10 +1903,6 @@ public  final class MeasurementProtocol extends
         userId_ = other.userId_;
         onChanged();
       }
-      if (!other.getHitId().isEmpty()) {
-        hitId_ = other.hitId_;
-        onChanged();
-      }
       if (!other.getDate().isEmpty()) {
         date_ = other.date_;
         onChanged();
@@ -1915,7 +1918,7 @@ public  final class MeasurementProtocol extends
         if (!other.customDimensions_.isEmpty()) {
           if (customDimensions_.isEmpty()) {
             customDimensions_ = other.customDimensions_;
-            bitField0_ = (bitField0_ & ~0x00000080);
+            bitField0_ = (bitField0_ & ~0x00000040);
           } else {
             ensureCustomDimensionsIsMutable();
             customDimensions_.addAll(other.customDimensions_);
@@ -1928,7 +1931,7 @@ public  final class MeasurementProtocol extends
             customDimensionsBuilder_.dispose();
             customDimensionsBuilder_ = null;
             customDimensions_ = other.customDimensions_;
-            bitField0_ = (bitField0_ & ~0x00000080);
+            bitField0_ = (bitField0_ & ~0x00000040);
             customDimensionsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getCustomDimensionsFieldBuilder() : null;
@@ -1941,7 +1944,7 @@ public  final class MeasurementProtocol extends
         if (!other.customMetrics_.isEmpty()) {
           if (customMetrics_.isEmpty()) {
             customMetrics_ = other.customMetrics_;
-            bitField0_ = (bitField0_ & ~0x00000100);
+            bitField0_ = (bitField0_ & ~0x00000080);
           } else {
             ensureCustomMetricsIsMutable();
             customMetrics_.addAll(other.customMetrics_);
@@ -1954,7 +1957,7 @@ public  final class MeasurementProtocol extends
             customMetricsBuilder_.dispose();
             customMetricsBuilder_ = null;
             customMetrics_ = other.customMetrics_;
-            bitField0_ = (bitField0_ & ~0x00000100);
+            bitField0_ = (bitField0_ & ~0x00000080);
             customMetricsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getCustomMetricsFieldBuilder() : null;
@@ -1979,7 +1982,7 @@ public  final class MeasurementProtocol extends
         if (!other.experiments_.isEmpty()) {
           if (experiments_.isEmpty()) {
             experiments_ = other.experiments_;
-            bitField0_ = (bitField0_ & ~0x00002000);
+            bitField0_ = (bitField0_ & ~0x00001000);
           } else {
             ensureExperimentsIsMutable();
             experiments_.addAll(other.experiments_);
@@ -1992,7 +1995,7 @@ public  final class MeasurementProtocol extends
             experimentsBuilder_.dispose();
             experimentsBuilder_ = null;
             experiments_ = other.experiments_;
-            bitField0_ = (bitField0_ & ~0x00002000);
+            bitField0_ = (bitField0_ & ~0x00001000);
             experimentsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getExperimentsFieldBuilder() : null;
@@ -2014,7 +2017,7 @@ public  final class MeasurementProtocol extends
         if (!other.products_.isEmpty()) {
           if (products_.isEmpty()) {
             products_ = other.products_;
-            bitField0_ = (bitField0_ & ~0x00020000);
+            bitField0_ = (bitField0_ & ~0x00010000);
           } else {
             ensureProductsIsMutable();
             products_.addAll(other.products_);
@@ -2027,7 +2030,7 @@ public  final class MeasurementProtocol extends
             productsBuilder_.dispose();
             productsBuilder_ = null;
             products_ = other.products_;
-            bitField0_ = (bitField0_ & ~0x00020000);
+            bitField0_ = (bitField0_ & ~0x00010000);
             productsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getProductsFieldBuilder() : null;
@@ -2040,7 +2043,7 @@ public  final class MeasurementProtocol extends
         if (!other.promotions_.isEmpty()) {
           if (promotions_.isEmpty()) {
             promotions_ = other.promotions_;
-            bitField0_ = (bitField0_ & ~0x00040000);
+            bitField0_ = (bitField0_ & ~0x00020000);
           } else {
             ensurePromotionsIsMutable();
             promotions_.addAll(other.promotions_);
@@ -2053,7 +2056,7 @@ public  final class MeasurementProtocol extends
             promotionsBuilder_.dispose();
             promotionsBuilder_ = null;
             promotions_ = other.promotions_;
-            bitField0_ = (bitField0_ & ~0x00040000);
+            bitField0_ = (bitField0_ & ~0x00020000);
             promotionsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getPromotionsFieldBuilder() : null;
@@ -2079,6 +2082,9 @@ public  final class MeasurementProtocol extends
       }
       if (other.hasTransaction()) {
         mergeTransaction(other.getTransaction());
+      }
+      if (other.hasATTRIBUTES()) {
+        mergeATTRIBUTES(other.getATTRIBUTES());
       }
       onChanged();
       return this;
@@ -2374,79 +2380,10 @@ public  final class MeasurementProtocol extends
       return this;
     }
 
-    private java.lang.Object hitId_ = "";
-    /**
-     * <code>optional string hitId = 4;</code>
-     */
-    public java.lang.String getHitId() {
-      java.lang.Object ref = hitId_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        hitId_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>optional string hitId = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getHitIdBytes() {
-      java.lang.Object ref = hitId_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        hitId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>optional string hitId = 4;</code>
-     */
-    public Builder setHitId(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      hitId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>optional string hitId = 4;</code>
-     */
-    public Builder clearHitId() {
-      
-      hitId_ = getDefaultInstance().getHitId();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>optional string hitId = 4;</code>
-     */
-    public Builder setHitIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      hitId_ = value;
-      onChanged();
-      return this;
-    }
-
     private java.lang.Object date_ = "";
     /**
      * <pre>
-     *local date as partition field.
+     *string hitId = 4;
      * </pre>
      *
      * <code>optional string date = 5;</code>
@@ -2465,7 +2402,7 @@ public  final class MeasurementProtocol extends
     }
     /**
      * <pre>
-     *local date as partition field.
+     *string hitId = 4;
      * </pre>
      *
      * <code>optional string date = 5;</code>
@@ -2485,7 +2422,7 @@ public  final class MeasurementProtocol extends
     }
     /**
      * <pre>
-     *local date as partition field.
+     *string hitId = 4;
      * </pre>
      *
      * <code>optional string date = 5;</code>
@@ -2502,7 +2439,7 @@ public  final class MeasurementProtocol extends
     }
     /**
      * <pre>
-     *local date as partition field.
+     *string hitId = 4;
      * </pre>
      *
      * <code>optional string date = 5;</code>
@@ -2515,7 +2452,7 @@ public  final class MeasurementProtocol extends
     }
     /**
      * <pre>
-     *local date as partition field.
+     *string hitId = 4;
      * </pre>
      *
      * <code>optional string date = 5;</code>
@@ -2662,9 +2599,9 @@ public  final class MeasurementProtocol extends
     private java.util.List<org.datahem.protobuf.measurementprotocol.v2.CustomDimension> customDimensions_ =
       java.util.Collections.emptyList();
     private void ensureCustomDimensionsIsMutable() {
-      if (!((bitField0_ & 0x00000080) == 0x00000080)) {
+      if (!((bitField0_ & 0x00000040) == 0x00000040)) {
         customDimensions_ = new java.util.ArrayList<org.datahem.protobuf.measurementprotocol.v2.CustomDimension>(customDimensions_);
-        bitField0_ |= 0x00000080;
+        bitField0_ |= 0x00000040;
        }
     }
 
@@ -2814,7 +2751,7 @@ public  final class MeasurementProtocol extends
     public Builder clearCustomDimensions() {
       if (customDimensionsBuilder_ == null) {
         customDimensions_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ = (bitField0_ & ~0x00000040);
         onChanged();
       } else {
         customDimensionsBuilder_.clear();
@@ -2891,7 +2828,7 @@ public  final class MeasurementProtocol extends
         customDimensionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
             org.datahem.protobuf.measurementprotocol.v2.CustomDimension, org.datahem.protobuf.measurementprotocol.v2.CustomDimension.Builder, org.datahem.protobuf.measurementprotocol.v2.CustomDimensionOrBuilder>(
                 customDimensions_,
-                ((bitField0_ & 0x00000080) == 0x00000080),
+                ((bitField0_ & 0x00000040) == 0x00000040),
                 getParentForChildren(),
                 isClean());
         customDimensions_ = null;
@@ -2902,9 +2839,9 @@ public  final class MeasurementProtocol extends
     private java.util.List<org.datahem.protobuf.measurementprotocol.v2.CustomMetric> customMetrics_ =
       java.util.Collections.emptyList();
     private void ensureCustomMetricsIsMutable() {
-      if (!((bitField0_ & 0x00000100) == 0x00000100)) {
+      if (!((bitField0_ & 0x00000080) == 0x00000080)) {
         customMetrics_ = new java.util.ArrayList<org.datahem.protobuf.measurementprotocol.v2.CustomMetric>(customMetrics_);
-        bitField0_ |= 0x00000100;
+        bitField0_ |= 0x00000080;
        }
     }
 
@@ -3054,7 +2991,7 @@ public  final class MeasurementProtocol extends
     public Builder clearCustomMetrics() {
       if (customMetricsBuilder_ == null) {
         customMetrics_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000100);
+        bitField0_ = (bitField0_ & ~0x00000080);
         onChanged();
       } else {
         customMetricsBuilder_.clear();
@@ -3131,7 +3068,7 @@ public  final class MeasurementProtocol extends
         customMetricsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
             org.datahem.protobuf.measurementprotocol.v2.CustomMetric, org.datahem.protobuf.measurementprotocol.v2.CustomMetric.Builder, org.datahem.protobuf.measurementprotocol.v2.CustomMetricOrBuilder>(
                 customMetrics_,
-                ((bitField0_ & 0x00000100) == 0x00000100),
+                ((bitField0_ & 0x00000080) == 0x00000080),
                 getParentForChildren(),
                 isClean());
         customMetrics_ = null;
@@ -3610,9 +3547,9 @@ public  final class MeasurementProtocol extends
     private java.util.List<org.datahem.protobuf.measurementprotocol.v2.Experiment> experiments_ =
       java.util.Collections.emptyList();
     private void ensureExperimentsIsMutable() {
-      if (!((bitField0_ & 0x00002000) == 0x00002000)) {
+      if (!((bitField0_ & 0x00001000) == 0x00001000)) {
         experiments_ = new java.util.ArrayList<org.datahem.protobuf.measurementprotocol.v2.Experiment>(experiments_);
-        bitField0_ |= 0x00002000;
+        bitField0_ |= 0x00001000;
        }
     }
 
@@ -3762,7 +3699,7 @@ public  final class MeasurementProtocol extends
     public Builder clearExperiments() {
       if (experimentsBuilder_ == null) {
         experiments_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00002000);
+        bitField0_ = (bitField0_ & ~0x00001000);
         onChanged();
       } else {
         experimentsBuilder_.clear();
@@ -3839,7 +3776,7 @@ public  final class MeasurementProtocol extends
         experimentsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
             org.datahem.protobuf.measurementprotocol.v2.Experiment, org.datahem.protobuf.measurementprotocol.v2.Experiment.Builder, org.datahem.protobuf.measurementprotocol.v2.ExperimentOrBuilder>(
                 experiments_,
-                ((bitField0_ & 0x00002000) == 0x00002000),
+                ((bitField0_ & 0x00001000) == 0x00001000),
                 getParentForChildren(),
                 isClean());
         experiments_ = null;
@@ -4201,9 +4138,9 @@ public  final class MeasurementProtocol extends
     private java.util.List<org.datahem.protobuf.measurementprotocol.v2.Product> products_ =
       java.util.Collections.emptyList();
     private void ensureProductsIsMutable() {
-      if (!((bitField0_ & 0x00020000) == 0x00020000)) {
+      if (!((bitField0_ & 0x00010000) == 0x00010000)) {
         products_ = new java.util.ArrayList<org.datahem.protobuf.measurementprotocol.v2.Product>(products_);
-        bitField0_ |= 0x00020000;
+        bitField0_ |= 0x00010000;
        }
     }
 
@@ -4353,7 +4290,7 @@ public  final class MeasurementProtocol extends
     public Builder clearProducts() {
       if (productsBuilder_ == null) {
         products_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00020000);
+        bitField0_ = (bitField0_ & ~0x00010000);
         onChanged();
       } else {
         productsBuilder_.clear();
@@ -4430,7 +4367,7 @@ public  final class MeasurementProtocol extends
         productsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
             org.datahem.protobuf.measurementprotocol.v2.Product, org.datahem.protobuf.measurementprotocol.v2.Product.Builder, org.datahem.protobuf.measurementprotocol.v2.ProductOrBuilder>(
                 products_,
-                ((bitField0_ & 0x00020000) == 0x00020000),
+                ((bitField0_ & 0x00010000) == 0x00010000),
                 getParentForChildren(),
                 isClean());
         products_ = null;
@@ -4441,9 +4378,9 @@ public  final class MeasurementProtocol extends
     private java.util.List<org.datahem.protobuf.measurementprotocol.v2.Promotion> promotions_ =
       java.util.Collections.emptyList();
     private void ensurePromotionsIsMutable() {
-      if (!((bitField0_ & 0x00040000) == 0x00040000)) {
+      if (!((bitField0_ & 0x00020000) == 0x00020000)) {
         promotions_ = new java.util.ArrayList<org.datahem.protobuf.measurementprotocol.v2.Promotion>(promotions_);
-        bitField0_ |= 0x00040000;
+        bitField0_ |= 0x00020000;
        }
     }
 
@@ -4593,7 +4530,7 @@ public  final class MeasurementProtocol extends
     public Builder clearPromotions() {
       if (promotionsBuilder_ == null) {
         promotions_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00040000);
+        bitField0_ = (bitField0_ & ~0x00020000);
         onChanged();
       } else {
         promotionsBuilder_.clear();
@@ -4670,7 +4607,7 @@ public  final class MeasurementProtocol extends
         promotionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
             org.datahem.protobuf.measurementprotocol.v2.Promotion, org.datahem.protobuf.measurementprotocol.v2.Promotion.Builder, org.datahem.protobuf.measurementprotocol.v2.PromotionOrBuilder>(
                 promotions_,
-                ((bitField0_ & 0x00040000) == 0x00040000),
+                ((bitField0_ & 0x00020000) == 0x00020000),
                 getParentForChildren(),
                 isClean());
         promotions_ = null;
@@ -5378,6 +5315,123 @@ public  final class MeasurementProtocol extends
         transaction_ = null;
       }
       return transactionBuilder_;
+    }
+
+    private org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES ATTRIBUTES_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES, org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES.Builder, org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTESOrBuilder> ATTRIBUTESBuilder_;
+    /**
+     * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+     */
+    public boolean hasATTRIBUTES() {
+      return ATTRIBUTESBuilder_ != null || ATTRIBUTES_ != null;
+    }
+    /**
+     * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+     */
+    public org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES getATTRIBUTES() {
+      if (ATTRIBUTESBuilder_ == null) {
+        return ATTRIBUTES_ == null ? org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES.getDefaultInstance() : ATTRIBUTES_;
+      } else {
+        return ATTRIBUTESBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+     */
+    public Builder setATTRIBUTES(org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES value) {
+      if (ATTRIBUTESBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ATTRIBUTES_ = value;
+        onChanged();
+      } else {
+        ATTRIBUTESBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+     */
+    public Builder setATTRIBUTES(
+        org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES.Builder builderForValue) {
+      if (ATTRIBUTESBuilder_ == null) {
+        ATTRIBUTES_ = builderForValue.build();
+        onChanged();
+      } else {
+        ATTRIBUTESBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+     */
+    public Builder mergeATTRIBUTES(org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES value) {
+      if (ATTRIBUTESBuilder_ == null) {
+        if (ATTRIBUTES_ != null) {
+          ATTRIBUTES_ =
+            org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES.newBuilder(ATTRIBUTES_).mergeFrom(value).buildPartial();
+        } else {
+          ATTRIBUTES_ = value;
+        }
+        onChanged();
+      } else {
+        ATTRIBUTESBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+     */
+    public Builder clearATTRIBUTES() {
+      if (ATTRIBUTESBuilder_ == null) {
+        ATTRIBUTES_ = null;
+        onChanged();
+      } else {
+        ATTRIBUTES_ = null;
+        ATTRIBUTESBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+     */
+    public org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES.Builder getATTRIBUTESBuilder() {
+      
+      onChanged();
+      return getATTRIBUTESFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+     */
+    public org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTESOrBuilder getATTRIBUTESOrBuilder() {
+      if (ATTRIBUTESBuilder_ != null) {
+        return ATTRIBUTESBuilder_.getMessageOrBuilder();
+      } else {
+        return ATTRIBUTES_ == null ?
+            org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES.getDefaultInstance() : ATTRIBUTES_;
+      }
+    }
+    /**
+     * <code>optional .datahem.protobuf.measurementprotocol.v2._ATTRIBUTES _ATTRIBUTES = 26;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES, org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES.Builder, org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTESOrBuilder> 
+        getATTRIBUTESFieldBuilder() {
+      if (ATTRIBUTESBuilder_ == null) {
+        ATTRIBUTESBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES, org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES.Builder, org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTESOrBuilder>(
+                getATTRIBUTES(),
+                getParentForChildren(),
+                isClean());
+        ATTRIBUTES_ = null;
+      }
+      return ATTRIBUTESBuilder_;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {

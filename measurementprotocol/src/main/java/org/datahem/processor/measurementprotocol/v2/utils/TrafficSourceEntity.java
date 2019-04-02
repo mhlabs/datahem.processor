@@ -83,11 +83,14 @@ public class TrafficSourceEntity{
 	private void parse(Map<String, String> paramMap){
 		try{
             URL url;
-            if(paramMap.get("dl") != null){
+            if(paramMap.get("dlu") != null){
+                url = new URL(paramMap.get("dlu"));
+            }
+            /*if(paramMap.get("dl") != null){
                 url = new URL(paramMap.get("dl"));
             } else if (paramMap.get("dh") != null && paramMap.get("dp") != null){
                 url = new URL("https://" + paramMap.get("dh") + paramMap.get("dp"));
-            }
+            }*/
 			else{
                 return;
             }

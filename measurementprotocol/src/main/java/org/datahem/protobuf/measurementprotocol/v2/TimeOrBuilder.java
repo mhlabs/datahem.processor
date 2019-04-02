@@ -22,31 +22,155 @@ public interface TimeOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   * <pre>
+   * local datetime YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
+   * </pre>
+   *
    * <code>optional string dateTime = 1;</code>
    */
   java.lang.String getDateTime();
   /**
+   * <pre>
+   * local datetime YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
+   * </pre>
+   *
    * <code>optional string dateTime = 1;</code>
    */
   com.google.protobuf.ByteString
       getDateTimeBytes();
 
   /**
-   * <code>optional string timestamp = 2;</code>
+   * <pre>
+   * local date
+   * </pre>
+   *
+   * <code>optional string date = 2;</code>
    */
-  java.lang.String getTimestamp();
+  java.lang.String getDate();
   /**
-   * <code>optional string timestamp = 2;</code>
+   * <pre>
+   * local date
+   * </pre>
+   *
+   * <code>optional string date = 2;</code>
    */
   com.google.protobuf.ByteString
-      getTimestampBytes();
+      getDateBytes();
 
   /**
    * <pre>
-   *epoch millis
+   * local time
    * </pre>
    *
-   * <code>optional int64 instant = 3;</code>
+   * <code>optional string time = 3;</code>
    */
-  long getInstant();
+  java.lang.String getTime();
+  /**
+   * <pre>
+   * local time
+   * </pre>
+   *
+   * <code>optional string time = 3;</code>
+   */
+  com.google.protobuf.ByteString
+      getTimeBytes();
+
+  /**
+   * <pre>
+   * local year
+   * </pre>
+   *
+   * <code>optional int32 year = 4;</code>
+   */
+  int getYear();
+
+  /**
+   * <pre>
+   * local month
+   * </pre>
+   *
+   * <code>optional int32 month = 5;</code>
+   */
+  int getMonth();
+
+  /**
+   * <pre>
+   * local week number
+   * </pre>
+   *
+   * <code>optional int32 week = 6;</code>
+   */
+  int getWeek();
+
+  /**
+   * <pre>
+   * local day number
+   * </pre>
+   *
+   * <code>optional int32 day = 7;</code>
+   */
+  int getDay();
+
+  /**
+   * <pre>
+   * local hour in which the hit occurred (0 to 23).
+   * </pre>
+   *
+   * <code>optional int32 hour = 8;</code>
+   */
+  int getHour();
+
+  /**
+   * <pre>
+   * local minute in which the hit occurred (0 to 59).
+   * </pre>
+   *
+   * <code>optional int32 minute = 9;</code>
+   */
+  int getMinute();
+
+  /**
+   * <pre>
+   * local second
+   * </pre>
+   *
+   * <code>optional int32 second = 10;</code>
+   */
+  int getSecond();
+
+  /**
+   * <pre>
+   * local day of week
+   * </pre>
+   *
+   * <code>optional string weekDay = 11;</code>
+   */
+  java.lang.String getWeekDay();
+  /**
+   * <pre>
+   * local day of week
+   * </pre>
+   *
+   * <code>optional string weekDay = 11;</code>
+   */
+  com.google.protobuf.ByteString
+      getWeekDayBytes();
+
+  /**
+   * <pre>
+   * local timeZone
+   * </pre>
+   *
+   * <code>optional string timeZone = 12;</code>
+   */
+  java.lang.String getTimeZone();
+  /**
+   * <pre>
+   * local timeZone
+   * </pre>
+   *
+   * <code>optional string timeZone = 12;</code>
+   */
+  com.google.protobuf.ByteString
+      getTimeZoneBytes();
 }
