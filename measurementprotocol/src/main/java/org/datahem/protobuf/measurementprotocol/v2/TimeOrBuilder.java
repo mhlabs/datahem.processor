@@ -143,18 +143,9 @@ public interface TimeOrBuilder extends
    * local day of week
    * </pre>
    *
-   * <code>optional string weekDay = 11;</code>
+   * <code>optional int32 weekDay = 11;</code>
    */
-  java.lang.String getWeekDay();
-  /**
-   * <pre>
-   * local day of week
-   * </pre>
-   *
-   * <code>optional string weekDay = 11;</code>
-   */
-  com.google.protobuf.ByteString
-      getWeekDayBytes();
+  int getWeekDay();
 
   /**
    * <pre>

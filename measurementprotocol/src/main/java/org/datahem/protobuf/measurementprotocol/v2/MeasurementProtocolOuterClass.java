@@ -230,7 +230,7 @@ public final class MeasurementProtocolOuterClass {
       "\030\003 \001(\t\022\014\n\004year\030\004 \001(\005\022\r\n\005month\030\005 \001(\005\022\014\n\004w" +
       "eek\030\006 \001(\005\022\013\n\003day\030\007 \001(\005\022\014\n\004hour\030\010 \001(\005\022\016\n\006" +
       "minute\030\t \001(\005\022\016\n\006second\030\n \001(\005\022\017\n\007weekDay\030" +
-      "\013 \001(\t\022\020\n\010timeZone\030\014 \001(\t\"=\n\013_ATTRIBUTES\022\014" +
+      "\013 \001(\005\022\020\n\010timeZone\030\014 \001(\t\"=\n\013_ATTRIBUTES\022\014" +
       "\n\004uuid\030\001 \001(\t\022\r\n\005topic\030\002 \001(\t\022\021\n\ttimestamp" +
       "\030\003 \001(\tB/\n+org.datahem.protobuf.measureme" +
       "ntprotocol.v2P\001b\006proto3"

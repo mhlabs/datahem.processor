@@ -39,7 +39,7 @@ public  final class Time extends
     hour_ = 0;
     minute_ = 0;
     second_ = 0;
-    weekDay_ = "";
+    weekDay_ = 0;
     timeZone_ = "";
   }
 
@@ -121,10 +121,9 @@ public  final class Time extends
             second_ = input.readInt32();
             break;
           }
-          case 90: {
-            java.lang.String s = input.readStringRequireUtf8();
+          case 88: {
 
-            weekDay_ = s;
+            weekDay_ = input.readInt32();
             break;
           }
           case 98: {
@@ -374,45 +373,16 @@ public  final class Time extends
   }
 
   public static final int WEEKDAY_FIELD_NUMBER = 11;
-  private volatile java.lang.Object weekDay_;
+  private int weekDay_;
   /**
    * <pre>
    * local day of week
    * </pre>
    *
-   * <code>optional string weekDay = 11;</code>
+   * <code>optional int32 weekDay = 11;</code>
    */
-  public java.lang.String getWeekDay() {
-    java.lang.Object ref = weekDay_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      weekDay_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * local day of week
-   * </pre>
-   *
-   * <code>optional string weekDay = 11;</code>
-   */
-  public com.google.protobuf.ByteString
-      getWeekDayBytes() {
-    java.lang.Object ref = weekDay_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      weekDay_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public int getWeekDay() {
+    return weekDay_;
   }
 
   public static final int TIMEZONE_FIELD_NUMBER = 12;
@@ -499,8 +469,8 @@ public  final class Time extends
     if (second_ != 0) {
       output.writeInt32(10, second_);
     }
-    if (!getWeekDayBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 11, weekDay_);
+    if (weekDay_ != 0) {
+      output.writeInt32(11, weekDay_);
     }
     if (!getTimeZoneBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 12, timeZone_);
@@ -549,8 +519,9 @@ public  final class Time extends
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(10, second_);
     }
-    if (!getWeekDayBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, weekDay_);
+    if (weekDay_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(11, weekDay_);
     }
     if (!getTimeZoneBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, timeZone_);
@@ -591,8 +562,8 @@ public  final class Time extends
         == other.getMinute());
     result = result && (getSecond()
         == other.getSecond());
-    result = result && getWeekDay()
-        .equals(other.getWeekDay());
+    result = result && (getWeekDay()
+        == other.getWeekDay());
     result = result && getTimeZone()
         .equals(other.getTimeZone());
     return result;
@@ -626,7 +597,7 @@ public  final class Time extends
     hash = (37 * hash) + SECOND_FIELD_NUMBER;
     hash = (53 * hash) + getSecond();
     hash = (37 * hash) + WEEKDAY_FIELD_NUMBER;
-    hash = (53 * hash) + getWeekDay().hashCode();
+    hash = (53 * hash) + getWeekDay();
     hash = (37 * hash) + TIMEZONE_FIELD_NUMBER;
     hash = (53 * hash) + getTimeZone().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
@@ -767,7 +738,7 @@ public  final class Time extends
 
       second_ = 0;
 
-      weekDay_ = "";
+      weekDay_ = 0;
 
       timeZone_ = "";
 
@@ -879,9 +850,8 @@ public  final class Time extends
       if (other.getSecond() != 0) {
         setSecond(other.getSecond());
       }
-      if (!other.getWeekDay().isEmpty()) {
-        weekDay_ = other.weekDay_;
-        onChanged();
+      if (other.getWeekDay() != 0) {
+        setWeekDay(other.getWeekDay());
       }
       if (!other.getTimeZone().isEmpty()) {
         timeZone_ = other.timeZone_;
@@ -1446,59 +1416,26 @@ public  final class Time extends
       return this;
     }
 
-    private java.lang.Object weekDay_ = "";
+    private int weekDay_ ;
     /**
      * <pre>
      * local day of week
      * </pre>
      *
-     * <code>optional string weekDay = 11;</code>
+     * <code>optional int32 weekDay = 11;</code>
      */
-    public java.lang.String getWeekDay() {
-      java.lang.Object ref = weekDay_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        weekDay_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public int getWeekDay() {
+      return weekDay_;
     }
     /**
      * <pre>
      * local day of week
      * </pre>
      *
-     * <code>optional string weekDay = 11;</code>
+     * <code>optional int32 weekDay = 11;</code>
      */
-    public com.google.protobuf.ByteString
-        getWeekDayBytes() {
-      java.lang.Object ref = weekDay_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        weekDay_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * local day of week
-     * </pre>
-     *
-     * <code>optional string weekDay = 11;</code>
-     */
-    public Builder setWeekDay(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
+    public Builder setWeekDay(int value) {
+      
       weekDay_ = value;
       onChanged();
       return this;
@@ -1508,29 +1445,11 @@ public  final class Time extends
      * local day of week
      * </pre>
      *
-     * <code>optional string weekDay = 11;</code>
+     * <code>optional int32 weekDay = 11;</code>
      */
     public Builder clearWeekDay() {
       
-      weekDay_ = getDefaultInstance().getWeekDay();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * local day of week
-     * </pre>
-     *
-     * <code>optional string weekDay = 11;</code>
-     */
-    public Builder setWeekDayBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      weekDay_ = value;
+      weekDay_ = 0;
       onChanged();
       return this;
     }

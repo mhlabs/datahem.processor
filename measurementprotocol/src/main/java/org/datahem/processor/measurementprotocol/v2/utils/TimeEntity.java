@@ -52,29 +52,7 @@ public class TimeEntity{
             try{
                 
 				DateTime localDateTime = DateTime.parse(pm.get("timestamp")).withZone(DateTimeZone.forID(getTimeZone()));
-                //DateTimeFormatter dateTime = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
-                //DateTimeFormatter date = DateTimeFormat.forPattern("YYYY-MM-dd");//.withZone(DateTimeZone.forID(getTimeZone()));
-                //DateTimeFormatter time = DateTimeFormat.forPattern("HH:mm:ss");//.withZone(DateTimeZone.forID(getTimeZone()));
-                //pm.put("cpd", utcDateTime.toString(partition));
-                //DateTimeFormatter local_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZone(DateTimeZone.forID(getTimeZone()));
                 Time.Builder builder = Time.newBuilder();
-
-                /*
-                string dateTime = 1; // local datetime YYYY-[M]M-[D]D[( |T)[H]H:[m]m:[s]s[.DDDDDD]]
-                string date = 2; // local date
-                string time = 3; // local time
-                int32 year = 4; // local year
-                int32 month = 5; // local month
-                int32 week = 6; // local week number
-                int32 day = 7; // local day number
-                int32 hour = 8; // local hour in which the hit occurred (0 to 23).
-                int32 minute = 9; // local minute in which the hit occurred (0 to 59).
-                int32 second = 10; // local second
-                string weekDay = 11; // local day of week
-                string timeZone = 12; // local timeZone
-                */
-
-                //Optional.ofNullable(pm.get("timestamp")).ifPresent(builder::setDateTime);
                 Optional.ofNullable(localDateTime.toString(DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss"))).ifPresent(builder::setDateTime);
                 Optional.ofNullable(localDateTime.toString(DateTimeFormat.forPattern("YYYY-MM-dd"))).ifPresent(builder::setDate);
                 Optional.ofNullable(localDateTime.toString(DateTimeFormat.forPattern("HH:mm:ss"))).ifPresent(builder::setTime);

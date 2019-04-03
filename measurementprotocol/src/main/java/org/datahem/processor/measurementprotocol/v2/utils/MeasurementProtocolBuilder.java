@@ -150,20 +150,6 @@ public class MeasurementProtocolBuilder{
 				}
 
 	        	if(!pm.get("User-Agent").matches(getExcludedBotsPattern()) && pm.get("dl").matches(getIncludedHostnamesPattern()) && !pm.get("t").equals("adtiming")){
-	                DateTime utcDateTime = DateTime.parse(pm.get("timestamp"));
-                    
-                    
-                    //Add epochMillis and timestamp to pm       
-                    //Instant payloadTimeStamp = new Instant(Long.parseLong(pm.get("MessageTimestamp")));
-					//DateTimeFormatter utc_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
-					DateTimeFormatter local_timestamp = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZone(DateTimeZone.forID(getTimeZone()));
-		            //pm.put("cpts", payloadTimeStamp.toString(local_timestamp));
-                    //pm.put("cpem", pm.get("MessageTimestamp"));
-
-					//Set local timezone for use as partition field
-					DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd").withZone(DateTimeZone.forID(getTimeZone()));
-					pm.put("cpd", utcDateTime.toString(partition));
-                    pm.put("ctz", getTimeZone());
 
                     try{
                         //If document location parameter exist, extract host and path and add those as separate parameters
@@ -195,11 +181,11 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(pm.get("t")).ifPresent(builder::setHitType);
                     Optional.ofNullable(pm.get("cid")).ifPresent(builder::setClientId);
                     Optional.ofNullable(pm.get("uid")).ifPresent(builder::setUserId);
-                    //Optional.ofNullable(pm.get("MessageUuid")).ifPresent(builder::setHitId);
                     Optional.ofNullable(pm.get("v")).ifPresent(builder::setVersion);
                     FieldMapper.intVal(pm.get("ni")).ifPresent(g -> builder.setNonInteraction(g.intValue()));
-                    //Optional.ofNullable(pm.get("cpd")).ifPresent(builder::setDate);
-                    Optional.ofNullable(utcDateTime.toString(partition)).ifPresent(builder::setDate);
+                    //Set local timezone for use as partition field
+					DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd").withZone(DateTimeZone.forID(getTimeZone()));
+                    Optional.ofNullable(DateTime.parse(pm.get("timestamp")).toString(partition)).ifPresent(builder::setDate);
 
                     Optional.ofNullable(pageEntity.build((HashMap)pm.clone())).ifPresent(builder::setPage);
                     Optional.ofNullable(eventEntity.build((HashMap)pm.clone())).ifPresent(builder::setEvent);
@@ -221,27 +207,13 @@ public class MeasurementProtocolBuilder{
                     MeasurementProtocol measurementProtocol = builder.build();
                     LOG.info(measurementProtocol.toString());
                     return measurementProtocol; 
-                    /*
-					addAllIfNotNull(events, pageviewEntity.build(pm));
-                    addAllIfNotNull(events, eventEntity.build(pm));
-                    addAllIfNotNull(events, exceptionEntity.build(pm));
-					addAllIfNotNull(events, siteSearchEntity.build(pm));
-					addAllIfNotNull(events, socialEntity.build(pm));
-					addAllIfNotNull(events, timingEntity.build(pm));
-					addAllIfNotNull(events, transactionEntity.build(pm));
-					addAllIfNotNull(events, productEntity.build(pm));
-					addAllIfNotNull(events, trafficEntity.build(pm));
-					addAllIfNotNull(events, promotionEntity.build(pm));
-					addAllIfNotNull(events, productImpressionEntity.build(pm));
-					addAllIfNotNull(events, experimentEntity.build(pm));
-                    */
 				}
 	        }else{
                 LOG.info("not matching MeasurementProtocolBuilder conditions: User-Agent: " + pm.getOrDefault("User-Agent", "null") + ", document.location: " + pm.getOrDefault("dl", "null") + ", type:" + pm.getOrDefault("t", "null"));
             }
         }
         catch (NullPointerException e) {
-				LOG.error(e.toString());// + " pm:" + pm.toString());
+				LOG.error(e.toString());
 		}
     	return null;   
     }
