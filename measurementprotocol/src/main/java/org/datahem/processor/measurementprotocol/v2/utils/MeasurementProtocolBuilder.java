@@ -130,6 +130,7 @@ public class MeasurementProtocolBuilder{
 
 	public void setTimeZone(String tz){
     	this.timeZone = tz;
+        this.timeEntity.setTimeZone(tz);
   	}
 
 
@@ -197,7 +198,8 @@ public class MeasurementProtocolBuilder{
                     //Optional.ofNullable(pm.get("MessageUuid")).ifPresent(builder::setHitId);
                     Optional.ofNullable(pm.get("v")).ifPresent(builder::setVersion);
                     FieldMapper.intVal(pm.get("ni")).ifPresent(g -> builder.setNonInteraction(g.intValue()));
-                    Optional.ofNullable(pm.get("cpd")).ifPresent(builder::setDate);
+                    //Optional.ofNullable(pm.get("cpd")).ifPresent(builder::setDate);
+                    Optional.ofNullable(utcDateTime.toString(partition)).ifPresent(builder::setDate);
 
                     Optional.ofNullable(pageEntity.build((HashMap)pm.clone())).ifPresent(builder::setPage);
                     Optional.ofNullable(eventEntity.build((HashMap)pm.clone())).ifPresent(builder::setEvent);
