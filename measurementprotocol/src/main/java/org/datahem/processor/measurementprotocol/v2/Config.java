@@ -44,6 +44,7 @@ public class Config {
 				public String excludedBotsPattern;
 				public String siteSearchPattern;
 				public String timeZone;
+                public String tableSpec;
                 public String pubSubTopic;
 			}
 		}

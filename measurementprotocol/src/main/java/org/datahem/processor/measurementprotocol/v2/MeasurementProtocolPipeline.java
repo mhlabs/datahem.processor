@@ -15,7 +15,7 @@ package org.datahem.processor.measurementprotocol.v2;
  */
 
 import org.datahem.processor.utils.ProtobufUtils;
-import org.datahem.processor.measurementprotocol.v2.utils.MeasurementProtocolBuilder;
+//import org.datahem.processor.measurementprotocol.v2.utils.MeasurementProtocolBuilder;
 import org.datahem.processor.measurementprotocol.v2.utils.PayloadToMeasurementProtocolFn;
 import org.datahem.processor.measurementprotocol.v2.utils.MeasurementProtocolToTableRowFn;
 import org.datahem.protobuf.measurementprotocol.v2.*;
@@ -86,12 +86,12 @@ public class MeasurementProtocolPipeline {
     // Create schemas from protocol buffers
     
     TableSchema eventSchema = ProtobufUtils.makeTableSchema(MeasurementProtocol.getDescriptor());
-    	List<TableFieldSchema> fieldsList = eventSchema.getFields();
-    	TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
-    	fieldsList.set(fieldsList.indexOf(date), date.setType("DATE"));
-        TableFieldSchema localDateTime = new TableFieldSchema().setName("local_date_time").setType("STRING").setMode("NULLABLE");
-    	fieldsList.set(fieldsList.indexOf(localDateTime), localDateTime.setType("DATETIME"));
-    	TableSchema schema = new TableSchema().setFields(fieldsList);
+    	//List<TableFieldSchema> fieldsList = eventSchema.getFields();
+    	//TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
+    	//fieldsList.set(fieldsList.indexOf(date), date.setType("DATE"));
+        //TableFieldSchema localDateTime = new TableFieldSchema().setName("local_date_time").setType("STRING").setMode("NULLABLE");
+    	//fieldsList.set(fieldsList.indexOf(localDateTime), localDateTime.setType("DATETIME"));
+    	//TableSchema schema = new TableSchema().setFields(fieldsList);
     
 	
 	for (Config.Account.Property property : Config.read(options.getConfig().get())) {
@@ -105,6 +105,7 @@ public class MeasurementProtocolPipeline {
     			.fromSubscription(pubsubSubscription));
     
         for(Config.Account.Property.View view : property.views){ //Start view
+            String table = (view.tableSpec != null ? view.tableSpec : property.id + "." + view.id);
             PCollection<MeasurementProtocol> enrichedEntities = payload
                 .apply(view.id + " - Payload to MeasurementProtocol", 
                     ParDo.of(new PayloadToMeasurementProtocolFn(
@@ -127,7 +128,8 @@ public class MeasurementProtocolPipeline {
                 .apply(view.id + " - Write to bigquery", 
                     BigQueryIO
                         .writeTableRows()
-                        .to(property.id + "." + view.id)
+                        //.to(property.id + "." + view.id)
+                        .to(table)
                         .withSchema(eventSchema)
                         .withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
                         .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
