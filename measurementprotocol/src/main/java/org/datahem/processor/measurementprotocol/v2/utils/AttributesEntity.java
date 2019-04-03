@@ -39,7 +39,7 @@ public class AttributesEntity{
             try{
                 _ATTRIBUTES.Builder builder = _ATTRIBUTES.newBuilder();
                 Optional.ofNullable(pm.get("uuid")).ifPresent(builder::setUuid);
-                Optional.ofNullable(pm.get("source")).ifPresent(builder::setTopic);
+                Optional.ofNullable(pm.get("source")).ifPresent(builder::setSource);
                 Optional.ofNullable(pm.get("timestamp")).ifPresent(builder::setTimestamp);
                 return builder.build();
 			}
