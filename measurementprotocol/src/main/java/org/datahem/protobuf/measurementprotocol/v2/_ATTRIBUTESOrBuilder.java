@@ -41,21 +41,21 @@ public interface _ATTRIBUTESOrBuilder extends
 
   /**
    * <pre>
-   * the topic the payload was published to (i.e. name of the stream)
+   * the topic the payload was published to
    * </pre>
    *
-   * <code>optional string topic = 2;</code>
+   * <code>optional string source = 2;</code>
    */
-  java.lang.String getTopic();
+  java.lang.String getSource();
   /**
    * <pre>
-   * the topic the payload was published to (i.e. name of the stream)
+   * the topic the payload was published to
    * </pre>
    *
-   * <code>optional string topic = 2;</code>
+   * <code>optional string source = 2;</code>
    */
   com.google.protobuf.ByteString
-      getTopicBytes();
+      getSourceBytes();
 
   /**
    * <pre>

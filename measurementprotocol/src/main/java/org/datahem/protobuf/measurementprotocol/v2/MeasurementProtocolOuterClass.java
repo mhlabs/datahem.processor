@@ -230,10 +230,10 @@ public final class MeasurementProtocolOuterClass {
       "\030\003 \001(\t\022\014\n\004year\030\004 \001(\005\022\r\n\005month\030\005 \001(\005\022\014\n\004w" +
       "eek\030\006 \001(\005\022\013\n\003day\030\007 \001(\005\022\014\n\004hour\030\010 \001(\005\022\016\n\006" +
       "minute\030\t \001(\005\022\016\n\006second\030\n \001(\005\022\017\n\007weekDay\030" +
-      "\013 \001(\005\022\020\n\010timeZone\030\014 \001(\t\"=\n\013_ATTRIBUTES\022\014" +
-      "\n\004uuid\030\001 \001(\t\022\r\n\005topic\030\002 \001(\t\022\021\n\ttimestamp" +
-      "\030\003 \001(\tB/\n+org.datahem.protobuf.measureme" +
-      "ntprotocol.v2P\001b\006proto3"
+      "\013 \001(\005\022\020\n\010timeZone\030\014 \001(\t\">\n\013_ATTRIBUTES\022\014" +
+      "\n\004uuid\030\001 \001(\t\022\016\n\006source\030\002 \001(\t\022\021\n\ttimestam" +
+      "p\030\003 \001(\tB/\n+org.datahem.protobuf.measurem" +
+      "entprotocol.v2P\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -366,7 +366,7 @@ public final class MeasurementProtocolOuterClass {
     internal_static_datahem_protobuf_measurementprotocol_v2__ATTRIBUTES_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_datahem_protobuf_measurementprotocol_v2__ATTRIBUTES_descriptor,
-        new java.lang.String[] { "Uuid", "Topic", "Timestamp", });
+        new java.lang.String[] { "Uuid", "Source", "Timestamp", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

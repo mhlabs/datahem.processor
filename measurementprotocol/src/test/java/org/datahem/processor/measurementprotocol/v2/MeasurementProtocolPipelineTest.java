@@ -96,7 +96,7 @@ public class MeasurementProtocolPipelineTest {
 			put("MessageUuid", "123-456-abc");
             put("timestamp", "2013-08-16T23:36:32.444Z");
             put("uuid", "123-456-abc");
-            put("topic", "test");
+            put("source", "test");
 		}
 	};
 

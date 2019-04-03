@@ -30,7 +30,7 @@ public  final class _ATTRIBUTES extends
   }
   private _ATTRIBUTES() {
     uuid_ = "";
-    topic_ = "";
+    source_ = "";
     timestamp_ = "";
   }
 
@@ -68,7 +68,7 @@ public  final class _ATTRIBUTES extends
           case 18: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            topic_ = s;
+            source_ = s;
             break;
           }
           case 26: {
@@ -142,42 +142,42 @@ public  final class _ATTRIBUTES extends
     }
   }
 
-  public static final int TOPIC_FIELD_NUMBER = 2;
-  private volatile java.lang.Object topic_;
+  public static final int SOURCE_FIELD_NUMBER = 2;
+  private volatile java.lang.Object source_;
   /**
    * <pre>
-   * the topic the payload was published to (i.e. name of the stream)
+   * the topic the payload was published to
    * </pre>
    *
-   * <code>optional string topic = 2;</code>
+   * <code>optional string source = 2;</code>
    */
-  public java.lang.String getTopic() {
-    java.lang.Object ref = topic_;
+  public java.lang.String getSource() {
+    java.lang.Object ref = source_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      topic_ = s;
+      source_ = s;
       return s;
     }
   }
   /**
    * <pre>
-   * the topic the payload was published to (i.e. name of the stream)
+   * the topic the payload was published to
    * </pre>
    *
-   * <code>optional string topic = 2;</code>
+   * <code>optional string source = 2;</code>
    */
   public com.google.protobuf.ByteString
-      getTopicBytes() {
-    java.lang.Object ref = topic_;
+      getSourceBytes() {
+    java.lang.Object ref = source_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      topic_ = b;
+      source_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -241,8 +241,8 @@ public  final class _ATTRIBUTES extends
     if (!getUuidBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, uuid_);
     }
-    if (!getTopicBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, topic_);
+    if (!getSourceBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, source_);
     }
     if (!getTimestampBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, timestamp_);
@@ -257,8 +257,8 @@ public  final class _ATTRIBUTES extends
     if (!getUuidBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, uuid_);
     }
-    if (!getTopicBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, topic_);
+    if (!getSourceBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, source_);
     }
     if (!getTimestampBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, timestamp_);
@@ -281,8 +281,8 @@ public  final class _ATTRIBUTES extends
     boolean result = true;
     result = result && getUuid()
         .equals(other.getUuid());
-    result = result && getTopic()
-        .equals(other.getTopic());
+    result = result && getSource()
+        .equals(other.getSource());
     result = result && getTimestamp()
         .equals(other.getTimestamp());
     return result;
@@ -297,8 +297,8 @@ public  final class _ATTRIBUTES extends
     hash = (19 * hash) + getDescriptorForType().hashCode();
     hash = (37 * hash) + UUID_FIELD_NUMBER;
     hash = (53 * hash) + getUuid().hashCode();
-    hash = (37 * hash) + TOPIC_FIELD_NUMBER;
-    hash = (53 * hash) + getTopic().hashCode();
+    hash = (37 * hash) + SOURCE_FIELD_NUMBER;
+    hash = (53 * hash) + getSource().hashCode();
     hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
     hash = (53 * hash) + getTimestamp().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
@@ -421,7 +421,7 @@ public  final class _ATTRIBUTES extends
       super.clear();
       uuid_ = "";
 
-      topic_ = "";
+      source_ = "";
 
       timestamp_ = "";
 
@@ -448,7 +448,7 @@ public  final class _ATTRIBUTES extends
     public org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES buildPartial() {
       org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES result = new org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES(this);
       result.uuid_ = uuid_;
-      result.topic_ = topic_;
+      result.source_ = source_;
       result.timestamp_ = timestamp_;
       onBuilt();
       return result;
@@ -495,8 +495,8 @@ public  final class _ATTRIBUTES extends
         uuid_ = other.uuid_;
         onChanged();
       }
-      if (!other.getTopic().isEmpty()) {
-        topic_ = other.topic_;
+      if (!other.getSource().isEmpty()) {
+        source_ = other.source_;
         onChanged();
       }
       if (!other.getTimestamp().isEmpty()) {
@@ -618,21 +618,21 @@ public  final class _ATTRIBUTES extends
       return this;
     }
 
-    private java.lang.Object topic_ = "";
+    private java.lang.Object source_ = "";
     /**
      * <pre>
-     * the topic the payload was published to (i.e. name of the stream)
+     * the topic the payload was published to
      * </pre>
      *
-     * <code>optional string topic = 2;</code>
+     * <code>optional string source = 2;</code>
      */
-    public java.lang.String getTopic() {
-      java.lang.Object ref = topic_;
+    public java.lang.String getSource() {
+      java.lang.Object ref = source_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        topic_ = s;
+        source_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
@@ -640,19 +640,19 @@ public  final class _ATTRIBUTES extends
     }
     /**
      * <pre>
-     * the topic the payload was published to (i.e. name of the stream)
+     * the topic the payload was published to
      * </pre>
      *
-     * <code>optional string topic = 2;</code>
+     * <code>optional string source = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getTopicBytes() {
-      java.lang.Object ref = topic_;
+        getSourceBytes() {
+      java.lang.Object ref = source_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        topic_ = b;
+        source_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -660,49 +660,49 @@ public  final class _ATTRIBUTES extends
     }
     /**
      * <pre>
-     * the topic the payload was published to (i.e. name of the stream)
+     * the topic the payload was published to
      * </pre>
      *
-     * <code>optional string topic = 2;</code>
+     * <code>optional string source = 2;</code>
      */
-    public Builder setTopic(
+    public Builder setSource(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      topic_ = value;
+      source_ = value;
       onChanged();
       return this;
     }
     /**
      * <pre>
-     * the topic the payload was published to (i.e. name of the stream)
+     * the topic the payload was published to
      * </pre>
      *
-     * <code>optional string topic = 2;</code>
+     * <code>optional string source = 2;</code>
      */
-    public Builder clearTopic() {
+    public Builder clearSource() {
       
-      topic_ = getDefaultInstance().getTopic();
+      source_ = getDefaultInstance().getSource();
       onChanged();
       return this;
     }
     /**
      * <pre>
-     * the topic the payload was published to (i.e. name of the stream)
+     * the topic the payload was published to
      * </pre>
      *
-     * <code>optional string topic = 2;</code>
+     * <code>optional string source = 2;</code>
      */
-    public Builder setTopicBytes(
+    public Builder setSourceBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      topic_ = value;
+      source_ = value;
       onChanged();
       return this;
     }
