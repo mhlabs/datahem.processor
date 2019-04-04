@@ -57,6 +57,7 @@ public class MeasurementProtocolBuilder{
 	private ExceptionEntity exceptionEntity = new ExceptionEntity();
     private ExperimentEntity experimentEntity = new ExperimentEntity();
     private ProductEntity productEntity = new ProductEntity();
+    private GeoEntity geoEntity = new GeoEntity();
     private TrafficSourceEntity trafficSourceEntity = new TrafficSourceEntity();
     private TransactionEntity transactionEntity = new TransactionEntity();
     private DeviceEntity deviceEntity = new DeviceEntity();
@@ -73,8 +74,7 @@ public class MeasurementProtocolBuilder{
     
     public MeasurementProtocolBuilder(){
 	}
-	
-	
+		
   	public String getSearchEnginesPattern(){
     	return this.trafficSourceEntity.getSearchEnginesPattern();
   	}
@@ -133,7 +133,6 @@ public class MeasurementProtocolBuilder{
         this.timeEntity.setTimeZone(tz);
   	}
 
-
     public MeasurementProtocol measurementProtocolFromPayload(PubsubMessage message){
 		try{
             String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
@@ -147,9 +146,8 @@ public class MeasurementProtocolBuilder{
 				if(pm.get("User-Agent") == null){
 					pm.put("User-Agent", "");
 				}
-
+                
 	        	if(!pm.get("User-Agent").matches(getExcludedBotsPattern()) && pm.get("dl").matches(getIncludedHostnamesPattern()) && !pm.get("t").equals("adtiming")){
-
                     try{
                         //If document location parameter exist, extract host and path and add those as separate parameters
                         if (pm.get("dh") != null && pm.get("dp") != null){
@@ -158,7 +156,6 @@ public class MeasurementProtocolBuilder{
                             URL url = new URL(pm.get("dl"));
                             if(pm.get("dh")==null) pm.put("dh", url.getHost());
                             if(pm.get("dp")==null) pm.put("dp", url.getFile());
-                            //pm.put("dlu", url.getHost()+url.getFile());
                             pm.put("dlu", "https://" + pm.get("dh") + pm.get("dp"));
                         }
                     }catch (MalformedURLException e) {
@@ -168,7 +165,6 @@ public class MeasurementProtocolBuilder{
                     try{
                         //If document referer parameter exist, extract host and path and add those as separate parameters
                         if(pm.get("dr") != null && !pm.get("dr").equals("(not set)")){
-                        //if(pm.get("dr") != null){
                             URL referer = new URL(pm.get("dr"));
                             pm.put("drh", referer.getHost());
                             pm.put("drp", referer.getPath());
@@ -176,7 +172,6 @@ public class MeasurementProtocolBuilder{
                     }catch (MalformedURLException e) {
                         LOG.error(e.toString() + " referer, pm:" + pm.toString());
                     }
-
                     MeasurementProtocol.Builder builder = MeasurementProtocol.newBuilder();
                     Optional.ofNullable(pm.get("t")).ifPresent(builder::setHitType);
                     Optional.ofNullable(pm.get("cid")).ifPresent(builder::setClientId);
@@ -186,10 +181,10 @@ public class MeasurementProtocolBuilder{
                     //Set local timezone for use as partition field
 					DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd").withZone(DateTimeZone.forID(getTimeZone()));
                     Optional.ofNullable(DateTime.parse(pm.get("timestamp")).toString(partition)).ifPresent(builder::setDate);
-
                     Optional.ofNullable(pageEntity.build((HashMap)pm.clone())).ifPresent(builder::setPage);
                     Optional.ofNullable(eventEntity.build((HashMap)pm.clone())).ifPresent(builder::setEvent);
                     Optional.ofNullable(exceptionEntity.build((HashMap)pm.clone())).ifPresent(builder::setException);
+                    Optional.ofNullable(geoEntity.build((HashMap)pm.clone())).ifPresent(builder::setGeo);
                     Optional.ofNullable(experimentEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllExperiments);
                     Optional.ofNullable(productEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllProducts);
                     Optional.ofNullable(trafficSourceEntity.build((HashMap)pm.clone())).ifPresent(builder::setTrafficSource);
@@ -205,7 +200,7 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(timeEntity.build((HashMap)pm.clone())).ifPresent(builder::setTime);
 
                     MeasurementProtocol measurementProtocol = builder.build();
-                    //LOG.info(measurementProtocol.toString());
+                    LOG.info(measurementProtocol.toString());
                     return measurementProtocol; 
 				}
 	        }else{
@@ -216,6 +211,5 @@ public class MeasurementProtocolBuilder{
 				LOG.error(e.toString());
 		}
     	return null;   
-    }
-        
+    }       
 }

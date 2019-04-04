@@ -19,10 +19,7 @@ package org.datahem.processor.measurementprotocol.v2.utils;
 import org.datahem.protobuf.measurementprotocol.v2.TrafficSource;
 
 import java.util.Map;
-import java.util.List;
 import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.net.URL;
@@ -34,14 +31,14 @@ import org.slf4j.LoggerFactory;
 
 
 public class TrafficSourceEntity{
-	
+	private static final Logger LOG = LoggerFactory.getLogger(TrafficSourceEntity.class);
+
 	private Map<String, String> campaignParameters = new HashMap<String, String>();
 	private Pattern pattern;
     private Matcher matcher;
-	private static final Logger LOG = LoggerFactory.getLogger(TrafficSourceEntity.class);
-	private static String searchEnginesPattern = "";
-	private static String ignoredReferersPattern = "";
-	private static String socialNetworksPattern = "";
+	private String searchEnginesPattern = "";
+	private String ignoredReferersPattern = "";
+	private String socialNetworksPattern = "";
 	
 	
 	public String getSearchEnginesPattern(){
@@ -86,33 +83,18 @@ public class TrafficSourceEntity{
             if(paramMap.get("dlu") != null){
                 url = new URL(paramMap.get("dlu"));
             }
-            /*if(paramMap.get("dl") != null){
-                url = new URL(paramMap.get("dl"));
-            } else if (paramMap.get("dh") != null && paramMap.get("dp") != null){
-                url = new URL("https://" + paramMap.get("dh") + paramMap.get("dp"));
-            }*/
 			else{
                 return;
             }
-            /*
-            if(paramMap.get("dr") != null && !paramMap.get("dr").equals("(not set)")){
-                try{
-                    URL referer = new URL(paramMap.get("dr"));
-				    paramMap.put("drh", referer.getHost());
-				    paramMap.put("drp", referer.getPath());
-                }catch (MalformedURLException e) {
-				   	LOG.error("dr: " + e.toString() + ", paramMap: " + paramMap.toString());
-			    }
-			}
-            */
+            
             //Fix for Single Page Applications where dl and referrer stays the same for each hit but dp is updated
-            //String documentLocation = (url.getQuery != null ? url.getPath() + "?" + url.getQuery() : url.getPath());
-            //LOG.info(String.valueOf(url.getFile() == paramMap.get("dp")) + " url.getFile() " + url.getFile() + " paramMap.get(dp)" + paramMap.get("dp"));
-            //LOG.info("traffic parsing, url.getFile() = " + url.getFile() + " and paramMap.get(dp) = " + paramMap.get("dp"));
             if(url.getFile().equals(paramMap.get("dp")) || paramMap.get("dp") == null){
-				if(null != url.getQuery()){
+				
+                //Campaign traffic?
+                if(null != url.getQuery()){
 					Map<String, String> campaignMap = FieldMapper.fieldMapFromURL(url);
-					//Google Search Ads traffic
+					
+                    //Google Search Ads traffic
 					if(campaignMap.get("gclid") != null){
 						campaignParameters.put("cn", campaignMap.getOrDefault("utm_campaign", "(not set)"));
 						campaignParameters.put("cs", campaignMap.getOrDefault("utm_source","google search ads"));
@@ -122,7 +104,8 @@ public class TrafficSourceEntity{
 						campaignParameters.put("gclid", campaignMap.get("gclid"));
 						return;
 					}
-					//Google Display & Video traffic
+					
+                    //Google Display & Video traffic
 					if(campaignMap.get("dclid") != null){
 						campaignParameters.put("cn", campaignMap.getOrDefault("utm_campaign", "(not set)"));
 						campaignParameters.put("cs", campaignMap.getOrDefault("utm_source","google display & video"));
@@ -132,7 +115,8 @@ public class TrafficSourceEntity{
 						campaignParameters.put("dclid", campaignMap.get("dclid"));
 						return;
 					}
-					//campaign traffic
+					
+                    //campaign traffic
 					if(campaignMap.get("utm_source") != null){
 						campaignParameters.put("cn", campaignMap.getOrDefault("utm_campaign", "(not set)"));
 						campaignParameters.put("cs", campaignMap.get("utm_source"));
@@ -142,7 +126,8 @@ public class TrafficSourceEntity{
 						return;
 					}
 				}
-				//Search Engine or Referer or Social
+
+				//Search Engine or Referer or Social?
 				if(paramMap.get("dr") != null){
 					
 					//Exclude self referal
@@ -186,11 +171,11 @@ public class TrafficSourceEntity{
 					return;
         		}
             }
-			}
-			catch (MalformedURLException e) {
-				LOG.error(e.toString() + ", paramMap: " + paramMap.toString());
-			}
-			return;
+        }
+        catch (MalformedURLException e) {
+            LOG.error(e.toString() + ", paramMap: " + paramMap.toString());
+        }
+        return;
 	}
 	
 	public TrafficSource build(Map<String, String> pm){
@@ -215,5 +200,4 @@ public class TrafficSourceEntity{
 			return null;
 		}
 	}
-	
 }

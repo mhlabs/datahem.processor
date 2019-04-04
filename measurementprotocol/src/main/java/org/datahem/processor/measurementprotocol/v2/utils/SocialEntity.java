@@ -18,13 +18,11 @@ import org.datahem.protobuf.measurementprotocol.v2.Social;
 
 import java.util.Map;
 import java.util.Optional;
-import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SocialEntity{
 	private static final Logger LOG = LoggerFactory.getLogger(SocialEntity.class);
-
 	
 	public SocialEntity(){}
 	

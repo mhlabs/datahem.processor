@@ -14,7 +14,6 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * =========================LICENSE_END==================================
  */
 
-
 import org.datahem.protobuf.measurementprotocol.v2.Device;
 
 import java.util.Map;
@@ -22,12 +21,7 @@ import java.util.Optional;
 import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.regex.Pattern;
-//import java.util.regex.Matcher;
-//import java.util.stream.Collectors;
-//import java.util.stream.Stream;
-
 
 public class DeviceEntity{
 	
@@ -35,40 +29,21 @@ public class DeviceEntity{
 	
 	public DeviceEntity(){}
 	
-	private boolean trigger(Map<String, String> paramMap){
-		return true;
-	}
-	
 	public Device build(Map<String, String> pm){
-		if(trigger(pm)){
-            try{
-                Device.Builder builder = Device.newBuilder();
-                Optional.ofNullable(pm.get("vp")).ifPresent(builder::setBrowserSize);
-                Optional.ofNullable(pm.get("fl")).ifPresent(builder::setFlashVersion);
-                FieldMapper.intVal(pm.get("je")).ifPresent(g -> builder.setJavaEnabled(g.intValue()));
-                Optional.ofNullable(pm.get("ul")).ifPresent(builder::setLanguage);
-                Optional.ofNullable(pm.get("sd")).ifPresent(builder::setScreenColors);
-                Optional.ofNullable(pm.get("sr")).ifPresent(builder::setScreenResolution);
-                Optional.ofNullable(getFirstParameter(pm, "ua|user-agent|User-Agent")).ifPresent(builder::setUserAgent);
-                return builder.build();
-			}
-			catch(IllegalArgumentException e){
-				LOG.error(e.toString());
-				return null;
-			}
-		}
-		else{
-			return null;
-		}
+        try{
+            Device.Builder builder = Device.newBuilder();
+            Optional.ofNullable(pm.get("vp")).ifPresent(builder::setBrowserSize);
+            Optional.ofNullable(pm.get("fl")).ifPresent(builder::setFlashVersion);
+            FieldMapper.intVal(pm.get("je")).ifPresent(g -> builder.setJavaEnabled(g.intValue()));
+            Optional.ofNullable(pm.get("ul")).ifPresent(builder::setLanguage);
+            Optional.ofNullable(pm.get("sd")).ifPresent(builder::setScreenColors);
+            Optional.ofNullable(pm.get("sr")).ifPresent(builder::setScreenResolution);
+            Optional.ofNullable(FieldMapper.getFirstParameterValue(pm, "ua|user-agent|User-Agent")).ifPresent(builder::setUserAgent);
+            return builder.build();
+        }
+        catch(IllegalArgumentException e){
+            LOG.error(e.toString());
+            return null;
+        }
 	}
-
-    private String getFirstParameter(Map<String, String> prParamMap, String parameterPattern){
-        Pattern pattern = Pattern.compile(parameterPattern);
- 		Optional<String> firstElement = prParamMap
- 			.keySet()
- 			.stream()
- 			.filter(pattern.asPredicate())
-			.findFirst();
-        return prParamMap.get(firstElement.orElse(null));    
-    }
 }

@@ -17,7 +17,6 @@ package org.datahem.processor.measurementprotocol.v2.utils;
 
 import org.datahem.protobuf.measurementprotocol.v2.Promotion;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.datahem.processor.utils.FieldMapper;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class PromotionEntity{

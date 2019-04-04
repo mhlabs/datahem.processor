@@ -19,7 +19,6 @@ import org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES;
 
 import java.util.Map;
 import java.util.Optional;
-//import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,26 +29,17 @@ public class AttributesEntity{
 	
 	public AttributesEntity(){}
 	
-	private boolean trigger(Map<String, String> paramMap){
-        return true;
-    }
-	
 	public _ATTRIBUTES build(Map<String, String> pm){
-		//if(trigger(pm)){
-            try{
-                _ATTRIBUTES.Builder builder = _ATTRIBUTES.newBuilder();
-                Optional.ofNullable(pm.get("uuid")).ifPresent(builder::setUuid);
-                Optional.ofNullable(pm.get("source")).ifPresent(builder::setSource);
-                Optional.ofNullable(pm.get("timestamp")).ifPresent(builder::setTimestamp);
-                return builder.build();
-			}
-			catch(IllegalArgumentException e){
-				LOG.error(e.toString());
-				return null;
-			}
-		//}
-		//else{
-		//	return null;
-		//}
+        try{
+            _ATTRIBUTES.Builder builder = _ATTRIBUTES.newBuilder();
+            Optional.ofNullable(pm.get("uuid")).ifPresent(builder::setUuid);
+            Optional.ofNullable(pm.get("source")).ifPresent(builder::setSource);
+            Optional.ofNullable(pm.get("timestamp")).ifPresent(builder::setTimestamp);
+            return builder.build();
+        }
+        catch(IllegalArgumentException e){
+            LOG.error(e.toString());
+            return null;
+        }
 	}
 }

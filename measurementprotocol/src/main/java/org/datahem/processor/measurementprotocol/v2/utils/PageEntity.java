@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 public class PageEntity{
 	private static final Logger LOG = LoggerFactory.getLogger(PageEntity.class);
-    private static String siteSearchPattern = ".*q=(([^&#]*)|&|#|$)";
+    private String siteSearchPattern = ".*q=(([^&#]*)|&|#|$)";
 	
 	public PageEntity(){}
 
@@ -37,39 +37,28 @@ public class PageEntity{
     	this.siteSearchPattern = pattern;
   	}
 	
-	private boolean trigger(Map<String, String> paramMap){
-        return true;
-    }
-	
 	public Page build(Map<String, String> pm){
-		if(trigger(pm)){
-            try{
-                Page.Builder builder = Page.newBuilder();
-                Pattern pattern = Pattern.compile(siteSearchPattern);
-			    Matcher matcher = pattern.matcher(pm.get("dlu"));
-			    if(matcher.find()){
-				    //paramMap.put("sst", FieldMapper.decode(matcher.group(1)));
-                    Optional.ofNullable(FieldMapper.decode(matcher.group(1))).ifPresent(builder::setSearchKeyword);
-			    }
-                Optional.ofNullable(pm.get("dt")).ifPresent(builder::setTitle);
-                Optional.ofNullable(pm.get("dlu")).ifPresent(builder::setUrl);
-                Optional.ofNullable(pm.get("dh")).ifPresent(builder::setHostname);
-                Optional.ofNullable(pm.get("dp").split("\\?")[0]).ifPresent(builder::setPath);
-                Optional.ofNullable(pm.get("dr")).ifPresent(builder::setReferer);
-                Optional.ofNullable(pm.get("drh")).ifPresent(builder::setRefererHost);
-                Optional.ofNullable(pm.get("drp")).ifPresent(builder::setRefererPath);
-                Optional.ofNullable(pm.get("de")).ifPresent(builder::setEncoding);
-                Optional.ofNullable(pm.get("linkid")).ifPresent(builder::setLinkId);
-                //Optional.ofNullable(pm.get("sst")).ifPresent(builder::setSearchKeyword);
-                return builder.build();
-			}
-			catch(IllegalArgumentException e){
-				LOG.error(e.toString());
-				return null;
-			}
-		}
-		else{
-			return null;
-		}
+        try{
+            Page.Builder builder = Page.newBuilder();
+            Pattern pattern = Pattern.compile(siteSearchPattern);
+            Matcher matcher = pattern.matcher(pm.get("dlu"));
+            if(matcher.find()){
+                Optional.ofNullable(FieldMapper.decode(matcher.group(1))).ifPresent(builder::setSearchKeyword);
+            }
+            Optional.ofNullable(pm.get("dt")).ifPresent(builder::setTitle);
+            Optional.ofNullable(pm.get("dlu")).ifPresent(builder::setUrl);
+            Optional.ofNullable(pm.get("dh")).ifPresent(builder::setHostname);
+            Optional.ofNullable(pm.get("dp").split("\\?")[0]).ifPresent(builder::setPath);
+            Optional.ofNullable(pm.get("dr")).ifPresent(builder::setReferer);
+            Optional.ofNullable(pm.get("drh")).ifPresent(builder::setRefererHost);
+            Optional.ofNullable(pm.get("drp")).ifPresent(builder::setRefererPath);
+            Optional.ofNullable(pm.get("de")).ifPresent(builder::setEncoding);
+            Optional.ofNullable(pm.get("linkid")).ifPresent(builder::setLinkId);
+            return builder.build();
+        }
+        catch(IllegalArgumentException e){
+            LOG.error(e.toString());
+            return null;
+        }
 	}
 }

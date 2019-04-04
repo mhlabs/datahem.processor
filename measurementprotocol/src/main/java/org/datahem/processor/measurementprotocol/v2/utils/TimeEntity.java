@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 
 public class TimeEntity{
-    private static String timeZone;
+    private String timeZone;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(TimeEntity.class);
 	
@@ -43,37 +43,27 @@ public class TimeEntity{
 
 	public TimeEntity(){}
 	
-	private boolean trigger(Map<String, String> paramMap){
-        return true;
-    }
-	
 	public Time build(Map<String, String> pm){
-		if(trigger(pm)){
-            try{
-                
-				DateTime localDateTime = DateTime.parse(pm.get("timestamp")).withZone(DateTimeZone.forID(getTimeZone()));
-                Time.Builder builder = Time.newBuilder();
-                Optional.ofNullable(localDateTime.toString(DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss"))).ifPresent(builder::setDateTime);
-                Optional.ofNullable(localDateTime.toString(DateTimeFormat.forPattern("YYYY-MM-dd"))).ifPresent(builder::setDate);
-                Optional.ofNullable(localDateTime.toString(DateTimeFormat.forPattern("HH:mm:ss"))).ifPresent(builder::setTime);
-                FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("YYYY"))).ifPresent(g -> builder.setYear(g.intValue()));
-                FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("MM"))).ifPresent(g -> builder.setMonth(g.intValue()));
-                FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("w"))).ifPresent(g -> builder.setWeek(g.intValue()));
-                FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("dd"))).ifPresent(g -> builder.setDay(g.intValue()));
-                FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("HH"))).ifPresent(g -> builder.setHour(g.intValue()));
-                FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("mm"))).ifPresent(g -> builder.setMinute(g.intValue()));
-                FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("ss"))).ifPresent(g -> builder.setSecond(g.intValue()));
-                FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("e"))).ifPresent(g -> builder.setWeekDay(g.intValue()));
-                Optional.ofNullable(timeZone).ifPresent(builder::setTimeZone);
-                return builder.build();
-			}
-			catch(IllegalArgumentException e){
-				LOG.error(e.toString());
-				return null;
-			}
-		}
-		else{
-			return null;
-		}
+        try{   
+            DateTime localDateTime = DateTime.parse(pm.get("timestamp")).withZone(DateTimeZone.forID(getTimeZone()));
+            Time.Builder builder = Time.newBuilder();
+            Optional.ofNullable(localDateTime.toString(DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss"))).ifPresent(builder::setDateTime);
+            Optional.ofNullable(localDateTime.toString(DateTimeFormat.forPattern("YYYY-MM-dd"))).ifPresent(builder::setDate);
+            Optional.ofNullable(localDateTime.toString(DateTimeFormat.forPattern("HH:mm:ss"))).ifPresent(builder::setTime);
+            FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("YYYY"))).ifPresent(g -> builder.setYear(g.intValue()));
+            FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("MM"))).ifPresent(g -> builder.setMonth(g.intValue()));
+            FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("w"))).ifPresent(g -> builder.setWeek(g.intValue()));
+            FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("dd"))).ifPresent(g -> builder.setDay(g.intValue()));
+            FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("HH"))).ifPresent(g -> builder.setHour(g.intValue()));
+            FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("mm"))).ifPresent(g -> builder.setMinute(g.intValue()));
+            FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("ss"))).ifPresent(g -> builder.setSecond(g.intValue()));
+            FieldMapper.intVal(localDateTime.toString(DateTimeFormat.forPattern("e"))).ifPresent(g -> builder.setWeekDay(g.intValue()));
+            Optional.ofNullable(timeZone).ifPresent(builder::setTimeZone);
+            return builder.build();
+        }
+        catch(IllegalArgumentException e){
+            LOG.error(e.toString());
+            return null;
+        }
 	}
 }

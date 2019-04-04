@@ -15,8 +15,6 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  */
 
 import org.datahem.protobuf.measurementprotocol.v2.Product;
-import org.datahem.protobuf.measurementprotocol.v2.CustomDimension;
-import org.datahem.protobuf.measurementprotocol.v2.CustomMetric;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -14,43 +14,30 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * =========================LICENSE_END==================================
  */
 
-
 import org.datahem.protobuf.measurementprotocol.v2.Geo;
 
 import java.util.Map;
 import java.util.Optional;
-import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-public class GeoEntity{
-	
+public class GeoEntity{	
 	private static final Logger LOG = LoggerFactory.getLogger(GeoEntity.class);
 	
 	public GeoEntity(){}
 	
-	private boolean trigger(Map<String, String> paramMap){
-        return true;
-	}
-	
 	public Geo build(Map<String, String> pm){
-		if(trigger(pm)){
-            try{
-                Geo.Builder builder = Geo.newBuilder();
-                Optional.ofNullable(pm.get("X-AppEngine-Country")).ifPresent(builder::setCountry);
-                Optional.ofNullable(pm.get("X-AppEngine-Region")).ifPresent(builder::setRegion);
-                Optional.ofNullable(pm.get("X-AppEngine-City")).ifPresent(builder::setCity);
-                Optional.ofNullable(pm.get("X-AppEngine-CityLatLong")).ifPresent(builder::setCityLatLong);
-                return builder.build();
-			}
-			catch(IllegalArgumentException e){
-				LOG.error(e.toString());
-				return null;
-			}
-		}
-		else{
-			return null;
-		}
+        try{
+            Geo.Builder builder = Geo.newBuilder();
+            Optional.ofNullable(pm.get("X-AppEngine-Country")).ifPresent(builder::setCountry);
+            Optional.ofNullable(pm.get("X-AppEngine-Region")).ifPresent(builder::setRegion);
+            Optional.ofNullable(pm.get("X-AppEngine-City")).ifPresent(builder::setCity);
+            Optional.ofNullable(pm.get("X-AppEngine-CityLatLong")).ifPresent(builder::setCityLatLong);
+            return builder.build();
+        }
+        catch(IllegalArgumentException e){
+            LOG.error(e.toString());
+            return null;
+        }
 	}
 }

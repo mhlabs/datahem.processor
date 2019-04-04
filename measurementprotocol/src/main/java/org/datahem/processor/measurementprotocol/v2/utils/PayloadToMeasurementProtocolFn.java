@@ -7,7 +7,7 @@ import org.datahem.protobuf.measurementprotocol.v2.*;
 
 
 import java.util.Optional;
-import java.util.List;
+//import java.util.List;
 
 /*-
  * ========================LICENSE_START=================================
@@ -49,8 +49,6 @@ public class PayloadToMeasurementProtocolFn extends DoFn<PubsubMessage, Measurem
 		     	this.timeZone = timeZone;
 	   	}
         
-        
-
       	@ProcessElement      
       	public void processElement(ProcessContext c)  {
 	      	
@@ -60,16 +58,11 @@ public class PayloadToMeasurementProtocolFn extends DoFn<PubsubMessage, Measurem
 	        mpb.setSearchEnginesPattern(searchEnginesPattern.get());
 	        mpb.setIgnoredReferersPattern(ignoredReferersPattern.get());
 	        mpb.setSocialNetworksPattern(socialNetworksPattern.get());
-            
 	        mpb.setIncludedHostnamesPattern(includedHostnamesPattern.get());
 	        mpb.setExcludedBotsPattern(excludedBotsPattern.get());
 	        mpb.setSiteSearchPattern(siteSearchPattern.get());
 	        mpb.setTimeZone(timeZone.get());
 	        
-            /*
-	        MeasurementProtocol measurementProtocol = mpb.measurementProtocolFromPayload(received);
-	        c.output(measurementProtocol);	
-            */
             Optional<MeasurementProtocol> measurementProtocol = Optional.ofNullable(mpb.measurementProtocolFromPayload(received));
 	        if(measurementProtocol.isPresent()){
                 c.output(measurementProtocol.get());	
