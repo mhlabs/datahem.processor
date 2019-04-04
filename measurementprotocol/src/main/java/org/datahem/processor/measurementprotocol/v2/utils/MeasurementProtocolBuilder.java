@@ -200,7 +200,7 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(timeEntity.build((HashMap)pm.clone())).ifPresent(builder::setTime);
 
                     MeasurementProtocol measurementProtocol = builder.build();
-                    LOG.info(measurementProtocol.toString());
+                    //LOG.info(measurementProtocol.toString());
                     return measurementProtocol; 
 				}
 	        }else{
@@ -208,7 +208,8 @@ public class MeasurementProtocolBuilder{
             }
         }
         catch (NullPointerException e) {
-				LOG.error(e.toString());
+                LOG.error("NullPointerException: ", e);
+                //LOG.error(e.toString());
 		}
     	return null;   
     }       
