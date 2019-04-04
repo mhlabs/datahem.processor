@@ -137,13 +137,12 @@ public class MeasurementProtocolBuilder{
     public MeasurementProtocol measurementProtocolFromPayload(PubsubMessage message){
 		try{
             String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
-	        LOG.info(payload);
+	        //LOG.info("payload: " + payload);
             //Check if post body contains payload and add parameters in a map
 	        if (!"".equals(payload)) {
 	            //Add header parameters to pm
 	            pm = FieldMapper.fieldMapFromQuery(payload);
                 pm.putAll(message.getAttributeMap());
-	            //LOG.info(pm.toString());
 	            //Exclude bots, spiders and crawlers
 				if(pm.get("User-Agent") == null){
 					pm.put("User-Agent", "");
@@ -168,7 +167,8 @@ public class MeasurementProtocolBuilder{
                     
                     try{
                         //If document referer parameter exist, extract host and path and add those as separate parameters
-                        if(pm.get("dr") != null){
+                        if(pm.get("dr") != null && !pm.get("dr").equals("(not set)")){
+                        //if(pm.get("dr") != null){
                             URL referer = new URL(pm.get("dr"));
                             pm.put("drh", referer.getHost());
                             pm.put("drp", referer.getPath());
@@ -176,7 +176,7 @@ public class MeasurementProtocolBuilder{
                     }catch (MalformedURLException e) {
                         LOG.error(e.toString() + " referer, pm:" + pm.toString());
                     }
-					
+
                     MeasurementProtocol.Builder builder = MeasurementProtocol.newBuilder();
                     Optional.ofNullable(pm.get("t")).ifPresent(builder::setHitType);
                     Optional.ofNullable(pm.get("cid")).ifPresent(builder::setClientId);
@@ -200,12 +200,12 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(latencyEntity.build((HashMap)pm.clone())).ifPresent(builder::setLatency);
                     Optional.ofNullable(propertyEntity.build((HashMap)pm.clone())).ifPresent(builder::setProperty);
                     Optional.ofNullable(FieldMapper.getCustomDimensions((HashMap)pm.clone(), "^(cd[0-9]{1,3})$", "^cd([0-9]{1,3})$")).ifPresent(builder::addAllCustomDimensions);
-                    Optional.ofNullable(FieldMapper.getCustomMetrics((HashMap)pm.clone(),"^(cm[0-9]{1,3})$","^([0-9]{1,3})$")).ifPresent(builder::addAllCustomMetrics);
+                    Optional.ofNullable(FieldMapper.getCustomMetrics((HashMap)pm.clone(),"^(cm[0-9]{1,3})$","^cm([0-9]{1,3})$")).ifPresent(builder::addAllCustomMetrics);
                     Optional.ofNullable(attributesEntity.build((HashMap)pm.clone())).ifPresent(builder::setATTRIBUTES);
                     Optional.ofNullable(timeEntity.build((HashMap)pm.clone())).ifPresent(builder::setTime);
 
                     MeasurementProtocol measurementProtocol = builder.build();
-                    LOG.info(measurementProtocol.toString());
+                    //LOG.info(measurementProtocol.toString());
                     return measurementProtocol; 
 				}
 	        }else{

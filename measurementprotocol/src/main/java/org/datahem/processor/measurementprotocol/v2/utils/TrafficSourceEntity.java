@@ -94,7 +94,8 @@ public class TrafficSourceEntity{
 			else{
                 return;
             }
-            if(paramMap.get("dr") != null){
+            /*
+            if(paramMap.get("dr") != null && !paramMap.get("dr").equals("(not set)")){
                 try{
                     URL referer = new URL(paramMap.get("dr"));
 				    paramMap.put("drh", referer.getHost());
@@ -103,6 +104,7 @@ public class TrafficSourceEntity{
 				   	LOG.error("dr: " + e.toString() + ", paramMap: " + paramMap.toString());
 			    }
 			}
+            */
             //Fix for Single Page Applications where dl and referrer stays the same for each hit but dp is updated
             //String documentLocation = (url.getQuery != null ? url.getPath() + "?" + url.getQuery() : url.getPath());
             //LOG.info(String.valueOf(url.getFile() == paramMap.get("dp")) + " url.getFile() " + url.getFile() + " paramMap.get(dp)" + paramMap.get("dp"));

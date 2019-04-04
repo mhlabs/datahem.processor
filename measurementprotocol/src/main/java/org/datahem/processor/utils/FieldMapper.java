@@ -46,7 +46,14 @@ public class FieldMapper{
 	    		Pattern.compile("&")
 	    		.splitAsStream(url.getQuery())
 	        	.map(s -> Arrays.copyOf(s.split("="), 2))
-	        	.collect(Collectors.toMap(s -> decode(s[0]), s -> decode(s[1])));
+	        	.collect(Collectors.toMap(
+                    s -> decode(s[0]), 
+                    s -> decode(s[1]),
+                    (k1, k2) -> {
+                        LOG.info("duplicate key found!");
+                        return k1;
+                    }
+                ));
         }catch(NullPointerException e) {
             LOG.error(e.toString());
     		return null;

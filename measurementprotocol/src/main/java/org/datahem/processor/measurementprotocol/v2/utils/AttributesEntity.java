@@ -19,7 +19,7 @@ import org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES;
 
 import java.util.Map;
 import java.util.Optional;
-import org.datahem.processor.utils.FieldMapper;
+//import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +35,7 @@ public class AttributesEntity{
     }
 	
 	public _ATTRIBUTES build(Map<String, String> pm){
-		if(trigger(pm)){
+		//if(trigger(pm)){
             try{
                 _ATTRIBUTES.Builder builder = _ATTRIBUTES.newBuilder();
                 Optional.ofNullable(pm.get("uuid")).ifPresent(builder::setUuid);
@@ -47,9 +47,9 @@ public class AttributesEntity{
 				LOG.error(e.toString());
 				return null;
 			}
-		}
-		else{
-			return null;
-		}
+		//}
+		//else{
+		//	return null;
+		//}
 	}
 }

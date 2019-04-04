@@ -38,8 +38,8 @@ public class PageEntity{
   	}
 	
 	private boolean trigger(Map<String, String> paramMap){
-		return "pageview".equals(paramMap.get("t"));
-	}
+        return true;
+    }
 	
 	public Page build(Map<String, String> pm){
 		if(trigger(pm)){

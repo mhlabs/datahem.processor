@@ -86,12 +86,12 @@ public class MeasurementProtocolPipeline {
     // Create schemas from protocol buffers
     
     TableSchema eventSchema = ProtobufUtils.makeTableSchema(MeasurementProtocol.getDescriptor());
-    	//List<TableFieldSchema> fieldsList = eventSchema.getFields();
-    	//TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
-    	//fieldsList.set(fieldsList.indexOf(date), date.setType("DATE"));
+    	List<TableFieldSchema> fieldsList = eventSchema.getFields();
+    	TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
+    	fieldsList.set(fieldsList.indexOf(date), date.setType("DATE"));
         //TableFieldSchema localDateTime = new TableFieldSchema().setName("local_date_time").setType("STRING").setMode("NULLABLE");
     	//fieldsList.set(fieldsList.indexOf(localDateTime), localDateTime.setType("DATETIME"));
-    	//TableSchema schema = new TableSchema().setFields(fieldsList);
+    	TableSchema schema = new TableSchema().setFields(fieldsList);
     
 	
 	for (Config.Account.Property property : Config.read(options.getConfig().get())) {
@@ -130,7 +130,7 @@ public class MeasurementProtocolPipeline {
                         .writeTableRows()
                         //.to(property.id + "." + view.id)
                         .to(table)
-                        .withSchema(eventSchema)
+                        .withSchema(schema)
                         .withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
                         .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                         .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
