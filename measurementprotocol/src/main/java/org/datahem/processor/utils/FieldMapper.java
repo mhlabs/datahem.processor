@@ -71,11 +71,15 @@ public class FieldMapper{
     
     public static String decode(final String encoded) {
     	try {
-        	return encoded == null ? "(not set)" : URLDecoder.decode(encoded, "UTF-8");
+        	//return encoded == null ? "(not set)" : URLDecoder.decode(encoded, "UTF-8");
+            return (encoded != null && !encoded.isEmpty() ? URLDecoder.decode(encoded, "UTF-8") : "(not set)");
     	} catch(final UnsupportedEncodingException e) {
-            //LOG.error(e.toString());
+            LOG.error("FieldMapper.decode Unsupported encoding error: ", e);
         	throw new RuntimeException("Impossible: UTF-8 is a required encoding", e);
-    	}
+    	} catch(IllegalArgumentException e) {
+            LOG.error("FieldMapper.decode illegal argument error: ", e);
+            LOG.error("FieldMapper.decode illegal argument error, encoded string: ", encoded);
+    	} return null;
 	}
 	
 	public static String encode(Object decoded) {

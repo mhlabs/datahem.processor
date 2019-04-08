@@ -22,8 +22,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.net.URL;
-import java.net.MalformedURLException;
+//import java.net.URL;
+//import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Optional;
 import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
@@ -79,16 +81,19 @@ public class TrafficSourceEntity{
 	
 	private void parse(Map<String, String> paramMap){
 		try{
-            URL url;
+            //URL url;
+            URI uri;
             if(paramMap.get("dlu") != null){
-                url = new URL(paramMap.get("dlu"));
+                //url = new URL(paramMap.get("dlu"));
+                uri = new URI(paramMap.get("dlu"));
             }
 			else{
                 return;
             }
             
             //Fix for Single Page Applications where dl and referrer stays the same for each hit but dp is updated
-            if(url.getFile().equals(paramMap.get("dp")) || paramMap.get("dp") == null){
+            //if(url.getFile().equals(paramMap.get("dp")) || paramMap.get("dp") == null){
+            if(uri.getPath().equals(paramMap.get("dp")) || paramMap.get("dp") == null){
 				
                 //Campaign traffic?
                 if(null != url.getQuery()){

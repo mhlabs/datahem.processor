@@ -40,8 +40,10 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import java.net.URL;
-import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+//import java.net.URL;
+//import java.net.MalformedURLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,29 +149,37 @@ public class MeasurementProtocolBuilder{
 					pm.put("User-Agent", "");
 				}
                 
-	        	if(!pm.get("User-Agent").matches(getExcludedBotsPattern()) && pm.get("dl").matches(getIncludedHostnamesPattern()) && !pm.get("t").equals("adtiming")){
+	        	if(!pm.get("User-Agent").matches(getExcludedBotsPattern()) && (pm.getOrDefault("dl","").matches(getIncludedHostnamesPattern()) || pm.getOrDefault("dh","").matches(getIncludedHostnamesPattern())) && !pm.get("t").equals("adtiming")){
                     try{
                         //If document location parameter exist, extract host and path and add those as separate parameters
                         if (pm.get("dh") != null && pm.get("dp") != null){
                             pm.put("dlu","https://" + pm.get("dh") + pm.get("dp"));
                         } else if(pm.get("dl") != null){
-                            URL url = new URL(pm.get("dl"));
-                            if(pm.get("dh")==null) pm.put("dh", url.getHost());
-                            if(pm.get("dp")==null) pm.put("dp", url.getFile());
-                            pm.put("dlu", "https://" + pm.get("dh") + pm.get("dp"));
+                            //URL url = new URL(pm.get("dl"));
+                            //if(pm.get("dh")==null) pm.put("dh", url.getHost());
+                            //if(pm.get("dp")==null) pm.put("dp", url.getFile());
+                            URI uri = new URI(pm.get("dl"));
+                            if(pm.get("dh")==null) pm.put("dh", uri.getHost());
+                            if(pm.get("dp")==null) pm.put("dp", uri.getPath());
+                            pm.put("dlu", pm.get("dl"));
                         }
-                    }catch (MalformedURLException e) {
-                        LOG.error(e.toString() + " document location, pm:" + pm.toString());
+                    }//catch (MalformedURLException e) {
+                    catch (URISyntaxException e) {
+                        LOG.error("URISyntaxException: ", e);
                     }
                     
                     try{
                         //If document referer parameter exist, extract host and path and add those as separate parameters
                         if(pm.get("dr") != null && !pm.get("dr").equals("(not set)")){
-                            URL referer = new URL(pm.get("dr"));
+                            //URL referer = new URL(pm.get("dr"));
+                            //pm.put("drh", referer.getHost());
+                            //pm.put("drp", referer.getPath());
+                            URI referer = new URI(pm.get("dr"));
                             pm.put("drh", referer.getHost());
                             pm.put("drp", referer.getPath());
                         }
-                    }catch (MalformedURLException e) {
+                    }//catch (MalformedURLException e) {
+                    catch (URISyntaxException e) {
                         LOG.error(e.toString() + " referer, pm:" + pm.toString());
                     }
                     MeasurementProtocol.Builder builder = MeasurementProtocol.newBuilder();

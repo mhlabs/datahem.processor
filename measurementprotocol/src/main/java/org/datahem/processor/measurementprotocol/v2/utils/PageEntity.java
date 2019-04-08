@@ -41,7 +41,7 @@ public class PageEntity{
         try{
             Page.Builder builder = Page.newBuilder();
             Pattern pattern = Pattern.compile(siteSearchPattern);
-            Matcher matcher = pattern.matcher(pm.get("dlu"));
+            Matcher matcher = pattern.matcher(pm.getOrDefault("dlu",""));
             if(matcher.find()){
                 Optional.ofNullable(FieldMapper.decode(matcher.group(1))).ifPresent(builder::setSearchKeyword);
             }
@@ -57,7 +57,11 @@ public class PageEntity{
             return builder.build();
         }
         catch(IllegalArgumentException e){
-            LOG.error(e.toString());
+            LOG.error("Page build - illegalargumentexception: ", e);
+            return null;
+        }
+        catch(NullPointerException e){
+            LOG.error("Page build - nullpointerexception: ", e);
             return null;
         }
 	}
