@@ -19,6 +19,8 @@ package org.datahem.processor.utils;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -56,6 +58,26 @@ public class FieldMapper{
                 ));
         }catch(NullPointerException e) {
             LOG.error(e.toString());
+    		return null;
+		}
+    }
+
+    public static Map<String, String> fieldMapFromURI(URI uri){ 
+    	try{
+	    	return   
+	    		Pattern.compile("&")
+	    		.splitAsStream(uri.getQuery())
+	        	.map(s -> Arrays.copyOf(s.split("="), 2))
+	        	.collect(Collectors.toMap(
+                    s -> decode(s[0]), 
+                    s -> decode(s[1]),
+                    (k1, k2) -> {
+                        LOG.info("duplicate key found!");
+                        return k1;
+                    }
+                ));
+        }catch(NullPointerException e) {
+            LOG.error("fieldMapFromURI NullPointerException: ", e);
     		return null;
 		}
     }

@@ -47,8 +47,8 @@ public class PageEntity{
             }
             Optional.ofNullable(pm.get("dt")).ifPresent(builder::setTitle);
             Optional.ofNullable(pm.get("dlu")).ifPresent(builder::setUrl);
-            Optional.ofNullable(pm.get("dh")).ifPresent(builder::setHostname);
-            Optional.ofNullable(pm.get("dp").split("\\?")[0]).ifPresent(builder::setPath);
+            Optional.ofNullable(pm.get("dlh")).ifPresent(builder::setHostname);
+            Optional.ofNullable(pm.get("dlp").split("\\?")[0]).ifPresent(builder::setPath);
             Optional.ofNullable(pm.get("dr")).ifPresent(builder::setReferer);
             Optional.ofNullable(pm.get("drh")).ifPresent(builder::setRefererHost);
             Optional.ofNullable(pm.get("drp")).ifPresent(builder::setRefererPath);

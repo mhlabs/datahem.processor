@@ -152,21 +152,39 @@ public class MeasurementProtocolBuilder{
 	        	if(!pm.get("User-Agent").matches(getExcludedBotsPattern()) && (pm.getOrDefault("dl","").matches(getIncludedHostnamesPattern()) || pm.getOrDefault("dh","").matches(getIncludedHostnamesPattern())) && !pm.get("t").equals("adtiming")){
                     try{
                         //If document location parameter exist, extract host and path and add those as separate parameters
+                        URI uri = new URI(pm.get("dl"));
+                        pm.put("dlh", uri.getHost());
+                        pm.put("dlp", (uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath()));
+                    }
+                    catch (URISyntaxException e) {
+                        LOG.error("URISyntaxException: ", e);
+                    }
+                    if(pm.get("dh") != null) pm.put("dlh", (pm.get("dh")));
+                    if(pm.get("dp") != null) pm.put("dlp", (pm.get("dp")));
+                    pm.put("dlu", pm.get("dlh") + pm.get("dlp"));
+
+                        /*
+                        if(pm.get("dh")!=null) pm.put("dlh", uri.getHost());
                         if (pm.get("dh") != null && pm.get("dp") != null){
-                            pm.put("dlu","https://" + pm.get("dh") + pm.get("dp"));
+                            //pm.put("dlu","https://" + pm.get("dh") + pm.get("dp"));
+                            pm.put("dlu", pm.get("dh") + pm.get("dp"));
                         } else if(pm.get("dl") != null){
                             //URL url = new URL(pm.get("dl"));
                             //if(pm.get("dh")==null) pm.put("dh", url.getHost());
                             //if(pm.get("dp")==null) pm.put("dp", url.getFile());
                             URI uri = new URI(pm.get("dl"));
                             if(pm.get("dh")==null) pm.put("dh", uri.getHost());
-                            if(pm.get("dp")==null) pm.put("dp", uri.getPath());
-                            pm.put("dlu", pm.get("dl"));
+                            if(pm.get("dp")==null){
+                                String path = (uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath());
+                                pm.put("dp", path);
+                            } 
+                            pm.put("dlu", pm.get("dh") + pm.get("dp"));
                         }
+                        
                     }//catch (MalformedURLException e) {
                     catch (URISyntaxException e) {
                         LOG.error("URISyntaxException: ", e);
-                    }
+                    }*/
                     
                     try{
                         //If document referer parameter exist, extract host and path and add those as separate parameters
@@ -210,7 +228,7 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(timeEntity.build((HashMap)pm.clone())).ifPresent(builder::setTime);
 
                     MeasurementProtocol measurementProtocol = builder.build();
-                    //LOG.info(measurementProtocol.toString());
+                    LOG.info(measurementProtocol.toString());
                     return measurementProtocol; 
 				}
 	        }else{
