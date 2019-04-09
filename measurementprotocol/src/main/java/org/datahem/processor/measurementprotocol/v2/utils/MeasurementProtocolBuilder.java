@@ -214,11 +214,11 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(exceptionEntity.build((HashMap)pm.clone())).ifPresent(builder::setException);
                     Optional.ofNullable(geoEntity.build((HashMap)pm.clone())).ifPresent(builder::setGeo);
                     Optional.ofNullable(experimentEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllExperiments);
-                    Optional.ofNullable(productEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllProducts);
                     Optional.ofNullable(trafficSourceEntity.build((HashMap)pm.clone())).ifPresent(builder::setTrafficSource);
                     Optional.ofNullable(transactionEntity.build((HashMap)pm.clone())).ifPresent(builder::setTransaction);
                     Optional.ofNullable(deviceEntity.build((HashMap)pm.clone())).ifPresent(builder::setDevice);
                     Optional.ofNullable(promotionEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllPromotions);
+                    Optional.ofNullable(productEntity.build((HashMap)pm.clone())).ifPresent(builder::addAllProducts);
                     Optional.ofNullable(socialEntity.build((HashMap)pm.clone())).ifPresent(builder::setSocial);
                     Optional.ofNullable(latencyEntity.build((HashMap)pm.clone())).ifPresent(builder::setLatency);
                     Optional.ofNullable(propertyEntity.build((HashMap)pm.clone())).ifPresent(builder::setProperty);

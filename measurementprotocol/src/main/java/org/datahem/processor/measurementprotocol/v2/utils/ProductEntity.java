@@ -58,7 +58,7 @@ public class ProductEntity{
 		ArrayList<Product> eventList = new ArrayList<>();
 		Map<String, String> impressionMap = new HashMap<>(paramMap);
         if(trigger(paramMap)){
-    			
+    			LOG.info(paramMap.toString());
                 //START product action
     			Pattern productExclPattern = Pattern.compile("^(?!pr[0-9]{1,3}.*).*$");
     			Map<String, String> paramMapExclPr = paramMap
