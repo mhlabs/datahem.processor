@@ -152,19 +152,24 @@ public class MeasurementProtocolBuilder{
 	        	if(!pm.get("User-Agent").matches(getExcludedBotsPattern()) && (pm.getOrDefault("dl","").matches(getIncludedHostnamesPattern()) || pm.getOrDefault("dh","").matches(getIncludedHostnamesPattern())) && !pm.get("t").equals("adtiming")){
                     //LOG.info("checkpoint");
                     try{
-                        //If document location parameter exist, extract host and path and add those as separate parameters
-                        //LOG.info("dl: "+ pm.get("dl"));
-                        URI uri = new URI(pm.get("dl"));
+                        //If document location parameter exist, extract host and path and add those as separate parameters 
+                        URI uri = new URI(pm.get("dl").replace(" ", "%20"));
                         pm.put("dlh", uri.getHost());
                         pm.put("dlp", (uri.getRawQuery() != null ? uri.getRawPath() + "?" + uri.getRawQuery() : uri.getRawPath()));
                     }
                     catch (URISyntaxException e) {
-                        LOG.error(pm.get("dl"));
-                        LOG.error("URISyntaxException: ", e);
+                        //LOG.error("pm: "+ pm.toString());
+                        //LOG.error(pm.get("dl"));
+                        LOG.error("URISyntaxException (IE11 user agent?): ", e);
                     }
+                    catch (NullPointerException e) {
+                        LOG.error("NullPointerException: ", e);
+                        //LOG.error(e.toString());
+		            }
+                    
                     if(pm.get("dh") != null) pm.put("dlh", (pm.get("dh")));
-                    if(pm.get("dp") != null) pm.put("dlp", (pm.get("dp")));
-                    pm.put("dlu", pm.get("dlh") + pm.get("dlp"));
+                    if(pm.get("dp") != null) pm.put("dlp", (pm.get("dp").replace(" ", "%20")));
+                    if(pm.get("dlh") != null && pm.get("dlp") != null) pm.put("dlu", pm.get("dlh") + pm.get("dlp"));
 
                         /*
                         if(pm.get("dh")!=null) pm.put("dlh", uri.getHost());
@@ -192,17 +197,17 @@ public class MeasurementProtocolBuilder{
                     try{
                         //If document referer parameter exist, extract host and path and add those as separate parameters
                         if(pm.get("dr") != null && !pm.get("dr").equals("(not set)")){
-                            //URL referer = new URL(pm.get("dr"));
-                            //pm.put("drh", referer.getHost());
-                            //pm.put("drp", referer.getPath());
                             URI referer = new URI(pm.get("dr"));
                             pm.put("drh", referer.getHost());
                             pm.put("drp", referer.getRawPath());
                         }
                     }//catch (MalformedURLException e) {
                     catch (URISyntaxException e) {
-                        LOG.error(e.toString() + " referer, pm:" + pm.toString());
+                        LOG.error("MalformedURLException: ", e);
                     }
+                    catch (NullPointerException e) {
+                        LOG.error("NullPointerException: ", e);
+		            }
                     MeasurementProtocol.Builder builder = MeasurementProtocol.newBuilder();
                     Optional.ofNullable(pm.get("t")).ifPresent(builder::setHitType);
                     Optional.ofNullable(pm.get("cid")).ifPresent(builder::setClientId);
@@ -233,10 +238,10 @@ public class MeasurementProtocolBuilder{
                     MeasurementProtocol measurementProtocol = builder.build();
                     //LOG.info(measurementProtocol.toString());
                     return measurementProtocol; 
-				}
-	        }else{
-                LOG.info("not matching MeasurementProtocolBuilder conditions: User-Agent: " + pm.getOrDefault("User-Agent", "null") + ", document.location: " + pm.getOrDefault("dl", "null") + ", type:" + pm.getOrDefault("t", "null"));
-            }
+                }else{
+                    //LOG.info("not matching MeasurementProtocolBuilder conditions: User-Agent: " + pm.getOrDefault("User-Agent", "null") + ", document.location: " + pm.getOrDefault("dl", "null") + ", type:" + pm.getOrDefault("t", "null"));
+                    }
+            }else{LOG.info("no message payload");}
         }
         catch (NullPointerException e) {
                 LOG.error("NullPointerException: ", e);

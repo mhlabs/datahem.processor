@@ -85,7 +85,7 @@ public class TrafficSourceEntity{
             URI uri;
             if(paramMap.get("dl") != null){
                 //url = new URL(paramMap.get("dlu"));
-                uri = new URI(paramMap.get("dl"));
+                uri = new URI(paramMap.get("dl").replace(" ", "%20")); //IE11 fix
             }
 			else{
                 return;

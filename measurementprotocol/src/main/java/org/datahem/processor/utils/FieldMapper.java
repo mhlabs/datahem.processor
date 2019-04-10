@@ -48,34 +48,36 @@ public class FieldMapper{
 	    		Pattern.compile("&")
 	    		.splitAsStream(url.getQuery())
 	        	.map(s -> Arrays.copyOf(s.split("="), 2))
-	        	.collect(Collectors.toMap(
+                .collect(HashMap::new, (m,v)->m.put(decode(v[0]), decode(v[1])), HashMap::putAll);
+	        	/*.collect(Collectors.toMap(
                     s -> decode(s[0]), 
                     s -> decode(s[1]),
                     (k1, k2) -> {
                         LOG.info("duplicate key found!");
                         return k1;
                     }
-                ));
+                ));*/
         }catch(NullPointerException e) {
             LOG.error(e.toString());
     		return null;
 		}
     }
 
-    public static Map<String, String> fieldMapFromURI(URI uri){ 
+    public static HashMap<String, String> fieldMapFromURI(URI uri){ 
     	try{
 	    	return   
 	    		Pattern.compile("&")
 	    		.splitAsStream(uri.getQuery())
 	        	.map(s -> Arrays.copyOf(s.split("="), 2))
-	        	.collect(Collectors.toMap(
+                .collect(HashMap::new, (m,v)->m.put(decode(v[0]), decode(v[1])), HashMap::putAll);
+	        	/*.collect(Collectors.toMap(
                     s -> decode(s[0]), 
                     s -> decode(s[1]),
                     (k1, k2) -> {
                         LOG.info("duplicate key found!");
                         return k1;
                     }
-                ));
+                ));*/
         }catch(NullPointerException e) {
             LOG.error("fieldMapFromURI NullPointerException: ", e);
     		return null;
