@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.Objects;
 
 
 public class ProductEntity{
@@ -58,14 +59,16 @@ public class ProductEntity{
 		ArrayList<Product> eventList = new ArrayList<>();
 		Map<String, String> impressionMap = new HashMap<>(paramMap);
         if(trigger(paramMap)){
-    			LOG.info(paramMap.toString());
+    			//LOG.info(paramMap.toString());
                 //START product action
     			Pattern productExclPattern = Pattern.compile("^(?!pr[0-9]{1,3}.*).*$");
-    			Map<String, String> paramMapExclPr = paramMap
+    			HashMap<String, String> paramMapExclPr = paramMap
 					.keySet()
         			.stream()
+                    //.filter(Objects::nonNull)
         			.filter(productExclPattern.asPredicate())
-        			.collect(Collectors.toMap(s -> s, s -> paramMap.get(s)));
+                    .collect(HashMap::new, (m,v)->m.put(v, paramMap.get(v)), HashMap::putAll);
+        			//.collect(Collectors.toMap(s -> s, s -> paramMap.get(s)));
     			
     			//Group product parameters by product index 
     			final Pattern productIndexPattern = Pattern.compile("^pr([0-9]{1,3}).*");
@@ -86,7 +89,9 @@ public class ProductEntity{
 		            Map<String, String> prParamMap = keys
 		            	.stream()
 		            	.collect(Collectors.toMap(s -> s, s -> paramMap.get(s)));
+
 		            prParamMap.putAll(paramMapExclPr);
+
 		            try{
                         Product.Builder builder = Product.newBuilder();
                         Optional.ofNullable(prParamMap.get("pr" + prefix + "id")).ifPresent(builder::setId);

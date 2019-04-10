@@ -148,15 +148,18 @@ public class MeasurementProtocolBuilder{
 				if(pm.get("User-Agent") == null){
 					pm.put("User-Agent", "");
 				}
-                
+                //LOG.info(pm.toString());
 	        	if(!pm.get("User-Agent").matches(getExcludedBotsPattern()) && (pm.getOrDefault("dl","").matches(getIncludedHostnamesPattern()) || pm.getOrDefault("dh","").matches(getIncludedHostnamesPattern())) && !pm.get("t").equals("adtiming")){
+                    //LOG.info("checkpoint");
                     try{
                         //If document location parameter exist, extract host and path and add those as separate parameters
+                        //LOG.info("dl: "+ pm.get("dl"));
                         URI uri = new URI(pm.get("dl"));
                         pm.put("dlh", uri.getHost());
-                        pm.put("dlp", (uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath()));
+                        pm.put("dlp", (uri.getRawQuery() != null ? uri.getRawPath() + "?" + uri.getRawQuery() : uri.getRawPath()));
                     }
                     catch (URISyntaxException e) {
+                        LOG.error(pm.get("dl"));
                         LOG.error("URISyntaxException: ", e);
                     }
                     if(pm.get("dh") != null) pm.put("dlh", (pm.get("dh")));
@@ -194,7 +197,7 @@ public class MeasurementProtocolBuilder{
                             //pm.put("drp", referer.getPath());
                             URI referer = new URI(pm.get("dr"));
                             pm.put("drh", referer.getHost());
-                            pm.put("drp", referer.getPath());
+                            pm.put("drp", referer.getRawPath());
                         }
                     }//catch (MalformedURLException e) {
                     catch (URISyntaxException e) {
@@ -228,7 +231,7 @@ public class MeasurementProtocolBuilder{
                     Optional.ofNullable(timeEntity.build((HashMap)pm.clone())).ifPresent(builder::setTime);
 
                     MeasurementProtocol measurementProtocol = builder.build();
-                    LOG.info(measurementProtocol.toString());
+                    //LOG.info(measurementProtocol.toString());
                     return measurementProtocol; 
 				}
 	        }else{

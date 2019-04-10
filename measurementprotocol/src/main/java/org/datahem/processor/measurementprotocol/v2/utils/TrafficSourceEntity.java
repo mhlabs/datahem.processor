@@ -93,17 +93,17 @@ public class TrafficSourceEntity{
             
             //Fix for Single Page Applications where dl and referrer stays the same for each hit but dp is updated
             //if(url.getFile().equals(paramMap.get("dp")) || paramMap.get("dp") == null){
-            LOG.info("uri: " + uri.toString());
-            LOG.info("dl:" + paramMap.get("dl"));
-            LOG.info("dp:" + paramMap.get("dp"));
-            LOG.info((uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath()));
-            LOG.info(Boolean.toString((uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath()).equals(paramMap.get("dp"))));
-            LOG.info(Boolean.toString((paramMap.get("dp") == null && paramMap.get("dl") != null)));
-            LOG.info(Boolean.toString((paramMap.get("dp") != null && paramMap.get("dl") == null)));
+            //LOG.info("uri: " + uri.toString());
+            //LOG.info("dl:" + paramMap.get("dl"));
+            //LOG.info("dp:" + paramMap.get("dp"));
+            //LOG.info((uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath()));
+            //LOG.info(Boolean.toString((uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath()).equals(paramMap.get("dp"))));
+            //LOG.info(Boolean.toString((paramMap.get("dp") == null && paramMap.get("dl") != null)));
+            //LOG.info(Boolean.toString((paramMap.get("dp") != null && paramMap.get("dl") == null)));
             if((uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath()).equals(paramMap.get("dp")) || 
                 (paramMap.get("dp") == null && paramMap.get("dl") != null) || 
                 (paramMap.get("dp") != null && paramMap.get("dl") == null)){
-				LOG.info("traffic source true");
+				//LOG.info("traffic source true");
                 //Campaign traffic?
                 //if(null != url.getQuery()){
                 if(null != uri.getQuery()){

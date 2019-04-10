@@ -18,6 +18,7 @@ package org.datahem.processor.measurementprotocol.v2.utils;
 import org.datahem.protobuf.measurementprotocol.v2.Promotion;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import java.util.Objects;
 
 
 public class PromotionEntity{
@@ -56,11 +58,13 @@ public class PromotionEntity{
     			//create conditions and set parameters for different promotion actions
     			//Get map without product parameters
     			Pattern promoExclPattern = Pattern.compile("^(?!promo[0-9]{1,3}.*).*$");
-    			Map<String, String> paramMapExclPromo = paramMap
+    			HashMap<String, String> paramMapExclPromo = paramMap
 					.keySet()
         			.stream()
+                    //.filter(str -> str != null && str.length() > 0)
         			.filter(promoExclPattern.asPredicate())
-        			.collect(Collectors.toMap(s -> s, s -> paramMap.get(s)));
+                    .collect(HashMap::new, (m,v)->m.put(v, paramMap.get(v)), HashMap::putAll);
+        			//.collect(Collectors.toMap(s -> s, s -> paramMap.getOrDefault(s,"(not set)")));
     			
     			//Group promo parameters by promo index 
     			final Pattern promoIndexPattern = Pattern.compile("^promo([0-9]{1,3}).*");
