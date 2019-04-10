@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-import java.util.Objects;
-
 
 public class PromotionEntity{
 
@@ -64,7 +62,6 @@ public class PromotionEntity{
                     //.filter(str -> str != null && str.length() > 0)
         			.filter(promoExclPattern.asPredicate())
                     .collect(HashMap::new, (m,v)->m.put(v, paramMap.get(v)), HashMap::putAll);
-        			//.collect(Collectors.toMap(s -> s, s -> paramMap.getOrDefault(s,"(not set)")));
     			
     			//Group promo parameters by promo index 
     			final Pattern promoIndexPattern = Pattern.compile("^promo([0-9]{1,3}).*");
@@ -81,9 +78,9 @@ public class PromotionEntity{
     			//Build a promotion hit for each promotion
     			for(Map.Entry<String, List<String>> entry : entries.entrySet()){
 		            List<String> keys = entry.getValue();
-		            Map<String, String> prParamMap = keys
+		            HashMap<String, String> prParamMap = keys
 		            	.stream()
-		            	.collect(Collectors.toMap(s -> s, s -> paramMap.get(s)));
+                        .collect(HashMap::new, (m,v)->m.put(v, paramMap.get(v)), HashMap::putAll);
 		            prParamMap.putAll(paramMapExclPromo);
 		            try{
                         Promotion.Builder builder = Promotion.newBuilder();

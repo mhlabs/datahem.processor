@@ -17,21 +17,21 @@ package org.datahem.processor.measurementprotocol.v2.utils;
 
 import java.nio.charset.StandardCharsets;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.Collections;
-import java.util.stream.Stream;
-import java.util.Map;
+//import java.util.List;
+//import java.util.stream.Collectors;
+//import java.util.Collections;
+//import java.util.stream.Stream;
+//import java.util.Map;
 import java.util.HashMap;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+//import java.util.Arrays;
+//import java.util.ArrayList;
+//import java.util.regex.Pattern;
+//import java.util.regex.Matcher;
 import java.util.Optional;
 
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
 
-import org.datahem.processor.measurementprotocol.v2.utils.*;
+//import org.datahem.processor.measurementprotocol.v2.utils.*;
 import org.datahem.processor.utils.FieldMapper;
 import org.datahem.protobuf.measurementprotocol.v2.*;
 
@@ -42,8 +42,6 @@ import org.joda.time.DateTimeZone;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-//import java.net.URL;
-//import java.net.MalformedURLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,7 +136,6 @@ public class MeasurementProtocolBuilder{
     public MeasurementProtocol measurementProtocolFromPayload(PubsubMessage message){
 		try{
             String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
-	        //LOG.info("payload: " + payload);
             //Check if post body contains payload and add parameters in a map
 	        if (!"".equals(payload)) {
 	            //Add header parameters to pm
@@ -148,51 +145,22 @@ public class MeasurementProtocolBuilder{
 				if(pm.get("User-Agent") == null){
 					pm.put("User-Agent", "");
 				}
-                //LOG.info(pm.toString());
 	        	if(!pm.get("User-Agent").matches(getExcludedBotsPattern()) && (pm.getOrDefault("dl","").matches(getIncludedHostnamesPattern()) || pm.getOrDefault("dh","").matches(getIncludedHostnamesPattern())) && !pm.get("t").equals("adtiming")){
-                    //LOG.info("checkpoint");
                     try{
                         //If document location parameter exist, extract host and path and add those as separate parameters 
-                        URI uri = new URI(pm.get("dl").replace(" ", "%20"));
+                        URI uri = new URI(pm.get("dl").replace(" ", "%20")); // IE11 fix
                         pm.put("dlh", uri.getHost());
                         pm.put("dlp", (uri.getRawQuery() != null ? uri.getRawPath() + "?" + uri.getRawQuery() : uri.getRawPath()));
                     }
                     catch (URISyntaxException e) {
-                        //LOG.error("pm: "+ pm.toString());
-                        //LOG.error(pm.get("dl"));
                         LOG.error("URISyntaxException (IE11 user agent?): ", e);
                     }
                     catch (NullPointerException e) {
                         LOG.error("NullPointerException: ", e);
-                        //LOG.error(e.toString());
 		            }
-                    
                     if(pm.get("dh") != null) pm.put("dlh", (pm.get("dh")));
-                    if(pm.get("dp") != null) pm.put("dlp", (pm.get("dp").replace(" ", "%20")));
+                    if(pm.get("dp") != null) pm.put("dlp", (pm.get("dp").replace(" ", "%20"))); // IE11 fix
                     if(pm.get("dlh") != null && pm.get("dlp") != null) pm.put("dlu", pm.get("dlh") + pm.get("dlp"));
-
-                        /*
-                        if(pm.get("dh")!=null) pm.put("dlh", uri.getHost());
-                        if (pm.get("dh") != null && pm.get("dp") != null){
-                            //pm.put("dlu","https://" + pm.get("dh") + pm.get("dp"));
-                            pm.put("dlu", pm.get("dh") + pm.get("dp"));
-                        } else if(pm.get("dl") != null){
-                            //URL url = new URL(pm.get("dl"));
-                            //if(pm.get("dh")==null) pm.put("dh", url.getHost());
-                            //if(pm.get("dp")==null) pm.put("dp", url.getFile());
-                            URI uri = new URI(pm.get("dl"));
-                            if(pm.get("dh")==null) pm.put("dh", uri.getHost());
-                            if(pm.get("dp")==null){
-                                String path = (uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath());
-                                pm.put("dp", path);
-                            } 
-                            pm.put("dlu", pm.get("dh") + pm.get("dp"));
-                        }
-                        
-                    }//catch (MalformedURLException e) {
-                    catch (URISyntaxException e) {
-                        LOG.error("URISyntaxException: ", e);
-                    }*/
                     
                     try{
                         //If document referer parameter exist, extract host and path and add those as separate parameters
@@ -201,7 +169,7 @@ public class MeasurementProtocolBuilder{
                             pm.put("drh", referer.getHost());
                             pm.put("drp", referer.getRawPath());
                         }
-                    }//catch (MalformedURLException e) {
+                    }
                     catch (URISyntaxException e) {
                         LOG.error("MalformedURLException: ", e);
                     }
@@ -245,7 +213,6 @@ public class MeasurementProtocolBuilder{
         }
         catch (NullPointerException e) {
                 LOG.error("NullPointerException: ", e);
-                //LOG.error(e.toString());
 		}
     	return null;   
     }       

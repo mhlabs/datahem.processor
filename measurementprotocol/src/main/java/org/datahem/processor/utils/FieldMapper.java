@@ -20,17 +20,17 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.URI;
-import java.net.URISyntaxException;
+//import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
+//import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-import java.util.AbstractMap.SimpleImmutableEntry;
+//import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.*;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
+//import java.net.MalformedURLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,14 +49,6 @@ public class FieldMapper{
 	    		.splitAsStream(url.getQuery())
 	        	.map(s -> Arrays.copyOf(s.split("="), 2))
                 .collect(HashMap::new, (m,v)->m.put(decode(v[0]), decode(v[1])), HashMap::putAll);
-	        	/*.collect(Collectors.toMap(
-                    s -> decode(s[0]), 
-                    s -> decode(s[1]),
-                    (k1, k2) -> {
-                        LOG.info("duplicate key found!");
-                        return k1;
-                    }
-                ));*/
         }catch(NullPointerException e) {
             LOG.error(e.toString());
     		return null;
@@ -70,14 +62,6 @@ public class FieldMapper{
 	    		.splitAsStream(uri.getQuery())
 	        	.map(s -> Arrays.copyOf(s.split("="), 2))
                 .collect(HashMap::new, (m,v)->m.put(decode(v[0]), decode(v[1])), HashMap::putAll);
-	        	/*.collect(Collectors.toMap(
-                    s -> decode(s[0]), 
-                    s -> decode(s[1]),
-                    (k1, k2) -> {
-                        LOG.info("duplicate key found!");
-                        return k1;
-                    }
-                ));*/
         }catch(NullPointerException e) {
             LOG.error("fieldMapFromURI NullPointerException: ", e);
     		return null;
@@ -95,7 +79,6 @@ public class FieldMapper{
     
     public static String decode(final String encoded) {
     	try {
-        	//return encoded == null ? "(not set)" : URLDecoder.decode(encoded, "UTF-8");
             return (encoded != null && !encoded.isEmpty() ? URLDecoder.decode(encoded, "UTF-8") : "(not set)");
     	} catch(final UnsupportedEncodingException e) {
             LOG.error("FieldMapper.decode Unsupported encoding error: ", e);

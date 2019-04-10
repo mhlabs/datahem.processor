@@ -29,8 +29,6 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.Objects;
-
 
 public class ProductEntity{
 	private static final Logger LOG = LoggerFactory.getLogger(ProductEntity.class);
@@ -59,16 +57,13 @@ public class ProductEntity{
 		ArrayList<Product> eventList = new ArrayList<>();
 		Map<String, String> impressionMap = new HashMap<>(paramMap);
         if(trigger(paramMap)){
-    			//LOG.info(paramMap.toString());
                 //START product action
     			Pattern productExclPattern = Pattern.compile("^(?!pr[0-9]{1,3}.*).*$");
     			HashMap<String, String> paramMapExclPr = paramMap
 					.keySet()
         			.stream()
-                    //.filter(Objects::nonNull)
         			.filter(productExclPattern.asPredicate())
                     .collect(HashMap::new, (m,v)->m.put(v, paramMap.get(v)), HashMap::putAll);
-        			//.collect(Collectors.toMap(s -> s, s -> paramMap.get(s)));
     			
     			//Group product parameters by product index 
     			final Pattern productIndexPattern = Pattern.compile("^pr([0-9]{1,3}).*");
@@ -86,10 +81,9 @@ public class ProductEntity{
     			for(Map.Entry<String, List<String>> entry : entries.entrySet()){
 		            String prefix = entry.getKey();
 		            List<String> keys = entry.getValue();
-		            Map<String, String> prParamMap = keys
+		            HashMap<String, String> prParamMap = keys
 		            	.stream()
-		            	.collect(Collectors.toMap(s -> s, s -> paramMap.get(s)));
-
+                        .collect(HashMap::new, (m,v)->m.put(v, paramMap.get(v)), HashMap::putAll);
 		            prParamMap.putAll(paramMapExclPr);
 
 		            try{
@@ -132,9 +126,9 @@ public class ProductEntity{
     			//Build a product hit for each product
     			for(Map.Entry<String, List<String>> ilEntry : ilEntries.entrySet()){
 		            List<String> ilKeys = ilEntry.getValue();
-		            Map<String, String> ilParamMap = ilKeys
+		            HashMap<String, String> ilParamMap = ilKeys
 		            	.stream()
-		            	.collect(Collectors.toMap(s -> s, s -> impressionMap.get(s)));
+                        .collect(HashMap::new, (m,v)->m.put(v, impressionMap.get(v)), HashMap::putAll);
 		            try{
                         Product.Builder builder = Product.newBuilder();
                         String ilIndex = FieldMapper.getParameterIndex(FieldMapper.getFirstParameterName(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}.*"), "^il([0-9]{1,3})pi[0-9]{1,3}.*");

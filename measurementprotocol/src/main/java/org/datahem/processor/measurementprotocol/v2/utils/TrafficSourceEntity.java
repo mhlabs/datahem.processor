@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-//import java.net.URL;
-//import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -67,9 +65,7 @@ public class TrafficSourceEntity{
     	this.socialNetworksPattern = pattern;
   	}
 	
-	
 	public TrafficSourceEntity(){}
-	
 	
 	private boolean trigger(Map<String, String> paramMap){
 		if(paramMap.get("t").equals("pageview")){
@@ -81,10 +77,8 @@ public class TrafficSourceEntity{
 	
 	private void parse(Map<String, String> paramMap){
 		try{
-            //URL url;
             URI uri;
             if(paramMap.get("dl") != null){
-                //url = new URL(paramMap.get("dlu"));
                 uri = new URI(paramMap.get("dl").replace(" ", "%20")); //IE11 fix
             }
 			else{
@@ -92,22 +86,12 @@ public class TrafficSourceEntity{
             }
             
             //Fix for Single Page Applications where dl and referrer stays the same for each hit but dp is updated
-            //if(url.getFile().equals(paramMap.get("dp")) || paramMap.get("dp") == null){
-            //LOG.info("uri: " + uri.toString());
-            //LOG.info("dl:" + paramMap.get("dl"));
-            //LOG.info("dp:" + paramMap.get("dp"));
-            //LOG.info((uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath()));
-            //LOG.info(Boolean.toString((uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath()).equals(paramMap.get("dp"))));
-            //LOG.info(Boolean.toString((paramMap.get("dp") == null && paramMap.get("dl") != null)));
-            //LOG.info(Boolean.toString((paramMap.get("dp") != null && paramMap.get("dl") == null)));
             if((uri.getQuery() != null ? uri.getPath() + "?" + uri.getQuery() : uri.getPath()).equals(paramMap.get("dp")) || 
                 (paramMap.get("dp") == null && paramMap.get("dl") != null) || 
                 (paramMap.get("dp") != null && paramMap.get("dl") == null)){
-				//LOG.info("traffic source true");
+
                 //Campaign traffic?
-                //if(null != url.getQuery()){
                 if(null != uri.getQuery()){
-					//Map<String, String> campaignMap = FieldMapper.fieldMapFromURL(url);
                     Map<String, String> campaignMap = FieldMapper.fieldMapFromURI(uri);
 					
                     //Google Search Ads traffic
@@ -191,9 +175,6 @@ public class TrafficSourceEntity{
         catch (URISyntaxException e) {
             LOG.error("URISyntaxException: ", e);
         }
-        //catch (MalformedURLException e) {
-        //    LOG.error(e.toString() + ", paramMap: " + paramMap.toString());
-        //}
         return;
 	}
 	
