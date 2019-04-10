@@ -15,8 +15,6 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  */
 
 import org.datahem.protobuf.measurementprotocol.v2.Product;
-import org.datahem.protobuf.measurementprotocol.v2.CustomDimension;
-import org.datahem.protobuf.measurementprotocol.v2.CustomMetric;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +29,6 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 
 public class ProductEntity{
 	private static final Logger LOG = LoggerFactory.getLogger(ProductEntity.class);
@@ -60,14 +57,13 @@ public class ProductEntity{
 		ArrayList<Product> eventList = new ArrayList<>();
 		Map<String, String> impressionMap = new HashMap<>(paramMap);
         if(trigger(paramMap)){
-    			
                 //START product action
     			Pattern productExclPattern = Pattern.compile("^(?!pr[0-9]{1,3}.*).*$");
-    			Map<String, String> paramMapExclPr = paramMap
+    			HashMap<String, String> paramMapExclPr = paramMap
 					.keySet()
         			.stream()
         			.filter(productExclPattern.asPredicate())
-        			.collect(Collectors.toMap(s -> s, s -> paramMap.get(s)));
+                    .collect(HashMap::new, (m,v)->m.put(v, paramMap.get(v)), HashMap::putAll);
     			
     			//Group product parameters by product index 
     			final Pattern productIndexPattern = Pattern.compile("^pr([0-9]{1,3}).*");
@@ -85,10 +81,11 @@ public class ProductEntity{
     			for(Map.Entry<String, List<String>> entry : entries.entrySet()){
 		            String prefix = entry.getKey();
 		            List<String> keys = entry.getValue();
-		            Map<String, String> prParamMap = keys
+		            HashMap<String, String> prParamMap = keys
 		            	.stream()
-		            	.collect(Collectors.toMap(s -> s, s -> paramMap.get(s)));
+                        .collect(HashMap::new, (m,v)->m.put(v, paramMap.get(v)), HashMap::putAll);
 		            prParamMap.putAll(paramMapExclPr);
+
 		            try{
                         Product.Builder builder = Product.newBuilder();
                         Optional.ofNullable(prParamMap.get("pr" + prefix + "id")).ifPresent(builder::setId);
@@ -129,9 +126,9 @@ public class ProductEntity{
     			//Build a product hit for each product
     			for(Map.Entry<String, List<String>> ilEntry : ilEntries.entrySet()){
 		            List<String> ilKeys = ilEntry.getValue();
-		            Map<String, String> ilParamMap = ilKeys
+		            HashMap<String, String> ilParamMap = ilKeys
 		            	.stream()
-		            	.collect(Collectors.toMap(s -> s, s -> impressionMap.get(s)));
+                        .collect(HashMap::new, (m,v)->m.put(v, impressionMap.get(v)), HashMap::putAll);
 		            try{
                         Product.Builder builder = Product.newBuilder();
                         String ilIndex = FieldMapper.getParameterIndex(FieldMapper.getFirstParameterName(ilParamMap, "il[0-9]{1,3}pi[0-9]{1,3}.*"), "^il([0-9]{1,3})pi[0-9]{1,3}.*");
@@ -158,76 +155,4 @@ public class ProductEntity{
 			return null;
 		}
 	}	
-
-    /*
-    private ArrayList<CustomDimension> getCustomDimensions(Map<String, String> prParamMap, String parameterPattern, String indexPattern){
-			ArrayList<CustomDimension> customDimensions = new ArrayList<>();
-            List<String> params = getParameters(prParamMap, parameterPattern);
-            for(String p : params){
-                CustomDimension.Builder builder = CustomDimension.newBuilder();
-                FieldMapper.intVal(getParameterIndex(p, indexPattern)).ifPresent(g -> builder.setIndex(g.intValue()));
-                Optional.ofNullable(prParamMap.get(p)).ifPresent(builder::setValue);
-                customDimensions.add(builder.build());
-            }
-            return customDimensions;
-    }
-
-    private ArrayList<CustomMetric> getCustomMetrics(Map<String, String> prParamMap, String parameterPattern, String indexPattern){
-			ArrayList<CustomMetric> customMetrics = new ArrayList<>();
-            List<String> params = getParameters(prParamMap, parameterPattern);
-            for(String p : params){
-                CustomMetric.Builder builder = CustomMetric.newBuilder();
-                FieldMapper.intVal(getParameterIndex(p, indexPattern)).ifPresent(g -> builder.setIndex(g.intValue()));
-                FieldMapper.intVal(prParamMap.get(p)).ifPresent(g -> builder.setValue(g.intValue()));
-                customMetrics.add(builder.build());
-            }
-            return customMetrics;
-    }
-
-    private String getFirstParameterValue(Map<String, String> prParamMap, String parameterPattern){
-        Pattern pattern = Pattern.compile(parameterPattern);
- 		Optional<String> firstElement = prParamMap
- 			.keySet()
- 			.stream()
- 			.filter(pattern.asPredicate())
-			.findFirst();
-        return prParamMap.get(firstElement.orElse(null));    
-    }
-
-    private String getFirstParameterName(Map<String, String> prParamMap, String parameterPattern){
-        Pattern pattern = Pattern.compile(parameterPattern);
- 		Optional<String> firstElement = prParamMap
- 			.keySet()
- 			.stream()
- 			.filter(pattern.asPredicate())
-			.findFirst();
-        return firstElement.orElse(null);    
-    }
-
-    private List<String> getParameters(Map<String, String> prParamMap, String parameterPattern){
-        Pattern pattern = Pattern.compile(parameterPattern);
- 		List<String> params = prParamMap
- 			.keySet()
- 			.stream()
- 			.filter(pattern.asPredicate())
-			.collect(Collectors.toList());
-        return params;    
-    }
-
-    private String getParameterIndex(String param, String indexPattern){
-		if(null == param){
-			return null;
-		}
-		else{
-			Pattern pattern = Pattern.compile(indexPattern);
-			Matcher matcher = pattern.matcher(param);
-			if(matcher.find() && matcher.group(1) != null){
-				return matcher.group(1);
-			}
-			else {
-				return null;
-			}
-		}
-	}
-    */
 }

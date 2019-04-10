@@ -7,7 +7,7 @@ import org.datahem.protobuf.measurementprotocol.v2.*;
 
 
 import java.util.Optional;
-import java.util.List;
+//import java.util.List;
 
 /*-
  * ========================LICENSE_START=================================
@@ -38,38 +38,31 @@ public class PayloadToMeasurementProtocolFn extends DoFn<PubsubMessage, Measurem
 	  		ValueProvider<String> socialNetworksPattern, 
             ValueProvider<String> includedHostnamesPattern, 
 	  		ValueProvider<String> excludedBotsPattern, 
-	  		//ValueProvider<String> siteSearchPattern,
+	  		ValueProvider<String> siteSearchPattern,
 	  		ValueProvider<String> timeZone) {
                 this.searchEnginesPattern = searchEnginesPattern;
 		     	this.ignoredReferersPattern = ignoredReferersPattern;
 		     	this.socialNetworksPattern = socialNetworksPattern;
                 this.includedHostnamesPattern = includedHostnamesPattern;
 		     	this.excludedBotsPattern = excludedBotsPattern;
-		     	//this.siteSearchPattern = siteSearchPattern;
+		     	this.siteSearchPattern = siteSearchPattern;
 		     	this.timeZone = timeZone;
 	   	}
         
-        
-
       	@ProcessElement      
       	public void processElement(ProcessContext c)  {
 	      	
 	      	PubsubMessage received = c.element();
 	        MeasurementProtocolBuilder mpb = new MeasurementProtocolBuilder();
-            /*
+            
 	        mpb.setSearchEnginesPattern(searchEnginesPattern.get());
 	        mpb.setIgnoredReferersPattern(ignoredReferersPattern.get());
 	        mpb.setSocialNetworksPattern(socialNetworksPattern.get());
-            */
 	        mpb.setIncludedHostnamesPattern(includedHostnamesPattern.get());
 	        mpb.setExcludedBotsPattern(excludedBotsPattern.get());
-	        //mpb.setSiteSearchPattern(siteSearchPattern.get());
+	        mpb.setSiteSearchPattern(siteSearchPattern.get());
 	        mpb.setTimeZone(timeZone.get());
 	        
-            /*
-	        MeasurementProtocol measurementProtocol = mpb.measurementProtocolFromPayload(received);
-	        c.output(measurementProtocol);	
-            */
             Optional<MeasurementProtocol> measurementProtocol = Optional.ofNullable(mpb.measurementProtocolFromPayload(received));
 	        if(measurementProtocol.isPresent()){
                 c.output(measurementProtocol.get());	

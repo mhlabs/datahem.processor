@@ -14,31 +14,25 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * =========================LICENSE_END==================================
  */
 
-import org.datahem.protobuf.measurementprotocol.v2.Device;
+import org.datahem.protobuf.measurementprotocol.v2.Geo;
 
 import java.util.Map;
 import java.util.Optional;
-import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.regex.Pattern;
 
-public class DeviceEntity{
+public class GeoEntity{	
+	private static final Logger LOG = LoggerFactory.getLogger(GeoEntity.class);
 	
-	private static final Logger LOG = LoggerFactory.getLogger(DeviceEntity.class);
+	public GeoEntity(){}
 	
-	public DeviceEntity(){}
-	
-	public Device build(Map<String, String> pm){
+	public Geo build(Map<String, String> pm){
         try{
-            Device.Builder builder = Device.newBuilder();
-            Optional.ofNullable(pm.get("vp")).ifPresent(builder::setBrowserSize);
-            Optional.ofNullable(pm.get("fl")).ifPresent(builder::setFlashVersion);
-            FieldMapper.intVal(pm.get("je")).ifPresent(g -> builder.setJavaEnabled(g.intValue()));
-            Optional.ofNullable(pm.get("ul")).ifPresent(builder::setLanguage);
-            Optional.ofNullable(pm.get("sd")).ifPresent(builder::setScreenColors);
-            Optional.ofNullable(pm.get("sr")).ifPresent(builder::setScreenResolution);
-            Optional.ofNullable(FieldMapper.getFirstParameterValue(pm, "ua|user-agent|User-Agent")).ifPresent(builder::setUserAgent);
+            Geo.Builder builder = Geo.newBuilder();
+            Optional.ofNullable(pm.get("X-AppEngine-Country")).ifPresent(builder::setCountry);
+            Optional.ofNullable(pm.get("X-AppEngine-Region")).ifPresent(builder::setRegion);
+            Optional.ofNullable(pm.get("X-AppEngine-City")).ifPresent(builder::setCity);
+            Optional.ofNullable(pm.get("X-AppEngine-CityLatLong")).ifPresent(builder::setCityLatLong);
             return builder.build();
         }
         catch(IllegalArgumentException e){

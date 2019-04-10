@@ -18,12 +18,8 @@ import org.datahem.protobuf.measurementprotocol.v2.Experiment;
 
 import java.util.Map;
 import java.util.Optional;
-import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-//import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -34,13 +30,8 @@ public class ExperimentEntity{
 
 	public ExperimentEntity(){}
 	
-	private boolean trigger(Map<String, String> paramMap){
-		return (null != paramMap.get("exp") || (null != paramMap.get("xid") && (null != paramMap.get("xvar"))));
-	}
-	
 	public ArrayList<Experiment> build(Map<String, String> pm){
 		ArrayList<Experiment> eventList = new ArrayList<>();
-		if(trigger(pm)){
     		try{
 				if(null != pm.get("exp")){
 					try{
@@ -70,16 +61,11 @@ public class ExperimentEntity{
 						return null;
 					}	
 				}
-
 				return eventList;
 			}
 			catch(IllegalArgumentException e){
 				LOG.error(e.toString());
 				return null;
 			}
-		}
-		else{
-			return null;
-		}
 	}
 }

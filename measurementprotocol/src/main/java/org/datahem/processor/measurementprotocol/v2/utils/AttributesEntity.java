@@ -14,31 +14,27 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * =========================LICENSE_END==================================
  */
 
-import org.datahem.protobuf.measurementprotocol.v2.Device;
+
+import org.datahem.protobuf.measurementprotocol.v2._ATTRIBUTES;
 
 import java.util.Map;
 import java.util.Optional;
-import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.regex.Pattern;
 
-public class DeviceEntity{
+
+public class AttributesEntity{
 	
-	private static final Logger LOG = LoggerFactory.getLogger(DeviceEntity.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AttributesEntity.class);
 	
-	public DeviceEntity(){}
+	public AttributesEntity(){}
 	
-	public Device build(Map<String, String> pm){
+	public _ATTRIBUTES build(Map<String, String> pm){
         try{
-            Device.Builder builder = Device.newBuilder();
-            Optional.ofNullable(pm.get("vp")).ifPresent(builder::setBrowserSize);
-            Optional.ofNullable(pm.get("fl")).ifPresent(builder::setFlashVersion);
-            FieldMapper.intVal(pm.get("je")).ifPresent(g -> builder.setJavaEnabled(g.intValue()));
-            Optional.ofNullable(pm.get("ul")).ifPresent(builder::setLanguage);
-            Optional.ofNullable(pm.get("sd")).ifPresent(builder::setScreenColors);
-            Optional.ofNullable(pm.get("sr")).ifPresent(builder::setScreenResolution);
-            Optional.ofNullable(FieldMapper.getFirstParameterValue(pm, "ua|user-agent|User-Agent")).ifPresent(builder::setUserAgent);
+            _ATTRIBUTES.Builder builder = _ATTRIBUTES.newBuilder();
+            Optional.ofNullable(pm.get("uuid")).ifPresent(builder::setUuid);
+            Optional.ofNullable(pm.get("source")).ifPresent(builder::setSource);
+            Optional.ofNullable(pm.get("timestamp")).ifPresent(builder::setTimestamp);
             return builder.build();
         }
         catch(IllegalArgumentException e){

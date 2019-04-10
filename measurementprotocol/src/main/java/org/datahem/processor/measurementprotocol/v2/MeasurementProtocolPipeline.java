@@ -15,7 +15,6 @@ package org.datahem.processor.measurementprotocol.v2;
  */
 
 import org.datahem.processor.utils.ProtobufUtils;
-import org.datahem.processor.measurementprotocol.v2.utils.MeasurementProtocolBuilder;
 import org.datahem.processor.measurementprotocol.v2.utils.PayloadToMeasurementProtocolFn;
 import org.datahem.processor.measurementprotocol.v2.utils.MeasurementProtocolToTableRowFn;
 import org.datahem.protobuf.measurementprotocol.v2.*;
@@ -23,51 +22,29 @@ import org.datahem.protobuf.measurementprotocol.v2.*;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.api.services.bigquery.model.TableFieldSchema;
-import com.google.api.services.bigquery.model.TableReference;
 import com.google.api.services.bigquery.model.TimePartitioning;
-import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.util.List;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
-import org.apache.beam.sdk.io.gcp.bigquery.BigQueryHelpers;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
-import org.apache.beam.sdk.metrics.Counter;
-import org.apache.beam.sdk.metrics.Metrics;
 import org.apache.beam.sdk.extensions.gcp.options.GcpOptions;
-import org.apache.beam.sdk.options.Default;
-import org.apache.beam.sdk.options.DefaultValueFactory;
 import org.apache.beam.sdk.options.Description;
 import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
-import org.apache.beam.sdk.options.Validation.Required;
 import org.apache.beam.sdk.options.ValueProvider;
-import org.apache.beam.sdk.options.ValueProvider.NestedValueProvider;
 import org.apache.beam.sdk.options.ValueProvider.StaticValueProvider;
-import org.apache.beam.sdk.transforms.Count;
-import org.apache.beam.sdk.transforms.DoFn;
-import org.apache.beam.sdk.transforms.MapElements;
-import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
-import org.apache.beam.sdk.transforms.SerializableFunction;
-import org.apache.beam.sdk.transforms.SimpleFunction;
 import org.apache.beam.sdk.transforms.windowing.FixedWindows;
 import org.apache.beam.sdk.transforms.windowing.Window;
-import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 
 import org.joda.time.Duration;
-import org.joda.time.Instant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.io.IOException;
 
 public class MeasurementProtocolPipeline {
 	private static final Logger LOG = LoggerFactory.getLogger(MeasurementProtocolPipeline.class);
@@ -76,8 +53,6 @@ public class MeasurementProtocolPipeline {
 	@Description("JSON Configuration string")
 	ValueProvider<String> getConfig();
 	void setConfig(ValueProvider<String> value);
-	//String getConfig();
-	//void setConfig(String value);
   }
 
   public static void main(String[] args) {
@@ -89,12 +64,10 @@ public class MeasurementProtocolPipeline {
     	List<TableFieldSchema> fieldsList = eventSchema.getFields();
     	TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
     	fieldsList.set(fieldsList.indexOf(date), date.setType("DATE"));
-        TableFieldSchema localDateTime = new TableFieldSchema().setName("local_date_time").setType("STRING").setMode("NULLABLE");
-    	fieldsList.set(fieldsList.indexOf(localDateTime), localDateTime.setType("DATETIME"));
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     
 	
-	for (Config.Account.Property property : Config.read(options.getConfig().get())) {
+	for (Config.Account.Property property : Config.read(options.getConfig().get())) { //Start account
 			String pubsubSubscription = "projects/" + options.as(GcpOptions.class).getProject() + "/subscriptions/" + property.id;
 			LOG.info("pubsibSubscription: " + pubsubSubscription);
 
@@ -105,17 +78,16 @@ public class MeasurementProtocolPipeline {
     			.fromSubscription(pubsubSubscription));
     
         for(Config.Account.Property.View view : property.views){ //Start view
+            String table = (view.tableSpec != null ? view.tableSpec : property.id + "." + view.id);
             PCollection<MeasurementProtocol> enrichedEntities = payload
                 .apply(view.id + " - Payload to MeasurementProtocol", 
                     ParDo.of(new PayloadToMeasurementProtocolFn(
-                        
                         StaticValueProvider.of(view.searchEnginesPattern),
                         StaticValueProvider.of(view.ignoredReferersPattern), 
                         StaticValueProvider.of(view.socialNetworksPattern),
-                        
                         StaticValueProvider.of(view.includedHostnamesPattern),
                         StaticValueProvider.of(view.excludedBotsPattern),
-                        //StaticValueProvider.of(view.siteSearchPattern),
+                        StaticValueProvider.of(view.siteSearchPattern),
                         StaticValueProvider.of(view.timeZone)
                     )));
             
@@ -129,8 +101,8 @@ public class MeasurementProtocolPipeline {
                 .apply(view.id + " - Write to bigquery", 
                     BigQueryIO
                         .writeTableRows()
-                        .to(property.id + "." + view.id)
-                        .withSchema(eventSchema)
+                        .to(table)
+                        .withSchema(schema)
                         .withTimePartitioning(new TimePartitioning().setField("date").setType("DAY"))
                         .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                         .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
@@ -144,7 +116,7 @@ public class MeasurementProtocolPipeline {
                             .to(pubSubTopic));
             }
         } //End View
-    }
+    } //End account
     pipeline.run();
   }
 }

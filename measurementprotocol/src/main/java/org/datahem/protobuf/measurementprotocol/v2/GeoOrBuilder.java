@@ -77,37 +77,19 @@ public interface GeoOrBuilder extends
 
   /**
    * <pre>
-   *X-AppEngine-CityLatLong. The approximate latitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
+   *X-AppEngine-CityLatLong. The approximate latitude and longitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
    * </pre>
    *
-   * <code>optional string latitude = 4;</code>
+   * <code>optional string cityLatLong = 4;</code>
    */
-  java.lang.String getLatitude();
+  java.lang.String getCityLatLong();
   /**
    * <pre>
-   *X-AppEngine-CityLatLong. The approximate latitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
+   *X-AppEngine-CityLatLong. The approximate latitude and longitude of users' city, derived from their IP addresses or Geographical IDs. Locations north of the equator have positive latitudes and locations south of the equator have negative latitudes.
    * </pre>
    *
-   * <code>optional string latitude = 4;</code>
+   * <code>optional string cityLatLong = 4;</code>
    */
   com.google.protobuf.ByteString
-      getLatitudeBytes();
-
-  /**
-   * <pre>
-   *X-AppEngine-CityLatLong. The approximate longitude of users' city, derived from their IP addresses or Geographical IDs. Locations east of the prime meridian have positive longitudes and locations west of the prime meridian have negative longitudes.
-   * </pre>
-   *
-   * <code>optional string longitude = 5;</code>
-   */
-  java.lang.String getLongitude();
-  /**
-   * <pre>
-   *X-AppEngine-CityLatLong. The approximate longitude of users' city, derived from their IP addresses or Geographical IDs. Locations east of the prime meridian have positive longitudes and locations west of the prime meridian have negative longitudes.
-   * </pre>
-   *
-   * <code>optional string longitude = 5;</code>
-   */
-  com.google.protobuf.ByteString
-      getLongitudeBytes();
+      getCityLatLongBytes();
 }

@@ -16,8 +16,6 @@ package org.datahem.processor.measurementprotocol.v2;
 
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +42,7 @@ public class Config {
 				public String excludedBotsPattern;
 				public String siteSearchPattern;
 				public String timeZone;
+                public String tableSpec;
                 public String pubSubTopic;
 			}
 		}
