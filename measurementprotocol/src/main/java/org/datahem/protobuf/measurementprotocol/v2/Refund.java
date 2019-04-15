@@ -109,7 +109,7 @@ public  final class Refund extends
   private volatile java.lang.Object currency_;
   /**
    * <pre>
-   * Refund currencey
+   * Refund currency
    * </pre>
    *
    * <code>optional string currency = 2;</code>
@@ -128,7 +128,7 @@ public  final class Refund extends
   }
   /**
    * <pre>
-   * Refund currencey
+   * Refund currency
    * </pre>
    *
    * <code>optional string currency = 2;</code>
@@ -477,7 +477,7 @@ public  final class Refund extends
     private java.lang.Object currency_ = "";
     /**
      * <pre>
-     * Refund currencey
+     * Refund currency
      * </pre>
      *
      * <code>optional string currency = 2;</code>
@@ -496,7 +496,7 @@ public  final class Refund extends
     }
     /**
      * <pre>
-     * Refund currencey
+     * Refund currency
      * </pre>
      *
      * <code>optional string currency = 2;</code>
@@ -516,7 +516,7 @@ public  final class Refund extends
     }
     /**
      * <pre>
-     * Refund currencey
+     * Refund currency
      * </pre>
      *
      * <code>optional string currency = 2;</code>
@@ -533,7 +533,7 @@ public  final class Refund extends
     }
     /**
      * <pre>
-     * Refund currencey
+     * Refund currency
      * </pre>
      *
      * <code>optional string currency = 2;</code>
@@ -546,7 +546,7 @@ public  final class Refund extends
     }
     /**
      * <pre>
-     * Refund currencey
+     * Refund currency
      * </pre>
      *
      * <code>optional string currency = 2;</code>

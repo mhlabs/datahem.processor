@@ -36,6 +36,7 @@ public  final class Transaction extends
     affiliation_ = "";
     currency_ = "";
     coupon_ = "";
+    action_ = "";
   }
 
   @java.lang.Override
@@ -100,6 +101,12 @@ public  final class Transaction extends
             java.lang.String s = input.readStringRequireUtf8();
 
             coupon_ = s;
+            break;
+          }
+          case 66: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            action_ = s;
             break;
           }
         }
@@ -332,6 +339,48 @@ public  final class Transaction extends
     }
   }
 
+  public static final int ACTION_FIELD_NUMBER = 8;
+  private volatile java.lang.Object action_;
+  /**
+   * <pre>
+   *pa
+   * </pre>
+   *
+   * <code>optional string action = 8;</code>
+   */
+  public java.lang.String getAction() {
+    java.lang.Object ref = action_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      action_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   *pa
+   * </pre>
+   *
+   * <code>optional string action = 8;</code>
+   */
+  public com.google.protobuf.ByteString
+      getActionBytes() {
+    java.lang.Object ref = action_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      action_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -365,6 +414,9 @@ public  final class Transaction extends
     if (!getCouponBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 7, coupon_);
     }
+    if (!getActionBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 8, action_);
+    }
   }
 
   public int getSerializedSize() {
@@ -395,6 +447,9 @@ public  final class Transaction extends
     }
     if (!getCouponBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, coupon_);
+    }
+    if (!getActionBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, action_);
     }
     memoizedSize = size;
     return size;
@@ -432,6 +487,8 @@ public  final class Transaction extends
         .equals(other.getCurrency());
     result = result && getCoupon()
         .equals(other.getCoupon());
+    result = result && getAction()
+        .equals(other.getAction());
     return result;
   }
 
@@ -459,6 +516,8 @@ public  final class Transaction extends
     hash = (53 * hash) + getCurrency().hashCode();
     hash = (37 * hash) + COUPON_FIELD_NUMBER;
     hash = (53 * hash) + getCoupon().hashCode();
+    hash = (37 * hash) + ACTION_FIELD_NUMBER;
+    hash = (53 * hash) + getAction().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -591,6 +650,8 @@ public  final class Transaction extends
 
       coupon_ = "";
 
+      action_ = "";
+
       return this;
     }
 
@@ -620,6 +681,7 @@ public  final class Transaction extends
       result.affiliation_ = affiliation_;
       result.currency_ = currency_;
       result.coupon_ = coupon_;
+      result.action_ = action_;
       onBuilt();
       return result;
     }
@@ -684,6 +746,10 @@ public  final class Transaction extends
       }
       if (!other.getCoupon().isEmpty()) {
         coupon_ = other.coupon_;
+        onChanged();
+      }
+      if (!other.getAction().isEmpty()) {
+        action_ = other.action_;
         onChanged();
       }
       onChanged();
@@ -1178,6 +1244,95 @@ public  final class Transaction extends
   checkByteStringIsUtf8(value);
       
       coupon_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object action_ = "";
+    /**
+     * <pre>
+     *pa
+     * </pre>
+     *
+     * <code>optional string action = 8;</code>
+     */
+    public java.lang.String getAction() {
+      java.lang.Object ref = action_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        action_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <pre>
+     *pa
+     * </pre>
+     *
+     * <code>optional string action = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getActionBytes() {
+      java.lang.Object ref = action_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        action_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     *pa
+     * </pre>
+     *
+     * <code>optional string action = 8;</code>
+     */
+    public Builder setAction(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      action_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *pa
+     * </pre>
+     *
+     * <code>optional string action = 8;</code>
+     */
+    public Builder clearAction() {
+      
+      action_ = getDefaultInstance().getAction();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *pa
+     * </pre>
+     *
+     * <code>optional string action = 8;</code>
+     */
+    public Builder setActionBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      action_ = value;
       onChanged();
       return this;
     }

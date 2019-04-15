@@ -32,7 +32,7 @@ public interface RefundOrBuilder extends
 
   /**
    * <pre>
-   * Refund currencey
+   * Refund currency
    * </pre>
    *
    * <code>optional string currency = 2;</code>
@@ -40,7 +40,7 @@ public interface RefundOrBuilder extends
   java.lang.String getCurrency();
   /**
    * <pre>
-   * Refund currencey
+   * Refund currency
    * </pre>
    *
    * <code>optional string currency = 2;</code>

@@ -60,10 +60,32 @@ public class MeasurementProtocolPipeline {
     Pipeline pipeline = Pipeline.create(options);
     // Create schemas from protocol buffers
     
-    TableSchema eventSchema = ProtobufUtils.makeTableSchema(MeasurementProtocol.getDescriptor());
+        TableSchema eventSchema = ProtobufUtils.makeTableSchema(MeasurementProtocol.getDescriptor());
     	List<TableFieldSchema> fieldsList = eventSchema.getFields();
-    	TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
-    	fieldsList.set(fieldsList.indexOf(date), date.setType("DATE"));
+
+        //change date partition column from string to date type
+        TableFieldSchema partition = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
+    	fieldsList.set(fieldsList.indexOf(partition), partition.setType("DATE"));
+
+        //Change date and time related dimensions from string to datetime, date and time types
+        TableFieldSchema timeMessage = new TableFieldSchema().setName("time").setType("RECORD").setMode("NULLABLE");
+        List<TableFieldSchema> timeMessageList = fieldsList.get(fieldsList.indexOf(timeMessage)).getFields();
+        TableFieldSchema dateTime = new TableFieldSchema().setName("dateTime").setType("STRING").setMode("NULLABLE");
+    	timeMessageList.set(timeMessageList.indexOf(dateTime), dateTime.setType("DATETIME"));
+        TableFieldSchema time = new TableFieldSchema().setName("time").setType("STRING").setMode("NULLABLE");
+    	timeMessageList.set(timeMessageList.indexOf(time), time.setType("TIME"));
+        TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
+    	timeMessageList.set(timeMessageList.indexOf(date), date.setType("DATE"));
+        fieldsList.set(fieldsList.indexOf(timeMessage), timeMessage.setFields(timeMessageList));
+        /*
+        fieldsList.set(fieldsList.indexOf(timeMessage), timeMessage.setFields(Arrays.asList(
+                new TableFieldSchema().setName("dateTime").setType("DATETIME"),
+                new TableFieldSchema().setName("time").setType("TIME"),
+                new TableFieldSchema().setName("date").setType("DATE"),
+                new TableFieldSchema().setName("timeZone").setType("STRING"),
+          ))
+        );*/
+    	
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     
 	
