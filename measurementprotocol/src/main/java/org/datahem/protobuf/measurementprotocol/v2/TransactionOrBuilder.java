@@ -119,4 +119,22 @@ public interface TransactionOrBuilder extends
    */
   com.google.protobuf.ByteString
       getCouponBytes();
+
+  /**
+   * <pre>
+   *pa
+   * </pre>
+   *
+   * <code>optional string action = 8;</code>
+   */
+  java.lang.String getAction();
+  /**
+   * <pre>
+   *pa
+   * </pre>
+   *
+   * <code>optional string action = 8;</code>
+   */
+  com.google.protobuf.ByteString
+      getActionBytes();
 }

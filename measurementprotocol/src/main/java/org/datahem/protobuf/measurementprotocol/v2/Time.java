@@ -32,14 +32,6 @@ public  final class Time extends
     dateTime_ = "";
     date_ = "";
     time_ = "";
-    year_ = 0;
-    month_ = 0;
-    week_ = 0;
-    day_ = 0;
-    hour_ = 0;
-    minute_ = 0;
-    second_ = 0;
-    weekDay_ = 0;
     timeZone_ = "";
   }
 
@@ -86,47 +78,7 @@ public  final class Time extends
             time_ = s;
             break;
           }
-          case 32: {
-
-            year_ = input.readInt32();
-            break;
-          }
-          case 40: {
-
-            month_ = input.readInt32();
-            break;
-          }
-          case 48: {
-
-            week_ = input.readInt32();
-            break;
-          }
-          case 56: {
-
-            day_ = input.readInt32();
-            break;
-          }
-          case 64: {
-
-            hour_ = input.readInt32();
-            break;
-          }
-          case 72: {
-
-            minute_ = input.readInt32();
-            break;
-          }
-          case 80: {
-
-            second_ = input.readInt32();
-            break;
-          }
-          case 88: {
-
-            weekDay_ = input.readInt32();
-            break;
-          }
-          case 98: {
+          case 34: {
             java.lang.String s = input.readStringRequireUtf8();
 
             timeZone_ = s;
@@ -201,7 +153,7 @@ public  final class Time extends
   private volatile java.lang.Object date_;
   /**
    * <pre>
-   * local date
+   * local date YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
    * </pre>
    *
    * <code>optional string date = 2;</code>
@@ -220,7 +172,7 @@ public  final class Time extends
   }
   /**
    * <pre>
-   * local date
+   * local date YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
    * </pre>
    *
    * <code>optional string date = 2;</code>
@@ -243,7 +195,7 @@ public  final class Time extends
   private volatile java.lang.Object time_;
   /**
    * <pre>
-   * local time
+   * local time [H]H:[M]M:[S]S[.DDDDDD]
    * </pre>
    *
    * <code>optional string time = 3;</code>
@@ -262,7 +214,7 @@ public  final class Time extends
   }
   /**
    * <pre>
-   * local time
+   * local time [H]H:[M]M:[S]S[.DDDDDD]
    * </pre>
    *
    * <code>optional string time = 3;</code>
@@ -281,118 +233,14 @@ public  final class Time extends
     }
   }
 
-  public static final int YEAR_FIELD_NUMBER = 4;
-  private int year_;
-  /**
-   * <pre>
-   * local year
-   * </pre>
-   *
-   * <code>optional int32 year = 4;</code>
-   */
-  public int getYear() {
-    return year_;
-  }
-
-  public static final int MONTH_FIELD_NUMBER = 5;
-  private int month_;
-  /**
-   * <pre>
-   * local month
-   * </pre>
-   *
-   * <code>optional int32 month = 5;</code>
-   */
-  public int getMonth() {
-    return month_;
-  }
-
-  public static final int WEEK_FIELD_NUMBER = 6;
-  private int week_;
-  /**
-   * <pre>
-   * local week number
-   * </pre>
-   *
-   * <code>optional int32 week = 6;</code>
-   */
-  public int getWeek() {
-    return week_;
-  }
-
-  public static final int DAY_FIELD_NUMBER = 7;
-  private int day_;
-  /**
-   * <pre>
-   * local day number
-   * </pre>
-   *
-   * <code>optional int32 day = 7;</code>
-   */
-  public int getDay() {
-    return day_;
-  }
-
-  public static final int HOUR_FIELD_NUMBER = 8;
-  private int hour_;
-  /**
-   * <pre>
-   * local hour in which the hit occurred (0 to 23).
-   * </pre>
-   *
-   * <code>optional int32 hour = 8;</code>
-   */
-  public int getHour() {
-    return hour_;
-  }
-
-  public static final int MINUTE_FIELD_NUMBER = 9;
-  private int minute_;
-  /**
-   * <pre>
-   * local minute in which the hit occurred (0 to 59).
-   * </pre>
-   *
-   * <code>optional int32 minute = 9;</code>
-   */
-  public int getMinute() {
-    return minute_;
-  }
-
-  public static final int SECOND_FIELD_NUMBER = 10;
-  private int second_;
-  /**
-   * <pre>
-   * local second
-   * </pre>
-   *
-   * <code>optional int32 second = 10;</code>
-   */
-  public int getSecond() {
-    return second_;
-  }
-
-  public static final int WEEKDAY_FIELD_NUMBER = 11;
-  private int weekDay_;
-  /**
-   * <pre>
-   * local day of week
-   * </pre>
-   *
-   * <code>optional int32 weekDay = 11;</code>
-   */
-  public int getWeekDay() {
-    return weekDay_;
-  }
-
-  public static final int TIMEZONE_FIELD_NUMBER = 12;
+  public static final int TIMEZONE_FIELD_NUMBER = 4;
   private volatile java.lang.Object timeZone_;
   /**
    * <pre>
-   * local timeZone
+   * local timeZone continent/[region/]city
    * </pre>
    *
-   * <code>optional string timeZone = 12;</code>
+   * <code>optional string timeZone = 4;</code>
    */
   public java.lang.String getTimeZone() {
     java.lang.Object ref = timeZone_;
@@ -408,10 +256,10 @@ public  final class Time extends
   }
   /**
    * <pre>
-   * local timeZone
+   * local timeZone continent/[region/]city
    * </pre>
    *
-   * <code>optional string timeZone = 12;</code>
+   * <code>optional string timeZone = 4;</code>
    */
   public com.google.protobuf.ByteString
       getTimeZoneBytes() {
@@ -448,32 +296,8 @@ public  final class Time extends
     if (!getTimeBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, time_);
     }
-    if (year_ != 0) {
-      output.writeInt32(4, year_);
-    }
-    if (month_ != 0) {
-      output.writeInt32(5, month_);
-    }
-    if (week_ != 0) {
-      output.writeInt32(6, week_);
-    }
-    if (day_ != 0) {
-      output.writeInt32(7, day_);
-    }
-    if (hour_ != 0) {
-      output.writeInt32(8, hour_);
-    }
-    if (minute_ != 0) {
-      output.writeInt32(9, minute_);
-    }
-    if (second_ != 0) {
-      output.writeInt32(10, second_);
-    }
-    if (weekDay_ != 0) {
-      output.writeInt32(11, weekDay_);
-    }
     if (!getTimeZoneBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 12, timeZone_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, timeZone_);
     }
   }
 
@@ -491,40 +315,8 @@ public  final class Time extends
     if (!getTimeBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, time_);
     }
-    if (year_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(4, year_);
-    }
-    if (month_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(5, month_);
-    }
-    if (week_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(6, week_);
-    }
-    if (day_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(7, day_);
-    }
-    if (hour_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(8, hour_);
-    }
-    if (minute_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(9, minute_);
-    }
-    if (second_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(10, second_);
-    }
-    if (weekDay_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(11, weekDay_);
-    }
     if (!getTimeZoneBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, timeZone_);
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, timeZone_);
     }
     memoizedSize = size;
     return size;
@@ -548,22 +340,6 @@ public  final class Time extends
         .equals(other.getDate());
     result = result && getTime()
         .equals(other.getTime());
-    result = result && (getYear()
-        == other.getYear());
-    result = result && (getMonth()
-        == other.getMonth());
-    result = result && (getWeek()
-        == other.getWeek());
-    result = result && (getDay()
-        == other.getDay());
-    result = result && (getHour()
-        == other.getHour());
-    result = result && (getMinute()
-        == other.getMinute());
-    result = result && (getSecond()
-        == other.getSecond());
-    result = result && (getWeekDay()
-        == other.getWeekDay());
     result = result && getTimeZone()
         .equals(other.getTimeZone());
     return result;
@@ -582,22 +358,6 @@ public  final class Time extends
     hash = (53 * hash) + getDate().hashCode();
     hash = (37 * hash) + TIME_FIELD_NUMBER;
     hash = (53 * hash) + getTime().hashCode();
-    hash = (37 * hash) + YEAR_FIELD_NUMBER;
-    hash = (53 * hash) + getYear();
-    hash = (37 * hash) + MONTH_FIELD_NUMBER;
-    hash = (53 * hash) + getMonth();
-    hash = (37 * hash) + WEEK_FIELD_NUMBER;
-    hash = (53 * hash) + getWeek();
-    hash = (37 * hash) + DAY_FIELD_NUMBER;
-    hash = (53 * hash) + getDay();
-    hash = (37 * hash) + HOUR_FIELD_NUMBER;
-    hash = (53 * hash) + getHour();
-    hash = (37 * hash) + MINUTE_FIELD_NUMBER;
-    hash = (53 * hash) + getMinute();
-    hash = (37 * hash) + SECOND_FIELD_NUMBER;
-    hash = (53 * hash) + getSecond();
-    hash = (37 * hash) + WEEKDAY_FIELD_NUMBER;
-    hash = (53 * hash) + getWeekDay();
     hash = (37 * hash) + TIMEZONE_FIELD_NUMBER;
     hash = (53 * hash) + getTimeZone().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
@@ -724,22 +484,6 @@ public  final class Time extends
 
       time_ = "";
 
-      year_ = 0;
-
-      month_ = 0;
-
-      week_ = 0;
-
-      day_ = 0;
-
-      hour_ = 0;
-
-      minute_ = 0;
-
-      second_ = 0;
-
-      weekDay_ = 0;
-
       timeZone_ = "";
 
       return this;
@@ -767,14 +511,6 @@ public  final class Time extends
       result.dateTime_ = dateTime_;
       result.date_ = date_;
       result.time_ = time_;
-      result.year_ = year_;
-      result.month_ = month_;
-      result.week_ = week_;
-      result.day_ = day_;
-      result.hour_ = hour_;
-      result.minute_ = minute_;
-      result.second_ = second_;
-      result.weekDay_ = weekDay_;
       result.timeZone_ = timeZone_;
       onBuilt();
       return result;
@@ -828,30 +564,6 @@ public  final class Time extends
       if (!other.getTime().isEmpty()) {
         time_ = other.time_;
         onChanged();
-      }
-      if (other.getYear() != 0) {
-        setYear(other.getYear());
-      }
-      if (other.getMonth() != 0) {
-        setMonth(other.getMonth());
-      }
-      if (other.getWeek() != 0) {
-        setWeek(other.getWeek());
-      }
-      if (other.getDay() != 0) {
-        setDay(other.getDay());
-      }
-      if (other.getHour() != 0) {
-        setHour(other.getHour());
-      }
-      if (other.getMinute() != 0) {
-        setMinute(other.getMinute());
-      }
-      if (other.getSecond() != 0) {
-        setSecond(other.getSecond());
-      }
-      if (other.getWeekDay() != 0) {
-        setWeekDay(other.getWeekDay());
       }
       if (!other.getTimeZone().isEmpty()) {
         timeZone_ = other.timeZone_;
@@ -975,7 +687,7 @@ public  final class Time extends
     private java.lang.Object date_ = "";
     /**
      * <pre>
-     * local date
+     * local date YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
      * </pre>
      *
      * <code>optional string date = 2;</code>
@@ -994,7 +706,7 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local date
+     * local date YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
      * </pre>
      *
      * <code>optional string date = 2;</code>
@@ -1014,7 +726,7 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local date
+     * local date YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
      * </pre>
      *
      * <code>optional string date = 2;</code>
@@ -1031,7 +743,7 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local date
+     * local date YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
      * </pre>
      *
      * <code>optional string date = 2;</code>
@@ -1044,7 +756,7 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local date
+     * local date YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
      * </pre>
      *
      * <code>optional string date = 2;</code>
@@ -1064,7 +776,7 @@ public  final class Time extends
     private java.lang.Object time_ = "";
     /**
      * <pre>
-     * local time
+     * local time [H]H:[M]M:[S]S[.DDDDDD]
      * </pre>
      *
      * <code>optional string time = 3;</code>
@@ -1083,7 +795,7 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local time
+     * local time [H]H:[M]M:[S]S[.DDDDDD]
      * </pre>
      *
      * <code>optional string time = 3;</code>
@@ -1103,7 +815,7 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local time
+     * local time [H]H:[M]M:[S]S[.DDDDDD]
      * </pre>
      *
      * <code>optional string time = 3;</code>
@@ -1120,7 +832,7 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local time
+     * local time [H]H:[M]M:[S]S[.DDDDDD]
      * </pre>
      *
      * <code>optional string time = 3;</code>
@@ -1133,7 +845,7 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local time
+     * local time [H]H:[M]M:[S]S[.DDDDDD]
      * </pre>
      *
      * <code>optional string time = 3;</code>
@@ -1150,317 +862,13 @@ public  final class Time extends
       return this;
     }
 
-    private int year_ ;
-    /**
-     * <pre>
-     * local year
-     * </pre>
-     *
-     * <code>optional int32 year = 4;</code>
-     */
-    public int getYear() {
-      return year_;
-    }
-    /**
-     * <pre>
-     * local year
-     * </pre>
-     *
-     * <code>optional int32 year = 4;</code>
-     */
-    public Builder setYear(int value) {
-      
-      year_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * local year
-     * </pre>
-     *
-     * <code>optional int32 year = 4;</code>
-     */
-    public Builder clearYear() {
-      
-      year_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private int month_ ;
-    /**
-     * <pre>
-     * local month
-     * </pre>
-     *
-     * <code>optional int32 month = 5;</code>
-     */
-    public int getMonth() {
-      return month_;
-    }
-    /**
-     * <pre>
-     * local month
-     * </pre>
-     *
-     * <code>optional int32 month = 5;</code>
-     */
-    public Builder setMonth(int value) {
-      
-      month_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * local month
-     * </pre>
-     *
-     * <code>optional int32 month = 5;</code>
-     */
-    public Builder clearMonth() {
-      
-      month_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private int week_ ;
-    /**
-     * <pre>
-     * local week number
-     * </pre>
-     *
-     * <code>optional int32 week = 6;</code>
-     */
-    public int getWeek() {
-      return week_;
-    }
-    /**
-     * <pre>
-     * local week number
-     * </pre>
-     *
-     * <code>optional int32 week = 6;</code>
-     */
-    public Builder setWeek(int value) {
-      
-      week_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * local week number
-     * </pre>
-     *
-     * <code>optional int32 week = 6;</code>
-     */
-    public Builder clearWeek() {
-      
-      week_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private int day_ ;
-    /**
-     * <pre>
-     * local day number
-     * </pre>
-     *
-     * <code>optional int32 day = 7;</code>
-     */
-    public int getDay() {
-      return day_;
-    }
-    /**
-     * <pre>
-     * local day number
-     * </pre>
-     *
-     * <code>optional int32 day = 7;</code>
-     */
-    public Builder setDay(int value) {
-      
-      day_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * local day number
-     * </pre>
-     *
-     * <code>optional int32 day = 7;</code>
-     */
-    public Builder clearDay() {
-      
-      day_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private int hour_ ;
-    /**
-     * <pre>
-     * local hour in which the hit occurred (0 to 23).
-     * </pre>
-     *
-     * <code>optional int32 hour = 8;</code>
-     */
-    public int getHour() {
-      return hour_;
-    }
-    /**
-     * <pre>
-     * local hour in which the hit occurred (0 to 23).
-     * </pre>
-     *
-     * <code>optional int32 hour = 8;</code>
-     */
-    public Builder setHour(int value) {
-      
-      hour_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * local hour in which the hit occurred (0 to 23).
-     * </pre>
-     *
-     * <code>optional int32 hour = 8;</code>
-     */
-    public Builder clearHour() {
-      
-      hour_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private int minute_ ;
-    /**
-     * <pre>
-     * local minute in which the hit occurred (0 to 59).
-     * </pre>
-     *
-     * <code>optional int32 minute = 9;</code>
-     */
-    public int getMinute() {
-      return minute_;
-    }
-    /**
-     * <pre>
-     * local minute in which the hit occurred (0 to 59).
-     * </pre>
-     *
-     * <code>optional int32 minute = 9;</code>
-     */
-    public Builder setMinute(int value) {
-      
-      minute_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * local minute in which the hit occurred (0 to 59).
-     * </pre>
-     *
-     * <code>optional int32 minute = 9;</code>
-     */
-    public Builder clearMinute() {
-      
-      minute_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private int second_ ;
-    /**
-     * <pre>
-     * local second
-     * </pre>
-     *
-     * <code>optional int32 second = 10;</code>
-     */
-    public int getSecond() {
-      return second_;
-    }
-    /**
-     * <pre>
-     * local second
-     * </pre>
-     *
-     * <code>optional int32 second = 10;</code>
-     */
-    public Builder setSecond(int value) {
-      
-      second_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * local second
-     * </pre>
-     *
-     * <code>optional int32 second = 10;</code>
-     */
-    public Builder clearSecond() {
-      
-      second_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private int weekDay_ ;
-    /**
-     * <pre>
-     * local day of week
-     * </pre>
-     *
-     * <code>optional int32 weekDay = 11;</code>
-     */
-    public int getWeekDay() {
-      return weekDay_;
-    }
-    /**
-     * <pre>
-     * local day of week
-     * </pre>
-     *
-     * <code>optional int32 weekDay = 11;</code>
-     */
-    public Builder setWeekDay(int value) {
-      
-      weekDay_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * local day of week
-     * </pre>
-     *
-     * <code>optional int32 weekDay = 11;</code>
-     */
-    public Builder clearWeekDay() {
-      
-      weekDay_ = 0;
-      onChanged();
-      return this;
-    }
-
     private java.lang.Object timeZone_ = "";
     /**
      * <pre>
-     * local timeZone
+     * local timeZone continent/[region/]city
      * </pre>
      *
-     * <code>optional string timeZone = 12;</code>
+     * <code>optional string timeZone = 4;</code>
      */
     public java.lang.String getTimeZone() {
       java.lang.Object ref = timeZone_;
@@ -1476,10 +884,10 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local timeZone
+     * local timeZone continent/[region/]city
      * </pre>
      *
-     * <code>optional string timeZone = 12;</code>
+     * <code>optional string timeZone = 4;</code>
      */
     public com.google.protobuf.ByteString
         getTimeZoneBytes() {
@@ -1496,10 +904,10 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local timeZone
+     * local timeZone continent/[region/]city
      * </pre>
      *
-     * <code>optional string timeZone = 12;</code>
+     * <code>optional string timeZone = 4;</code>
      */
     public Builder setTimeZone(
         java.lang.String value) {
@@ -1513,10 +921,10 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local timeZone
+     * local timeZone continent/[region/]city
      * </pre>
      *
-     * <code>optional string timeZone = 12;</code>
+     * <code>optional string timeZone = 4;</code>
      */
     public Builder clearTimeZone() {
       
@@ -1526,10 +934,10 @@ public  final class Time extends
     }
     /**
      * <pre>
-     * local timeZone
+     * local timeZone continent/[region/]city
      * </pre>
      *
-     * <code>optional string timeZone = 12;</code>
+     * <code>optional string timeZone = 4;</code>
      */
     public Builder setTimeZoneBytes(
         com.google.protobuf.ByteString value) {

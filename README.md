@@ -2,6 +2,10 @@
 Process bounded and unbounded data and write to PubSub and BigQuery, currently using Google Dataflow (Apache Beam) and supports processing of Google Analytics hits and AWS Kinesis events
 
 # Version:
+## 1.1.0 (2019-04-16):  Measurement Protocol exclude IP-filter & date and time dimensions
+Added support for IP-filters
+Modified schema for time dimensions to bigquery types
+
 ## 1.0.0 (2019-04-10): AGPL and Measurement Protocol version 2
 Changed license to AGPL 3.0 or later
 Added version 2 of pipeline for measurement protocol with more strictly typed schema.

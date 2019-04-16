@@ -184,7 +184,8 @@ public class TrafficSourceEntity{
 				TrafficSource.Builder builder = TrafficSource.newBuilder();
                 Optional.ofNullable(pm.get("ci")).ifPresent(builder::setId);
                 Optional.ofNullable(pm.get("cn")).ifPresent(builder::setName);
-                Optional.ofNullable(pm.get("cc")).ifPresent(builder::setMedium);
+                Optional.ofNullable(pm.get("cm")).ifPresent(builder::setMedium);
+                Optional.ofNullable(pm.get("cc")).ifPresent(builder::setContent);
                 Optional.ofNullable(pm.get("cs")).ifPresent(builder::setSource);
                 Optional.ofNullable(pm.get("ck")).ifPresent(builder::setKeyword);
                 Optional.ofNullable(pm.get("gclid")).ifPresent(builder::setGclId);

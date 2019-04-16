@@ -41,7 +41,7 @@ public interface TimeOrBuilder extends
 
   /**
    * <pre>
-   * local date
+   * local date YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
    * </pre>
    *
    * <code>optional string date = 2;</code>
@@ -49,7 +49,7 @@ public interface TimeOrBuilder extends
   java.lang.String getDate();
   /**
    * <pre>
-   * local date
+   * local date YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.DDDDDD]]
    * </pre>
    *
    * <code>optional string date = 2;</code>
@@ -59,7 +59,7 @@ public interface TimeOrBuilder extends
 
   /**
    * <pre>
-   * local time
+   * local time [H]H:[M]M:[S]S[.DDDDDD]
    * </pre>
    *
    * <code>optional string time = 3;</code>
@@ -67,7 +67,7 @@ public interface TimeOrBuilder extends
   java.lang.String getTime();
   /**
    * <pre>
-   * local time
+   * local time [H]H:[M]M:[S]S[.DDDDDD]
    * </pre>
    *
    * <code>optional string time = 3;</code>
@@ -77,90 +77,18 @@ public interface TimeOrBuilder extends
 
   /**
    * <pre>
-   * local year
+   * local timeZone continent/[region/]city
    * </pre>
    *
-   * <code>optional int32 year = 4;</code>
-   */
-  int getYear();
-
-  /**
-   * <pre>
-   * local month
-   * </pre>
-   *
-   * <code>optional int32 month = 5;</code>
-   */
-  int getMonth();
-
-  /**
-   * <pre>
-   * local week number
-   * </pre>
-   *
-   * <code>optional int32 week = 6;</code>
-   */
-  int getWeek();
-
-  /**
-   * <pre>
-   * local day number
-   * </pre>
-   *
-   * <code>optional int32 day = 7;</code>
-   */
-  int getDay();
-
-  /**
-   * <pre>
-   * local hour in which the hit occurred (0 to 23).
-   * </pre>
-   *
-   * <code>optional int32 hour = 8;</code>
-   */
-  int getHour();
-
-  /**
-   * <pre>
-   * local minute in which the hit occurred (0 to 59).
-   * </pre>
-   *
-   * <code>optional int32 minute = 9;</code>
-   */
-  int getMinute();
-
-  /**
-   * <pre>
-   * local second
-   * </pre>
-   *
-   * <code>optional int32 second = 10;</code>
-   */
-  int getSecond();
-
-  /**
-   * <pre>
-   * local day of week
-   * </pre>
-   *
-   * <code>optional int32 weekDay = 11;</code>
-   */
-  int getWeekDay();
-
-  /**
-   * <pre>
-   * local timeZone
-   * </pre>
-   *
-   * <code>optional string timeZone = 12;</code>
+   * <code>optional string timeZone = 4;</code>
    */
   java.lang.String getTimeZone();
   /**
    * <pre>
-   * local timeZone
+   * local timeZone continent/[region/]city
    * </pre>
    *
-   * <code>optional string timeZone = 12;</code>
+   * <code>optional string timeZone = 4;</code>
    */
   com.google.protobuf.ByteString
       getTimeZoneBytes();

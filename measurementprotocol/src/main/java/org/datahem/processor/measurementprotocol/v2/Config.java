@@ -44,6 +44,7 @@ public class Config {
 				public String timeZone;
                 public String tableSpec;
                 public String pubSubTopic;
+                public String excludedIpsPattern;
 			}
 		}
 	}

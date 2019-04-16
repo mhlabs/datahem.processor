@@ -31,6 +31,7 @@ public class PayloadToMeasurementProtocolFn extends DoFn<PubsubMessage, Measurem
 		ValueProvider<String> excludedBotsPattern;
 		ValueProvider<String> siteSearchPattern;
 		ValueProvider<String> timeZone;
+        ValueProvider<String> excludedIpsPattern;
 		
 	  	public PayloadToMeasurementProtocolFn(
 	  		ValueProvider<String> searchEnginesPattern, 
@@ -39,7 +40,8 @@ public class PayloadToMeasurementProtocolFn extends DoFn<PubsubMessage, Measurem
             ValueProvider<String> includedHostnamesPattern, 
 	  		ValueProvider<String> excludedBotsPattern, 
 	  		ValueProvider<String> siteSearchPattern,
-	  		ValueProvider<String> timeZone) {
+	  		ValueProvider<String> timeZone,
+            ValueProvider<String> excludedIpsPattern) {
                 this.searchEnginesPattern = searchEnginesPattern;
 		     	this.ignoredReferersPattern = ignoredReferersPattern;
 		     	this.socialNetworksPattern = socialNetworksPattern;
@@ -47,6 +49,7 @@ public class PayloadToMeasurementProtocolFn extends DoFn<PubsubMessage, Measurem
 		     	this.excludedBotsPattern = excludedBotsPattern;
 		     	this.siteSearchPattern = siteSearchPattern;
 		     	this.timeZone = timeZone;
+                this.excludedIpsPattern = excludedIpsPattern;
 	   	}
         
       	@ProcessElement      
@@ -62,6 +65,7 @@ public class PayloadToMeasurementProtocolFn extends DoFn<PubsubMessage, Measurem
 	        mpb.setExcludedBotsPattern(excludedBotsPattern.get());
 	        mpb.setSiteSearchPattern(siteSearchPattern.get());
 	        mpb.setTimeZone(timeZone.get());
+            mpb.setExcludedIpsPattern(excludedIpsPattern.get());
 	        
             Optional<MeasurementProtocol> measurementProtocol = Optional.ofNullable(mpb.measurementProtocolFromPayload(received));
 	        if(measurementProtocol.isPresent()){

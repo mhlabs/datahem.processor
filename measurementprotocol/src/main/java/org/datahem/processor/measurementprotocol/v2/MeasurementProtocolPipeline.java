@@ -25,6 +25,7 @@ import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TimePartitioning;
 
 import java.util.List;
+import java.util.Arrays;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
@@ -60,10 +61,23 @@ public class MeasurementProtocolPipeline {
     Pipeline pipeline = Pipeline.create(options);
     // Create schemas from protocol buffers
     
-    TableSchema eventSchema = ProtobufUtils.makeTableSchema(MeasurementProtocol.getDescriptor());
+        TableSchema eventSchema = ProtobufUtils.makeTableSchema(MeasurementProtocol.getDescriptor());
     	List<TableFieldSchema> fieldsList = eventSchema.getFields();
-    	TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
-    	fieldsList.set(fieldsList.indexOf(date), date.setType("DATE"));
+
+        //change date partition column from string to date type
+    	TableFieldSchema partition = fieldsList.stream().filter(s -> "date".equals(s.getName())).findAny().orElse(null);
+        fieldsList.set(fieldsList.indexOf(partition), partition.setType("DATE"));
+
+        //Change date and time related dimensions from string to datetime, date and time types
+        TableFieldSchema timeRecord = fieldsList.stream().filter(s -> "time".equals(s.getName())).findAny().orElse(null);
+        fieldsList.set(fieldsList.indexOf(timeRecord), timeRecord.setFields(Arrays.asList(
+                new TableFieldSchema().setName("dateTime").setType("DATETIME").setMode("NULLABLE"),
+                new TableFieldSchema().setName("time").setType("TIME").setMode("NULLABLE"),
+                new TableFieldSchema().setName("date").setType("DATE").setMode("NULLABLE"),
+                new TableFieldSchema().setName("timeZone").setType("STRING").setMode("NULLABLE")
+          ))
+        );
+
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     
 	
@@ -88,7 +102,8 @@ public class MeasurementProtocolPipeline {
                         StaticValueProvider.of(view.includedHostnamesPattern),
                         StaticValueProvider.of(view.excludedBotsPattern),
                         StaticValueProvider.of(view.siteSearchPattern),
-                        StaticValueProvider.of(view.timeZone)
+                        StaticValueProvider.of(view.timeZone),
+                        StaticValueProvider.of(view.excludedIpsPattern)
                     )));
             
             enrichedEntities
