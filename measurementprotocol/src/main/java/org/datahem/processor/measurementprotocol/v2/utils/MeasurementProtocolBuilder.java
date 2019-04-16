@@ -71,6 +71,7 @@ public class MeasurementProtocolBuilder{
     private static String excludedBotsPattern;
     private static String includedHostnamesPattern;
     private static String timeZone;
+    private static String excludedIpsPattern;
     
     public MeasurementProtocolBuilder(){
 	}
@@ -132,6 +133,14 @@ public class MeasurementProtocolBuilder{
     	this.timeZone = tz;
         this.timeEntity.setTimeZone(tz);
   	}
+    
+    public String getExcludedIpsPattern(){
+    	return this.excludedIpsPattern;
+  	}
+
+	public void setExcludedIpsPattern(String pattern){
+    	this.excludedIpsPattern = pattern;
+  	}
 
     public MeasurementProtocol measurementProtocolFromPayload(PubsubMessage message){
 		try{
@@ -142,13 +151,18 @@ public class MeasurementProtocolBuilder{
 	            pm = FieldMapper.fieldMapFromQuery(payload);
                 pm.putAll(message.getAttributeMap());
 	            //Exclude bots, spiders and crawlers
-				if(pm.get("User-Agent") == null){
+				/*if(pm.get("User-Agent") == null){
 					pm.put("User-Agent", "");
-				}
-	        	if(!pm.get("User-Agent").matches(getExcludedBotsPattern()) && (pm.getOrDefault("dl","").matches(getIncludedHostnamesPattern()) || pm.getOrDefault("dh","").matches(getIncludedHostnamesPattern())) && !pm.get("t").equals("adtiming")){
+				}*/
+                //LOG.info(pm.getOrDefault("X-Forwarded-For","") + " : " + getExcludedIpsPattern() + " matches " + Boolean.toString(pm.getOrDefault("X-Forwarded-For","").matches(getExcludedIpsPattern())));
+	        	if(!pm.getOrDefault("User-Agent","").matches(getExcludedBotsPattern())
+                        && !pm.getOrDefault("X-Forwarded-For","").matches(getExcludedIpsPattern())
+                        && (pm.getOrDefault("dl","").matches(getIncludedHostnamesPattern()) || pm.getOrDefault("dh","").matches(getIncludedHostnamesPattern())) 
+                        && !pm.get("t").equals("adtiming")
+                ){
                     try{
                         //If document location parameter exist, extract host and path and add those as separate parameters 
-                        URI uri = new URI(pm.get("dl").replace(" ", "%20")); // IE11 fix
+                        URI uri = new URI(pm.getOrDefault("dl","").replace(" ", "%20")); // IE11 fix
                         pm.put("dlh", uri.getHost());
                         pm.put("dlp", (uri.getRawQuery() != null ? uri.getRawPath() + "?" + uri.getRawQuery() : uri.getRawPath()));
                     }

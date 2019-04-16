@@ -17,6 +17,7 @@ package org.datahem.processor.measurementprotocol.v2.utils;
 import org.datahem.protobuf.measurementprotocol.v2.Transaction;
 
 import java.util.Map;
+import java.util.Arrays;
 import java.util.Optional;
 import org.datahem.processor.utils.FieldMapper;
 import org.slf4j.Logger;
@@ -28,7 +29,8 @@ public class TransactionEntity{
 	public TransactionEntity(){}
 	
 	private boolean trigger(Map<String, String> paramMap){
-		return (null != paramMap.get("ti") && "purchase".equals(paramMap.get("pa")));
+		//return (null != paramMap.get("ti") && ("purchase".equals(paramMap.get("pa")) || "refund".equals(paramMap.get("pa")));
+        return (null != paramMap.get("ti") && Arrays.asList("purchase", "refund").contains(paramMap.get("pa")));
 	}
 	
 	public Transaction build(Map<String, String> pm){
@@ -42,6 +44,7 @@ public class TransactionEntity{
                 Optional.ofNullable(pm.get("ta")).ifPresent(builder::setAffiliation);
                 Optional.ofNullable(pm.get("cu")).ifPresent(builder::setCurrency);
                 Optional.ofNullable(pm.get("tcc")).ifPresent(builder::setCoupon);
+                Optional.ofNullable(pm.get("pa")).ifPresent(builder::setAction);
                 return builder.build();
 			}
 			catch(IllegalArgumentException e){

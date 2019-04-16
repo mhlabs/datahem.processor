@@ -219,21 +219,18 @@ public final class MeasurementProtocolOuterClass {
       "action\030\001 \001(\t\022\016\n\006target\030\002 \001(\t\022\017\n\007network\030",
       "\003 \001(\t\"Y\n\tPromotion\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002" +
       " \001(\t\022\016\n\006action\030\003 \001(\t\022\020\n\010creative\030\004 \001(\t\022\020" +
-      "\n\010position\030\005 \001(\t\"\200\001\n\013Transaction\022\n\n\002id\030\001" +
+      "\n\010position\030\005 \001(\t\"\220\001\n\013Transaction\022\n\n\002id\030\001" +
       " \001(\t\022\017\n\007revenue\030\002 \001(\001\022\013\n\003tax\030\003 \001(\001\022\020\n\010sh" +
       "ipping\030\004 \001(\001\022\023\n\013affiliation\030\005 \001(\t\022\020\n\010cur" +
-      "rency\030\006 \001(\t\022\016\n\006coupon\030\007 \001(\t\"G\n\005Event\022\020\n\010" +
-      "category\030\001 \001(\t\022\016\n\006action\030\002 \001(\t\022\r\n\005label\030" +
-      "\003 \001(\t\022\r\n\005value\030\004 \001(\005\"1\n\tException\022\023\n\013des" +
-      "cription\030\001 \001(\t\022\017\n\007isFatal\030\002 \001(\005\"\275\001\n\004Time" +
-      "\022\020\n\010dateTime\030\001 \001(\t\022\014\n\004date\030\002 \001(\t\022\014\n\004time",
-      "\030\003 \001(\t\022\014\n\004year\030\004 \001(\005\022\r\n\005month\030\005 \001(\005\022\014\n\004w" +
-      "eek\030\006 \001(\005\022\013\n\003day\030\007 \001(\005\022\014\n\004hour\030\010 \001(\005\022\016\n\006" +
-      "minute\030\t \001(\005\022\016\n\006second\030\n \001(\005\022\017\n\007weekDay\030" +
-      "\013 \001(\005\022\020\n\010timeZone\030\014 \001(\t\">\n\013_ATTRIBUTES\022\014" +
-      "\n\004uuid\030\001 \001(\t\022\016\n\006source\030\002 \001(\t\022\021\n\ttimestam" +
-      "p\030\003 \001(\tB/\n+org.datahem.protobuf.measurem" +
-      "entprotocol.v2P\001b\006proto3"
+      "rency\030\006 \001(\t\022\016\n\006coupon\030\007 \001(\t\022\016\n\006action\030\010 " +
+      "\001(\t\"G\n\005Event\022\020\n\010category\030\001 \001(\t\022\016\n\006action" +
+      "\030\002 \001(\t\022\r\n\005label\030\003 \001(\t\022\r\n\005value\030\004 \001(\005\"1\n\t" +
+      "Exception\022\023\n\013description\030\001 \001(\t\022\017\n\007isFata" +
+      "l\030\002 \001(\005\"F\n\004Time\022\020\n\010dateTime\030\001 \001(\t\022\014\n\004dat",
+      "e\030\002 \001(\t\022\014\n\004time\030\003 \001(\t\022\020\n\010timeZone\030\004 \001(\t\"" +
+      ">\n\013_ATTRIBUTES\022\014\n\004uuid\030\001 \001(\t\022\016\n\006source\030\002" +
+      " \001(\t\022\021\n\ttimestamp\030\003 \001(\tB/\n+org.datahem.p" +
+      "rotobuf.measurementprotocol.v2P\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -342,7 +339,7 @@ public final class MeasurementProtocolOuterClass {
     internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_descriptor,
-        new java.lang.String[] { "Id", "Revenue", "Tax", "Shipping", "Affiliation", "Currency", "Coupon", });
+        new java.lang.String[] { "Id", "Revenue", "Tax", "Shipping", "Affiliation", "Currency", "Coupon", "Action", });
     internal_static_datahem_protobuf_measurementprotocol_v2_Event_descriptor =
       getDescriptor().getMessageTypes().get(16);
     internal_static_datahem_protobuf_measurementprotocol_v2_Event_fieldAccessorTable = new
@@ -360,7 +357,7 @@ public final class MeasurementProtocolOuterClass {
     internal_static_datahem_protobuf_measurementprotocol_v2_Time_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_datahem_protobuf_measurementprotocol_v2_Time_descriptor,
-        new java.lang.String[] { "DateTime", "Date", "Time", "Year", "Month", "Week", "Day", "Hour", "Minute", "Second", "WeekDay", "TimeZone", });
+        new java.lang.String[] { "DateTime", "Date", "Time", "TimeZone", });
     internal_static_datahem_protobuf_measurementprotocol_v2__ATTRIBUTES_descriptor =
       getDescriptor().getMessageTypes().get(19);
     internal_static_datahem_protobuf_measurementprotocol_v2__ATTRIBUTES_fieldAccessorTable = new
