@@ -25,6 +25,7 @@ import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TimePartitioning;
 
 import java.util.List;
+import java.util.Arrays;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
@@ -64,28 +65,19 @@ public class MeasurementProtocolPipeline {
     	List<TableFieldSchema> fieldsList = eventSchema.getFields();
 
         //change date partition column from string to date type
-        TableFieldSchema partition = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
-    	fieldsList.set(fieldsList.indexOf(partition), partition.setType("DATE"));
+    	TableFieldSchema partition = fieldsList.stream().filter(s -> "date".equals(s.getName())).findAny().orElse(null);
+        fieldsList.set(fieldsList.indexOf(partition), partition.setType("DATE"));
 
         //Change date and time related dimensions from string to datetime, date and time types
-        TableFieldSchema timeMessage = new TableFieldSchema().setName("time").setType("RECORD").setMode("NULLABLE");
-        List<TableFieldSchema> timeMessageList = fieldsList.get(fieldsList.indexOf(timeMessage)).getFields();
-        TableFieldSchema dateTime = new TableFieldSchema().setName("dateTime").setType("STRING").setMode("NULLABLE");
-    	timeMessageList.set(timeMessageList.indexOf(dateTime), dateTime.setType("DATETIME"));
-        TableFieldSchema time = new TableFieldSchema().setName("time").setType("STRING").setMode("NULLABLE");
-    	timeMessageList.set(timeMessageList.indexOf(time), time.setType("TIME"));
-        TableFieldSchema date = new TableFieldSchema().setName("date").setType("STRING").setMode("NULLABLE");
-    	timeMessageList.set(timeMessageList.indexOf(date), date.setType("DATE"));
-        fieldsList.set(fieldsList.indexOf(timeMessage), timeMessage.setFields(timeMessageList));
-        /*
-        fieldsList.set(fieldsList.indexOf(timeMessage), timeMessage.setFields(Arrays.asList(
-                new TableFieldSchema().setName("dateTime").setType("DATETIME"),
-                new TableFieldSchema().setName("time").setType("TIME"),
-                new TableFieldSchema().setName("date").setType("DATE"),
-                new TableFieldSchema().setName("timeZone").setType("STRING"),
+        TableFieldSchema timeRecord = fieldsList.stream().filter(s -> "time".equals(s.getName())).findAny().orElse(null);
+        fieldsList.set(fieldsList.indexOf(timeRecord), timeRecord.setFields(Arrays.asList(
+                new TableFieldSchema().setName("dateTime").setType("DATETIME").setMode("NULLABLE"),
+                new TableFieldSchema().setName("time").setType("TIME").setMode("NULLABLE"),
+                new TableFieldSchema().setName("date").setType("DATE").setMode("NULLABLE"),
+                new TableFieldSchema().setName("timeZone").setType("STRING").setMode("NULLABLE")
           ))
-        );*/
-    	
+        );
+
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     
 	
@@ -110,7 +102,8 @@ public class MeasurementProtocolPipeline {
                         StaticValueProvider.of(view.includedHostnamesPattern),
                         StaticValueProvider.of(view.excludedBotsPattern),
                         StaticValueProvider.of(view.siteSearchPattern),
-                        StaticValueProvider.of(view.timeZone)
+                        StaticValueProvider.of(view.timeZone),
+                        StaticValueProvider.of(view.excludedIpsPattern)
                     )));
             
             enrichedEntities
