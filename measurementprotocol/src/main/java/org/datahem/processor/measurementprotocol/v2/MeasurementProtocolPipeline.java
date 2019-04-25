@@ -51,9 +51,14 @@ public class MeasurementProtocolPipeline {
 	private static final Logger LOG = LoggerFactory.getLogger(MeasurementProtocolPipeline.class);
 
   public interface MeasurementProtocolPipelineOptions extends PipelineOptions{
-	@Description("JSON Configuration string")
+	/*
+    @Description("JSON Configuration string")
 	ValueProvider<String> getConfig();
-	void setConfig(ValueProvider<String> value);
+	void setConfig(ValueProvider<String> value);*/
+
+    @Description("JSON Configuration string")
+	String getConfig();
+	void setConfig(String value);
   }
 
   public static void main(String[] args) {
@@ -81,9 +86,10 @@ public class MeasurementProtocolPipeline {
     	TableSchema schema = new TableSchema().setFields(fieldsList);
     
 	
-	for (Config.Account.Property property : Config.read(options.getConfig().get())) { //Start account
+	//for (Config.Account.Property property : Config.read(options.getConfig().get())) { //Start account
+    for (Config.Account.Property property : Config.read(options.getConfig())) { //Start account
 			String pubsubSubscription = "projects/" + options.as(GcpOptions.class).getProject() + "/subscriptions/" + property.id;
-			LOG.info("pubsibSubscription: " + pubsubSubscription);
+			LOG.info("pubsubSubscription: " + pubsubSubscription);
 
     PCollection<PubsubMessage> payload = pipeline
     	.apply(property.id + " - Read payloads from pubsub", 
