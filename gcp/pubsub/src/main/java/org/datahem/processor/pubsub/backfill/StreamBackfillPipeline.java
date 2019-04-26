@@ -39,6 +39,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Base64;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
@@ -117,7 +118,8 @@ public class StreamBackfillPipeline {
 	      		public void processElement(ProcessContext c)  {
                     TableRow row = c.element();
                     String b = (String) row.get("data");
-			        byte[] payload = b.getBytes();
+                    byte[] payload = Base64.getDecoder().decode(b.getBytes());
+			        //byte[] payload = b.getBytes();
                     List<TableRow> repeated = (List<TableRow>) row.get("attributes");
                     HashMap<String, String> attributes = repeated
                         .stream()
