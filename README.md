@@ -2,6 +2,9 @@
 Process bounded and unbounded data and write to PubSub and BigQuery, currently using Google Dataflow (Apache Beam) and supports processing of Google Analytics hits and AWS Kinesis events
 
 # Version:
+## 1.1.2 (2019-04-26): Streaming backfill pipeline
+Query BigQuery backup tables and publish to pubsub for backfill purposes
+
 ## 1.1.1 (2019-04-24): Hot-fix remove value provider
 
 ## 1.1.0 (2019-04-16):  Measurement Protocol exclude IP-filter & date and time dimensions

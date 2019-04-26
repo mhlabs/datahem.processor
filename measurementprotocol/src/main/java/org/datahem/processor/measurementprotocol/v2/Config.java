@@ -31,6 +31,7 @@ public class Config {
 		
 		static public class Property {
 			public String id;
+            public String pubSubSubscription;
 			public List<View> views;
 			
 			static public class View{
