@@ -37,6 +37,7 @@ import com.google.api.services.bigquery.model.TimePartitioning;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.beam.sdk.Pipeline;
@@ -47,6 +48,7 @@ import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
 
 import org.apache.beam.sdk.metrics.Counter;
 import org.apache.beam.sdk.metrics.Metrics;
+import org.apache.beam.runners.dataflow.options.DataflowPipelineOptions;
 import org.apache.beam.sdk.extensions.gcp.options.GcpOptions;
 import org.apache.beam.sdk.options.Default;
 import org.apache.beam.sdk.options.DefaultValueFactory;
@@ -85,7 +87,7 @@ public class StreamBackfillPipeline {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(StreamBackfillPipeline.class);
   
-  	public interface StreamBackfillPipelineOptions extends PipelineOptions{ 
+  	public interface StreamBackfillPipelineOptions extends DataflowPipelineOptions{ 
 
         @Description("Pub/Sub topic")
 	    String getPubsubTopic();
@@ -114,8 +116,12 @@ public class StreamBackfillPipeline {
 	      		@ProcessElement
 	      		public void processElement(ProcessContext c)  {
                     TableRow row = c.element();
-			        byte[] payload = (byte[]) row.get("data");
-                    HashMap<String, String> attributes = (HashMap<String, String>) row.get("attributes");
+                    String b = (String) row.get("data");
+			        byte[] payload = b.getBytes();
+                    List<TableRow> repeated = (List<TableRow>) row.get("attributes");
+                    HashMap<String, String> attributes = repeated
+                        .stream()
+                        .collect(HashMap::new, (map,record)-> map.put((String) record.get("key"), (String) record.get("value")), HashMap::putAll);
                     PubsubMessage pubSubMessage = new PubsubMessage(payload, attributes); 
                     c.output(pubSubMessage);
          }}))
