@@ -145,6 +145,7 @@ public class MeasurementProtocolBuilder{
     public MeasurementProtocol measurementProtocolFromPayload(PubsubMessage message){
 		try{
             String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
+            LOG.info("payload: " + payload);
             //Check if post body contains payload and add parameters in a map
 	        if (!"".equals(payload)) {
 	            //Add header parameters to pm
