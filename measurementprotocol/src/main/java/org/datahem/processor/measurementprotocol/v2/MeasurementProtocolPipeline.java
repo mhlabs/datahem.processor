@@ -88,14 +88,15 @@ public class MeasurementProtocolPipeline {
 	
 	//for (Config.Account.Property property : Config.read(options.getConfig().get())) { //Start account
     for (Config.Account.Property property : Config.read(options.getConfig())) { //Start account
-			String pubsubSubscription = "projects/" + options.as(GcpOptions.class).getProject() + "/subscriptions/" + property.id;
-			LOG.info("pubsubSubscription: " + pubsubSubscription);
+            String pubSubSubscriptionSuffix = (property.pubSubSubscription != null ? property.pubSubSubscription : property.id);
+			String pubSubSubscription = "projects/" + options.as(GcpOptions.class).getProject() + "/subscriptions/" + pubSubSubscriptionSuffix;
+			LOG.info("pubSubSubscription: " + pubSubSubscription);
 
     PCollection<PubsubMessage> payload = pipeline
     	.apply(property.id + " - Read payloads from pubsub", 
     		PubsubIO
     			.readMessagesWithAttributes()
-    			.fromSubscription(pubsubSubscription));
+    			.fromSubscription(pubSubSubscription));
     
         for(Config.Account.Property.View view : property.views){ //Start view
             String table = (view.tableSpec != null ? view.tableSpec : property.id + "." + view.id);
