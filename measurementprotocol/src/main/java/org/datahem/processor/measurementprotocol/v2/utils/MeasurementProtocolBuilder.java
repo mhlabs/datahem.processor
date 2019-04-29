@@ -221,8 +221,8 @@ public class MeasurementProtocolBuilder{
                     //LOG.info(measurementProtocol.toString());
                     return measurementProtocol; 
                 }else{
-                    //LOG.info("not matching MeasurementProtocolBuilder conditions: User-Agent: " + pm.getOrDefault("User-Agent", "null") + ", document.location: " + pm.getOrDefault("dl", "null") + ", type:" + pm.getOrDefault("t", "null"));
-                    }
+                    //LOG.info("not matching MeasurementProtocolBuilder conditions: User-Agent: " + pm.getOrDefault("User-Agent", "null") + ", document.location: " + pm.getOrDefault("dl", "null") + ", type:" + pm.getOrDefault("t", "null") + ", ip:" + pm.getOrDefault("X-Forwarded-For",""));
+                }
             }else{LOG.info("no message payload");}
         }
         catch (NullPointerException e) {

@@ -38,7 +38,7 @@ public class DeviceEntity{
             Optional.ofNullable(pm.get("ul")).ifPresent(builder::setLanguage);
             Optional.ofNullable(pm.get("sd")).ifPresent(builder::setScreenColors);
             Optional.ofNullable(pm.get("sr")).ifPresent(builder::setScreenResolution);
-            Optional.ofNullable(FieldMapper.getFirstParameterValue(pm, "ua|user-agent|User-Agent")).ifPresent(builder::setUserAgent);
+            Optional.ofNullable(FieldMapper.getFirstParameterValue(pm, "User-Agent|user-agent|^ua$")).ifPresent(builder::setUserAgent);
             return builder.build();
         }
         catch(IllegalArgumentException e){
