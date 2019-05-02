@@ -151,11 +151,8 @@ public class MeasurementProtocolBuilder{
 	            pm = FieldMapper.fieldMapFromQuery(payload);
                 pm.putAll(message.getAttributeMap());
 	            //Exclude bots, spiders and crawlers
-				/*if(pm.get("User-Agent") == null){
-					pm.put("User-Agent", "");
-				}*/
-                //LOG.info(pm.getOrDefault("X-Forwarded-For","") + " : " + getExcludedIpsPattern() + " matches " + Boolean.toString(pm.getOrDefault("X-Forwarded-For","").matches(getExcludedIpsPattern())));
-	        	if(!pm.getOrDefault("User-Agent","").matches(getExcludedBotsPattern())
+	        	if(!Optional.ofNullable(FieldMapper.getFirstParameterValue(pm, "User-Agent|user-agent|^ua$")).orElse("").matches(getExcludedBotsPattern())
+                    //!pm.getOrDefault("User-Agent","").matches(getExcludedBotsPattern())
                         && !pm.getOrDefault("X-Forwarded-For","").matches(getExcludedIpsPattern())
                         && (pm.getOrDefault("dl","").matches(getIncludedHostnamesPattern()) || pm.getOrDefault("dh","").matches(getIncludedHostnamesPattern())) 
                         && !pm.get("t").equals("adtiming")
@@ -221,7 +218,7 @@ public class MeasurementProtocolBuilder{
                     //LOG.info(measurementProtocol.toString());
                     return measurementProtocol; 
                 }else{
-                    //LOG.info("not matching MeasurementProtocolBuilder conditions: User-Agent: " + pm.getOrDefault("User-Agent", "null") + ", document.location: " + pm.getOrDefault("dl", "null") + ", type:" + pm.getOrDefault("t", "null") + ", ip:" + pm.getOrDefault("X-Forwarded-For",""));
+                    LOG.info("not matching MeasurementProtocolBuilder conditions: User-Agent: " + pm.getOrDefault("User-Agent", "null") + ", document.location: " + pm.getOrDefault("dl", "null") + ", type:" + pm.getOrDefault("t", "null") + ", ip:" + pm.getOrDefault("X-Forwarded-For","null"));
                 }
             }else{LOG.info("no message payload");}
         }
