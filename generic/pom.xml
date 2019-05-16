@@ -5,28 +5,26 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.datahem.processor</groupId>
-  <artifactId>measurementprotocol</artifactId>
-  <version>1.1.2</version>
+  <groupId>se.mathem.processor.aws</groupId>
+  <artifactId>sns</artifactId>
+  <version>0.7.2</version>
 
   <packaging>jar</packaging>
 
-  <name>Datahem.processor.measurementprotocol</name>
+  <name>DataHem</name>
   <inceptionYear>2018</inceptionYear>
   <organization>
-  	<name>Robert Sahlin</name>
+  	<name>MatHem Sverige AB</name>
   </organization>
-  <description>pipelines to process measurement protocol hits</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <surefire-plugin.version>2.22.1</surefire-plugin.version>
+    <surefire-plugin.version>2.20</surefire-plugin.version>
     <java.version>1.8</java.version>
-    <beam.version>2.8.0</beam.version>
+    <beam.version>2.12.0</beam.version>
     <!--<license.dir>${basedir}</license.dir>-->
-    <!--<license.copyrightOwners>Robert Sahlin</license.copyrightOwners>-->
-	<license.licenseName>agpl_v3_later</license.licenseName>
-    <license.licenseResolver>${project.baseUri}/src/license</license.licenseResolver>
+    <license.copyrightOwners>MatHem Sverige AB</license.copyrightOwners>
+	<license.licenseName>mit</license.licenseName>
 	<!--<license.outputDirectory>${basedir}</license.outputDirectory>
 	<license.licenceFile>LICENSE</license.licenceFile>	-->
   </properties>
@@ -49,7 +47,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
         <configuration>
-        <useSystemClassLoader>false</useSystemClassLoader>
           <parallel>all</parallel>
           <threadCount>4</threadCount>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
@@ -64,18 +61,14 @@
       </plugin>
 
 
-      <!-- Ensure that the Maven jar plugin runs before the Maven
-        shade plugin by listing the plugin higher within the file. -->
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.0.2</version>
       </plugin>
 
-      <!--
-        Configures `mvn package` to produce a bundled jar ("fat jar") for runners
-        that require this for job submission to a cluster.
-      -->
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -106,14 +99,14 @@
           </execution>
         </executions>
       </plugin>
-      
-      <!-- License information -->
-      
+
+   
+   
     
     <plugin>
         	<groupId>org.codehaus.mojo</groupId>
         	<artifactId>license-maven-plugin</artifactId>
-        	<version>1.19</version>
+        	<version>1.15</version>
         	<configuration>
           		<verbose>false</verbose>
           		<processStartTag>========================LICENSE_START=================================</processStartTag>
@@ -196,7 +189,7 @@
       <artifactId>beam-runners-google-cloud-dataflow-java</artifactId>
       <version>${beam.version}</version>
     </dependency>
-    <dependency>
+   <dependency>
    <groupId>org.apache.beam</groupId>
    <artifactId>beam-runners-direct-java</artifactId>
    <version>${beam.version}</version>
@@ -210,39 +203,90 @@
     <artifactId>google-cloud-bigquery</artifactId>
     <version>1.49.0</version>
 </dependency>
+<dependency>
+  <groupId>com.google.cloud</groupId>
+  <artifactId>google-cloud-storage</artifactId>
+  <version>1.70.0</version>
+</dependency>
 
 <!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client -->
+<!--
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client</artifactId>
+          <version>1.24.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava-jdk5</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+-->
+
+<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-pubsub -->
+<!--    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-pubsub</artifactId>
+      <version>v1-rev422-1.24.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava-jdk5</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+-->
+
+
+<!--
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client</artifactId>
+      <version>1.26.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava-jdk5</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+-->
+
+    
+
+
+<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client -->
+    <!-->
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client</artifactId>
       <version>1.22.0</version>
-      <!--    <version>1.23.0</version> -->
       <exclusions>
-        <!-- Exclude an old version of guava that is being pulled
-             in by a transitive dependency of google-api-client -->
         <exclusion>
           <groupId>com.google.guava</groupId>
           <artifactId>guava-jdk5</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
+    -->
 
 
 <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-pubsub -->
+    <!-->
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-pubsub</artifactId>
       <version>v1-rev10-1.22.0</version>
-          <!--<version>v1-rev383-1.23.0</version>-->
       <exclusions>
-        <!-- Exclude an old version of guava that is being pulled
-             in by a transitive dependency of google-api-client -->
         <exclusion>
           <groupId>com.google.guava</groupId>
           <artifactId>guava-jdk5</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
+-->
+
 
 <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 <dependency>
@@ -285,6 +329,7 @@
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-all</artifactId>
       <version>1.3</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
