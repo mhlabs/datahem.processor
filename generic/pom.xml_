@@ -5,28 +5,27 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.datahem.processor</groupId>
-  <artifactId>measurementprotocol</artifactId>
-  <version>1.1.2</version>
+  <groupId>se.mathem.processor</groupId>
+  <artifactId>sns</artifactId>
+  <version>0.7.2</version>
 
   <packaging>jar</packaging>
 
-  <name>Datahem.processor.measurementprotocol</name>
+  <name>DataHem</name>
   <inceptionYear>2018</inceptionYear>
   <organization>
-  	<name>Robert Sahlin</name>
+  	<name>MatHem Sverige AB</name>
   </organization>
-  <description>pipelines to process measurement protocol hits</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <surefire-plugin.version>2.22.1</surefire-plugin.version>
+    <surefire-plugin.version>2.20</surefire-plugin.version>
     <java.version>1.8</java.version>
-    <beam.version>2.8.0</beam.version>
+    <beam.version>2.10.0</beam.version>
+    <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
     <!--<license.dir>${basedir}</license.dir>-->
-    <!--<license.copyrightOwners>Robert Sahlin</license.copyrightOwners>-->
-	<license.licenseName>agpl_v3_later</license.licenseName>
-    <license.licenseResolver>${project.baseUri}/src/license</license.licenseResolver>
+    <license.copyrightOwners>Robert Sahlin and MatHem Sverige AB</license.copyrightOwners>
+	<license.licenseName>mit</license.licenseName>
 	<!--<license.outputDirectory>${basedir}</license.outputDirectory>
 	<license.licenceFile>LICENSE</license.licenceFile>	-->
   </properties>
@@ -49,7 +48,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
         <configuration>
-        <useSystemClassLoader>false</useSystemClassLoader>
           <parallel>all</parallel>
           <threadCount>4</threadCount>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
@@ -63,19 +61,83 @@
         </dependencies>
       </plugin>
 
+<!--
+<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>-->
+
+<!--
+         <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <configuration>
+          <to>
+            <image>gcr.io/mathem-ml-datahem-test/datahem-sqs</image>
+          </to>
+            <container>
+            <args>runner=DataflowRunner</args>
+        </container>
+        </configuration>
+        
+         <executions>
+    <execution>
+      <phase>package</phase>
+      <goals>
+        <goal>build</goal>
+      </goals>
+    </execution>
+  </executions>
+      </plugin>
+-->
 
       <!-- Ensure that the Maven jar plugin runs before the Maven
         shade plugin by listing the plugin higher within the file. -->
+      <!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.0.2</version>
-      </plugin>
+      </plugin>-->
+      <plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-jar-plugin</artifactId>
+  <version>${maven-jar-plugin.version}</version>
+  <configuration>
+    <archive>
+      <manifest>
+        <addClasspath>true</addClasspath>
+        <classpathPrefix>lib/</classpathPrefix>
+        <mainClass>org.datahem.processor.aws.sqs.collector.SqsCollectorPipeline</mainClass>
+      </manifest>
+    </archive>
+  </configuration>
+</plugin>
+      
+
 
       <!--
         Configures `mvn package` to produce a bundled jar ("fat jar") for runners
         that require this for job submission to a cluster.
       -->
+      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -107,13 +169,13 @@
         </executions>
       </plugin>
       
-      <!-- License information -->
       
-    
+      
+    <!--
     <plugin>
         	<groupId>org.codehaus.mojo</groupId>
         	<artifactId>license-maven-plugin</artifactId>
-        	<version>1.19</version>
+        	<version>1.15</version>
         	<configuration>
           		<verbose>false</verbose>
           		<processStartTag>========================LICENSE_START=================================</processStartTag>
@@ -153,6 +215,7 @@
 				</execution>
         	</executions>
       	</plugin>
+          -->
     </plugins>
 
     <pluginManagement>
@@ -195,27 +258,53 @@
       <groupId>org.apache.beam</groupId>
       <artifactId>beam-runners-google-cloud-dataflow-java</artifactId>
       <version>${beam.version}</version>
+      <scope>runtime</scope>
     </dependency>
-    <dependency>
-   <groupId>org.apache.beam</groupId>
-   <artifactId>beam-runners-direct-java</artifactId>
-   <version>${beam.version}</version>
-   <scope>runtime</scope>
+<!--<dependency>
+    <groupId>org.apache.beam</groupId>
+    <artifactId>beam-sdks-java-io-kinesis</artifactId>
+    <version>${beam.version}</version>
+</dependency>-->
+<!-- https://mvnrepository.com/artifact/org.apache.beam/beam-sdks-java-io-amazon-web-services -->
+<dependency>
+    <groupId>org.apache.beam</groupId>
+    <artifactId>beam-sdks-java-io-amazon-web-services</artifactId>
+    <version>${beam.version}</version>
 </dependency>
 
 
-<!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-bigquery -->
+
+
+
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client</artifactId>
+      <version>1.28.0</version>
+      <exclusions>
+        <!-- Exclude an old version of guava that is being pulled
+             in by a transitive dependency of google-api-client -->
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava-jdk5</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+
+    
+<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-cloudkms -->
 <dependency>
-    <groupId>com.google.cloud</groupId>
-    <artifactId>google-cloud-bigquery</artifactId>
-    <version>1.49.0</version>
+    <groupId>com.google.apis</groupId>
+    <artifactId>google-api-services-cloudkms</artifactId>
+    <!--<version>v1-rev45-1.23.0</version>-->
+        <version>v1-rev45-1.22.0</version>
 </dependency>
 
 <!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client -->
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client</artifactId>
-      <version>1.22.0</version>
+      <version>1.28.0</version>
       <!--    <version>1.23.0</version> -->
       <exclusions>
         <!-- Exclude an old version of guava that is being pulled
@@ -243,6 +332,30 @@
         </exclusion>
       </exclusions>
     </dependency>
+
+<!-- https://mvnrepository.com/artifact/com.amazonaws/amazon-kinesis-client -->
+<!--<dependency>
+    <groupId>com.amazonaws</groupId>
+    <artifactId>amazon-kinesis-client</artifactId>
+    <version>1.9.0</version>
+     <exclusions>-->
+        <!-- Exclude an old version of protobuf that is being pulled
+             in by a transitive dependency of amazon-kinesis-client -->
+    <!-->    <exclusion>
+          <groupId>com.google.protobuf</groupId>
+          <artifactId>protobuf-java</artifactId>
+        </exclusion>
+      </exclusions>
+</dependency>-->
+
+<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-sqs -->
+<dependency>
+    <groupId>com.amazonaws</groupId>
+    <artifactId>aws-java-sdk-sqs</artifactId>
+    <version>1.11.163</version>
+</dependency>
+
+
 
 <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 <dependency>
