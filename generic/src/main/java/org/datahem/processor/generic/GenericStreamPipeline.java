@@ -6,29 +6,14 @@ package org.datahem.processor.generic;
  * %%
  * Copyright (C) 2018 - 2019 MatHem Sverige AB
  * %%
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
 
-
-
-import org.datahem.processor.generic.PubsubMessageToTableRowFn;
 import org.datahem.processor.utils.ProtobufUtils;
 
 import com.google.protobuf.util.JsonFormat;
@@ -154,35 +139,103 @@ public class GenericStreamPipeline {
 		void setBigQueryTableSpec(ValueProvider<String> value);
 	}
 
+    public static Descriptor descriptor(String bucketName, String fileDescriptorName, String fileDescriptorProtoName, String messageType) throws Exception {
+            try{
+                Storage storage = StorageOptions.getDefaultInstance().getService();
+                Blob blob = storage.get(BlobId.of(bucketName, fileDescriptorName));
+                ReadChannel reader = blob.reader();
+                InputStream inputStream = Channels.newInputStream(reader);
+
+                FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
+                List<FileDescriptorProto> fdpl = descriptorSetObject.getFileList();
+                Optional<FileDescriptorProto> fdp = fdpl.stream()
+                    .filter(m -> m.getName().equals(fileDescriptorProtoName))
+                    .findFirst();
+                System.out.println(fdp.orElse(null));
+                FileDescriptor[] empty = new FileDescriptor[0];
+                FileDescriptor fd = FileDescriptor.buildFrom(fdp.orElse(null), empty);
+                Optional<Descriptor> d = fd.getMessageTypes().stream()
+                    .filter(m -> m.getName().equals(messageType))
+                    .findFirst();
+                return d.orElse(null);
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+    public static class PubsubMessageToTableRowFn extends DoFn<PubsubMessage,TableRow> {
+		//private static final Logger LOG = LoggerFactory.getLogger(PubsubMessageToTableRowFn.class);
+		//private static Pattern pattern;
+    	//private static Matcher matcher;
+        private Descriptor messageDescriptor;
+        ValueProvider<String> bucketName;
+        ValueProvider<String> fileDescriptorName;
+        ValueProvider<String> fileDescriptorProtoName;
+        ValueProvider<String> messageType;
+		
+	  	public PubsubMessageToTableRowFn(
+	  		ValueProvider<String> bucketName,
+	  		ValueProvider<String> fileDescriptorName,
+            ValueProvider<String> fileDescriptorProtoName,
+            ValueProvider<String> messageType) {
+		     	this.bucketName = bucketName;
+		     	this.fileDescriptorName = fileDescriptorName;
+                this.fileDescriptorProtoName = fileDescriptorProtoName;
+                this.messageType = messageType;
+	   	}
+        
+        @Setup
+        public void setup() throws Exception {
+            messageDescriptor = descriptor(bucketName.get(), fileDescriptorName.get(), fileDescriptorProtoName.get(), messageType.get());
+        }
+		
+		@ProcessElement
+			public void processElement(ProcessContext c) throws Exception {
+                // Get pubsub message payload and attributes
+                PubsubMessage pubsubMessage = c.element();
+                String payload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
+                Map<String, String> attributes = pubsubMessage.getAttributeMap();
+                //LOG.info("payload: " + payload);
+
+                // Parse json to protobuf
+                DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
+				try{
+                    JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
+					attributes.entrySet().forEach(attribute -> {
+                        DynamicMessage.Builder attributeBuilder = DynamicMessage.newBuilder(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry"));
+                        attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("key"), attribute.getKey());
+                        attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("value"), attribute.getValue());
+                        builder.addRepeatedField(messageDescriptor.findFieldByName("_ATTRIBUTES"),attributeBuilder.build());
+                        });
+					DynamicMessage message = builder.build();
+                    //LOG.info(message.toString());
+
+                    //transform protobuf to tablerow
+                    TableRow tr = ProtobufUtils.makeTableRow(message);
+                    try{
+                        //LOG.info(tr.toPrettyString());
+                    }catch(Exception e){}
+                    c.output(tr);
+				}catch(InvalidProtocolBufferException e){
+					LOG.error("invalid protocol buffer exception: ", e);
+					LOG.error(payload);
+				}catch(IllegalArgumentException e){
+                    LOG.error("IllegalArgumentException: ", e);
+				}
+    		}
+  }
+
 	public static void main(String[] args) throws IOException {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
         TableSchema eventSchema = null;
+        
         try{
-            Storage storage = StorageOptions.getDefaultInstance().getService();
-            Blob blob = storage.get(BlobId.of(options.getBucketName().get(), options.getFileDescriptorName().get()));
-            ReadChannel reader = blob.reader();
-            InputStream inputStream = Channels.newInputStream(reader);
-
-            FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
-            List<FileDescriptorProto> fdpl = descriptorSetObject.getFileList();
-            Optional<FileDescriptorProto> fdp = fdpl.stream()
-                .filter(m -> m.getName().equals(options.getFileDescriptorProtoName().get()))
-                .findFirst();
-            //System.out.println(fdp.orElse(null));
-            FileDescriptor[] empty = new FileDescriptor[0];
-            FileDescriptor fd = FileDescriptor.buildFrom(fdp.orElse(null), empty);
-            Optional<Descriptor> d = fd.getMessageTypes().stream()
-                .filter(m -> m.getName().equals(options.getMessageType().get()))
-                .findFirst();
-            //desc = d.orElse(null);
-            eventSchema = ProtobufUtils.makeTableSchema(d.orElse(null));
+            eventSchema = ProtobufUtils.makeTableSchema(descriptor(options.getBucketName().get(), options.getFileDescriptorName().get(), options.getFileDescriptorProtoName().get(), options.getMessageType().get()));
         }catch (Exception e) {
             e.printStackTrace();
         }
-
-		//TableSchema eventSchema = setup(); //ProtobufUtils.makeTableSchema(Member.getDescriptor());
-
 
 		WriteResult writeResult = pipeline
             .apply("Read json as string from pubsub", 
