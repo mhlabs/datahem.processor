@@ -1,36 +1,41 @@
-#AWS Kinesis Order Stream
+# GenericStreamPipeline
 
-Read pubsub and write parsed payload to bigquery and pubsub
+Read pubsub containing json-payload and write parsed (using protobuf schema) payload to bigquery
 
 # 1. Set variables
 
 ```shell
-#DataHem generic settings
-PROJECT_ID='mathem-ml-datahem-test' # Required. Your google project id. Example: 'my-prod-project'
-VERSION='0.11.3' # Required. DataHem version used. Example: '0.5'
+# DataHem generic settings
+PROJECT_ID='' # Required. Your google project id. Example: 'my-project'
 
-#Dataflow settings
+# Dataflow settings
 DF_REGION='europe-west1' # Optional. Default: us-central1
 DF_ZONE='europe-west1-b' # Optional. Default:  an availability zone from the region set in DF_REGION.
 DF_NUM_WORKERS=1 # Optional. Default: Dataflow service will determine an appropriate number of workers. Example: 2
 DF_MAX_NUM_WORKERS=1 # Optional. Default: Dataflow service will determine an appropriate number of workers. Example: 5
 DF_DISK_SIZE_GB=30 # Optional. Default: Size defined in your Cloud Platform project. Minimum is 30. Example: 50
 DF_WORKER_MACHINE_TYPE='n1-standard-1' # Optional. Default: The Dataflow service will choose the machine type based on your job. Example: 'n1-standard-1'
+JOB_NAME='' # Optional. Default: The Dataflow service will name the job if not provided
 
-#AWS Kinesis Order Stream Pipeline settings
-STREAM_ID='member-service-MemberProcessTopic' # Required. The name of the stream. Example: 'order-stream'
-TIME_ZONE='Europe/Stockholm' #Optional. Define local time zone (ex. Europe/Stockholm) for date field used for partitioning. Default: 'Etc/UTC'
+# GenericStream Pipeline settings
+BUCKET_NAME=${PROJECT_ID}-schema-registry # Required. Example. ${PROJECT_ID}-schema-registry
+FILE_DESCRIPTOR_NAME='' # Required. Example: schemas.desc
+FILE_DESCRIPTOR_PROTO_NAME='' # Required. Example: datahem/protobuf/order/v1/order.proto'
+MESSAGE_TYPE='' # Required. Example: order
+PUBSUB_SUBSCRIPTION='' # Required. The name of the stream. Example: 'order-stream'
+BIGQUERY_TABLE_SPEC='' # Required. Example: streams.orders
+
 ```
 
 ## compile and run
 
 ```shell
-   mvn compile exec:java \
-      -Dexec.mainClass se.mathem.processor.aws.sns.member.MemberStreamPipeline \
+mvn compile exec:java \
+      -Dexec.mainClass=org.datahem.processor.generic.GenericStreamPipeline \
       -Dexec.args=" \
       --project=$PROJECT_ID \
-      --jobName=members \
-      --stagingLocation=gs://$PROJECT_ID-processor/$VERSION/com/datahem/processor/staging \
+      --jobName=$JOB_NAME \
+      --stagingLocation=gs://$PROJECT_ID-processor/org/datahem/processor/generic/staging \
       --gcpTempLocation=gs://$PROJECT_ID-processor/gcptemp/ \
       --runner=DataflowRunner \
       --zone=$DF_ZONE \
@@ -39,63 +44,13 @@ TIME_ZONE='Europe/Stockholm' #Optional. Define local time zone (ex. Europe/Stock
       --maxNumWorkers=$DF_MAX_NUM_WORKERS \
       --diskSizeGb=$DF_DISK_SIZE_GB \
       --workerMachineType=$DF_WORKER_MACHINE_TYPE \
-      --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$STREAM_ID \
-      --bigQueryPartitionTimeZone=$TIME_ZONE \
-      --bigQueryTableSpec=streams.members"
+      --bucketName=$BUCKET_NAME \
+      --fileDescriptorName=$FILE_DESCRIPTOR_NAME \
+      --fileDescriptorProtoName=$FILE_DESCRIPTOR_PROTO_NAME \
+      --messageType=$MESSAGE_TYPE \
+      --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$PUBSUB_SUBSCRIPTION \
+      --bigQueryTableSpec=$BIGQUERY_TABLE_SPEC"
 ```
-
-mvn compile exec:java \
-      -Dexec.mainClass=se.mathem.processor.aws.sns.member.MemberStreamPipeline \
-      -Dexec.args=" \
-      --project=mathem-ml-datahem-test \
-      --jobName=members \
-      --stagingLocation=gs://mathem-ml-datahem-test-processor/98/com/datahem/processor/staging \
-      --gcpTempLocation=gs://mathem-ml-datahem-test-processor/gcptemp/ \
-      --runner=DataflowRunner \
-      --zone='europe-west1-b' \
-      --region='europe-west1' \
-      --numWorkers=1 \
-      --maxNumWorkers=2 \
-      --diskSizeGb=30 \
-      --workerMachineType='n1-standard-1' \
-      --pubsubSubscription=projects/mathem-ml-datahem-test/subscriptions/member-service-MemberProcessTopic \
-      --bigQueryPartitionTimeZone='Europe/Stockholm' \
-      --bigQueryTableSpec=streams.members2"
-
-mvn compile exec:java \
-      -Dexec.mainClass=se.mathem.processor.aws.sns.member.MemberStreamPipeline \
-      -Dexec.args=" \
-      --project=mathem-ml-datahem-prod \
-      --jobName=members \
-      --stagingLocation=gs://mathem-ml-datahem-prod-processor/98/com/datahem/processor/staging \
-      --gcpTempLocation=gs://mathem-ml-datahem-prod-processor/gcptemp/ \
-      --runner=DataflowRunner \
-      --zone='europe-west1-b' \
-      --region='europe-west1' \
-      --numWorkers=1 \
-      --maxNumWorkers=2 \
-      --diskSizeGb=30 \
-      --workerMachineType='n1-standard-1' \
-      --pubsubSubscription=projects/mathem-ml-datahem-prod/subscriptions/member-service-MemberProcessTopic \
-      --bigQueryPartitionTimeZone='Europe/Stockholm' \
-      --bigQueryTableSpec=streams.members"
-
-mvn compile exec:java \
-      -Dexec.mainClass se.mathem.processor.aws.sns.member.MemberStreamPipeline \
-      -Dexec.args=" \
-      --project=$PROJECT_ID \
-      --stagingLocation=gs://$PROJECT_ID-processor/$VERSION/com/datahem/processor/staging \
-      --gcpTempLocation=gs://$PROJECT_ID-processor/gcptemp/ \
-      --runner=DataflowRunner \
-      --zone=$DF_ZONE \
-      --region=$DF_REGION \
-      --numWorkers=$DF_NUM_WORKERS \
-      --maxNumWorkers=$DF_MAX_NUM_WORKERS \
-      --diskSizeGb=$DF_DISK_SIZE_GB \
-      --workerMachineType=$DF_WORKER_MACHINE_TYPE \
-      --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$STREAM_ID \
-      --bigQueryPartitionTimeZone=$TIME_ZONE \
-      --bigQueryTableSpec=streams.testing"
 
 
 
