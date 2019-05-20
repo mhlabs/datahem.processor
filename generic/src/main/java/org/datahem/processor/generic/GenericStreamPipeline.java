@@ -139,7 +139,7 @@ public class GenericStreamPipeline {
 		void setBigQueryTableSpec(ValueProvider<String> value);
 	}
 
-    public static Descriptor descriptor(String bucketName, String fileDescriptorName, String fileDescriptorProtoName, String messageType) throws Exception {
+    public static Descriptor getDescriptorFromCloudStorage(String bucketName, String fileDescriptorName, String fileDescriptorProtoName, String messageType) throws Exception {
             try{
                 Storage storage = StorageOptions.getDefaultInstance().getService();
                 Blob blob = storage.get(BlobId.of(bucketName, fileDescriptorName));
@@ -151,7 +151,7 @@ public class GenericStreamPipeline {
                 Optional<FileDescriptorProto> fdp = fdpl.stream()
                     .filter(m -> m.getName().equals(fileDescriptorProtoName))
                     .findFirst();
-                System.out.println(fdp.orElse(null));
+                //System.out.println(fdp.orElse(null));
                 FileDescriptor[] empty = new FileDescriptor[0];
                 FileDescriptor fd = FileDescriptor.buildFrom(fdp.orElse(null), empty);
                 Optional<Descriptor> d = fd.getMessageTypes().stream()
@@ -187,7 +187,7 @@ public class GenericStreamPipeline {
         
         @Setup
         public void setup() throws Exception {
-            messageDescriptor = descriptor(bucketName.get(), fileDescriptorName.get(), fileDescriptorProtoName.get(), messageType.get());
+            messageDescriptor = getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), fileDescriptorProtoName.get(), messageType.get());
         }
 		
 		@ProcessElement
@@ -213,9 +213,9 @@ public class GenericStreamPipeline {
 
                     //transform protobuf to tablerow
                     TableRow tr = ProtobufUtils.makeTableRow(message);
-                    try{
-                        //LOG.info(tr.toPrettyString());
-                    }catch(Exception e){}
+                    /*try{
+                        LOG.info(tr.toPrettyString());
+                    }catch(Exception e){}*/
                     c.output(tr);
 				}catch(InvalidProtocolBufferException e){
 					LOG.error("invalid protocol buffer exception: ", e);
@@ -232,7 +232,7 @@ public class GenericStreamPipeline {
         TableSchema eventSchema = null;
         
         try{
-            eventSchema = ProtobufUtils.makeTableSchema(descriptor(options.getBucketName().get(), options.getFileDescriptorName().get(), options.getFileDescriptorProtoName().get(), options.getMessageType().get()));
+            eventSchema = ProtobufUtils.makeTableSchema(getDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get(), options.getFileDescriptorProtoName().get(), options.getMessageType().get()));
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -252,27 +252,29 @@ public class GenericStreamPipeline {
             .apply("Fixed Windows",
                 Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
                     .withAllowedLateness(Duration.standardDays(7))
-                    .discardingFiredPanes())
+                    .discardingFiredPanes()
+                )
             .apply("Write to bigquery", 
                 BigQueryIO
                     .writeTableRows()
+                    //.to(new TablePartition(options.getBigQueryTableSpec()))
                     .to(options.getBigQueryTableSpec())
                     .withSchema(eventSchema)
-                    //.withTimePartitioning(new TimePartitioning().setField("Date").setType("DAY"))
-                    .withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors())
+                    .withTimePartitioning(new TimePartitioning()) //.setField("_PARTITIONTIME").setType("TIMESTAMP"))
+                    //.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors())
                     .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
-		pipeline.run();
-
-        /*writeResult
+        writeResult
             .getFailedInserts()
-            .apply("FormatFailedInserts", ParDo.of(new FailedInsertFormatter()))
-            .apply(
-                "WriteFailedInsertsToDeadletter",
-                BigQueryIO.writeTableRows()
-                    .to(options.getDeadletterTable())
-                    .withCreateDisposition(CreateDisposition.CREATE_NEVER)
-                    .withWriteDisposition(WriteDisposition.WRITE_APPEND));*/
-	}
+            .apply("LogFailedData", ParDo.of(new DoFn<TableRow, TableRow>() {
+                @ProcessElement
+                public void processElement(ProcessContext c) {
+                    TableRow row = c.element();
+                    LOG.error("Failed to insert: " + row.toString());
+                }
+            }));
+        
+        pipeline.run();
+    }
 }
