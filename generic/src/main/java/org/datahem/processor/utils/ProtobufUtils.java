@@ -95,9 +95,14 @@ public class ProtobufUtils {
 		return res;
 	}
 
-	public static TableRow makeTableRow(Message message) {
+    public static TableRow makeTableRow(Message message) {
+        return makeTableRow(message, message.getDescriptorForType());
+    }
+
+	public static TableRow makeTableRow(Message message, Descriptor descriptor) {
 		TableRow res = new TableRow();
-		List<FieldDescriptor> fields = message.getDescriptorForType().getFields();
+        List<FieldDescriptor> fields = descriptor.getFields();
+		//List<FieldDescriptor> fields = message.getDescriptorForType().getFields();
 
 		for (FieldDescriptor f : fields) {
 			String type = "STRING";

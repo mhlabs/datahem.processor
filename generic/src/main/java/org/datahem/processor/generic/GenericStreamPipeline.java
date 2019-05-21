@@ -212,7 +212,7 @@ public class GenericStreamPipeline {
                     //LOG.info(message.toString());
 
                     //transform protobuf to tablerow
-                    TableRow tr = ProtobufUtils.makeTableRow(message);
+                    TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor);
                     /*try{
                         LOG.info(tr.toPrettyString());
                     }catch(Exception e){}*/
@@ -257,10 +257,12 @@ public class GenericStreamPipeline {
             .apply("Write to bigquery", 
                 BigQueryIO
                     .writeTableRows()
-                    //.to(new TablePartition(options.getBigQueryTableSpec()))
-                    .to(options.getBigQueryTableSpec())
+                    .to(new TablePartition(options.getBigQueryTableSpec()))
+                    //.to(options.getBigQueryTableSpec())
                     .withSchema(eventSchema)
-                    .withTimePartitioning(new TimePartitioning()) //.setField("_PARTITIONTIME").setType("TIMESTAMP"))
+                    //.withTimePartitioning(new TimePartitioning().setField("_PARTITIONTIME").setType("DAY"))
+                    //.withTimePartitioning(new TimePartitioning().setField("_PARTITIONTIME").setType("TIMESTAMP"))
+                    //.withTimePartitioning(new TimePartitioning())
                     //.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors())
                     .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));

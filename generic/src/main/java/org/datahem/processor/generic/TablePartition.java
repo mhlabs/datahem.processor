@@ -16,6 +16,7 @@ package org.datahem.processor.generic;
 
 import com.google.api.services.bigquery.model.TableReference;
 import com.google.api.services.bigquery.model.TableRow;
+import com.google.api.services.bigquery.model.TimePartitioning;
 
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryHelpers;
 import org.apache.beam.sdk.io.gcp.bigquery.TableDestination;
@@ -35,7 +36,7 @@ public class TablePartition implements SerializableFunction<ValueInSingleWindow<
     private final String tableSpec;
     
     public TablePartition(ValueProvider<String> tableSpec) {
-        this.tableSpec = tableSpec.get();
+        this.tableSpec = tableSpec.get(); 
     }
 
     @Override
@@ -43,6 +44,6 @@ public class TablePartition implements SerializableFunction<ValueInSingleWindow<
         DateTimeFormatter partition = DateTimeFormat.forPattern("yyyyMMdd").withZoneUTC();
         TableReference reference = BigQueryHelpers.parseTableSpec(tableSpec + "$" + input.getWindow().maxTimestamp().toString(partition));
         LOG.info("TableReference: " + reference.toString());
-        return new TableDestination(reference, null);
+        return new TableDestination(reference, "", new TimePartitioning());
     }
 }
