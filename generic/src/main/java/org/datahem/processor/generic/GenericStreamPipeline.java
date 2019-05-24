@@ -147,16 +147,21 @@ public class GenericStreamPipeline {
                 InputStream inputStream = Channels.newInputStream(reader);
 
                 FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
+                //LOG.info(descriptorSetObject.toString());
+                LOG.info("FileDescriptorSet");
                 List<FileDescriptorProto> fdpl = descriptorSetObject.getFileList();
                 Optional<FileDescriptorProto> fdp = fdpl.stream()
                     .filter(m -> m.getName().equals(fileDescriptorProtoName))
                     .findFirst();
-                //System.out.println(fdp.orElse(null));
+                LOG.info("FileDescriptorProto " + fdp.toString());
+                //LOG.info(fdp.orElse(null));
                 FileDescriptor[] empty = new FileDescriptor[0];
                 FileDescriptor fd = FileDescriptor.buildFrom(fdp.orElse(null), empty);
+                LOG.info("FileDescriptor");
                 Optional<Descriptor> d = fd.getMessageTypes().stream()
                     .filter(m -> m.getName().equals(messageType))
                     .findFirst();
+                LOG.info("Descriptor" + d.toString());
                 return d.orElse(null);
             }catch (Exception e){
                 e.printStackTrace();
@@ -196,26 +201,29 @@ public class GenericStreamPipeline {
                 PubsubMessage pubsubMessage = c.element();
                 String payload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
                 Map<String, String> attributes = pubsubMessage.getAttributeMap();
-                //LOG.info("payload: " + payload);
+                LOG.info("payload: " + payload);
 
                 // Parse json to protobuf
                 DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
+                LOG.info("DynamicMessage.Builder");
 				try{
                     JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
-					attributes.entrySet().forEach(attribute -> {
-                        DynamicMessage.Builder attributeBuilder = DynamicMessage.newBuilder(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry"));
-                        attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("key"), attribute.getKey());
-                        attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("value"), attribute.getValue());
-                        builder.addRepeatedField(messageDescriptor.findFieldByName("_ATTRIBUTES"),attributeBuilder.build());
-                        });
+					try{
+                        attributes.entrySet().forEach(attribute -> {
+                            DynamicMessage.Builder attributeBuilder = DynamicMessage.newBuilder(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry"));
+                            attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("key"), attribute.getKey());
+                            attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("value"), attribute.getValue());
+                            builder.addRepeatedField(messageDescriptor.findFieldByName("_ATTRIBUTES"),attributeBuilder.build());
+                            });
+                    }catch(java.lang.NullPointerException e){LOG.info("No _ATTRIBUTES field in message");}
 					DynamicMessage message = builder.build();
-                    //LOG.info(message.toString());
+                    LOG.info(message.toString());
 
                     //transform protobuf to tablerow
                     TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor);
-                    /*try{
+                    try{
                         LOG.info(tr.toPrettyString());
-                    }catch(Exception e){}*/
+                    }catch(Exception e){}
                     c.output(tr);
 				}catch(InvalidProtocolBufferException e){
 					LOG.error("invalid protocol buffer exception: ", e);

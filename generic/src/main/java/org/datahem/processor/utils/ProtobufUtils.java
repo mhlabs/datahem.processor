@@ -29,6 +29,8 @@ import com.google.protobuf.Descriptors.EnumDescriptor;
 import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Message;
 import com.google.protobuf.Timestamp;
+import com.google.protobuf.DynamicMessage;
+import com.google.protobuf.DynamicMessage.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +53,11 @@ public class ProtobufUtils {
 		return className;
 	}
 
+    public String getFieldDescription(FieldDescriptor fieldDescriptor) {
+        LOG.info(fieldDescriptor.getOptions().getExtension(Options.bigquery_field).getDescription());
+        //return fieldDescriptor.getOptions().getExtension(Options.bigquery_field).getDescription();
+    }
+
 	public static TableSchema makeTableSchema(Descriptor d) {
 		TableSchema res = new TableSchema();
 
@@ -59,6 +66,7 @@ public class ProtobufUtils {
 		List<TableFieldSchema> schema_fields = new ArrayList<TableFieldSchema>();
 
 		for (FieldDescriptor f : fields) {
+            getFieldDescription(f);
 			String type = "STRING";
 			String mode = "NULLABLE";
 
@@ -99,6 +107,10 @@ public class ProtobufUtils {
         return makeTableRow(message, message.getDescriptorForType());
     }
 
+    public static TableRow makeTableRow(Descriptor descriptor) {
+        return makeTableRow(DynamicMessage.newBuilder(descriptor).clear().build(), descriptor);
+    }
+
 	public static TableRow makeTableRow(Message message, Descriptor descriptor) {
 		TableRow res = new TableRow();
         List<FieldDescriptor> fields = descriptor.getFields();
@@ -126,9 +138,17 @@ public class ProtobufUtils {
 				} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
 					type = "RECORD";
 					if (message.getAllFields().containsKey(f)) {
-						TableRow tr = makeTableRow((Message) message.getField(f));
+						//TableRow tr = makeTableRow((Message) message.getField(f));
+                        //LOG.info("message.getField(f): " + ((Message) message.getField(f)).toString());
+
+                        TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType());
+                        LOG.info("contains key: "+ tr.toString());
 						res.set(f.getName().replace(".", "_"), tr);
-					}
+					}else{
+                        TableRow tr = makeTableRow(f.getMessageType());
+                        LOG.info("doesn't contain key: "+ tr.toString());
+						res.set(f.getName().replace(".", "_"), tr);
+                    }
 				}
 			} else if (f.isRepeated()) {
 				if (f.getType().toString().toUpperCase().contains("STRING")) {
@@ -157,9 +177,12 @@ public class ProtobufUtils {
 							.collect(Collectors.toList());
 					res.set(f.getName().replace(".", "_"), values);
 				} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
-					List<TableRow> values = ((List<Message>) message.getField(f)).stream().map(m -> makeTableRow(m))
+					    //List<TableRow> values = ((List<Message>) message.getField(f)).stream().map(m -> makeTableRow(m))
+                        List<TableRow> values = ((List<Message>) message.getField(f))
+                            .stream()
+                            .map(m -> makeTableRow(m,  f.getMessageType()))
 							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
+					    res.set(f.getName().replace(".", "_"), values);
 				}
 			}
 		}
