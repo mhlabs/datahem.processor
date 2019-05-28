@@ -14,6 +14,9 @@ package org.datahem.processor.utils;
  * =========================LICENSE_END==================================
  */
 
+import org.datahem.protobuf.options.Options;
+import org.datahem.protobuf.options.Bigquery;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,6 +31,7 @@ import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Descriptors.EnumDescriptor;
 import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Message;
+import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.DynamicMessage;
 import com.google.protobuf.DynamicMessage.Builder;
@@ -53,13 +57,36 @@ public class ProtobufUtils {
 		return className;
 	}
 
-    public String getFieldDescription(FieldDescriptor fieldDescriptor) {
-        LOG.info(fieldDescriptor.getOptions().getExtension(Options.bigquery_field).getDescription());
+    public static void getFieldDescription(FieldDescriptor fieldDescriptor) {
+        //ExtensionRegistry registry = ExtensionRegistry.newInstance();
+        //Options.registerAllExtensions(registry);
+        LOG.info("getFieldDescription");
+        //LOG.info(fieldDescriptor.getOptions().getExtension(Options.bigqueryField).getDescription());
+        //LOG.info(Integer.toString(fieldDescriptor.getOptions().getAllFields().size()));
+        LOG.info("fieldOptions: " + fieldDescriptor.getOptions().toString());
+        for (FieldDescriptor f : fieldDescriptor.getOptions().getDescriptor().getFields()){
+            LOG.info(f.getFullName() + " " + Integer.toString(f.getNumber()));
+            
+        }
+        //LOG.info(fieldDescriptor.getOptions().getExtension(Options.bigqueryField).toString());
+        //LOG.info("FieldOptions has extension bigqueryField: " +Boolean.toString(fieldDescriptor.getOptions().hasExtension(Options.bigqueryField)));
+        //LOG.info("FieldOptions number of extensions: " +Boolean.toString(fieldDescriptor.getOptions().getExtensionCount()));
         //return fieldDescriptor.getOptions().getExtension(Options.bigquery_field).getDescription();
     }
 
 	public static TableSchema makeTableSchema(Descriptor d) {
-		TableSchema res = new TableSchema();
+		//ExtensionRegistry registry = ExtensionRegistry.newInstance();
+        //Options.registerAllExtensions(registry);
+        LOG.info("messageOptions: " + d.getOptions().toString());
+        //LOG.info(d.getOptions().getDescriptor().getFields().get(4).toString());
+        //LOG.info("first option field: " + d.getOptions().getDescriptor().getFields().get(3).getFullName());
+        LOG.info(Boolean.toString(d.getOptions().hasExtension(Options.bqmessage)));
+        LOG.info(Boolean.toString(d.getOptions().isInitialized()));
+        TableSchema res = new TableSchema();
+
+        for (FieldDescriptor f : d.getOptions().getDescriptor().getFields()){
+            LOG.info(f.getFullName());
+        }
 
 		List<FieldDescriptor> fields = d.getFields();
 

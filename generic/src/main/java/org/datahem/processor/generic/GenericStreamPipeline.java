@@ -37,6 +37,7 @@ import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 
 import java.util.List;
+import java.util.HashMap;
 import java.util.Optional;
 import java.io.IOException;
 
@@ -139,14 +140,59 @@ public class GenericStreamPipeline {
 		void setBigQueryTableSpec(ValueProvider<String> value);
 	}
 
-    public static Descriptor getDescriptorFromCloudStorage(String bucketName, String fileDescriptorName, String fileDescriptorProtoName, String messageType) throws Exception {
+    private static Map<String, FileDescriptorProto> extractProtoMap(
+        FileDescriptorSet fileDescriptorSet) {
+        HashMap<String, FileDescriptorProto> map = new HashMap<>();
+        fileDescriptorSet.getFileList().forEach(fdp -> map.put(fdp.getName(), fdp));
+        return map;
+    }
+
+    private static FileDescriptor getFileDescriptor(String name, FileDescriptorSet fileDescriptorSet) {
+        Map<String, FileDescriptorProto> inMap = extractProtoMap(fileDescriptorSet);
+        Map<String, FileDescriptor> outMap = new HashMap<>();
+        return convertToFileDescriptorMap(name, inMap, outMap);
+    }
+
+    private static FileDescriptor convertToFileDescriptorMap(String name, Map<String, FileDescriptorProto> inMap,
+        Map<String, FileDescriptor> outMap) {
+        if (outMap.containsKey(name)) {
+            return outMap.get(name);
+        }
+        FileDescriptorProto fileDescriptorProto = inMap.get(name);
+        List<FileDescriptor> dependencies = new ArrayList<>();
+        if (fileDescriptorProto.getDependencyCount() > 0) {
+            LOG.info("more than 0 dependencies: " + fileDescriptorProto.toString());
+            fileDescriptorProto
+                .getDependencyList()
+                .forEach(dependencyName -> dependencies.add(convertToFileDescriptorMap(dependencyName, inMap, outMap)));
+        }
+        try {
+            LOG.info("Number of dependencies: " + Integer.toString(dependencies.size()));
+            FileDescriptor fileDescriptor = 
+                FileDescriptor.buildFrom(
+                    fileDescriptorProto, dependencies.toArray(new FileDescriptor[dependencies.size()]));
+            outMap.put(name, fileDescriptor);
+            return fileDescriptor;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Descriptor getDescriptorFromCloudStorage(
+        String bucketName, 
+        String fileDescriptorName, 
+        String fileDescriptorProtoName, 
+        String messageType) throws Exception {
             try{
                 Storage storage = StorageOptions.getDefaultInstance().getService();
                 Blob blob = storage.get(BlobId.of(bucketName, fileDescriptorName));
                 ReadChannel reader = blob.reader();
                 InputStream inputStream = Channels.newInputStream(reader);
-
                 FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
+
+                FileDescriptor fd = getFileDescriptor(fileDescriptorProtoName, descriptorSetObject);
+
+                /*
                 //LOG.info(descriptorSetObject.toString());
                 LOG.info("FileDescriptorSet");
                 List<FileDescriptorProto> fdpl = descriptorSetObject.getFileList();
@@ -158,6 +204,7 @@ public class GenericStreamPipeline {
                 FileDescriptor[] empty = new FileDescriptor[0];
                 FileDescriptor fd = FileDescriptor.buildFrom(fdp.orElse(null), empty);
                 LOG.info("FileDescriptor");
+                */
                 Optional<Descriptor> d = fd.getMessageTypes().stream()
                     .filter(m -> m.getName().equals(messageType))
                     .findFirst();
