@@ -105,7 +105,8 @@ public class GenericStreamPipelineTest {
 	
 	@Rule public transient TestPipeline p = TestPipeline.create();
 
-    String testPayload = "";
+    String testPayload = "{\"Temperature\":10.0, \"Car\":\"abc123\", \"Timestamp\":\"2019-05-23T13:13:13\", \"Date\":\"2019-05-13\"}";
+
 
     byte[] payload = testPayload.getBytes(StandardCharsets.UTF_8);
 	private Map<String,String> attributes = new HashMap<String, String>(){
@@ -123,14 +124,21 @@ public class GenericStreamPipelineTest {
 	@Test
 	public void userPageviewTest(){
         LOG.info("payload" + testPayload);
+        TableSchema eventSchema = null;
+        try{
+            //eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc", "mathem/cartemperature/v1/car_temperature.proto", "CarTemperature"));
+            eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc", "mathem/cartemperature/v1/car_temperature.proto", "CarTemperature"));
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
 		//PCollection<TableRow> output = 
         p
 			.apply(Create.of(Arrays.asList(pm)))
 			.apply(ParDo.of(new PubsubMessageToTableRowFn(
-				StaticValueProvider.of(""),
-                StaticValueProvider.of(""),
-                StaticValueProvider.of(""),
-                StaticValueProvider.of("")
+				StaticValueProvider.of("mathem-ml-datahem-test-schema-registry"),
+                StaticValueProvider.of("schemas.desc"),
+                StaticValueProvider.of("mathem/cartemperature/v1/car_temperature.proto"),
+                StaticValueProvider.of("CarTemperature")
             )));
         Assert.assertEquals(true, true);
         p.run();

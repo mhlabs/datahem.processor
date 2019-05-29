@@ -15,8 +15,10 @@ package org.datahem.processor.generic;
  */
 
 import org.datahem.processor.utils.ProtobufUtils;
+import io.anemos.metastore.core.proto.*;
 
 import com.google.protobuf.util.JsonFormat;
+import com.google.protobuf.ByteString;
 
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
@@ -37,8 +39,11 @@ import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 
 import java.util.List;
+import java.util.HashMap;
 import java.util.Optional;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.InputStream;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
@@ -139,25 +144,131 @@ public class GenericStreamPipeline {
 		void setBigQueryTableSpec(ValueProvider<String> value);
 	}
 
-    public static Descriptor descriptor(String bucketName, String fileDescriptorName, String fileDescriptorProtoName, String messageType) throws Exception {
+    private static Map<String, FileDescriptorProto> extractProtoMap(
+        FileDescriptorSet fileDescriptorSet) {
+        HashMap<String, FileDescriptorProto> map = new HashMap<>();
+        fileDescriptorSet.getFileList().forEach(fdp -> map.put(fdp.getName(), fdp));
+        return map;
+    }
+
+    private static FileDescriptor getFileDescriptor(String name, FileDescriptorSet fileDescriptorSet) {
+        Map<String, FileDescriptorProto> inMap = extractProtoMap(fileDescriptorSet);
+        Map<String, FileDescriptor> outMap = new HashMap<>();
+        return convertToFileDescriptorMap(name, inMap, outMap);
+    }
+
+    private static FileDescriptor convertToFileDescriptorMap(String name, Map<String, FileDescriptorProto> inMap,
+        Map<String, FileDescriptor> outMap) {
+        if (outMap.containsKey(name)) {
+            return outMap.get(name);
+        }
+        FileDescriptorProto fileDescriptorProto = inMap.get(name);
+        List<FileDescriptor> dependencies = new ArrayList<>();
+        if (fileDescriptorProto.getDependencyCount() > 0) {
+            LOG.info("more than 0 dependencies: " + fileDescriptorProto.toString());
+            fileDescriptorProto
+                .getDependencyList()
+                .forEach(dependencyName -> dependencies.add(convertToFileDescriptorMap(dependencyName, inMap, outMap)));
+        }
+        try {
+            LOG.info("Number of dependencies: " + Integer.toString(dependencies.size()));
+            FileDescriptor fileDescriptor = 
+                FileDescriptor.buildFrom(
+                    fileDescriptorProto, dependencies.toArray(new FileDescriptor[dependencies.size()]));
+            outMap.put(name, fileDescriptor);
+            return fileDescriptor;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
+        String bucketName, 
+        String fileDescriptorName, 
+        String fileDescriptorProtoName, 
+        String messageType) throws Exception {
             try{
                 Storage storage = StorageOptions.getDefaultInstance().getService();
                 Blob blob = storage.get(BlobId.of(bucketName, fileDescriptorName));
                 ReadChannel reader = blob.reader();
                 InputStream inputStream = Channels.newInputStream(reader);
-
                 FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
+                //FileDescriptor fd = getFileDescriptor(fileDescriptorProtoName, descriptorSetObject);
+                return new ProtoDescriptor(descriptorSetObject);
+                //LOG.info(ProtoLanguageFileWriter.write(protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName), protoDescriptor));
+                
+                //OutputStream out = new OutputStream();
+                //FileDescriptorProto fdp = FileDescriptorProto.parseFrom(ByteString.copyFromUtf8(ProtoLanguageFileWriter.write(protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName), protoDescriptor)));
+                //FileDescriptorProto fdp = FileDescriptorProto.parsefrom(new ByteArrayInputStream(out.toByteArray()));
+                //LOG.info("FileDescriptorProto " + fdp.toString());
+                //FileDescriptor fd = protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName);
+                //return protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
+                /*
+                //LOG.info(descriptorSetObject.toString());
+                LOG.info("FileDescriptorSet");
                 List<FileDescriptorProto> fdpl = descriptorSetObject.getFileList();
                 Optional<FileDescriptorProto> fdp = fdpl.stream()
                     .filter(m -> m.getName().equals(fileDescriptorProtoName))
                     .findFirst();
-                System.out.println(fdp.orElse(null));
+                LOG.info("FileDescriptorProto " + fdp.toString());
+                //LOG.info(fdp.orElse(null));
                 FileDescriptor[] empty = new FileDescriptor[0];
                 FileDescriptor fd = FileDescriptor.buildFrom(fdp.orElse(null), empty);
+                LOG.info("FileDescriptor");
+                
                 Optional<Descriptor> d = fd.getMessageTypes().stream()
                     .filter(m -> m.getName().equals(messageType))
                     .findFirst();
+                LOG.info("Descriptor" + d.toString());
                 return d.orElse(null);
+                */
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+    public static Descriptor getDescriptorFromCloudStorage(
+        String bucketName, 
+        String fileDescriptorName, 
+        String fileDescriptorProtoName, 
+        String messageType) throws Exception {
+            try{
+                Storage storage = StorageOptions.getDefaultInstance().getService();
+                Blob blob = storage.get(BlobId.of(bucketName, fileDescriptorName));
+                ReadChannel reader = blob.reader();
+                InputStream inputStream = Channels.newInputStream(reader);
+                FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
+                //FileDescriptor fd = getFileDescriptor(fileDescriptorProtoName, descriptorSetObject);
+                ProtoDescriptor protoDescriptor = new ProtoDescriptor(descriptorSetObject);
+                LOG.info(ProtoLanguageFileWriter.write(protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName), protoDescriptor));
+                
+                //OutputStream out = new OutputStream();
+                //FileDescriptorProto fdp = FileDescriptorProto.parseFrom(ByteString.copyFromUtf8(ProtoLanguageFileWriter.write(protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName), protoDescriptor)));
+                //FileDescriptorProto fdp = FileDescriptorProto.parsefrom(new ByteArrayInputStream(out.toByteArray()));
+                //LOG.info("FileDescriptorProto " + fdp.toString());
+                FileDescriptor fd = protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName);
+                
+                return protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
+                /*
+                //LOG.info(descriptorSetObject.toString());
+                LOG.info("FileDescriptorSet");
+                List<FileDescriptorProto> fdpl = descriptorSetObject.getFileList();
+                Optional<FileDescriptorProto> fdp = fdpl.stream()
+                    .filter(m -> m.getName().equals(fileDescriptorProtoName))
+                    .findFirst();
+                LOG.info("FileDescriptorProto " + fdp.toString());
+                //LOG.info(fdp.orElse(null));
+                FileDescriptor[] empty = new FileDescriptor[0];
+                FileDescriptor fd = FileDescriptor.buildFrom(fdp.orElse(null), empty);
+                LOG.info("FileDescriptor");
+                
+                Optional<Descriptor> d = fd.getMessageTypes().stream()
+                    .filter(m -> m.getName().equals(messageType))
+                    .findFirst();
+                LOG.info("Descriptor" + d.toString());
+                return d.orElse(null);
+                */
             }catch (Exception e){
                 e.printStackTrace();
                 return null;
@@ -187,7 +298,7 @@ public class GenericStreamPipeline {
         
         @Setup
         public void setup() throws Exception {
-            messageDescriptor = descriptor(bucketName.get(), fileDescriptorName.get(), fileDescriptorProtoName.get(), messageType.get());
+            messageDescriptor = getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), fileDescriptorProtoName.get(), messageType.get());
         }
 		
 		@ProcessElement
@@ -196,25 +307,28 @@ public class GenericStreamPipeline {
                 PubsubMessage pubsubMessage = c.element();
                 String payload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
                 Map<String, String> attributes = pubsubMessage.getAttributeMap();
-                //LOG.info("payload: " + payload);
+                LOG.info("payload: " + payload);
 
                 // Parse json to protobuf
                 DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
+                LOG.info("DynamicMessage.Builder");
 				try{
                     JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
-					attributes.entrySet().forEach(attribute -> {
-                        DynamicMessage.Builder attributeBuilder = DynamicMessage.newBuilder(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry"));
-                        attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("key"), attribute.getKey());
-                        attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("value"), attribute.getValue());
-                        builder.addRepeatedField(messageDescriptor.findFieldByName("_ATTRIBUTES"),attributeBuilder.build());
-                        });
+					try{
+                        attributes.entrySet().forEach(attribute -> {
+                            DynamicMessage.Builder attributeBuilder = DynamicMessage.newBuilder(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry"));
+                            attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("key"), attribute.getKey());
+                            attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("value"), attribute.getValue());
+                            builder.addRepeatedField(messageDescriptor.findFieldByName("_ATTRIBUTES"),attributeBuilder.build());
+                            });
+                    }catch(java.lang.NullPointerException e){LOG.info("No _ATTRIBUTES field in message");}
 					DynamicMessage message = builder.build();
-                    //LOG.info(message.toString());
+                    LOG.info(message.toString());
 
                     //transform protobuf to tablerow
-                    TableRow tr = ProtobufUtils.makeTableRow(message);
+                    TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor);
                     try{
-                        //LOG.info(tr.toPrettyString());
+                        LOG.info(tr.toPrettyString());
                     }catch(Exception e){}
                     c.output(tr);
 				}catch(InvalidProtocolBufferException e){
@@ -232,7 +346,8 @@ public class GenericStreamPipeline {
         TableSchema eventSchema = null;
         
         try{
-            eventSchema = ProtobufUtils.makeTableSchema(descriptor(options.getBucketName().get(), options.getFileDescriptorName().get(), options.getFileDescriptorProtoName().get(), options.getMessageType().get()));
+            eventSchema = ProtobufUtils.makeTableSchema(getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get(), options.getFileDescriptorProtoName().get(), options.getMessageType().get()));
+            //eventSchema = ProtobufUtils.makeTableSchema(getDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get(), options.getFileDescriptorProtoName().get(), options.getMessageType().get()));
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -252,27 +367,31 @@ public class GenericStreamPipeline {
             .apply("Fixed Windows",
                 Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
                     .withAllowedLateness(Duration.standardDays(7))
-                    .discardingFiredPanes())
+                    .discardingFiredPanes()
+                )
             .apply("Write to bigquery", 
                 BigQueryIO
                     .writeTableRows()
-                    .to(options.getBigQueryTableSpec())
+                    .to(new TablePartition(options.getBigQueryTableSpec()))
+                    //.to(options.getBigQueryTableSpec())
                     .withSchema(eventSchema)
-                    //.withTimePartitioning(new TimePartitioning().setField("Date").setType("DAY"))
-                    .withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors())
+                    //.withTimePartitioning(new TimePartitioning().setField("_PARTITIONTIME").setType("DAY"))
+                    //.withTimePartitioning(new TimePartitioning().setField("_PARTITIONTIME").setType("TIMESTAMP"))
+                    //.withTimePartitioning(new TimePartitioning())
+                    //.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors())
                     .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
-		pipeline.run();
-
-        /*writeResult
+        writeResult
             .getFailedInserts()
-            .apply("FormatFailedInserts", ParDo.of(new FailedInsertFormatter()))
-            .apply(
-                "WriteFailedInsertsToDeadletter",
-                BigQueryIO.writeTableRows()
-                    .to(options.getDeadletterTable())
-                    .withCreateDisposition(CreateDisposition.CREATE_NEVER)
-                    .withWriteDisposition(WriteDisposition.WRITE_APPEND));*/
-	}
+            .apply("LogFailedData", ParDo.of(new DoFn<TableRow, TableRow>() {
+                @ProcessElement
+                public void processElement(ProcessContext c) {
+                    TableRow row = c.element();
+                    LOG.error("Failed to insert: " + row.toString());
+                }
+            }));
+        
+        pipeline.run();
+    }
 }

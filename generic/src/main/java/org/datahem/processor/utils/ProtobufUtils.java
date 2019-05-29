@@ -14,11 +14,19 @@ package org.datahem.processor.utils;
  * =========================LICENSE_END==================================
  */
 
+import org.datahem.protobuf.options.Options;
+import org.datahem.protobuf.options.Bigquery;
+import io.anemos.metastore.core.proto.*;
+
+import java.lang.StringBuilder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Iterator;
+import java.io.IOException;
 
 import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
@@ -27,8 +35,16 @@ import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Descriptors.EnumDescriptor;
 import com.google.protobuf.Descriptors.EnumValueDescriptor;
+import com.google.protobuf.UnknownFieldSet;
 import com.google.protobuf.Message;
+import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.Timestamp;
+import com.google.protobuf.DynamicMessage;
+import com.google.protobuf.DynamicMessage.Builder;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import java.math.BigInteger;
+import com.google.protobuf.ByteString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,8 +67,231 @@ public class ProtobufUtils {
 		return className;
 	}
 
+    private static String unsignedToString(final long value) {
+    if (value >= 0) {
+      return Long.toString(value);
+    } else {
+      // Pull off the most-significant bit so that BigInteger doesn't think
+      // the number is negative, then set it again using setBit().
+      return BigInteger.valueOf(value & 0x7FFFFFFFFFFFFFFFL).setBit(63).toString();
+    }
+  }
+
+    private static String getOptionValue(FieldDescriptor descriptor, Object value) {
+      switch (descriptor.getType()) {
+        case STRING:
+          return "\"" + (String) value + "\"";
+        case INT32:
+          return Integer.toString((Integer) value);
+        case INT64:
+          return Long.toString((Long) value);
+        case ENUM:
+          EnumValueDescriptor valueDescriptor = (EnumValueDescriptor) value;
+          return valueDescriptor.toString();
+      }
+      return "";
+    }
+
+    private static String getUnknownPrimitiveFieldValue(
+        FieldDescriptor fieldDescriptor, 
+        Object value, 
+        int indent) {
+      switch (fieldDescriptor.getType()) {
+        case MESSAGE:
+          try {
+            StringBuilder stringBuilder = new StringBuilder();
+            DynamicMessage dynamicMessage =
+                DynamicMessage.parseFrom(fieldDescriptor.getMessageType(), (ByteString) value);
+            stringBuilder.append("{\n");
+
+            Iterator<FieldDescriptor> iter = dynamicMessage.getAllFields().keySet().iterator();
+            while (iter.hasNext()) {
+              FieldDescriptor fd = iter.next();
+              Object fieldValue = dynamicMessage.getField(fd);
+              for (int i = 0; i < indent + 1; i++) {
+                stringBuilder.append("\t");
+              }
+              stringBuilder.append(fd.getName());
+              stringBuilder.append(": ");
+
+              if (fd.isRepeated()) {
+                stringBuilder.append("[");
+                List<Object> repeatedValues = (List<Object>) fieldValue;
+                Iterator<Object> repeatedIt = repeatedValues.iterator();
+                while (repeatedIt.hasNext()) {
+                  stringBuilder.append(getOptionValue(fd, repeatedIt.next()));
+                  if (repeatedIt.hasNext()) {
+                    stringBuilder.append(",");
+                  } else {
+                    stringBuilder.append("]");
+                  }
+                }
+              } else {
+                String optionValue = getOptionValue(fd, fieldValue);
+                stringBuilder.append(optionValue);
+              }
+              if (iter.hasNext()) {
+                stringBuilder.append(",");
+              }
+              stringBuilder.append("\n");
+            }
+            for (int i = 0; i < indent; i++) {
+              stringBuilder.append("\t");
+            }
+            stringBuilder.append("}");
+            return stringBuilder.toString();
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        case BOOL:
+          return value.equals(1L) ? "true" : "false";
+        case ENUM:
+        case STRING:
+          ByteString byteString = (ByteString) value;
+          return "\"" + byteString.toStringUtf8() + "\"";
+        case INT32:
+        case INT64:
+          return unsignedToString((Long) value);
+        case DOUBLE:
+          Double d = Double.longBitsToDouble((Long) value);
+          return d.toString();
+        case FLOAT:
+          Float f = Float.intBitsToFloat((Integer) value);
+          return f.toString();
+      }
+      throw new RuntimeException(
+          "conversion of unknownfield for type "
+              + fieldDescriptor.getType().toString()
+              + " not implemented");
+    }
+
+    private static Multimap<FieldDescriptor, String> getUnknownFieldValue(
+        FieldDescriptor fieldDescriptor, 
+        UnknownFieldSet.Field field, 
+        int indent) {
+      
+        HashMultimap<FieldDescriptor, String> unknownFieldValues = HashMultimap.create();
+      
+      for (Object value : field.getLengthDelimitedList()) {
+        unknownFieldValues.put(
+            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value, indent));
+      }
+      for (Object value : field.getFixed32List()) {
+        unknownFieldValues.put(
+            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value, indent));
+      }
+      for (Object value : field.getFixed64List()) {
+        unknownFieldValues.put(
+            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value, indent));
+      }
+      for (Object value : field.getVarintList()) {
+        unknownFieldValues.put(
+            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value, indent));
+      }
+      for (Object value : field.getGroupList()) {
+        unknownFieldValues.put(
+            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value, indent));
+      }
+      return unknownFieldValues;
+    }
+  
+
+    private static HashMultimap<FieldDescriptor, String> getUnknownFieldValues(
+        UnknownFieldSet unknownFieldSet,
+        Map<Integer, FieldDescriptor> optionsMap,
+        int indent) {
+      HashMultimap<FieldDescriptor, String> unknownFieldValues = HashMultimap.create();
+      unknownFieldSet
+          .asMap()
+          .forEach(
+              (number, field) -> {
+                FieldDescriptor fieldDescriptor = optionsMap.get(number);
+                unknownFieldValues.putAll(getUnknownFieldValue(fieldDescriptor, field, indent));
+              });
+      return unknownFieldValues;
+    }
+
+    public static TableSchema makeTableSchema(ProtoDescriptor protoDescriptor) {
+		Descriptor d = protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
+        LOG.info("Descriptor fullname: " + d.getFullName());
+        LOG.info("messageOptions: " + d.getOptions().toString());
+
+        TableSchema res = new TableSchema();
+
+        for (FieldDescriptor f : d.getOptions().getDescriptor().getFields()){
+            LOG.info(f.getFullName());
+        }
+
+		List<FieldDescriptor> fields = d.getFields();
+
+		List<TableFieldSchema> schema_fields = new ArrayList<TableFieldSchema>();
+
+		for (FieldDescriptor f : fields) {
+            String description = "";
+            if (!f.getOptions().getUnknownFields().asMap().isEmpty()) {
+                f.getOptions().getUnknownFields().asMap().forEach(
+                    (number, field) -> {
+                        LOG.info("field: " + f.getFullName() + " fieldOption number :" + Integer.toString(number));
+                        LOG.info(protoDescriptor.getFieldOptionMap().get(number).getFullName());
+                });
+
+                 HashMultimap<FieldDescriptor, String> unknownOptionsMap =
+                    getUnknownFieldValues(
+                        f.getOptions().getUnknownFields(),
+                        protoDescriptor.getFieldOptionMap(),
+                        1);
+                Iterator<Map.Entry<FieldDescriptor, String>> unknownIter = unknownOptionsMap.entries().iterator();
+                while (unknownIter.hasNext()) {
+                    Map.Entry<FieldDescriptor, String> fieldOption = unknownIter.next();
+                    FieldDescriptor fd = fieldOption.getKey();
+                    String value = fieldOption.getValue();
+                    LOG.info("fieldOption name: " + fd.getName() + ", fieldOption value: " + value);
+                    if(fd.getName().equals("fdescription")){description = value;}
+                }
+            }
+            
+			String type = "STRING";
+			String mode = "NULLABLE";
+
+			if (f.isRepeated()) {
+				mode = "REPEATED";
+			}
+
+			if (f.getType().toString().toUpperCase().contains("BYTES")) {
+				type = "BYTES";
+			} else if (f.getType().toString().toUpperCase().contains("INT") 
+                || f.getType().toString().toUpperCase().contains("ENUM")){
+				type = "INTEGER";
+			} else if (f.getType().toString().toUpperCase().contains("BOOL")) {
+				type = "BOOLEAN";
+			} else if (f.getType().toString().toUpperCase().contains("FLOAT")
+					|| f.getType().toString().toUpperCase().contains("DOUBLE")) {
+				type = "FLOAT";
+			} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
+				type = "RECORD";
+				TableSchema ts = makeTableSchema(f.getMessageType());
+
+				schema_fields.add(new TableFieldSchema().setName(f.getName().replace(".", "_")).setType(type)
+						.setMode(mode).setFields(ts.getFields()).setDescription(description));
+			}
+
+			if (!type.equals("RECORD")) {
+				schema_fields
+						.add(new TableFieldSchema().setName(f.getName().replace(".", "_")).setType(type).setMode(mode).setDescription(description));
+			}
+        }
+		res.setFields(schema_fields);
+        LOG.info("table schema" + res.toString());
+		return res;
+	}
+
 	public static TableSchema makeTableSchema(Descriptor d) {
-		TableSchema res = new TableSchema();
+		
+        TableSchema res = new TableSchema();
+
+        for (FieldDescriptor f : d.getOptions().getDescriptor().getFields()){
+            LOG.info(f.getFullName());
+        }
 
 		List<FieldDescriptor> fields = d.getFields();
 
@@ -95,9 +334,18 @@ public class ProtobufUtils {
 		return res;
 	}
 
-	public static TableRow makeTableRow(Message message) {
+    public static TableRow makeTableRow(Message message) {
+        return makeTableRow(message, message.getDescriptorForType());
+    }
+
+    public static TableRow makeTableRow(Descriptor descriptor) {
+        return makeTableRow(DynamicMessage.newBuilder(descriptor).clear().build(), descriptor);
+    }
+
+	public static TableRow makeTableRow(Message message, Descriptor descriptor) {
 		TableRow res = new TableRow();
-		List<FieldDescriptor> fields = message.getDescriptorForType().getFields();
+        List<FieldDescriptor> fields = descriptor.getFields();
+		//List<FieldDescriptor> fields = message.getDescriptorForType().getFields();
 
 		for (FieldDescriptor f : fields) {
 			String type = "STRING";
@@ -121,9 +369,17 @@ public class ProtobufUtils {
 				} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
 					type = "RECORD";
 					if (message.getAllFields().containsKey(f)) {
-						TableRow tr = makeTableRow((Message) message.getField(f));
+						//TableRow tr = makeTableRow((Message) message.getField(f));
+                        //LOG.info("message.getField(f): " + ((Message) message.getField(f)).toString());
+
+                        TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType());
+                        LOG.info("contains key: "+ tr.toString());
 						res.set(f.getName().replace(".", "_"), tr);
-					}
+					}else{
+                        TableRow tr = makeTableRow(f.getMessageType());
+                        LOG.info("doesn't contain key: "+ tr.toString());
+						res.set(f.getName().replace(".", "_"), tr);
+                    }
 				}
 			} else if (f.isRepeated()) {
 				if (f.getType().toString().toUpperCase().contains("STRING")) {
@@ -152,9 +408,12 @@ public class ProtobufUtils {
 							.collect(Collectors.toList());
 					res.set(f.getName().replace(".", "_"), values);
 				} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
-					List<TableRow> values = ((List<Message>) message.getField(f)).stream().map(m -> makeTableRow(m))
+					    //List<TableRow> values = ((List<Message>) message.getField(f)).stream().map(m -> makeTableRow(m))
+                        List<TableRow> values = ((List<Message>) message.getField(f))
+                            .stream()
+                            .map(m -> makeTableRow(m,  f.getMessageType()))
 							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
+					    res.set(f.getName().replace(".", "_"), values);
 				}
 			}
 		}
