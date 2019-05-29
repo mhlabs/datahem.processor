@@ -105,7 +105,6 @@ public class GenericStreamPipelineTest {
 	
 	@Rule public transient TestPipeline p = TestPipeline.create();
 
-    //String testPayload = "{\"NewImage\":{\"Id\":\"58118\", \"SocialSecurityNo\":\"8109177800\",\"EmailAddress\":\"khitkle@gmail.com\",\"AddressId\":null,\"LoginInformation\":{\"LastLoginDate\":\"2015-12-11T09:21:35\",\"LoginCount\":39,\"LastLoginIp\":\"94.234.170.55\"},\"StoreId\":\"10\",\"Favorites\":null,\"AcceptNewsletter\":false,\"DontSendDeliverySms\":false,\"SendInvoiceReminderSms\":false,\"AllowMonthlyInvoice\":false,\"AllowPayEx\":false,\"DisableFlexPay\":true,\"TotalCreditLimit\":0.0,\"PerPurchaseCreditLimit\":0.0,\"AllowedPaymentTypes\":[0,8,11],\"InvoiceAddressId\":null,\"InvoiceAddress\":null,\"SavedPayExCCPaymentTicket\":\"\",\"MemberPaymentSettings\":[{\"AllowedPaymentTypeId\":1, \"TotalCreditLimit\":2.0}],\"AllowMultipleOrdersOnSameDay\":false,\"ExtraWorkTime\":0,\"DriverDeliveryNote\":null,\"CanChangeDeliveryAddressForInvoice\":true,\"InvoicePaymentAllowed\":true,\"LockPhoneNumber\":null,\"NumberOfPurchases\":3,\"SumOfAllPurchases\":2951.35,\"TotalCreditGiven\":0.0,\"TotalComplaint\":1,\"LastUsedOrderId\":\"0\",\"AboutMember\":null,\"LogHistory\":null,\"OrderPickingNote\":null,\"MemberGroups\":[],\"MemberDeliveryPass\":{\"ValidWeekdays\":[0,1,5]},\"MemberBonus\":{\"MemberId\":58118,\"BonusId\":1116921,\"BonusCode\":\"B1116918C97763\",\"BonusCheckDate\":\"2015-09-30T00:00:00\",\"TotalRemainingBonusPoint\":2476.0,\"BonusCheckAmountLeft\":24.0},\"MemberRating\":{\"MemberId\":58118,\"StarRating\":0.0,\"AverageTB2PerOrderScore\":0.0,\"NumberOfOrdersScore\":0.0,\"OrderFrequencyScore\":0.0},\"MemberDiscounts\":[{\"DiscountOfferId\":441636,\"MemberId\":58118,\"DiscountUsedDate\":\"2015-09-26T20:14:34\",\"DiscountCount\":1,\"OrderIds\":[]},{\"DiscountOfferId\":1188013,\"MemberId\":58118,\"DiscountUsedDate\":null,\"DiscountCount\":0,\"OrderIds\":[]},{\"DiscountOfferId\":35663,\"MemberId\":58118,\"DiscountUsedDate\":null,\"DiscountCount\":1,\"OrderIds\":[5503338]},{\"DiscountOfferId\":851752,\"MemberId\":58118,\"DiscountUsedDate\":null,\"DiscountCount\":1,\"OrderIds\":[6219978]}],\"CreationDate\":\"2013-02-13T19:19:01\",\"LastModifiedDate\":\"2019-02-27T21:38:42\",\"RemovedDate\":null}}";
     String testPayload = "{\"Temperature\":10.0, \"Car\":\"abc123\", \"Timestamp\":\"2019-05-23T13:13:13\", \"Date\":\"2019-05-13\"}";
 
 
@@ -127,7 +126,8 @@ public class GenericStreamPipelineTest {
         LOG.info("payload" + testPayload);
         TableSchema eventSchema = null;
         try{
-            eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc", "mathem/cartemperature/v1/car_temperature.proto", "CarTemperature"));
+            //eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc", "mathem/cartemperature/v1/car_temperature.proto", "CarTemperature"));
+            eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc", "mathem/cartemperature/v1/car_temperature.proto", "CarTemperature"));
         }catch (Exception e) {
             e.printStackTrace();
         }
