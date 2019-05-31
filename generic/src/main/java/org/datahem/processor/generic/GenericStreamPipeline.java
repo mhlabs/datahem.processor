@@ -194,6 +194,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 InputStream inputStream = Channels.newInputStream(reader);
                 FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
                 //FileDescriptor fd = getFileDescriptor(fileDescriptorProtoName, descriptorSetObject);
+                LOG.info("check");
                 return new ProtoDescriptor(descriptorSetObject);
                 //LOG.info(ProtoLanguageFileWriter.write(protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName), protoDescriptor));
                 
@@ -344,9 +345,11 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
         TableSchema eventSchema = null;
-        
+        String tableDescription = "";
+
         try{
             eventSchema = ProtobufUtils.makeTableSchema(getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get(), options.getFileDescriptorProtoName().get(), options.getMessageType().get()));
+            
             //eventSchema = ProtobufUtils.makeTableSchema(getDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get(), options.getFileDescriptorProtoName().get(), options.getMessageType().get()));
         }catch (Exception e) {
             e.printStackTrace();
@@ -372,7 +375,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             .apply("Write to bigquery", 
                 BigQueryIO
                     .writeTableRows()
-                    .to(new TablePartition(options.getBigQueryTableSpec()))
+                    .to(new TablePartition(options.getBigQueryTableSpec(), tableDescription))
                     //.to(options.getBigQueryTableSpec())
                     .withSchema(eventSchema)
                     //.withTimePartitioning(new TimePartitioning().setField("_PARTITIONTIME").setType("DAY"))

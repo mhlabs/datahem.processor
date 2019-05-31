@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.Map;
+import java.util.Set;
+import java.util.Collection;
 import java.util.Iterator;
 import java.io.IOException;
 
@@ -216,25 +218,30 @@ public class ProtobufUtils {
         LOG.info("Descriptor fullname: " + d.getFullName());
         LOG.info("messageOptions: " + d.getOptions().toString());
 
+        if (!d.getOptions().getUnknownFields().asMap().isEmpty()) {
+            LOG.info("messageOptionMap size in protolanguagefilewriter" + Integer.toString(protoDescriptor.getMessageOptionMap().size()));
+            HashMultimap<FieldDescriptor, String> unknownOptionsMap = getUnknownFieldValues(
+                d.getOptions().getUnknownFields(),
+                protoDescriptor.getMessageOptionMap(),
+                1);
+            Set<FieldDescriptor> keys = unknownOptionsMap.keySet();
+            for (FieldDescriptor fd : keys) {
+                Collection<String> values = unknownOptionsMap.get(fd);
+                for (String value : values) {
+                    //printMessageOption("", fd.getName(), value, indent + 1);
+                    LOG.info("Message options: " + fd.getName() + " : " + value);
+                }
+            }
+      }
+
         TableSchema res = new TableSchema();
 
-        for (FieldDescriptor f : d.getOptions().getDescriptor().getFields()){
-            LOG.info(f.getFullName());
-        }
-
+        // Iterate fields
 		List<FieldDescriptor> fields = d.getFields();
-
 		List<TableFieldSchema> schema_fields = new ArrayList<TableFieldSchema>();
-
 		for (FieldDescriptor f : fields) {
             String description = "";
             if (!f.getOptions().getUnknownFields().asMap().isEmpty()) {
-                f.getOptions().getUnknownFields().asMap().forEach(
-                    (number, field) -> {
-                        LOG.info("field: " + f.getFullName() + " fieldOption number :" + Integer.toString(number));
-                        LOG.info(protoDescriptor.getFieldOptionMap().get(number).getFullName());
-                });
-
                  HashMultimap<FieldDescriptor, String> unknownOptionsMap =
                     getUnknownFieldValues(
                         f.getOptions().getUnknownFields(),

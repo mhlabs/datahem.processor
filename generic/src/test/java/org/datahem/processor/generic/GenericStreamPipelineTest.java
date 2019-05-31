@@ -125,9 +125,11 @@ public class GenericStreamPipelineTest {
 	public void userPageviewTest(){
         LOG.info("payload" + testPayload);
         TableSchema eventSchema = null;
+        String tableDescription = "";
         try{
             //eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc", "mathem/cartemperature/v1/car_temperature.proto", "CarTemperature"));
             eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc", "mathem/cartemperature/v1/car_temperature.proto", "CarTemperature"));
+            
         }catch (Exception e) {
             e.printStackTrace();
         }
