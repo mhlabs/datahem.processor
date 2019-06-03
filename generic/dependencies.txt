@@ -1,0 +1,507 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< se.mathem.processor.aws:sns >---------------------
+[INFO] Building DataHem 0.7.2
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from central: https://repo.maven.apache.org/maven2/com/google/apis/google-api-services-bigquery/v2-rev434-1.25.0/google-api-services-bigquery-v2-rev434-1.25.0.pom
+Progress (1): 2.2/2.6 kBProgress (1): 2.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/com/google/apis/google-api-services-bigquery/v2-rev434-1.25.0/google-api-services-bigquery-v2-rev434-1.25.0.pom (2.6 kB at 2.5 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/com/google/apis/google-api-services-bigquery/v2-rev434-1.25.0/google-api-services-bigquery-v2-rev434-1.25.0.jar
+Progress (1): 2.2/161 kBProgress (1): 5.0/161 kBProgress (1): 7.7/161 kBProgress (1): 10/161 kB Progress (1): 13/161 kBProgress (1): 16/161 kBProgress (1): 19/161 kBProgress (1): 21/161 kBProgress (1): 24/161 kBProgress (1): 27/161 kBProgress (1): 30/161 kBProgress (1): 32/161 kBProgress (1): 36/161 kBProgress (1): 40/161 kBProgress (1): 45/161 kBProgress (1): 49/161 kBProgress (1): 53/161 kBProgress (1): 57/161 kBProgress (1): 61/161 kBProgress (1): 65/161 kBProgress (1): 69/161 kBProgress (1): 73/161 kBProgress (1): 77/161 kBProgress (1): 81/161 kBProgress (1): 85/161 kBProgress (1): 90/161 kBProgress (1): 94/161 kBProgress (1): 98/161 kBProgress (1): 102/161 kBProgress (1): 106/161 kBProgress (1): 110/161 kBProgress (1): 114/161 kBProgress (1): 118/161 kBProgress (1): 122/161 kBProgress (1): 126/161 kBProgress (1): 131/161 kBProgress (1): 135/161 kBProgress (1): 139/161 kBProgress (1): 143/161 kBProgress (1): 147/161 kBProgress (1): 151/161 kBProgress (1): 155/161 kBProgress (1): 159/161 kBProgress (1): 161 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/com/google/apis/google-api-services-bigquery/v2-rev434-1.25.0/google-api-services-bigquery-v2-rev434-1.25.0.jar (161 kB at 521 kB/s)
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ sns ---
+[INFO] se.mathem.processor.aws:sns:jar:0.7.2
+[INFO] +- org.apache.beam:beam-sdks-java-core:jar:2.12.0:compile
+[INFO] |  +- org.apache.beam:beam-model-pipeline:jar:2.12.0:compile
+[INFO] |  |  +- (org.apache.beam:beam-vendor-grpc-1_13_1:jar:0.2:compile - omitted for duplicate)
+[INFO] |  |  \- com.google.errorprone:error_prone_annotations:jar:2.1.2:compile
+[INFO] |  +- org.apache.beam:beam-model-job-management:jar:2.12.0:compile
+[INFO] |  |  +- (org.apache.beam:beam-vendor-grpc-1_13_1:jar:0.2:compile - omitted for duplicate)
+[INFO] |  |  \- (com.google.errorprone:error_prone_annotations:jar:2.1.2:compile - omitted for duplicate)
+[INFO] |  +- org.apache.beam:beam-vendor-guava-20_0:jar:0.1:compile
+[INFO] |  +- com.fasterxml.jackson.core:jackson-core:jar:2.9.8:compile
+[INFO] |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.9.8:compile
+[INFO] |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.9.8:compile
+[INFO] |  |  +- (com.fasterxml.jackson.core:jackson-annotations:jar:2.9.0:compile - omitted for conflict with 2.9.8)
+[INFO] |  |  \- (com.fasterxml.jackson.core:jackson-core:jar:2.9.8:compile - omitted for duplicate)
+[INFO] |  +- (org.slf4j:slf4j-api:jar:1.7.25:compile - omitted for conflict with 1.7.14)
+[INFO] |  +- org.apache.avro:avro:jar:1.8.2:compile
+[INFO] |  |  +- org.codehaus.jackson:jackson-core-asl:jar:1.9.13:compile
+[INFO] |  |  +- org.codehaus.jackson:jackson-mapper-asl:jar:1.9.13:compile
+[INFO] |  |  |  \- (org.codehaus.jackson:jackson-core-asl:jar:1.9.13:compile - omitted for duplicate)
+[INFO] |  |  +- com.thoughtworks.paranamer:paranamer:jar:2.7:compile
+[INFO] |  |  +- (org.xerial.snappy:snappy-java:jar:1.1.1.3:compile - omitted for conflict with 1.1.4)
+[INFO] |  |  +- org.apache.commons:commons-compress:jar:1.8.1:compile
+[INFO] |  |  +- (org.tukaani:xz:jar:1.5:compile - omitted for conflict with 1.8)
+[INFO] |  |  \- (org.slf4j:slf4j-api:jar:1.7.7:compile - omitted for conflict with 1.7.25)
+[INFO] |  +- org.xerial.snappy:snappy-java:jar:1.1.4:compile
+[INFO] |  +- (joda-time:joda-time:jar:2.4:compile - omitted for duplicate)
+[INFO] |  \- org.tukaani:xz:jar:1.8:compile
+[INFO] +- org.apache.beam:beam-sdks-java-io-google-cloud-platform:jar:2.12.0:compile
+[INFO] |  +- (org.apache.beam:beam-sdks-java-core:jar:2.12.0:compile - omitted for duplicate)
+[INFO] |  +- (org.apache.beam:beam-sdks-java-extensions-google-cloud-platform-core:jar:2.12.0:compile - omitted for duplicate)
+[INFO] |  +- org.apache.beam:beam-sdks-java-extensions-protobuf:jar:2.12.0:compile
+[INFO] |  |  +- (org.apache.beam:beam-vendor-guava-20_0:jar:0.1:compile - omitted for duplicate)
+[INFO] |  |  +- (org.apache.beam:beam-sdks-java-core:jar:2.12.0:compile - omitted for duplicate)
+[INFO] |  |  \- (com.google.protobuf:protobuf-java:jar:3.6.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.guava:guava:jar:20.0:compile - omitted for duplicate)
+[INFO] |  +- (com.fasterxml.jackson.core:jackson-databind:jar:2.9.8:compile - omitted for duplicate)
+[INFO] |  +- io.grpc:grpc-core:jar:1.17.1:compile
+[INFO] |  |  +- io.grpc:grpc-context:jar:1.17.1:compile
+[INFO] |  |  +- com.google.code.gson:gson:jar:2.7:compile
+[INFO] |  |  +- (com.google.errorprone:error_prone_annotations:jar:2.2.0:compile - omitted for conflict with 2.1.2)
+[INFO] |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  +- org.codehaus.mojo:animal-sniffer-annotations:jar:1.17:compile
+[INFO] |  |  +- (com.google.guava:guava:jar:26.0-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  +- io.opencensus:opencensus-api:jar:0.17.0:compile
+[INFO] |  |  \- io.opencensus:opencensus-contrib-grpc-metrics:jar:0.17.0:compile
+[INFO] |  |     \- (io.opencensus:opencensus-api:jar:0.17.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.apis:google-api-services-bigquery:jar:v2-rev20181104-1.27.0:compile - omitted for conflict with v2-rev434-1.25.0)
+[INFO] |  +- com.google.api:gax-grpc:jar:1.38.0:compile
+[INFO] |  |  +- com.google.api:gax:jar:1.38.0:compile
+[INFO] |  |  |  +- (com.google.guava:guava:jar:26.0-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  |  +- (com.google.code.findbugs:jsr305:jar:3.0.2:compile - omitted for duplicate)
+[INFO] |  |  |  +- (org.threeten:threetenbp:jar:1.3.3:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.auth:google-auth-library-oauth2-http:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (io.opencensus:opencensus-api:jar:0.17.0:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-stub:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-auth:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- io.grpc:grpc-protobuf:jar:1.17.1:compile
+[INFO] |  |  |  +- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.protobuf:protobuf-java:jar:3.5.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  |  +- (com.google.guava:guava:jar:26.0-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-common-protos:jar:1.0.0:compile - omitted for conflict with 1.12.0)
+[INFO] |  |  |  \- io.grpc:grpc-protobuf-lite:jar:1.17.1:compile
+[INFO] |  |  |     +- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  |     \- (com.google.guava:guava:jar:26.0-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  +- (com.google.guava:guava:jar:26.0-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  +- (com.google.code.findbugs:jsr305:jar:3.0.2:compile - omitted for duplicate)
+[INFO] |  |  +- org.threeten:threetenbp:jar:1.3.3:compile
+[INFO] |  |  +- (com.google.auth:google-auth-library-oauth2-http:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.auth:google-auth-library-credentials:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.api:api-common:jar:1.7.0:compile
+[INFO] |  |  |  +- (com.google.code.findbugs:jsr305:jar:3.0.2:compile - omitted for duplicate)
+[INFO] |  |  |  \- (com.google.guava:guava:jar:19.0:compile - omitted for conflict with 20.0)
+[INFO] |  |  +- io.grpc:grpc-netty-shaded:jar:1.17.1:compile
+[INFO] |  |  |  \- (io.grpc:grpc-core:jar:1.17.1:runtime - omitted for duplicate)
+[INFO] |  |  \- io.grpc:grpc-alts:jar:1.17.1:compile
+[INFO] |  |     +- (io.grpc:grpc-auth:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |     +- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |     +- (io.grpc:grpc-netty-shaded:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |     +- (io.grpc:grpc-protobuf:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |     +- (io.grpc:grpc-stub:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |     +- org.apache.commons:commons-lang3:jar:3.5:compile
+[INFO] |  |     +- (com.google.protobuf:protobuf-java:jar:3.5.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |     +- (com.google.auth:google-auth-library-oauth2-http:jar:0.9.0:compile - omitted for conflict with 0.12.0)
+[INFO] |  |     \- io.grpc:grpc-grpclb:jar:1.17.1:runtime
+[INFO] |  |        +- (io.grpc:grpc-core:jar:1.17.1:runtime - omitted for duplicate)
+[INFO] |  |        +- (io.grpc:grpc-protobuf:jar:1.17.1:runtime - omitted for duplicate)
+[INFO] |  |        +- (io.grpc:grpc-stub:jar:1.17.1:runtime - omitted for duplicate)
+[INFO] |  |        +- (com.google.protobuf:protobuf-java:jar:3.5.1:runtime - omitted for conflict with 3.6.0)
+[INFO] |  |        \- (com.google.protobuf:protobuf-java-util:jar:3.5.1:runtime - omitted for conflict with 3.6.1)
+[INFO] |  +- com.google.cloud:google-cloud-core-grpc:jar:1.61.0:compile
+[INFO] |  |  +- (com.google.auth:google-auth-library-credentials:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.cloud:google-cloud-core:jar:1.61.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.guava:guava:jar:26.0-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  +- (com.google.protobuf:protobuf-java:jar:3.6.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  +- com.google.protobuf:protobuf-java-util:jar:3.6.1:compile
+[INFO] |  |  |  +- (com.google.protobuf:protobuf-java:jar:3.6.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  |  +- (com.google.guava:guava:jar:19.0:compile - omitted for conflict with 20.0)
+[INFO] |  |  |  \- (com.google.code.gson:gson:jar:2.7:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-protobuf:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-context:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-netty-shaded:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-stub:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-auth:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api:gax-grpc:jar:1.37.0:compile - omitted for conflict with 1.38.0)
+[INFO] |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for conflict with 1.3.2)
+[INFO] |  +- com.google.apis:google-api-services-pubsub:jar:v1-rev20181105-1.27.0:compile
+[INFO] |  |  \- (com.google.api-client:google-api-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  +- com.google.api.grpc:grpc-google-cloud-pubsub-v1:jar:1.43.0:compile
+[INFO] |  |  +- (io.grpc:grpc-stub:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  +- (io.grpc:grpc-protobuf:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-cloud-pubsub-v1:jar:1.43.0:compile - omitted for duplicate)
+[INFO] |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  +- com.google.api.grpc:proto-google-cloud-pubsub-v1:jar:1.43.0:compile
+[INFO] |  |  +- (com.google.protobuf:protobuf-java:jar:3.6.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  +- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.api.grpc:proto-google-iam-v1:jar:0.12.0:compile
+[INFO] |  |  |  +- (com.google.protobuf:protobuf-java:jar:3.5.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  |  +- (com.google.api:api-common:jar:1.5.0:compile - omitted for conflict with 1.7.0)
+[INFO] |  |  |  \- (com.google.api.grpc:proto-google-common-protos:jar:1.11.0:compile - omitted for conflict with 1.12.0)
+[INFO] |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  +- com.google.cloud.bigdataoss:util:jar:1.9.16:compile
+[INFO] |  |  +- com.google.api-client:google-api-client-java6:jar:1.27.0:compile
+[INFO] |  |  |  +- (com.google.api-client:google-api-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (com.google.oauth-client:google-oauth-client-java6:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.api-client:google-api-client-jackson2:jar:1.27.0:compile
+[INFO] |  |  |  +- (com.google.api-client:google-api-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (com.google.http-client:google-http-client-jackson2:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.apis:google-api-services-storage:jar:v1-rev20181109-1.27.0:compile - omitted for conflict with v1-rev20181013-1.27.0)
+[INFO] |  |  +- (com.google.guava:guava:jar:27.0.1-jre:compile - omitted for conflict with 20.0)
+[INFO] |  |  +- com.google.auto.value:auto-value-annotations:jar:1.6.3:compile
+[INFO] |  |  +- com.google.oauth-client:google-oauth-client:jar:1.27.0:compile
+[INFO] |  |  |  +- (com.google.http-client:google-http-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.code.findbugs:jsr305:jar:3.0.2:compile - omitted for duplicate)
+[INFO] |  |  |  \- (com.google.guava:guava:jar:20.0:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.oauth-client:google-oauth-client-java6:jar:1.27.0:compile
+[INFO] |  |  |  \- (com.google.oauth-client:google-oauth-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.flogger:google-extensions:jar:0.3.1:compile
+[INFO] |  |  |  +- com.google.flogger:flogger:jar:0.3.1:compile
+[INFO] |  |  |  |  \- (com.google.code.findbugs:jsr305:jar:3.0.1:compile - omitted for conflict with 3.0.2)
+[INFO] |  |  |  \- (com.google.code.findbugs:jsr305:jar:3.0.1:compile - omitted for conflict with 3.0.2)
+[INFO] |  |  \- com.google.flogger:flogger-system-backend:jar:0.3.1:runtime
+[INFO] |  |     +- (com.google.flogger:flogger:jar:0.3.1:runtime - omitted for duplicate)
+[INFO] |  |     \- (com.google.code.findbugs:jsr305:jar:3.0.1:runtime - omitted for conflict with 3.0.2)
+[INFO] |  +- com.google.cloud.datastore:datastore-v1-proto-client:jar:1.6.0:compile
+[INFO] |  |  +- (com.google.api.grpc:proto-google-cloud-datastore-v1:jar:0.1.27:compile - omitted for conflict with 0.44.0)
+[INFO] |  |  +- (com.google.http-client:google-http-client:jar:1.23.0:compile - omitted for conflict with 1.27.0)
+[INFO] |  |  +- com.google.http-client:google-http-client-protobuf:jar:1.20.0:compile
+[INFO] |  |  |  +- (com.google.http-client:google-http-client:jar:1.20.0:compile - omitted for conflict with 1.27.0)
+[INFO] |  |  |  \- (com.google.protobuf:protobuf-java:jar:2.4.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  +- com.google.http-client:google-http-client-jackson:jar:1.20.0:compile
+[INFO] |  |  |  +- (com.google.http-client:google-http-client:jar:1.20.0:compile - omitted for conflict with 1.27.0)
+[INFO] |  |  |  \- (org.codehaus.jackson:jackson-core-asl:jar:1.9.11:compile - omitted for conflict with 1.9.13)
+[INFO] |  |  +- (com.google.oauth-client:google-oauth-client:jar:1.20.0:compile - omitted for conflict with 1.27.0)
+[INFO] |  |  +- (com.google.api-client:google-api-client:jar:1.20.0:compile - omitted for conflict with 1.27.0)
+[INFO] |  |  \- (com.google.guava:guava:jar:18.0:compile - omitted for conflict with 20.0)
+[INFO] |  +- com.google.api.grpc:proto-google-cloud-datastore-v1:jar:0.44.0:compile
+[INFO] |  |  +- (com.google.protobuf:protobuf-java:jar:3.6.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  +- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  +- io.grpc:grpc-auth:jar:1.17.1:compile
+[INFO] |  |  +- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  \- (com.google.auth:google-auth-library-credentials:jar:0.9.0:compile - omitted for conflict with 0.12.0)
+[INFO] |  +- io.grpc:grpc-netty:jar:1.17.1:compile
+[INFO] |  |  +- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- io.netty:netty-codec-http2:jar:4.1.30.Final:compile
+[INFO] |  |  |  +- io.netty:netty-codec-http:jar:4.1.30.Final:compile
+[INFO] |  |  |  |  \- (io.netty:netty-codec:jar:4.1.30.Final:compile - omitted for duplicate)
+[INFO] |  |  |  \- (io.netty:netty-handler:jar:4.1.30.Final:compile - omitted for duplicate)
+[INFO] |  |  \- io.netty:netty-handler-proxy:jar:4.1.30.Final:compile
+[INFO] |  |     +- (io.netty:netty-transport:jar:4.1.30.Final:compile - omitted for duplicate)
+[INFO] |  |     +- io.netty:netty-codec-socks:jar:4.1.30.Final:compile
+[INFO] |  |     |  \- (io.netty:netty-codec:jar:4.1.30.Final:compile - omitted for duplicate)
+[INFO] |  |     \- (io.netty:netty-codec-http:jar:4.1.30.Final:compile - omitted for duplicate)
+[INFO] |  +- io.netty:netty-handler:jar:4.1.30.Final:compile
+[INFO] |  |  +- io.netty:netty-buffer:jar:4.1.30.Final:compile
+[INFO] |  |  |  \- io.netty:netty-common:jar:4.1.30.Final:compile
+[INFO] |  |  +- io.netty:netty-transport:jar:4.1.30.Final:compile
+[INFO] |  |  |  +- (io.netty:netty-buffer:jar:4.1.30.Final:compile - omitted for duplicate)
+[INFO] |  |  |  \- io.netty:netty-resolver:jar:4.1.30.Final:compile
+[INFO] |  |  |     \- (io.netty:netty-common:jar:4.1.30.Final:compile - omitted for duplicate)
+[INFO] |  |  \- io.netty:netty-codec:jar:4.1.30.Final:compile
+[INFO] |  |     \- (io.netty:netty-transport:jar:4.1.30.Final:compile - omitted for duplicate)
+[INFO] |  +- io.grpc:grpc-stub:jar:1.17.1:compile
+[INFO] |  |  \- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  +- (joda-time:joda-time:jar:2.4:compile - omitted for duplicate)
+[INFO] |  +- com.google.cloud:google-cloud-bigquerystorage:jar:0.79.0-alpha:compile
+[INFO] |  |  +- (com.google.cloud:google-cloud-core:jar:1.61.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.cloud:google-cloud-core-grpc:jar:1.61.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-cloud-bigquerystorage-v1beta1:jar:0.44.0:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.api.grpc:grpc-google-cloud-bigquerystorage-v1beta1:jar:0.44.0:compile
+[INFO] |  |  |  +- (io.grpc:grpc-stub:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (io.grpc:grpc-protobuf:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-cloud-bigquerystorage-v1beta1:jar:0.44.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api:gax-grpc:jar:1.37.0:compile - omitted for conflict with 1.38.0)
+[INFO] |  |  +- (com.google.api:gax:jar:1.37.0:compile - omitted for conflict with 1.38.0)
+[INFO] |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  +- com.google.api.grpc:proto-google-cloud-bigquerystorage-v1beta1:jar:0.44.0:compile
+[INFO] |  |  +- (com.google.protobuf:protobuf-java:jar:3.6.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  +- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  +- com.google.cloud:google-cloud-core:jar:1.61.0:compile
+[INFO] |  |  +- (com.google.guava:guava:jar:26.0-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  +- (joda-time:joda-time:jar:2.9.2:compile - omitted for conflict with 2.4)
+[INFO] |  |  +- (com.google.http-client:google-http-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.code.findbugs:jsr305:jar:3.0.2:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api:gax:jar:1.37.0:compile - omitted for conflict with 1.38.0)
+[INFO] |  |  +- (com.google.protobuf:protobuf-java-util:jar:3.6.1:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-iam-v1:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  +- com.google.cloud:google-cloud-spanner:jar:1.6.0:compile
+[INFO] |  |  +- (com.google.cloud:google-cloud-core:jar:1.61.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.cloud:google-cloud-core-grpc:jar:1.61.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api:gax-grpc:jar:1.37.0:compile - omitted for conflict with 1.38.0)
+[INFO] |  |  +- com.google.api.grpc:proto-google-cloud-spanner-v1:jar:1.6.0:compile
+[INFO] |  |  |  +- (com.google.protobuf:protobuf-java:jar:3.6.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  |  +- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-cloud-spanner-admin-database-v1:jar:1.6.0:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.api.grpc:proto-google-cloud-spanner-admin-instance-v1:jar:1.6.0:compile
+[INFO] |  |  |  +- (com.google.protobuf:protobuf-java:jar:3.6.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  |  +- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-iam-v1:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.api.grpc:grpc-google-cloud-spanner-v1:jar:1.6.0:compile
+[INFO] |  |  |  +- (io.grpc:grpc-stub:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (io.grpc:grpc-protobuf:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-cloud-spanner-v1:jar:1.6.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.api.grpc:grpc-google-cloud-spanner-admin-database-v1:jar:1.6.0:compile
+[INFO] |  |  |  +- (io.grpc:grpc-stub:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (io.grpc:grpc-protobuf:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-cloud-spanner-admin-database-v1:jar:1.6.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.api.grpc:grpc-google-cloud-spanner-admin-instance-v1:jar:1.6.0:compile
+[INFO] |  |  |  +- (io.grpc:grpc-stub:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (io.grpc:grpc-protobuf:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-cloud-spanner-admin-instance-v1:jar:1.6.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.api.grpc:grpc-google-common-protos:jar:1.12.0:compile
+[INFO] |  |  |  +- (io.grpc:grpc-stub:jar:1.10.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (io.grpc:grpc-protobuf:jar:1.10.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  \- (com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-netty-shaded:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-auth:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-stub:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.code.findbugs:jsr305:jar:3.0.2:compile - omitted for duplicate)
+[INFO] |  |  +- (joda-time:joda-time:jar:2.9.2:compile - omitted for conflict with 2.4)
+[INFO] |  |  +- (io.opencensus:opencensus-api:jar:0.17.0:compile - omitted for duplicate)
+[INFO] |  |  +- io.opencensus:opencensus-contrib-grpc-util:jar:0.17.0:compile
+[INFO] |  |  |  +- (io.opencensus:opencensus-api:jar:0.17.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  +- com.google.api.grpc:grpc-google-cloud-bigtable-v2:jar:0.44.0:compile
+[INFO] |  |  +- (io.grpc:grpc-stub:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  +- (io.grpc:grpc-protobuf:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  +- com.google.api.grpc:proto-google-cloud-bigtable-v2:jar:0.44.0:compile
+[INFO] |  |  |  +- (com.google.protobuf:protobuf-java:jar:3.6.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  |  +- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  +- com.google.cloud.bigtable:bigtable-client-core:jar:1.8.0:compile
+[INFO] |  |  +- com.google.cloud:google-cloud-bigtable:jar:0.73.0-alpha:compile
+[INFO] |  |  |  +- (com.google.cloud:google-cloud-core:jar:1.55.0:compile - omitted for conflict with 1.61.0)
+[INFO] |  |  |  +- (com.google.cloud:google-cloud-core-grpc:jar:1.55.0:compile - omitted for conflict with 1.61.0)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-cloud-bigtable-v2:jar:0.38.0:compile - omitted for conflict with 0.44.0)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-cloud-bigtable-admin-v2:jar:0.38.0:compile - omitted for duplicate)
+[INFO] |  |  |  +- (io.grpc:grpc-netty-shaded:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  |  +- (io.grpc:grpc-stub:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (io.grpc:grpc-auth:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.cloud:google-cloud-bigtable-admin:jar:0.73.0-alpha:compile
+[INFO] |  |  |  +- (com.google.cloud:google-cloud-core:jar:1.55.0:compile - omitted for conflict with 1.61.0)
+[INFO] |  |  |  +- (com.google.cloud:google-cloud-core-grpc:jar:1.55.0:compile - omitted for conflict with 1.61.0)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-cloud-bigtable-admin-v2:jar:0.38.0:compile - omitted for duplicate)
+[INFO] |  |  |  +- (io.grpc:grpc-netty-shaded:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  |  +- (io.grpc:grpc-stub:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (io.grpc:grpc-auth:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:grpc-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-cloud-bigtable-v2:jar:0.38.0:compile - omitted for conflict with 0.44.0)
+[INFO] |  |  +- com.google.api.grpc:proto-google-cloud-bigtable-admin-v2:jar:0.38.0:compile
+[INFO] |  |  |  +- (com.google.protobuf:protobuf-java:jar:3.6.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  |  +- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-iam-v1:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:grpc-google-cloud-bigtable-v2:jar:0.38.0:compile - omitted for conflict with 0.44.0)
+[INFO] |  |  +- com.google.api.grpc:grpc-google-cloud-bigtable-admin-v2:jar:0.38.0:compile
+[INFO] |  |  |  +- (io.grpc:grpc-stub:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (io.grpc:grpc-protobuf:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  |  +- (com.google.api.grpc:proto-google-cloud-bigtable-admin-v2:jar:0.38.0:compile - omitted for duplicate)
+[INFO] |  |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-iam-v1:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.code.findbugs:jsr305:jar:3.0.2:compile - omitted for duplicate)
+[INFO] |  |  +- (org.slf4j:slf4j-api:jar:1.7.7:compile - omitted for conflict with 1.7.25)
+[INFO] |  |  +- (commons-logging:commons-logging:jar:1.2:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.guava:guava:jar:26.0-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  +- (com.google.auth:google-auth-library-oauth2-http:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.auth:google-auth-library-credentials:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.http-client:google-http-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.cloud:google-cloud-core-http:jar:1.55.0:compile - omitted for conflict with 1.70.0)
+[INFO] |  |  +- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.protobuf:protobuf-java:jar:3.6.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  +- (io.grpc:grpc-protobuf:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  +- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-context:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  +- (io.grpc:grpc-stub:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  +- (io.grpc:grpc-netty-shaded:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-auth:jar:1.16.1:compile - omitted for conflict with 1.17.1)
+[INFO] |  |  +- (com.google.api:gax-grpc:jar:1.35.0:compile - omitted for conflict with 1.38.0)
+[INFO] |  |  +- (io.opencensus:opencensus-api:jar:0.15.0:compile - omitted for conflict with 0.17.0)
+[INFO] |  |  +- (io.opencensus:opencensus-contrib-grpc-util:jar:0.15.0:compile - omitted for conflict with 0.17.0)
+[INFO] |  |  \- io.dropwizard.metrics:metrics-core:jar:3.1.2:compile
+[INFO] |  |     \- (org.slf4j:slf4j-api:jar:1.7.7:compile - omitted for conflict with 1.7.25)
+[INFO] |  +- com.google.api-client:google-api-client:jar:1.27.0:compile
+[INFO] |  |  +- (com.google.oauth-client:google-oauth-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.http-client:google-http-client-jackson2:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  \- (com.google.guava:guava:jar:20.0:compile - omitted for duplicate)
+[INFO] |  +- com.google.http-client:google-http-client:jar:1.27.0:compile
+[INFO] |  |  +- (com.google.code.findbugs:jsr305:jar:3.0.2:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.guava:guava:jar:20.0:compile - omitted for duplicate)
+[INFO] |  |  +- (org.apache.httpcomponents:httpclient:jar:4.5.5:compile - omitted for duplicate)
+[INFO] |  |  \- com.google.j2objc:j2objc-annotations:jar:1.1:compile
+[INFO] |  +- com.google.http-client:google-http-client-jackson2:jar:1.27.0:compile
+[INFO] |  |  +- (com.google.http-client:google-http-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  \- (com.fasterxml.jackson.core:jackson-core:jar:2.9.6:compile - omitted for conflict with 2.9.8)
+[INFO] |  +- com.google.auth:google-auth-library-credentials:jar:0.12.0:compile
+[INFO] |  +- com.google.auth:google-auth-library-oauth2-http:jar:0.12.0:compile
+[INFO] |  |  +- (com.google.auth:google-auth-library-credentials:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.http-client:google-http-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.http-client:google-http-client-jackson2:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  \- (com.google.guava:guava:jar:20.0:compile - omitted for duplicate)
+[INFO] |  +- (org.slf4j:slf4j-api:jar:1.7.25:compile - omitted for duplicate)
+[INFO] |  +- com.google.protobuf:protobuf-java:jar:3.6.0:compile
+[INFO] |  +- (org.apache.avro:avro:jar:1.8.2:compile - omitted for duplicate)
+[INFO] |  +- com.google.api.grpc:proto-google-cloud-spanner-admin-database-v1:jar:1.6.0:compile
+[INFO] |  |  +- (com.google.protobuf:protobuf-java:jar:3.6.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  |  +- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api.grpc:proto-google-iam-v1:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  |  \- (javax.annotation:javax.annotation-api:jar:1.2:compile - omitted for duplicate)
+[INFO] |  +- com.google.api.grpc:proto-google-common-protos:jar:1.12.0:compile
+[INFO] |  |  \- (com.google.protobuf:protobuf-java:jar:3.5.1:compile - omitted for conflict with 3.6.0)
+[INFO] |  +- io.grpc:grpc-all:jar:1.17.1:compile
+[INFO] |  |  +- (io.grpc:grpc-auth:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-context:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- (io.grpc:grpc-netty:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- io.grpc:grpc-okhttp:jar:1.17.1:compile
+[INFO] |  |  |  +- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  |  +- com.squareup.okhttp:okhttp:jar:2.5.0:compile
+[INFO] |  |  |  |  \- (com.squareup.okio:okio:jar:1.6.0:compile - omitted for conflict with 1.13.0)
+[INFO] |  |  |  \- com.squareup.okio:okio:jar:1.13.0:compile
+[INFO] |  |  +- (io.grpc:grpc-protobuf:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  +- io.grpc:grpc-protobuf-nano:jar:1.17.1:compile
+[INFO] |  |  |  +- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  |  +- com.google.protobuf.nano:protobuf-javanano:jar:3.0.0-alpha-5:compile
+[INFO] |  |  |  \- (com.google.guava:guava:jar:26.0-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  +- (io.grpc:grpc-stub:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |  \- io.grpc:grpc-testing:jar:1.17.1:compile
+[INFO] |  |     +- (io.grpc:grpc-core:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |     +- (io.grpc:grpc-stub:jar:1.17.1:compile - omitted for duplicate)
+[INFO] |  |     \- org.mockito:mockito-core:jar:1.9.5:compile
+[INFO] |  |        \- org.objenesis:objenesis:jar:1.0:compile
+[INFO] |  \- io.netty:netty-tcnative-boringssl-static:jar:2.0.17.Final:compile
+[INFO] +- org.apache.beam:beam-sdks-java-extensions-google-cloud-platform-core:jar:2.12.0:compile
+[INFO] |  +- (org.apache.beam:beam-vendor-guava-20_0:jar:0.1:compile - omitted for duplicate)
+[INFO] |  +- (org.apache.beam:beam-sdks-java-core:jar:2.12.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.http-client:google-http-client-jackson2:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.auth:google-auth-library-oauth2-http:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.api-client:google-api-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  +- com.google.cloud.bigdataoss:gcsio:jar:1.9.16:compile
+[INFO] |  |  +- (com.google.api-client:google-api-client-java6:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.api-client:google-api-client-jackson2:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.apis:google-api-services-storage:jar:v1-rev20181109-1.27.0:compile - omitted for conflict with v1-rev20181013-1.27.0)
+[INFO] |  |  +- (com.google.guava:guava:jar:27.0.1-jre:compile - omitted for conflict with 20.0)
+[INFO] |  |  +- (com.google.oauth-client:google-oauth-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.oauth-client:google-oauth-client-java6:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.flogger:google-extensions:jar:0.3.1:compile - omitted for duplicate)
+[INFO] |  |  +- (com.google.flogger:flogger-system-backend:jar:0.3.1:runtime - omitted for duplicate)
+[INFO] |  |  \- (com.google.cloud.bigdataoss:util:jar:1.9.16:compile - omitted for duplicate)
+[INFO] |  +- (com.google.cloud.bigdataoss:util:jar:1.9.16:compile - omitted for duplicate)
+[INFO] |  +- com.google.apis:google-api-services-cloudresourcemanager:jar:v1-rev20181015-1.27.0:compile
+[INFO] |  |  \- (com.google.api-client:google-api-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  +- com.google.apis:google-api-services-storage:jar:v1-rev20181013-1.27.0:compile
+[INFO] |  |  \- (com.google.api-client:google-api-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.auth:google-auth-library-credentials:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.http-client:google-http-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  +- (org.slf4j:slf4j-api:jar:1.7.25:compile - omitted for duplicate)
+[INFO] |  +- (joda-time:joda-time:jar:2.4:compile - omitted for duplicate)
+[INFO] |  +- (com.fasterxml.jackson.core:jackson-annotations:jar:2.9.8:compile - omitted for duplicate)
+[INFO] |  \- (com.fasterxml.jackson.core:jackson-databind:jar:2.9.8:compile - omitted for duplicate)
+[INFO] +- org.apache.beam:beam-runners-google-cloud-dataflow-java:jar:2.12.0:compile
+[INFO] |  +- (org.apache.beam:beam-vendor-guava-20_0:jar:0.1:compile - omitted for duplicate)
+[INFO] |  +- (org.apache.beam:beam-model-pipeline:jar:2.12.0:compile - omitted for duplicate)
+[INFO] |  +- (org.apache.beam:beam-sdks-java-core:jar:2.12.0:compile - omitted for duplicate)
+[INFO] |  +- (org.apache.beam:beam-sdks-java-extensions-google-cloud-platform-core:jar:2.12.0:compile - omitted for duplicate)
+[INFO] |  +- (org.apache.beam:beam-sdks-java-io-google-cloud-platform:jar:2.12.0:compile - omitted for duplicate)
+[INFO] |  +- org.apache.beam:beam-runners-core-construction-java:jar:2.12.0:compile
+[INFO] |  |  +- (org.apache.beam:beam-model-pipeline:jar:2.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (org.apache.beam:beam-model-job-management:jar:2.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (org.apache.beam:beam-sdks-java-core:jar:2.12.0:compile - omitted for duplicate)
+[INFO] |  |  +- (org.apache.beam:beam-vendor-grpc-1_13_1:jar:0.2:compile - omitted for duplicate)
+[INFO] |  |  +- (org.apache.beam:beam-vendor-guava-20_0:jar:0.1:compile - omitted for duplicate)
+[INFO] |  |  +- (com.fasterxml.jackson.core:jackson-core:jar:2.9.8:compile - omitted for duplicate)
+[INFO] |  |  +- (com.fasterxml.jackson.core:jackson-databind:jar:2.9.8:compile - omitted for duplicate)
+[INFO] |  |  +- (joda-time:joda-time:jar:2.4:compile - omitted for duplicate)
+[INFO] |  |  \- (org.slf4j:slf4j-api:jar:1.7.25:compile - omitted for duplicate)
+[INFO] |  +- org.apache.beam:beam-vendor-grpc-1_13_1:jar:0.2:compile
+[INFO] |  +- (com.google.api-client:google-api-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.http-client:google-http-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.http-client:google-http-client-jackson2:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  +- com.google.apis:google-api-services-dataflow:jar:v1b3-rev20190131-1.27.0:compile
+[INFO] |  |  \- (com.google.api-client:google-api-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  +- com.google.apis:google-api-services-clouddebugger:jar:v2-rev20180801-1.27.0:compile
+[INFO] |  |  \- (com.google.api-client:google-api-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.apis:google-api-services-storage:jar:v1-rev20181013-1.27.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.auth:google-auth-library-credentials:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.auth:google-auth-library-oauth2-http:jar:0.12.0:compile - omitted for duplicate)
+[INFO] |  +- (com.google.cloud.bigdataoss:util:jar:1.9.16:compile - omitted for duplicate)
+[INFO] |  +- (org.apache.avro:avro:jar:1.8.2:compile - omitted for duplicate)
+[INFO] |  +- (joda-time:joda-time:jar:2.4:compile - omitted for duplicate)
+[INFO] |  +- (com.fasterxml.jackson.core:jackson-core:jar:2.9.8:compile - omitted for duplicate)
+[INFO] |  +- (com.fasterxml.jackson.core:jackson-annotations:jar:2.9.8:compile - omitted for duplicate)
+[INFO] |  +- (com.fasterxml.jackson.core:jackson-databind:jar:2.9.8:compile - omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:1.7.25:compile - omitted for duplicate)
+[INFO] +- org.apache.beam:beam-runners-direct-java:jar:2.12.0:runtime
+[INFO] |  +- (org.apache.beam:beam-vendor-guava-20_0:jar:0.1:runtime - omitted for duplicate)
+[INFO] |  +- (org.apache.beam:beam-model-pipeline:jar:2.12.0:runtime - omitted for duplicate)
+[INFO] |  +- (org.apache.beam:beam-sdks-java-core:jar:2.12.0:runtime - omitted for duplicate)
+[INFO] |  +- (org.apache.beam:beam-vendor-grpc-1_13_1:jar:0.2:runtime - omitted for duplicate)
+[INFO] |  +- (joda-time:joda-time:jar:2.4:runtime - omitted for duplicate)
+[INFO] |  +- (org.slf4j:slf4j-api:jar:1.7.25:runtime - omitted for duplicate)
+[INFO] |  \- args4j:args4j:jar:2.33:runtime
+[INFO] +- com.google.apis:google-api-services-bigquery:jar:v2-rev434-1.25.0:compile
+[INFO] |  \- (com.google.api-client:google-api-client:jar:1.25.0:compile - omitted for conflict with 1.27.0)
+[INFO] +- com.google.cloud:google-cloud-storage:jar:1.70.0:compile
+[INFO] |  +- (com.google.cloud:google-cloud-core:jar:1.70.0:compile - omitted for conflict with 1.61.0)
+[INFO] |  +- com.google.cloud:google-cloud-core-http:jar:1.70.0:compile
+[INFO] |  |  +- (com.google.cloud:google-cloud-core:jar:1.70.0:compile - omitted for conflict with 1.61.0)
+[INFO] |  |  +- (com.google.auth:google-auth-library-credentials:jar:0.15.0:compile - omitted for conflict with 0.12.0)
+[INFO] |  |  +- (com.google.auth:google-auth-library-oauth2-http:jar:0.15.0:compile - omitted for conflict with 0.12.0)
+[INFO] |  |  +- (com.google.http-client:google-http-client:jar:1.29.0:compile - omitted for conflict with 1.27.0)
+[INFO] |  |  +- (com.google.guava:guava:jar:27.1-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  +- (com.google.api-client:google-api-client:jar:1.27.0:compile - omitted for duplicate)
+[INFO] |  |  +- com.google.http-client:google-http-client-appengine:jar:1.29.0:compile
+[INFO] |  |  |  \- (com.google.http-client:google-http-client:jar:1.29.0:compile - omitted for conflict with 1.27.0)
+[INFO] |  |  +- com.google.api:gax-httpjson:jar:0.61.0:compile
+[INFO] |  |  |  +- (com.google.api:gax:jar:1.44.0:compile - omitted for conflict with 1.38.0)
+[INFO] |  |  |  +- (com.google.code.gson:gson:jar:2.7:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.guava:guava:jar:26.0-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  |  +- (com.google.code.findbugs:jsr305:jar:3.0.2:compile - omitted for duplicate)
+[INFO] |  |  |  +- (org.threeten:threetenbp:jar:1.3.3:compile - omitted for duplicate)
+[INFO] |  |  |  +- (com.google.http-client:google-http-client:jar:1.29.0:compile - omitted for conflict with 1.27.0)
+[INFO] |  |  |  +- (com.google.auth:google-auth-library-oauth2-http:jar:0.15.0:compile - omitted for conflict with 0.12.0)
+[INFO] |  |  |  +- (com.google.auth:google-auth-library-credentials:jar:0.15.0:compile - omitted for conflict with 0.12.0)
+[INFO] |  |  |  \- (com.google.api:api-common:jar:1.7.0:compile - omitted for duplicate)
+[INFO] |  |  +- (io.opencensus:opencensus-api:jar:0.19.2:compile - omitted for conflict with 0.17.0)
+[INFO] |  |  +- io.opencensus:opencensus-contrib-http-util:jar:0.19.2:compile
+[INFO] |  |  |  +- (io.opencensus:opencensus-api:jar:0.19.2:compile - omitted for conflict with 0.17.0)
+[INFO] |  |  |  \- (com.google.guava:guava:jar:25.1-android:compile - omitted for conflict with 20.0)
+[INFO] |  |  \- (javax.annotation:javax.annotation-api:jar:1.3.2:compile - omitted for conflict with 1.2)
+[INFO] |  +- (com.google.apis:google-api-services-storage:jar:v1-rev20181109-1.27.0:compile - omitted for conflict with v1-rev20181013-1.27.0)
+[INFO] |  +- com.google.http-client:google-http-client-apache:jar:2.1.0:compile
+[INFO] |  |  +- (com.google.http-client:google-http-client:jar:1.29.0:compile - omitted for conflict with 1.27.0)
+[INFO] |  |  \- (org.apache.httpcomponents:httpclient:jar:4.5.5:compile - omitted for duplicate)
+[INFO] |  \- javax.annotation:javax.annotation-api:jar:1.3.2:compile
+[INFO] +- org.apache.httpcomponents:httpclient:jar:4.5.5:compile
+[INFO] |  +- org.apache.httpcomponents:httpcore:jar:4.4.9:compile
+[INFO] |  +- commons-logging:commons-logging:jar:1.2:compile
+[INFO] |  \- commons-codec:commons-codec:jar:1.10:compile
+[INFO] +- joda-time:joda-time:jar:2.4:compile
+[INFO] +- com.google.guava:guava:jar:20.0:compile
+[INFO] +- org.slf4j:slf4j-api:jar:1.7.14:compile
+[INFO] +- org.slf4j:slf4j-jdk14:jar:1.7.14:runtime
+[INFO] |  \- (org.slf4j:slf4j-api:jar:1.7.14:runtime - omitted for duplicate)
+[INFO] +- org.hamcrest:hamcrest-all:jar:1.3:test
+[INFO] \- junit:junit:jar:4.12:compile
+[INFO]    \- org.hamcrest:hamcrest-core:jar:1.3:compile
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  10.511 s
+[INFO] Finished at: 2019-06-03T16:21:39+02:00
+[INFO] ------------------------------------------------------------------------

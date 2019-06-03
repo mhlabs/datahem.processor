@@ -24,11 +24,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.Map;
+import java.util.Set;
+import java.util.Collection;
 import java.util.Iterator;
 import java.io.IOException;
 
 import com.google.api.services.bigquery.model.TableFieldSchema;
+import com.google.api.services.bigquery.model.TableFieldSchema.Categories;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.protobuf.Descriptors.Descriptor;
@@ -94,61 +98,16 @@ public class ProtobufUtils {
 
     private static String getUnknownPrimitiveFieldValue(
         FieldDescriptor fieldDescriptor, 
-        Object value, 
-        int indent) {
+        Object value) {
       switch (fieldDescriptor.getType()) {
-        case MESSAGE:
-          try {
-            StringBuilder stringBuilder = new StringBuilder();
-            DynamicMessage dynamicMessage =
-                DynamicMessage.parseFrom(fieldDescriptor.getMessageType(), (ByteString) value);
-            stringBuilder.append("{\n");
-
-            Iterator<FieldDescriptor> iter = dynamicMessage.getAllFields().keySet().iterator();
-            while (iter.hasNext()) {
-              FieldDescriptor fd = iter.next();
-              Object fieldValue = dynamicMessage.getField(fd);
-              for (int i = 0; i < indent + 1; i++) {
-                stringBuilder.append("\t");
-              }
-              stringBuilder.append(fd.getName());
-              stringBuilder.append(": ");
-
-              if (fd.isRepeated()) {
-                stringBuilder.append("[");
-                List<Object> repeatedValues = (List<Object>) fieldValue;
-                Iterator<Object> repeatedIt = repeatedValues.iterator();
-                while (repeatedIt.hasNext()) {
-                  stringBuilder.append(getOptionValue(fd, repeatedIt.next()));
-                  if (repeatedIt.hasNext()) {
-                    stringBuilder.append(",");
-                  } else {
-                    stringBuilder.append("]");
-                  }
-                }
-              } else {
-                String optionValue = getOptionValue(fd, fieldValue);
-                stringBuilder.append(optionValue);
-              }
-              if (iter.hasNext()) {
-                stringBuilder.append(",");
-              }
-              stringBuilder.append("\n");
-            }
-            for (int i = 0; i < indent; i++) {
-              stringBuilder.append("\t");
-            }
-            stringBuilder.append("}");
-            return stringBuilder.toString();
-          } catch (IOException e) {
-            throw new RuntimeException(e);
-          }
+        //case MESSAGE: return null;
         case BOOL:
           return value.equals(1L) ? "true" : "false";
         case ENUM:
         case STRING:
           ByteString byteString = (ByteString) value;
-          return "\"" + byteString.toStringUtf8() + "\"";
+          return byteString.toStringUtf8();
+          //return "\"" + byteString.toStringUtf8() + "\"";
         case INT32:
         case INT64:
           return unsignedToString((Long) value);
@@ -160,97 +119,112 @@ public class ProtobufUtils {
           return f.toString();
       }
       throw new RuntimeException(
-          "conversion of unknownfield for type "
-              + fieldDescriptor.getType().toString()
-              + " not implemented");
+          "conversion of unknownfield for type " + fieldDescriptor.getType().toString() + " not implemented");
     }
 
     private static Multimap<FieldDescriptor, String> getUnknownFieldValue(
         FieldDescriptor fieldDescriptor, 
-        UnknownFieldSet.Field field, 
-        int indent) {
+        UnknownFieldSet.Field field) {
       
         HashMultimap<FieldDescriptor, String> unknownFieldValues = HashMultimap.create();
       
       for (Object value : field.getLengthDelimitedList()) {
         unknownFieldValues.put(
-            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value, indent));
+            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value));
       }
       for (Object value : field.getFixed32List()) {
         unknownFieldValues.put(
-            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value, indent));
+            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value));
       }
       for (Object value : field.getFixed64List()) {
         unknownFieldValues.put(
-            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value, indent));
+            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value));
       }
       for (Object value : field.getVarintList()) {
         unknownFieldValues.put(
-            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value, indent));
+            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value));
       }
       for (Object value : field.getGroupList()) {
         unknownFieldValues.put(
-            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value, indent));
+            fieldDescriptor, getUnknownPrimitiveFieldValue(fieldDescriptor, value));
       }
       return unknownFieldValues;
     }
-  
 
     private static HashMultimap<FieldDescriptor, String> getUnknownFieldValues(
         UnknownFieldSet unknownFieldSet,
-        Map<Integer, FieldDescriptor> optionsMap,
-        int indent) {
+        Map<Integer, FieldDescriptor> optionsMap) {
       HashMultimap<FieldDescriptor, String> unknownFieldValues = HashMultimap.create();
       unknownFieldSet
           .asMap()
           .forEach(
               (number, field) -> {
                 FieldDescriptor fieldDescriptor = optionsMap.get(number);
-                unknownFieldValues.putAll(getUnknownFieldValue(fieldDescriptor, field, indent));
+                unknownFieldValues.putAll(getUnknownFieldValue(fieldDescriptor, field));
               });
       return unknownFieldValues;
     }
 
-    public static TableSchema makeTableSchema(ProtoDescriptor protoDescriptor) {
-		Descriptor d = protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
-        LOG.info("Descriptor fullname: " + d.getFullName());
-        LOG.info("messageOptions: " + d.getOptions().toString());
-
-        TableSchema res = new TableSchema();
-
-        for (FieldDescriptor f : d.getOptions().getDescriptor().getFields()){
-            LOG.info(f.getFullName());
+    public static HashMultimap<String, String> getMessageOptions(ProtoDescriptor protoDescriptor, Descriptor descriptor){
+        HashMultimap<String, String> messageOptions = HashMultimap.create();
+        if (!descriptor.getOptions().getUnknownFields().asMap().isEmpty()) {
+            HashMultimap<FieldDescriptor, String> unknownOptionsMap = getUnknownFieldValues(
+                descriptor.getOptions().getUnknownFields(),
+                protoDescriptor.getMessageOptionMap());
+            Set<FieldDescriptor> keys = unknownOptionsMap.keySet();
+            for (FieldDescriptor fd : keys) {
+                Collection<String> values = unknownOptionsMap.get(fd);
+                for (String value : values) {
+                    messageOptions.put(fd.getName(), value);
+                }
+            }
         }
+        return messageOptions;
+    }
 
-		List<FieldDescriptor> fields = d.getFields();
-
-		List<TableFieldSchema> schema_fields = new ArrayList<TableFieldSchema>();
-
-		for (FieldDescriptor f : fields) {
-            String description = "";
-            if (!f.getOptions().getUnknownFields().asMap().isEmpty()) {
-                f.getOptions().getUnknownFields().asMap().forEach(
-                    (number, field) -> {
-                        LOG.info("field: " + f.getFullName() + " fieldOption number :" + Integer.toString(number));
-                        LOG.info(protoDescriptor.getFieldOptionMap().get(number).getFullName());
-                });
-
+    public static HashMultimap<String, String> getFieldOptions(ProtoDescriptor protoDescriptor, FieldDescriptor fieldDescriptor){
+        HashMultimap<String, String> fieldOptions = HashMultimap.create();
+        if (!fieldDescriptor.getOptions().getUnknownFields().asMap().isEmpty()) {
                  HashMultimap<FieldDescriptor, String> unknownOptionsMap =
                     getUnknownFieldValues(
-                        f.getOptions().getUnknownFields(),
-                        protoDescriptor.getFieldOptionMap(),
-                        1);
+                        fieldDescriptor.getOptions().getUnknownFields(),
+                        protoDescriptor.getFieldOptionMap());
                 Iterator<Map.Entry<FieldDescriptor, String>> unknownIter = unknownOptionsMap.entries().iterator();
                 while (unknownIter.hasNext()) {
                     Map.Entry<FieldDescriptor, String> fieldOption = unknownIter.next();
                     FieldDescriptor fd = fieldOption.getKey();
                     String value = fieldOption.getValue();
-                    LOG.info("fieldOption name: " + fd.getName() + ", fieldOption value: " + value);
-                    if(fd.getName().equals("fdescription")){description = value;}
+                    fieldOptions.put(fd.getName(), value);
                 }
-            }
-            
-			String type = "STRING";
+        }
+        return fieldOptions;
+    }
+
+    public static TableSchema makeTableSchema(ProtoDescriptor protoDescriptor, String descriptorFullName) {
+		Descriptor d = protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
+        LOG.info("Descriptor fullname: " + d.getFullName());
+        LOG.info("messageOptions: " + d.getOptions().toString());
+        /*
+        HashMultimap<String, String> messageOptions = getMessageOptions(protoDescriptor, d);
+        String messageDescription = ((Set<String>) messageOptions.get("mdescription")).stream().findFirst().orElse("");
+        */
+
+        TableSchema res = new TableSchema();
+
+        // Iterate fields
+		List<FieldDescriptor> fields = d.getFields();
+		List<TableFieldSchema> schema_fields = new ArrayList<TableFieldSchema>();
+		for (FieldDescriptor f : fields) {
+            HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
+            String description = ((Set<String>) fieldOptions.get("BigQueryFieldDescription")).stream().findFirst().orElse("");
+            String categoriesString = ((Set<String>) fieldOptions.get("BigQueryFieldCategories")).stream().findFirst().orElse("");
+            List<String> categories = Stream.of(categoriesString.split(","))
+                .map(String::trim)
+                .collect(Collectors.toList());
+            TableFieldSchema.Categories fieldCategories = new TableFieldSchema.Categories();
+            fieldCategories.setNames(categories);
+			
+            String type = "STRING";
 			String mode = "NULLABLE";
 
 			if (f.isRepeated()) {
@@ -272,12 +246,12 @@ public class ProtobufUtils {
 				TableSchema ts = makeTableSchema(f.getMessageType());
 
 				schema_fields.add(new TableFieldSchema().setName(f.getName().replace(".", "_")).setType(type)
-						.setMode(mode).setFields(ts.getFields()).setDescription(description));
+						.setMode(mode).setFields(ts.getFields()).setDescription(description).setCategories(fieldCategories));
 			}
 
 			if (!type.equals("RECORD")) {
 				schema_fields
-						.add(new TableFieldSchema().setName(f.getName().replace(".", "_")).setType(type).setMode(mode).setDescription(description));
+						.add(new TableFieldSchema().setName(f.getName().replace(".", "_")).setType(type).setMode(mode).setDescription(description).setCategories(fieldCategories));
 			}
         }
 		res.setFields(schema_fields);
@@ -288,10 +262,6 @@ public class ProtobufUtils {
 	public static TableSchema makeTableSchema(Descriptor d) {
 		
         TableSchema res = new TableSchema();
-
-        for (FieldDescriptor f : d.getOptions().getDescriptor().getFields()){
-            LOG.info(f.getFullName());
-        }
 
 		List<FieldDescriptor> fields = d.getFields();
 
@@ -373,11 +343,11 @@ public class ProtobufUtils {
                         //LOG.info("message.getField(f): " + ((Message) message.getField(f)).toString());
 
                         TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType());
-                        LOG.info("contains key: "+ tr.toString());
+                        //LOG.info("contains key: "+ tr.toString());
 						res.set(f.getName().replace(".", "_"), tr);
 					}else{
                         TableRow tr = makeTableRow(f.getMessageType());
-                        LOG.info("doesn't contain key: "+ tr.toString());
+                        //LOG.info("doesn't contain key: "+ tr.toString());
 						res.set(f.getName().replace(".", "_"), tr);
                     }
 				}

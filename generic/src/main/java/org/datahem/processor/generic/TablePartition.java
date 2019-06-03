@@ -34,9 +34,11 @@ public class TablePartition implements SerializableFunction<ValueInSingleWindow<
 
     private static final Logger LOG = LoggerFactory.getLogger(TablePartition.class);
     private final String tableSpec;
+    private final String tableDescription;
     
-    public TablePartition(ValueProvider<String> tableSpec) {
+    public TablePartition(ValueProvider<String> tableSpec, String tableDescription) {
         this.tableSpec = tableSpec.get(); 
+        this.tableDescription = tableDescription;
     }
 
     @Override
@@ -44,6 +46,6 @@ public class TablePartition implements SerializableFunction<ValueInSingleWindow<
         DateTimeFormatter partition = DateTimeFormat.forPattern("yyyyMMdd").withZoneUTC();
         TableReference reference = BigQueryHelpers.parseTableSpec(tableSpec + "$" + input.getWindow().maxTimestamp().toString(partition));
         LOG.info("TableReference: " + reference.toString());
-        return new TableDestination(reference, "", new TimePartitioning());
+        return new TableDestination(reference, tableDescription, new TimePartitioning());
     }
 }
