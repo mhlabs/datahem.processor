@@ -199,11 +199,26 @@
 
 
 <!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-bigquery -->
+<!--
 <dependency>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-bigquery</artifactId>
     <version>1.49.0</version>
+</dependency>-->
+<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-bigquery -->
+<!--<dependency>
+    <groupId>com.google.apis</groupId>
+    <artifactId>google-api-services-bigquery</artifactId>
+    <version>v2-rev20181104-1.27.0</version>
+</dependency>-->
+<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-bigquery -->
+<dependency>
+    <groupId>com.google.apis</groupId>
+    <artifactId>google-api-services-bigquery</artifactId>
+    <version>v2-rev434-1.25.0</version>
 </dependency>
+
+
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-storage</artifactId>

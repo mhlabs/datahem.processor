@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.Map;
 import java.util.Set;
 import java.util.Collection;
@@ -31,6 +32,7 @@ import java.util.Iterator;
 import java.io.IOException;
 
 import com.google.api.services.bigquery.model.TableFieldSchema;
+import com.google.api.services.bigquery.model.TableFieldSchema.Categories;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.protobuf.Descriptors.Descriptor;
@@ -214,9 +216,15 @@ public class ProtobufUtils {
 		List<TableFieldSchema> schema_fields = new ArrayList<TableFieldSchema>();
 		for (FieldDescriptor f : fields) {
             HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
-            String description = ((Set<String>) fieldOptions.get("fdescription")).stream().findFirst().orElse("");
-            
-			String type = "STRING";
+            String description = ((Set<String>) fieldOptions.get("BigQueryFieldDescription")).stream().findFirst().orElse("");
+            String categoriesString = ((Set<String>) fieldOptions.get("BigQueryFieldCategories")).stream().findFirst().orElse("");
+            List<String> categories = Stream.of(categoriesString.split(","))
+                .map(String::trim)
+                .collect(Collectors.toList());
+            TableFieldSchema.Categories fieldCategories = new TableFieldSchema.Categories();
+            fieldCategories.setNames(categories);
+			
+            String type = "STRING";
 			String mode = "NULLABLE";
 
 			if (f.isRepeated()) {
@@ -238,12 +246,12 @@ public class ProtobufUtils {
 				TableSchema ts = makeTableSchema(f.getMessageType());
 
 				schema_fields.add(new TableFieldSchema().setName(f.getName().replace(".", "_")).setType(type)
-						.setMode(mode).setFields(ts.getFields()).setDescription(description));
+						.setMode(mode).setFields(ts.getFields()).setDescription(description).setCategories(fieldCategories));
 			}
 
 			if (!type.equals("RECORD")) {
 				schema_fields
-						.add(new TableFieldSchema().setName(f.getName().replace(".", "_")).setType(type).setMode(mode).setDescription(description));
+						.add(new TableFieldSchema().setName(f.getName().replace(".", "_")).setType(type).setMode(mode).setDescription(description).setCategories(fieldCategories));
 			}
         }
 		res.setFields(schema_fields);
