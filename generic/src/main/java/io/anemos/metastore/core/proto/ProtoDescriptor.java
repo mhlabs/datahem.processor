@@ -118,6 +118,7 @@ private static final Logger LOG = LoggerFactory.getLogger(ProtoDescriptor.class)
     return fileDescriptorMap.values().stream().collect(Collectors.toList());
   }
 
+/*
   public void writeToDirectory(String root) throws IOException {
     for (Map.Entry<String, Descriptors.FileDescriptor> entry : fileDescriptorMap.entrySet()) {
       String packageDir = entry.getValue().getPackage().replaceAll("\\.", "/");
@@ -135,6 +136,7 @@ private static final Logger LOG = LoggerFactory.getLogger(ProtoDescriptor.class)
       }
     }
   }
+*/
 
   private void indexNestedDescriptorByName(List<Descriptors.Descriptor> nestedTypes) {
     nestedTypes.forEach(
@@ -223,10 +225,8 @@ private static final Logger LOG = LoggerFactory.getLogger(ProtoDescriptor.class)
                         fileOptionMap.put(extension.getNumber(), extension);
                         break;
                       case ".google.protobuf.MessageOptions":
-                        LOG.info("adding message options: " + Integer.toString(extension.getNumber()) + " for descriptor: " + fileDescriptor.getFullName());
                         messageOptionDependencyMap.put(extension.getNumber(), fileDescriptor);
                         messageOptionMap.put(extension.getNumber(), extension);
-                        LOG.info("messageOptionMap size" + Integer.toString(messageOptionMap.size()));
                         break;
                       case ".google.protobuf.FieldOptions":
                         fieldOptionDependencyMap.put(extension.getNumber(), fileDescriptor);

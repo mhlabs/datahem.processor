@@ -123,15 +123,10 @@ public class GenericStreamPipeline {
 		ValueProvider<String> getFileDescriptorName();
 		void setFileDescriptorName(ValueProvider<String> value);
 	
-		@Description("fileDescriptorProtoName")
+		@Description("descriptorFullName")
 		//@Default.String("")
-		ValueProvider<String> getFileDescriptorProtoName();
-		void setFileDescriptorProtoName(ValueProvider<String> value);
-
-        @Description("messageType")
-		//@Default.String("")
-		ValueProvider<String> getMessageType();
-		void setMessageType(ValueProvider<String> value);
+		ValueProvider<String> getDescriptorFullName();
+		void setDescriptorFullName(ValueProvider<String> value);
 		
 		@Description("pubsubSubscription")
 		//@Default.String("")
@@ -184,45 +179,14 @@ public class GenericStreamPipeline {
 
 public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         String bucketName, 
-        String fileDescriptorName, 
-        String fileDescriptorProtoName, 
-        String messageType) throws Exception {
+        String fileDescriptorName) throws Exception {
             try{
                 Storage storage = StorageOptions.getDefaultInstance().getService();
                 Blob blob = storage.get(BlobId.of(bucketName, fileDescriptorName));
                 ReadChannel reader = blob.reader();
                 InputStream inputStream = Channels.newInputStream(reader);
                 FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
-                //FileDescriptor fd = getFileDescriptor(fileDescriptorProtoName, descriptorSetObject);
-                LOG.info("check");
                 return new ProtoDescriptor(descriptorSetObject);
-                //LOG.info(ProtoLanguageFileWriter.write(protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName), protoDescriptor));
-                
-                //OutputStream out = new OutputStream();
-                //FileDescriptorProto fdp = FileDescriptorProto.parseFrom(ByteString.copyFromUtf8(ProtoLanguageFileWriter.write(protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName), protoDescriptor)));
-                //FileDescriptorProto fdp = FileDescriptorProto.parsefrom(new ByteArrayInputStream(out.toByteArray()));
-                //LOG.info("FileDescriptorProto " + fdp.toString());
-                //FileDescriptor fd = protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName);
-                //return protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
-                /*
-                //LOG.info(descriptorSetObject.toString());
-                LOG.info("FileDescriptorSet");
-                List<FileDescriptorProto> fdpl = descriptorSetObject.getFileList();
-                Optional<FileDescriptorProto> fdp = fdpl.stream()
-                    .filter(m -> m.getName().equals(fileDescriptorProtoName))
-                    .findFirst();
-                LOG.info("FileDescriptorProto " + fdp.toString());
-                //LOG.info(fdp.orElse(null));
-                FileDescriptor[] empty = new FileDescriptor[0];
-                FileDescriptor fd = FileDescriptor.buildFrom(fdp.orElse(null), empty);
-                LOG.info("FileDescriptor");
-                
-                Optional<Descriptor> d = fd.getMessageTypes().stream()
-                    .filter(m -> m.getName().equals(messageType))
-                    .findFirst();
-                LOG.info("Descriptor" + d.toString());
-                return d.orElse(null);
-                */
             }catch (Exception e){
                 e.printStackTrace();
                 return null;
@@ -232,44 +196,9 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
     public static Descriptor getDescriptorFromCloudStorage(
         String bucketName, 
         String fileDescriptorName, 
-        String fileDescriptorProtoName, 
-        String messageType) throws Exception {
+        String descriptorFullName) throws Exception {
             try{
-                Storage storage = StorageOptions.getDefaultInstance().getService();
-                Blob blob = storage.get(BlobId.of(bucketName, fileDescriptorName));
-                ReadChannel reader = blob.reader();
-                InputStream inputStream = Channels.newInputStream(reader);
-                FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
-                //FileDescriptor fd = getFileDescriptor(fileDescriptorProtoName, descriptorSetObject);
-                ProtoDescriptor protoDescriptor = new ProtoDescriptor(descriptorSetObject);
-                LOG.info(ProtoLanguageFileWriter.write(protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName), protoDescriptor));
-                
-                //OutputStream out = new OutputStream();
-                //FileDescriptorProto fdp = FileDescriptorProto.parseFrom(ByteString.copyFromUtf8(ProtoLanguageFileWriter.write(protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName), protoDescriptor)));
-                //FileDescriptorProto fdp = FileDescriptorProto.parsefrom(new ByteArrayInputStream(out.toByteArray()));
-                //LOG.info("FileDescriptorProto " + fdp.toString());
-                FileDescriptor fd = protoDescriptor.getFileDescriptorByFileName(fileDescriptorProtoName);
-                
-                return protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
-                /*
-                //LOG.info(descriptorSetObject.toString());
-                LOG.info("FileDescriptorSet");
-                List<FileDescriptorProto> fdpl = descriptorSetObject.getFileList();
-                Optional<FileDescriptorProto> fdp = fdpl.stream()
-                    .filter(m -> m.getName().equals(fileDescriptorProtoName))
-                    .findFirst();
-                LOG.info("FileDescriptorProto " + fdp.toString());
-                //LOG.info(fdp.orElse(null));
-                FileDescriptor[] empty = new FileDescriptor[0];
-                FileDescriptor fd = FileDescriptor.buildFrom(fdp.orElse(null), empty);
-                LOG.info("FileDescriptor");
-                
-                Optional<Descriptor> d = fd.getMessageTypes().stream()
-                    .filter(m -> m.getName().equals(messageType))
-                    .findFirst();
-                LOG.info("Descriptor" + d.toString());
-                return d.orElse(null);
-                */
+                return getProtoDescriptorFromCloudStorage(bucketName, fileDescriptorName).getDescriptorByName(descriptorFullName);
             }catch (Exception e){
                 e.printStackTrace();
                 return null;
@@ -277,29 +206,23 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         }
 
     public static class PubsubMessageToTableRowFn extends DoFn<PubsubMessage,TableRow> {
-		//private static final Logger LOG = LoggerFactory.getLogger(PubsubMessageToTableRowFn.class);
-		//private static Pattern pattern;
-    	//private static Matcher matcher;
         private Descriptor messageDescriptor;
         ValueProvider<String> bucketName;
         ValueProvider<String> fileDescriptorName;
-        ValueProvider<String> fileDescriptorProtoName;
-        ValueProvider<String> messageType;
+        ValueProvider<String> descriptorFullName;
 		
 	  	public PubsubMessageToTableRowFn(
 	  		ValueProvider<String> bucketName,
 	  		ValueProvider<String> fileDescriptorName,
-            ValueProvider<String> fileDescriptorProtoName,
-            ValueProvider<String> messageType) {
+            ValueProvider<String> descriptorFullName) {
 		     	this.bucketName = bucketName;
 		     	this.fileDescriptorName = fileDescriptorName;
-                this.fileDescriptorProtoName = fileDescriptorProtoName;
-                this.messageType = messageType;
+                this.descriptorFullName = descriptorFullName;
 	   	}
         
         @Setup
         public void setup() throws Exception {
-            messageDescriptor = getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), fileDescriptorProtoName.get(), messageType.get());
+            messageDescriptor = getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
         }
 		
 		@ProcessElement
@@ -312,7 +235,6 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 
                 // Parse json to protobuf
                 DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
-                LOG.info("DynamicMessage.Builder");
 				try{
                     JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
 					try{
@@ -348,9 +270,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         String tableDescription = "";
 
         try{
-            eventSchema = ProtobufUtils.makeTableSchema(getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get(), options.getFileDescriptorProtoName().get(), options.getMessageType().get()));
-            
-            //eventSchema = ProtobufUtils.makeTableSchema(getDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get(), options.getFileDescriptorProtoName().get(), options.getMessageType().get()));
+            eventSchema = ProtobufUtils.makeTableSchema(getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get()), options.getDescriptorFullName().get());
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -364,8 +284,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             .apply("PubsubMessage to TableRow", ParDo.of(new PubsubMessageToTableRowFn(
 				options.getBucketName(),
                 options.getFileDescriptorName(),
-                options.getFileDescriptorProtoName(),
-                options.getMessageType()
+                options.getDescriptorFullName()
             )))
             .apply("Fixed Windows",
                 Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))

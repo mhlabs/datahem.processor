@@ -166,7 +166,6 @@ public class ProtobufUtils {
     public static HashMultimap<String, String> getMessageOptions(ProtoDescriptor protoDescriptor, Descriptor descriptor){
         HashMultimap<String, String> messageOptions = HashMultimap.create();
         if (!descriptor.getOptions().getUnknownFields().asMap().isEmpty()) {
-            //LOG.info("messageOptionMap size in protolanguagefilewriter" + Integer.toString(protoDescriptor.getMessageOptionMap().size()));
             HashMultimap<FieldDescriptor, String> unknownOptionsMap = getUnknownFieldValues(
                 descriptor.getOptions().getUnknownFields(),
                 protoDescriptor.getMessageOptionMap());
@@ -174,7 +173,6 @@ public class ProtobufUtils {
             for (FieldDescriptor fd : keys) {
                 Collection<String> values = unknownOptionsMap.get(fd);
                 for (String value : values) {
-                    //LOG.info("Message options: " + fd.getName() + " : " + value);
                     messageOptions.put(fd.getName(), value);
                 }
             }
@@ -195,14 +193,12 @@ public class ProtobufUtils {
                     FieldDescriptor fd = fieldOption.getKey();
                     String value = fieldOption.getValue();
                     fieldOptions.put(fd.getName(), value);
-                    //LOG.info("fieldOption name: " + fd.getName() + ", fieldOption value: " + value);
-                    //if(fd.getName().equals("fdescription")){description = value;}
                 }
         }
         return fieldOptions;
     }
 
-    public static TableSchema makeTableSchema(ProtoDescriptor protoDescriptor) {
+    public static TableSchema makeTableSchema(ProtoDescriptor protoDescriptor, String descriptorFullName) {
 		Descriptor d = protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
         LOG.info("Descriptor fullname: " + d.getFullName());
         LOG.info("messageOptions: " + d.getOptions().toString());
@@ -219,24 +215,6 @@ public class ProtobufUtils {
 		for (FieldDescriptor f : fields) {
             HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
             String description = ((Set<String>) fieldOptions.get("fdescription")).stream().findFirst().orElse("");
-            /*
-            String description = "";
-            
-            if (!f.getOptions().getUnknownFields().asMap().isEmpty()) {
-                 HashMultimap<FieldDescriptor, String> unknownOptionsMap =
-                    getUnknownFieldValues(
-                        f.getOptions().getUnknownFields(),
-                        protoDescriptor.getFieldOptionMap());
-                Iterator<Map.Entry<FieldDescriptor, String>> unknownIter = unknownOptionsMap.entries().iterator();
-                while (unknownIter.hasNext()) {
-                    Map.Entry<FieldDescriptor, String> fieldOption = unknownIter.next();
-                    FieldDescriptor fd = fieldOption.getKey();
-                    String value = fieldOption.getValue();
-                    LOG.info("fieldOption name: " + fd.getName() + ", fieldOption value: " + value);
-                    if(fd.getName().equals("fdescription")){description = value;}
-                }
-            }
-            */
             
 			String type = "STRING";
 			String mode = "NULLABLE";
@@ -276,10 +254,6 @@ public class ProtobufUtils {
 	public static TableSchema makeTableSchema(Descriptor d) {
 		
         TableSchema res = new TableSchema();
-
-        for (FieldDescriptor f : d.getOptions().getDescriptor().getFields()){
-            LOG.info(f.getFullName());
-        }
 
 		List<FieldDescriptor> fields = d.getFields();
 
@@ -361,11 +335,11 @@ public class ProtobufUtils {
                         //LOG.info("message.getField(f): " + ((Message) message.getField(f)).toString());
 
                         TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType());
-                        LOG.info("contains key: "+ tr.toString());
+                        //LOG.info("contains key: "+ tr.toString());
 						res.set(f.getName().replace(".", "_"), tr);
 					}else{
                         TableRow tr = makeTableRow(f.getMessageType());
-                        LOG.info("doesn't contain key: "+ tr.toString());
+                        //LOG.info("doesn't contain key: "+ tr.toString());
 						res.set(f.getName().replace(".", "_"), tr);
                     }
 				}
