@@ -19,6 +19,7 @@ import io.anemos.metastore.core.proto.*;
 
 import com.google.protobuf.util.JsonFormat;
 import com.google.protobuf.ByteString;
+import com.google.common.collect.HashMultimap;
 
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 //import java.util.regex.Pattern;
@@ -270,7 +272,11 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         String tableDescription = "";
 
         try{
-            eventSchema = ProtobufUtils.makeTableSchema(getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get()), options.getDescriptorFullName().get());
+            ProtoDescriptor protoDescriptor = getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get());
+            Descriptor descriptor = protoDescriptor.getDescriptorByName(options.getDescriptorFullName().get());
+            eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor);
+            HashMultimap<String, String> messageOptions = ProtobufUtils.getMessageOptions(protoDescriptor, descriptor);
+            tableDescription = ((Set<String>) messageOptions.get("BigQueryTableDescription")).stream().findFirst().orElse("");
         }catch (Exception e) {
             e.printStackTrace();
         }

@@ -20,6 +20,7 @@ import io.anemos.metastore.core.proto.*;
 
 import java.lang.StringBuilder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -200,10 +201,10 @@ public class ProtobufUtils {
         return fieldOptions;
     }
 
-    public static TableSchema makeTableSchema(ProtoDescriptor protoDescriptor, String descriptorFullName) {
-		Descriptor d = protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
-        LOG.info("Descriptor fullname: " + d.getFullName());
-        LOG.info("messageOptions: " + d.getOptions().toString());
+    public static TableSchema makeTableSchema(ProtoDescriptor protoDescriptor, Descriptor descriptor) {
+		//Descriptor d = protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
+        LOG.info("Descriptor fullname: " + descriptor.getFullName());
+        LOG.info("messageOptions: " + descriptor.getOptions().toString());
         /*
         HashMultimap<String, String> messageOptions = getMessageOptions(protoDescriptor, d);
         String messageDescription = ((Set<String>) messageOptions.get("mdescription")).stream().findFirst().orElse("");
@@ -212,14 +213,22 @@ public class ProtobufUtils {
         TableSchema res = new TableSchema();
 
         // Iterate fields
-		List<FieldDescriptor> fields = d.getFields();
+		List<FieldDescriptor> fields = descriptor.getFields();
 		List<TableFieldSchema> schema_fields = new ArrayList<TableFieldSchema>();
 		for (FieldDescriptor f : fields) {
             HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
             String description = ((Set<String>) fieldOptions.get("BigQueryFieldDescription")).stream().findFirst().orElse("");
-            String categoriesString = ((Set<String>) fieldOptions.get("BigQueryFieldCategories")).stream().findFirst().orElse("");
+            //LOG.info("Field: "+ f.getName() + ", bigqueryFieldDescription: " + description);
+            /*Optional<String> categoriesString = ((Set<String>) fieldOptions.get("BigQueryFieldCategories")).stream().findFirst();
+            if(categoriesString.isPresent()){
             List<String> categories = Stream.of(categoriesString.split(","))
                 .map(String::trim)
+                .collect(Collectors.toList());
+            }*/
+            List<String> categories = ((Set<String>) fieldOptions.get("BigQueryFieldCategories"))
+                .stream()
+                .map(categoriesOption -> categoriesOption.split(","))
+                .flatMap(categoriesArray -> Arrays.stream(categoriesArray))
                 .collect(Collectors.toList());
             TableFieldSchema.Categories fieldCategories = new TableFieldSchema.Categories();
             fieldCategories.setNames(categories);
@@ -243,21 +252,34 @@ public class ProtobufUtils {
 				type = "FLOAT";
 			} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
 				type = "RECORD";
-				TableSchema ts = makeTableSchema(f.getMessageType());
+				TableSchema ts = makeTableSchema(protoDescriptor, f.getMessageType());
 
-				schema_fields.add(new TableFieldSchema().setName(f.getName().replace(".", "_")).setType(type)
-						.setMode(mode).setFields(ts.getFields()).setDescription(description).setCategories(fieldCategories));
+				schema_fields
+                    .add(
+                        new TableFieldSchema()
+                            .setName(f.getName().replace(".", "_"))
+                            .setType(type)
+					        .setMode(mode)
+                            .setFields(ts.getFields())
+                            .setDescription(description)
+                            .setCategories(fieldCategories));
 			}
 
 			if (!type.equals("RECORD")) {
 				schema_fields
-						.add(new TableFieldSchema().setName(f.getName().replace(".", "_")).setType(type).setMode(mode).setDescription(description).setCategories(fieldCategories));
+						.add(new TableFieldSchema()
+                            .setName(f.getName().replace(".", "_"))
+                            .setType(type)
+                            .setMode(mode)
+                            .setDescription(description)
+                            .setCategories(fieldCategories));
 			}
         }
 		res.setFields(schema_fields);
         LOG.info("table schema" + res.toString());
 		return res;
 	}
+
 
 	public static TableSchema makeTableSchema(Descriptor d) {
 		

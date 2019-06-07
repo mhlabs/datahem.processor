@@ -15,7 +15,7 @@ package org.datahem.processor.generic;
  */
 
 
-
+import io.anemos.metastore.core.proto.*;
 import org.datahem.processor.generic.GenericStreamPipeline.PubsubMessageToTableRowFn;
 
 import com.google.gson.Gson;
@@ -79,6 +79,7 @@ import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.util.Collections;
@@ -89,6 +90,7 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.StorageOptions;
+import com.google.common.collect.HashMultimap;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -127,7 +129,14 @@ public class GenericStreamPipelineTest {
         TableSchema eventSchema = null;
         String tableDescription = "";
         try{
-            eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc"), "mathem.cartemperature.v1.CarTemperature");
+            ProtoDescriptor protoDescriptor = GenericStreamPipeline.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc");
+            //Descriptor d = protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
+            Descriptor d = protoDescriptor.getDescriptorByName("mathem.member.v1.Member");
+            eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, d);
+            //eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc"), "mathem.cartemperature.v1.CarTemperature");
+            HashMultimap<String, String> messageOptions = ProtobufUtils.getMessageOptions(protoDescriptor, d);
+            tableDescription = ((Set<String>) messageOptions.get("BigQueryTableDescription")).stream().findFirst().orElse("");
+            LOG.info("tableDescription: " + tableDescription);
         }catch (Exception e) {
             e.printStackTrace();
         }
