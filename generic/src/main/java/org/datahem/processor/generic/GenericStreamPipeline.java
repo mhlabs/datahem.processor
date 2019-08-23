@@ -275,6 +275,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             ProtoDescriptor protoDescriptor = getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get());
             Descriptor descriptor = protoDescriptor.getDescriptorByName(options.getDescriptorFullName().get());
             eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor);
+            LOG.info("eventSchema: " + eventSchema.toString());
             HashMultimap<String, String> messageOptions = ProtobufUtils.getMessageOptions(protoDescriptor, descriptor);
             tableDescription = ((Set<String>) messageOptions.get("BigQueryTableDescription")).stream().findFirst().orElse("");
         }catch (Exception e) {
@@ -286,7 +287,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 PubsubIO
                     .readMessagesWithAttributes()
                     .fromSubscription(options.getPubsubSubscription()))
-            //combine steps PubsubMessage -> DynamicMessage -> TableRow into one step and make generic
+            //combine steps PubsubMessage -> DynamicMessage -> TableRow into one step and make generic (beam 2.13 will fix dynamic messages in proto coder)
             .apply("PubsubMessage to TableRow", ParDo.of(new PubsubMessageToTableRowFn(
 				options.getBucketName(),
                 options.getFileDescriptorName(),

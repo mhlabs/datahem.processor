@@ -262,7 +262,8 @@ public class ProtobufUtils {
 					        .setMode(mode)
                             .setFields(ts.getFields())
                             .setDescription(description)
-                            .setCategories(fieldCategories));
+                            //.setCategories(fieldCategories)
+                            );
 			}
 
 			if (!type.equals("RECORD")) {
