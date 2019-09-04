@@ -233,11 +233,15 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 PubsubMessage pubsubMessage = c.element();
                 String payload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
                 Map<String, String> attributes = pubsubMessage.getAttributeMap();
-                LOG.info("payload: " + payload);
+                //LOG.info("payload: " + payload);
 
                 // Parse json to protobuf
-                DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
+                if(messageDescriptor == null){
+                    LOG.warn("message descriptor is null, creating new from descriptor in cloud storage...");
+                    messageDescriptor = getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
+                }
 				try{
+                    DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
                     JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
 					try{
                         attributes.entrySet().forEach(attribute -> {
@@ -246,21 +250,25 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                             attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("value"), attribute.getValue());
                             builder.addRepeatedField(messageDescriptor.findFieldByName("_ATTRIBUTES"),attributeBuilder.build());
                             });
-                    }catch(java.lang.NullPointerException e){LOG.info("No _ATTRIBUTES field in message");}
+                    }catch(java.lang.NullPointerException e){
+                        LOG.error("No _ATTRIBUTES field in message", e);
+                        LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
+                    }
 					DynamicMessage message = builder.build();
-                    LOG.info(message.toString());
+                    //LOG.info(message.toString());
 
                     //transform protobuf to tablerow
                     TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor);
-                    try{
-                        LOG.info(tr.toPrettyString());
-                    }catch(Exception e){}
                     c.output(tr);
+                }catch(java.lang.NullPointerException e){
+                    LOG.error("No descriptor?", e);
+                    LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
 				}catch(InvalidProtocolBufferException e){
 					LOG.error("invalid protocol buffer exception: ", e);
-					LOG.error(payload);
+                    LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
 				}catch(IllegalArgumentException e){
                     LOG.error("IllegalArgumentException: ", e);
+                    LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
 				}
     		}
   }
@@ -286,7 +294,9 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             .apply("Read json as string from pubsub", 
                 PubsubIO
                     .readMessagesWithAttributes()
-                    .fromSubscription(options.getPubsubSubscription()))
+                    .fromSubscription(options.getPubsubSubscription())
+                    .withIdAttribute("uuid")
+                    .withTimestampAttribute("timestamp"))
             //combine steps PubsubMessage -> DynamicMessage -> TableRow into one step and make generic (beam 2.13 will fix dynamic messages in proto coder)
             .apply("PubsubMessage to TableRow", ParDo.of(new PubsubMessageToTableRowFn(
 				options.getBucketName(),
@@ -302,11 +312,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 BigQueryIO
                     .writeTableRows()
                     .to(new TablePartition(options.getBigQueryTableSpec(), tableDescription))
-                    //.to(options.getBigQueryTableSpec())
                     .withSchema(eventSchema)
-                    //.withTimePartitioning(new TimePartitioning().setField("_PARTITIONTIME").setType("DAY"))
-                    //.withTimePartitioning(new TimePartitioning().setField("_PARTITIONTIME").setType("TIMESTAMP"))
-                    //.withTimePartitioning(new TimePartitioning())
                     //.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors())
                     .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
