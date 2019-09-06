@@ -129,6 +129,11 @@ public class GenericStreamPipeline {
 		//@Default.String("")
 		ValueProvider<String> getDescriptorFullName();
 		void setDescriptorFullName(ValueProvider<String> value);
+
+        @Description("taxonomyResourcePattern")
+		@Default.String(".*")
+		ValueProvider<String> getTaxonomyResourcePattern();
+		void setTaxonomyResourcePattern(ValueProvider<String> value);
 		
 		@Description("pubsubSubscription")
 		//@Default.String("")
@@ -209,6 +214,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 
     public static class PubsubMessageToTableRowFn extends DoFn<PubsubMessage,TableRow> {
         private Descriptor messageDescriptor;
+        private ProtoDescriptor protoDescriptor;
         ValueProvider<String> bucketName;
         ValueProvider<String> fileDescriptorName;
         ValueProvider<String> descriptorFullName;
@@ -225,6 +231,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         @Setup
         public void setup() throws Exception {
             messageDescriptor = getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
+            protoDescriptor = getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
         }
 		
 		@ProcessElement
@@ -240,9 +247,18 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     LOG.warn("message descriptor is null, creating new from descriptor in cloud storage...");
                     messageDescriptor = getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
                 }
+                if(protoDescriptor == null){
+                    LOG.warn("protoDescriptor is null, creating new from descriptor in cloud storage...");
+                    protoDescriptor = getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
+                }
 				try{
                     DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
-                    JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
+                    try{
+                        JsonFormat.parser().merge(payload, builder);
+                    }catch(InvalidProtocolBufferException e){
+                        LOG.error("Unknown fields in message, doesn't match current schema " + descriptorFullName.get(), e);
+                        JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
+                    }
 					try{
                         attributes.entrySet().forEach(attribute -> {
                             DynamicMessage.Builder attributeBuilder = DynamicMessage.newBuilder(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry"));
@@ -258,7 +274,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     //LOG.info(message.toString());
 
                     //transform protobuf to tablerow
-                    TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor);
+                    //TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor);
+                    TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor, protoDescriptor);
                     c.output(tr);
                 }catch(java.lang.NullPointerException e){
                     LOG.error("No descriptor?", e);
@@ -282,7 +299,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         try{
             ProtoDescriptor protoDescriptor = getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get());
             Descriptor descriptor = protoDescriptor.getDescriptorByName(options.getDescriptorFullName().get());
-            eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor);
+            eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, options.getTaxonomyResourcePattern().get());
             LOG.info("eventSchema: " + eventSchema.toString());
             HashMultimap<String, String> messageOptions = ProtobufUtils.getMessageOptions(protoDescriptor, descriptor);
             tableDescription = ((Set<String>) messageOptions.get("BigQueryTableDescription")).stream().findFirst().orElse("");
