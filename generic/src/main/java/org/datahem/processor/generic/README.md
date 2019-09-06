@@ -24,7 +24,7 @@ FILE_DESCRIPTOR_PROTO_NAME='' # Required. Example: datahem/protobuf/order/v1/ord
 MESSAGE_TYPE='' # Required. Example: order
 PUBSUB_SUBSCRIPTION='' # Required. The name of the stream. Example: 'order-stream'
 BIGQUERY_TABLE_SPEC='' # Required. Example: streams.orders
-
+TAXONOMY_RESOURCE_PATTERN='' # Optional. Default: '.*'. Example: '7564324984364324'  (taxonomy id)
 ```
 
 ## compile and run
@@ -47,6 +47,7 @@ mvn compile exec:java \
       --bucketName=$BUCKET_NAME \
       --fileDescriptorName=$FILE_DESCRIPTOR_NAME \
       --descriptorFullName=$DESCRIPTOR_FULL_NAME \
+      --taxonomyResourcePattern=$TAXONOMY_RESOURCE_PATTERN \
       --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$PUBSUB_SUBSCRIPTION \
       --bigQueryTableSpec=$BIGQUERY_TABLE_SPEC"
 ```

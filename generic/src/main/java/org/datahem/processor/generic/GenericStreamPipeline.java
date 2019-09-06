@@ -129,6 +129,11 @@ public class GenericStreamPipeline {
 		//@Default.String("")
 		ValueProvider<String> getDescriptorFullName();
 		void setDescriptorFullName(ValueProvider<String> value);
+
+        @Description("taxonomyResourcePattern")
+		@Default.String(".*")
+		ValueProvider<String> getTaxonomyResourcePattern();
+		void setTaxonomyResourcePattern(ValueProvider<String> value);
 		
 		@Description("pubsubSubscription")
 		//@Default.String("")
@@ -209,6 +214,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 
     public static class PubsubMessageToTableRowFn extends DoFn<PubsubMessage,TableRow> {
         private Descriptor messageDescriptor;
+        private ProtoDescriptor protoDescriptor;
         ValueProvider<String> bucketName;
         ValueProvider<String> fileDescriptorName;
         ValueProvider<String> descriptorFullName;
@@ -225,6 +231,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         @Setup
         public void setup() throws Exception {
             messageDescriptor = getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
+            protoDescriptor = getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
         }
 		
 		@ProcessElement
@@ -233,12 +240,25 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 PubsubMessage pubsubMessage = c.element();
                 String payload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
                 Map<String, String> attributes = pubsubMessage.getAttributeMap();
-                LOG.info("payload: " + payload);
+                //LOG.info("payload: " + payload);
 
                 // Parse json to protobuf
-                DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
+                if(messageDescriptor == null){
+                    LOG.warn("message descriptor is null, creating new from descriptor in cloud storage...");
+                    messageDescriptor = getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
+                }
+                if(protoDescriptor == null){
+                    LOG.warn("protoDescriptor is null, creating new from descriptor in cloud storage...");
+                    protoDescriptor = getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
+                }
 				try{
-                    JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
+                    DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
+                    try{
+                        JsonFormat.parser().merge(payload, builder);
+                    }catch(InvalidProtocolBufferException e){
+                        LOG.error("Unknown fields in message, doesn't match current schema " + descriptorFullName.get(), e);
+                        JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
+                    }
 					try{
                         attributes.entrySet().forEach(attribute -> {
                             DynamicMessage.Builder attributeBuilder = DynamicMessage.newBuilder(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry"));
@@ -246,21 +266,26 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                             attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("value"), attribute.getValue());
                             builder.addRepeatedField(messageDescriptor.findFieldByName("_ATTRIBUTES"),attributeBuilder.build());
                             });
-                    }catch(java.lang.NullPointerException e){LOG.info("No _ATTRIBUTES field in message");}
+                    }catch(java.lang.NullPointerException e){
+                        LOG.error("No _ATTRIBUTES field in message", e);
+                        LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
+                    }
 					DynamicMessage message = builder.build();
-                    LOG.info(message.toString());
+                    //LOG.info(message.toString());
 
                     //transform protobuf to tablerow
-                    TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor);
-                    try{
-                        LOG.info(tr.toPrettyString());
-                    }catch(Exception e){}
+                    //TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor);
+                    TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor, protoDescriptor);
                     c.output(tr);
+                }catch(java.lang.NullPointerException e){
+                    LOG.error("No descriptor?", e);
+                    LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
 				}catch(InvalidProtocolBufferException e){
 					LOG.error("invalid protocol buffer exception: ", e);
-					LOG.error(payload);
+                    LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
 				}catch(IllegalArgumentException e){
                     LOG.error("IllegalArgumentException: ", e);
+                    LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
 				}
     		}
   }
@@ -274,7 +299,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         try{
             ProtoDescriptor protoDescriptor = getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get());
             Descriptor descriptor = protoDescriptor.getDescriptorByName(options.getDescriptorFullName().get());
-            eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor);
+            eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, options.getTaxonomyResourcePattern().get());
             LOG.info("eventSchema: " + eventSchema.toString());
             HashMultimap<String, String> messageOptions = ProtobufUtils.getMessageOptions(protoDescriptor, descriptor);
             tableDescription = ((Set<String>) messageOptions.get("BigQueryTableDescription")).stream().findFirst().orElse("");
@@ -286,7 +311,9 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             .apply("Read json as string from pubsub", 
                 PubsubIO
                     .readMessagesWithAttributes()
-                    .fromSubscription(options.getPubsubSubscription()))
+                    .fromSubscription(options.getPubsubSubscription())
+                    .withIdAttribute("uuid")
+                    .withTimestampAttribute("timestamp"))
             //combine steps PubsubMessage -> DynamicMessage -> TableRow into one step and make generic (beam 2.13 will fix dynamic messages in proto coder)
             .apply("PubsubMessage to TableRow", ParDo.of(new PubsubMessageToTableRowFn(
 				options.getBucketName(),
@@ -302,11 +329,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 BigQueryIO
                     .writeTableRows()
                     .to(new TablePartition(options.getBigQueryTableSpec(), tableDescription))
-                    //.to(options.getBigQueryTableSpec())
                     .withSchema(eventSchema)
-                    //.withTimePartitioning(new TimePartitioning().setField("_PARTITIONTIME").setType("DAY"))
-                    //.withTimePartitioning(new TimePartitioning().setField("_PARTITIONTIME").setType("TIMESTAMP"))
-                    //.withTimePartitioning(new TimePartitioning())
                     //.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors())
                     .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
