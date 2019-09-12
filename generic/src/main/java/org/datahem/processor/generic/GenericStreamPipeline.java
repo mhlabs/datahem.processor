@@ -253,11 +253,16 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 }
 				try{
                     DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
-                    try{
-                        JsonFormat.parser().merge(payload, builder);
-                    }catch(InvalidProtocolBufferException e){
-                        LOG.error("Unknown fields in message, doesn't match current schema " + descriptorFullName.get(), e);
-                        JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
+                    if(messageDescriptor.findFieldByName("_DATA") != null){
+                        try{
+                            JsonFormat.parser().merge(payload, builder);
+                        }catch(InvalidProtocolBufferException e){
+                            LOG.error("Unknown fields in message, doesn't match current schema " + descriptorFullName.get(), e);
+                            builder.clear();
+                            JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
+                        }
+                    } else{
+                        builder.setField(messageDescriptor.findFieldByName("_DATA"), payload);
                     }
 					try{
                         attributes.entrySet().forEach(attribute -> {
