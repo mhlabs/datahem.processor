@@ -2,6 +2,10 @@
 Process bounded and unbounded data and write to PubSub and BigQuery, currently using Google Dataflow (Apache Beam) and supports processing of Google Analytics hits and AWS Kinesis events
 
 # Version:
+## 1.1.3 (2019-09-13): Generic protobuf pipline and bigquery type field options 
+A generic pipeline that serializes json to dynamic protobuf message based on schemas in cloud storage.
+Support for bigquery data type as field option in protobuf schemas. 
+
 ## 1.1.2 (2019-04-26): Streaming backfill pipeline
 Query BigQuery backup tables and publish to pubsub for backfill purposes
 
