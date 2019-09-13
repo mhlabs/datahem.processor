@@ -5,8 +5,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>se.mathem.processor.aws</groupId>
-  <artifactId>sns</artifactId>
+  <groupId>org.datahem.processor</groupId>
+  <artifactId>generic</artifactId>
   <version>0.7.2</version>
 
   <packaging>jar</packaging>
@@ -21,7 +21,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <surefire-plugin.version>2.20</surefire-plugin.version>
     <java.version>1.8</java.version>
-    <beam.version>2.12.0</beam.version>
+    <beam.version>2.15.0</beam.version>
     <!--<license.dir>${basedir}</license.dir>-->
     <!--<license.copyrightOwners>MatHem Sverige AB</license.copyrightOwners>-->
     <license.licenseName>agpl_v3_later</license.licenseName>
@@ -165,182 +165,85 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.beam</groupId>
-      <artifactId>beam-sdks-java-core</artifactId>
-      <version>${beam.version}</version>
+        <groupId>org.apache.beam</groupId>
+        <artifactId>beam-sdks-java-core</artifactId>
+        <version>${beam.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.beam</groupId>
-      <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
-      <version>${beam.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.beam</groupId>
-      <artifactId>beam-sdks-java-extensions-google-cloud-platform-core</artifactId>
-      <version>${beam.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.beam</groupId>
-      <artifactId>beam-runners-google-cloud-dataflow-java</artifactId>
-      <version>${beam.version}</version>
-    </dependency>
-   <dependency>
-   <groupId>org.apache.beam</groupId>
-   <artifactId>beam-runners-direct-java</artifactId>
-   <version>${beam.version}</version>
-   <scope>runtime</scope>
-</dependency>
-
-
-<!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-bigquery -->
-<!--
-<dependency>
-    <groupId>com.google.cloud</groupId>
-    <artifactId>google-cloud-bigquery</artifactId>
-    <version>1.49.0</version>
-</dependency>-->
-<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-bigquery -->
-<!--<dependency>
-    <groupId>com.google.apis</groupId>
-    <artifactId>google-api-services-bigquery</artifactId>
-    <version>v2-rev20181104-1.27.0</version>
-</dependency>-->
-<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-bigquery -->
-<dependency>
-    <groupId>com.google.apis</groupId>
-    <artifactId>google-api-services-bigquery</artifactId>
-    <version>v2-rev434-1.25.0</version>
-</dependency>
-
-
-<dependency>
-  <groupId>com.google.cloud</groupId>
-  <artifactId>google-cloud-storage</artifactId>
-  <version>1.70.0</version>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client -->
-<!--
-    <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client</artifactId>
-          <version>1.24.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava-jdk5</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
--->
-
-<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-pubsub -->
-<!--    <dependency>
-      <groupId>com.google.apis</groupId>
-      <artifactId>google-api-services-pubsub</artifactId>
-      <version>v1-rev422-1.24.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava-jdk5</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
--->
-
-
-<!--
-    <dependency>
-      <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client</artifactId>
-      <version>1.26.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava-jdk5</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
--->
-
     
-
-
-<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client -->
-    <!-->
     <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client</artifactId>
-      <version>1.22.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava-jdk5</artifactId>
-        </exclusion>
-      </exclusions>
+        <groupId>org.apache.beam</groupId>
+        <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
+        <version>${beam.version}</version>
+        <exclusions>
+            <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
-    -->
-
-
-<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-pubsub -->
-    <!-->
+    
     <dependency>
-      <groupId>com.google.apis</groupId>
-      <artifactId>google-api-services-pubsub</artifactId>
-      <version>v1-rev10-1.22.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava-jdk5</artifactId>
-        </exclusion>
-      </exclusions>
+        <groupId>org.apache.beam</groupId>
+        <artifactId>beam-sdks-java-extensions-google-cloud-platform-core</artifactId>
+        <version>${beam.version}</version>
     </dependency>
--->
-
-
-<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-<dependency>
-    <groupId>org.apache.httpcomponents</groupId>
-    <artifactId>httpclient</artifactId>
-    <version>4.5.5</version>
-</dependency>
-
-
+    
     <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>2.4</version>
+        <groupId>org.apache.beam</groupId>
+        <artifactId>beam-runners-google-cloud-dataflow-java</artifactId>
+        <version>${beam.version}</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.apache.beam</groupId>
+        <artifactId>beam-runners-direct-java</artifactId>
+        <version>${beam.version}</version>
+        <scope>runtime</scope>
     </dependency>
 
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>20.0</version>
-    </dependency>
-
-    <!-- Add slf4j API frontend binding with JUL backend -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.14</version>
+        <groupId>com.google.apis</groupId>
+        <artifactId>google-api-services-bigquery</artifactId>
+        <version>v2-rev434-1.25.0</version>
     </dependency>
 
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-jdk14</artifactId>
-      <version>1.7.14</version>
-      <!-- When loaded at runtime this will wire up slf4j to the JUL backend -->
-      <scope>runtime</scope>
+        <groupId>com.google.cloud</groupId>
+        <artifactId>google-cloud-storage</artifactId>
+        <version>1.70.0</version>
     </dependency>
 
-    <!-- Hamcrest and JUnit are required dependencies of PAssert,
-         which is used in the main code of DebuggingWordCount example. -->
+    <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.5.5</version>
+    </dependency>
+
+    <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>2.4</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>20.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.14</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-jdk14</artifactId>
+        <version>1.7.14</version>
+        <scope>runtime</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-all</artifactId>
@@ -353,5 +256,6 @@
       <artifactId>junit</artifactId>
       <version>4.12</version>
     </dependency>
+  
   </dependencies>
 </project>

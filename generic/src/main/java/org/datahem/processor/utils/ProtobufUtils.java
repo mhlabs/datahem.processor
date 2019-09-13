@@ -258,7 +258,7 @@ public class ProtobufUtils {
 				type = "FLOAT";
 			} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
 				type = "RECORD";
-				TableSchema ts = makeTableSchema(protoDescriptor, f.getMessageType());
+				TableSchema ts = makeTableSchema(protoDescriptor, f.getMessageType(), taxonomyResourcePattern);
 
 				schema_fields
                     .add(

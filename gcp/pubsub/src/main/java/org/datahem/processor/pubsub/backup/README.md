@@ -21,7 +21,9 @@ DF_DISK_SIZE_GB= # Optional. Default: Size defined in your Cloud Platform projec
 DF_WORKER_MACHINE_TYPE='' # Optional. Default: The Dataflow service will choose the machine type based on your job. Example: 'n1-standard-1'
 
 #Pubsub Backup Pipeline settings
-STREAM_ID= #Required. The ID (name) used to set up a streaming source with the infrastructor script. Example: 'ua123456789'
+JOB_NAME='' # Required. Example: 'backup-v1'
+PUBSUB_SUBSCRIPTION='' # Required. The name of the stream. Example: 'ua123456789'
+BIGQUERY_TABLE_SPEC='' # Required. Example: test.ua123456789
 
 ```
 
@@ -38,7 +40,7 @@ compile and run
       -Dexec.mainClass=org.datahem.processor.pubsub.backup.PubSubBackupPipeline \
       -Dexec.args=" \
       --project=$PROJECT_ID \
-      --jobName=$STREAM_ID-backup \
+      --jobName=$JOB_NAME \
       --stagingLocation=gs://$PROJECT_ID-processor/$VERSION/org/datahem/processor/staging \
       --gcpTempLocation=gs://$PROJECT_ID-processor/gcptemp/ \
       --runner=DataflowRunner \
@@ -48,8 +50,9 @@ compile and run
       --maxNumWorkers=$DF_MAX_NUM_WORKERS \
       --diskSizeGb=$DF_DISK_SIZE_GB \
       --workerMachineType=$DF_WORKER_MACHINE_TYPE \
-      --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$STREAM_ID-backup \
-      --bigQueryTableSpec=backup.$STREAM_ID"
+      --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$PUBSUB_SUBSCRIPTION \
+      --bigQueryTableSpec=$BIGQUERY_TABLE_SPEC"
+
 ```
 
 Create template

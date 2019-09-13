@@ -6,23 +6,11 @@ package org.datahem.processor.pubsub.backup;
  * %%
  * Copyright (C) 2018 Robert Sahlin and MatHem Sverige AB
  * %%
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
 
@@ -31,6 +19,7 @@ import com.google.api.services.bigquery.model.TableSchema;
 import com.google.api.services.bigquery.model.TableReference;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +29,7 @@ import java.util.stream.Collectors;
 import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
+import com.google.api.services.bigquery.model.Clustering;
 
 import java.util.List;
 import java.io.IOException;
@@ -114,11 +104,15 @@ public class PubSubBackupPipeline {
 		//TableFields
 		List<TableFieldSchema> fieldsSchemaList = new ArrayList<>();
 	    fieldsSchemaList.add(new TableFieldSchema().setName("publish_time").setType("TIMESTAMP").setMode("REQUIRED"));
+        fieldsSchemaList.add(new TableFieldSchema().setName("topic").setType("STRING"));
 	    fieldsSchemaList.add(new TableFieldSchema().setName("attributes").setType("RECORD").setMode("REPEATED").setFields(attributeFieldSchemaList));
 	    fieldsSchemaList.add(new TableFieldSchema().setName("data").setType("BYTES").setMode("REQUIRED"));
 		
 	    TableSchema schema = new TableSchema().setFields(fieldsSchemaList);
 	    TimePartitioning partition = new TimePartitioning().setField("publish_time");
+
+        Clustering cluster = new Clustering();
+        cluster.setFields(Arrays.asList("topic"));
 			
     	pipeline
     	.apply("Read from pubsub",
@@ -141,7 +135,8 @@ public class PubSubBackupPipeline {
 	        	DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
 	        	TableRow tableRow = new TableRow()
 	        		.set("publish_time", c.timestamp().toString(partition))
-	        		.set("attributes", attributes)
+	        		.set("topic", attributeMap.get("topic"))
+                    .set("attributes", attributes)
 	        		.set("data", pubsubMessage.getPayload());
 	        	
 	        	c.output(tableRow);
@@ -161,6 +156,7 @@ public class PubSubBackupPipeline {
 				.withFormatFunction(tr -> tr)
       			.withSchema(schema)
       			.withTimePartitioning(partition)
+                .withClustering(cluster)
       			.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
       			.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 

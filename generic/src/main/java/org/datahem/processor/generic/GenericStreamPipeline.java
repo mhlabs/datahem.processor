@@ -257,6 +257,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                         JsonFormat.parser().merge(payload, builder);
                     }catch(InvalidProtocolBufferException e){
                         LOG.error("Unknown fields in message, doesn't match current schema " + descriptorFullName.get(), e);
+                        builder.clear();
                         JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
                     }
 					try{
