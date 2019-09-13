@@ -7,7 +7,7 @@
 
   <groupId>org.datahem.processor</groupId>
   <artifactId>measurementprotocol</artifactId>
-  <version>0.8.0</version>
+  <version>1.1.2</version>
 
   <packaging>jar</packaging>
 
@@ -16,7 +16,7 @@
   <organization>
   	<name>Robert Sahlin</name>
   </organization>
-  <description>hello world!</description>
+  <description>pipelines to process measurement protocol hits</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -199,7 +199,7 @@
     <dependency>
    <groupId>org.apache.beam</groupId>
    <artifactId>beam-runners-direct-java</artifactId>
-   <version>2.8.0</version>
+   <version>${beam.version}</version>
    <scope>runtime</scope>
 </dependency>
 
