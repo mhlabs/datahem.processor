@@ -331,7 +331,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     .writeTableRows()
                     .to(new TablePartition(options.getBigQueryTableSpec(), tableDescription))
                     .withSchema(eventSchema)
-                    //.withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors())
+                    //.withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
                     .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
