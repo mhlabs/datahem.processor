@@ -15,7 +15,6 @@ package org.datahem.processor.utils;
  */
 
 import org.datahem.protobuf.options.Options;
-//import org.datahem.protobuf.options.Bigquery;
 import io.anemos.metastore.core.proto.*;
 
 import java.lang.StringBuilder;
@@ -208,13 +207,8 @@ public class ProtobufUtils {
     }
 
     public static TableSchema makeTableSchema(ProtoDescriptor protoDescriptor, Descriptor descriptor, String taxonomyResourcePattern) {
-		//Descriptor d = protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
         LOG.info("Descriptor fullname: " + descriptor.getFullName());
         LOG.info("messageOptions: " + descriptor.getOptions().toString());
-        /*
-        HashMultimap<String, String> messageOptions = getMessageOptions(protoDescriptor, d);
-        String messageDescription = ((Set<String>) messageOptions.get("mdescription")).stream().findFirst().orElse("");
-        */
 
         TableSchema res = new TableSchema();
 
@@ -224,7 +218,6 @@ public class ProtobufUtils {
 		for (FieldDescriptor f : fields) {
             HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
             String description = ((Set<String>) fieldOptions.get("BigQueryFieldDescription")).stream().findFirst().orElse("");
-            //String taxonomyResourcePattern = ".*590903188537942776.*";
             final Pattern categoryFilter = Pattern.compile(taxonomyResourcePattern);
             List<String> categories = ((Set<String>) fieldOptions.get("BigQueryFieldCategories"))
                 .stream()
@@ -268,7 +261,6 @@ public class ProtobufUtils {
 					        .setMode(mode)
                             .setFields(ts.getFields())
                             .setDescription(description)
-                            //.setCategories(fieldCategories)
                             );
 			}
 
@@ -344,12 +336,10 @@ public class ProtobufUtils {
 	public static TableRow makeTableRow(Message message, Descriptor descriptor) {
 		TableRow res = new TableRow();
         List<FieldDescriptor> fields = descriptor.getFields();
-		//List<FieldDescriptor> fields = message.getDescriptorForType().getFields();
 
 		for (FieldDescriptor f : fields) {
 			String type = "STRING";
             
-			//if (!f.isRepeated() && message.hasField(f)) {
             if (!f.isRepeated() ) {
                 if (f.getType().toString().toUpperCase().contains("STRING")) {
 					res.set(f.getName().replace(".", "_"), String.valueOf(message.getField(f)));
@@ -369,15 +359,10 @@ public class ProtobufUtils {
 				} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
 					type = "RECORD";
 					if (message.getAllFields().containsKey(f)) {
-						//TableRow tr = makeTableRow((Message) message.getField(f));
-                        //LOG.info("message.getField(f): " + ((Message) message.getField(f)).toString());
-
                         TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType());
-                        //LOG.info("contains key: "+ tr.toString());
 						res.set(f.getName().replace(".", "_"), tr);
 					}else{
                         TableRow tr = makeTableRow(f.getMessageType());
-                        //LOG.info("doesn't contain key: "+ tr.toString());
 						res.set(f.getName().replace(".", "_"), tr);
                     }
 				}
@@ -408,7 +393,6 @@ public class ProtobufUtils {
 							.collect(Collectors.toList());
 					res.set(f.getName().replace(".", "_"), values);
 				} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
-					    //List<TableRow> values = ((List<Message>) message.getField(f)).stream().map(m -> makeTableRow(m))
                         List<TableRow> values = ((List<Message>) message.getField(f))
                             .stream()
                             .map(m -> makeTableRow(m,  f.getMessageType()))
@@ -420,17 +404,17 @@ public class ProtobufUtils {
 		return res;
 	}
 
+    public static TableRow makeTableRow(Descriptor descriptor, ProtoDescriptor protoDescriptor) {
+        return makeTableRow(DynamicMessage.newBuilder(descriptor).clear().build(), descriptor, protoDescriptor);
+    }
+
     public static TableRow makeTableRow(Message message, Descriptor descriptor, ProtoDescriptor protoDescriptor) {
 		TableRow res = new TableRow();
         List<FieldDescriptor> fields = descriptor.getFields();
-		//List<FieldDescriptor> fields = message.getDescriptorForType().getFields();
 
 		for (FieldDescriptor f : fields) {
-			String type = "STRING";
-            
             HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
             String bigQueryFieldType = ((Set<String>) fieldOptions.get("BigQueryFieldType")).stream().findFirst().orElse("");
-			//if (!f.isRepeated() && message.hasField(f)) {
             if (!f.isRepeated() ) {
                 if(bigQueryFieldType.isEmpty()){
                     if (f.getType().toString().toUpperCase().contains("STRING")) {
@@ -449,17 +433,12 @@ public class ProtobufUtils {
                         || f.getType().toString().toUpperCase().contains("DOUBLE")) {
                         res.set(f.getName().replace(".", "_"), (double) message.getField(f));
                     } else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
-                        type = "RECORD";
                         if (message.getAllFields().containsKey(f)) {
-                            //TableRow tr = makeTableRow((Message) message.getField(f));
-                            //LOG.info("message.getField(f): " + ((Message) message.getField(f)).toString());
-
-                            TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType());
-                            //LOG.info("contains key: "+ tr.toString());
+                            TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType(), protoDescriptor);
                             res.set(f.getName().replace(".", "_"), tr);
                         }else{
-                            TableRow tr = makeTableRow(f.getMessageType());
-                            //LOG.info("doesn't contain key: "+ tr.toString());
+                            // doesn't contain message, create an empty message
+                            TableRow tr = makeTableRow(f.getMessageType(), protoDescriptor);
                             res.set(f.getName().replace(".", "_"), tr);
                         }
 				    }
@@ -479,11 +458,7 @@ public class ProtobufUtils {
                         || bigQueryFieldType.contains("DATETIME")
                         || bigQueryFieldType.contains("TIME")
                         || bigQueryFieldType.contains("TIMESTAMP")) {
-                        if (String.valueOf(message.getField(f)).isEmpty()){
-                            //res.set(f.getName().replace(".", "_"), null);
-                            LOG.info("Is empty date/time: field: " + f.getName() + ", value: " + String.valueOf(message.getField(f)) + ", isEmpty: " + String.valueOf(message.getField(f)).isEmpty());
-                        }else{
-                            LOG.info("Not empty date/time: field: " + f.getName() + ", value: " + String.valueOf(message.getField(f)) + ", isEmpty: " + String.valueOf(message.getField(f)).isEmpty());
+                        if (!String.valueOf(message.getField(f)).isEmpty()){
                             res.set(f.getName().replace(".", "_"), String.valueOf(message.getField(f)));
                         }
                     } 
@@ -516,10 +491,9 @@ public class ProtobufUtils {
                                 .collect(Collectors.toList());
                         res.set(f.getName().replace(".", "_"), values);
                     } else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
-					    //List<TableRow> values = ((List<Message>) message.getField(f)).stream().map(m -> makeTableRow(m))
                         List<TableRow> values = ((List<Message>) message.getField(f))
                             .stream()
-                            .map(m -> makeTableRow(m,  f.getMessageType()))
+                            .map(m -> makeTableRow(m,  f.getMessageType(), protoDescriptor))
 							.collect(Collectors.toList());
 					    res.set(f.getName().replace(".", "_"), values);
 				    }
