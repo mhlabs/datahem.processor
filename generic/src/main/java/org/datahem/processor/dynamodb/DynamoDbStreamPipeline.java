@@ -1,4 +1,4 @@
-package org.datahem.processor.generic;
+package org.datahem.processor.dynamodb;
 
 /*-
  * ========================LICENSE_START=================================
@@ -107,12 +107,14 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.DateTimeZone;
 
+import org.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GenericStreamPipeline {
+public class DynamoDbStreamPipeline {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(GenericStreamPipeline.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DynamoDbStreamPipeline.class);
 
 	public interface Options extends PipelineOptions, GcpOptions {
 
@@ -142,72 +144,6 @@ public class GenericStreamPipeline {
 		void setBigQueryTableSpec(ValueProvider<String> value);
 	}
 
-    private static Map<String, FileDescriptorProto> extractProtoMap(
-        FileDescriptorSet fileDescriptorSet) {
-        HashMap<String, FileDescriptorProto> map = new HashMap<>();
-        fileDescriptorSet.getFileList().forEach(fdp -> map.put(fdp.getName(), fdp));
-        return map;
-    }
-
-    private static FileDescriptor getFileDescriptor(String name, FileDescriptorSet fileDescriptorSet) {
-        Map<String, FileDescriptorProto> inMap = extractProtoMap(fileDescriptorSet);
-        Map<String, FileDescriptor> outMap = new HashMap<>();
-        return convertToFileDescriptorMap(name, inMap, outMap);
-    }
-
-    private static FileDescriptor convertToFileDescriptorMap(String name, Map<String, FileDescriptorProto> inMap,
-        Map<String, FileDescriptor> outMap) {
-        if (outMap.containsKey(name)) {
-            return outMap.get(name);
-        }
-        FileDescriptorProto fileDescriptorProto = inMap.get(name);
-        List<FileDescriptor> dependencies = new ArrayList<>();
-        if (fileDescriptorProto.getDependencyCount() > 0) {
-            LOG.info("more than 0 dependencies: " + fileDescriptorProto.toString());
-            fileDescriptorProto
-                .getDependencyList()
-                .forEach(dependencyName -> dependencies.add(convertToFileDescriptorMap(dependencyName, inMap, outMap)));
-        }
-        try {
-            LOG.info("Number of dependencies: " + Integer.toString(dependencies.size()));
-            FileDescriptor fileDescriptor = 
-                FileDescriptor.buildFrom(
-                    fileDescriptorProto, dependencies.toArray(new FileDescriptor[dependencies.size()]));
-            outMap.put(name, fileDescriptor);
-            return fileDescriptor;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
-        String bucketName, 
-        String fileDescriptorName) throws Exception {
-            try{
-                Storage storage = StorageOptions.getDefaultInstance().getService();
-                Blob blob = storage.get(BlobId.of(bucketName, fileDescriptorName));
-                ReadChannel reader = blob.reader();
-                InputStream inputStream = Channels.newInputStream(reader);
-                FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
-                return new ProtoDescriptor(descriptorSetObject);
-            }catch (Exception e){
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-    public static Descriptor getDescriptorFromCloudStorage(
-        String bucketName, 
-        String fileDescriptorName, 
-        String descriptorFullName) throws Exception {
-            try{
-                return getProtoDescriptorFromCloudStorage(bucketName, fileDescriptorName).getDescriptorByName(descriptorFullName);
-            }catch (Exception e){
-                e.printStackTrace();
-                return null;
-            }
-        }
-
     public static class PubsubMessageToTableRowFn extends DoFn<PubsubMessage,TableRow> {
         private Descriptor messageDescriptor;
         private ProtoDescriptor protoDescriptor;
@@ -226,27 +162,58 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         
         @Setup
         public void setup() throws Exception {
-            messageDescriptor = getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
-            protoDescriptor = getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
+            messageDescriptor = ProtobufUtils.getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
+            protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
         }
 		
 		@ProcessElement
 			public void processElement(ProcessContext c) throws Exception {
                 // Get pubsub message payload and attributes
                 PubsubMessage pubsubMessage = c.element();
-                String payload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
-                Map<String, String> attributes = pubsubMessage.getAttributeMap();
+                String pubsubPayload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
+                HashMap<String, String> attributes = new HashMap<String,String>();
+                attributes.putAll(pubsubMessage.getAttributeMap());
+
+                JSONObject DynamoDbStreamObject = new JSONObject(pubsubPayload);
+                LOG.info("DynamoDbStreamObject: " + DynamoDbStreamObject.toString());
+                JSONObject payloadObject;// = new JSONObject();
+                // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
+                if(!DynamoDbStreamObject.isNull("NewImage") && DynamoDbStreamObject.isNull("OldImage")){
+                    attributes.put("operation", "INSERT");
+                } else if(!DynamoDbStreamObject.isNull("NewImage") && !DynamoDbStreamObject.isNull("OldImage")){
+                    attributes.put("operation", "MODIFY");
+                } else if(DynamoDbStreamObject.isNull("NewImage") && !DynamoDbStreamObject.isNull("OldImage")){
+                    attributes.put("operation", "REMOVE");
+                }
+
+                if(!DynamoDbStreamObject.isNull("NewImage")){
+                    payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
+                    LOG.info("NewImage is not null, PayloadObject: " + payloadObject.toString());
+                } else {
+                    payloadObject = DynamoDbStreamObject.getJSONObject("OldImage");
+                    LOG.info("NewImage is null, PayloadObject: " + payloadObject.toString());
+                }
+
+                // Add meta-data from dynamoDB stream event as attributes
+                if(!DynamoDbStreamObject.isNull("Published")){
+                    attributes.put("dynamoDbStreamPublished",DynamoDbStreamObject.getString("Published"));
+                }
+                if(!DynamoDbStreamObject.isNull("EventId")){
+                    attributes.put("dynamoDbStreamEventId",DynamoDbStreamObject.getString("EventId"));
+                }
+
+                String payload = payloadObject.toString();
 
                 // Parse json to protobuf
                 if(messageDescriptor == null){
                     // fetch the message descriptor if current one is null for some reason
                     LOG.warn("message descriptor is null, creating new from descriptor in cloud storage...");
-                    messageDescriptor = getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
+                    messageDescriptor = ProtobufUtils.getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
                 }
                 if(protoDescriptor == null){
                     // fetch the proto descriptor if current one is null for some reason
                     LOG.warn("protoDescriptor is null, creating new from descriptor in cloud storage...");
-                    protoDescriptor = getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
+                    protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
                 }
 				try{
                     DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
@@ -296,7 +263,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         String tableDescription = "";
 
         try{
-            ProtoDescriptor protoDescriptor = getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get());
+            ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get());
             Descriptor descriptor = protoDescriptor.getDescriptorByName(options.getDescriptorFullName().get());
             eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, options.getTaxonomyResourcePattern().get());
             LOG.info("eventSchema: " + eventSchema.toString());

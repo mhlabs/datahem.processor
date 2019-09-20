@@ -14,30 +14,20 @@ package org.datahem.processor.utils;
  * =========================LICENSE_END==================================
  */
 
-import org.datahem.protobuf.options.Options;
-//import org.datahem.protobuf.options.Bigquery;
-import io.anemos.metastore.core.proto.*;
-
-import java.lang.StringBuilder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.stream.Stream;
-import java.util.Map;
-import java.util.Set;
-import java.util.Collection;
-import java.util.Iterator;
-import java.io.IOException;
-
 import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableFieldSchema.Categories;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
+
+import com.google.cloud.ReadChannel;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.StorageOptions;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Descriptors.EnumDescriptor;
@@ -48,16 +38,115 @@ import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.DynamicMessage;
 import com.google.protobuf.DynamicMessage.Builder;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import java.math.BigInteger;
+import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
+import com.google.protobuf.Descriptors.FileDescriptor;
+import com.google.protobuf.DescriptorProtos.FileDescriptorProto;
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.ByteString;
+
+import io.anemos.metastore.core.proto.*;
+
+import java.io.InputStream;
+import java.io.IOException;
+
+import java.nio.channels.Channels;
+
+import java.lang.StringBuilder;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.stream.Stream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Collection;
+import java.util.Iterator;
+
+import java.math.BigInteger;
+
+import org.datahem.protobuf.options.Options;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ProtobufUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProtobufUtils.class);
+
+
+    private static Map<String, FileDescriptorProto> extractProtoMap(
+        FileDescriptorSet fileDescriptorSet) {
+        HashMap<String, FileDescriptorProto> map = new HashMap<>();
+        fileDescriptorSet.getFileList().forEach(fdp -> map.put(fdp.getName(), fdp));
+        return map;
+    }
+
+    private static FileDescriptor getFileDescriptor(String name, FileDescriptorSet fileDescriptorSet) {
+        Map<String, FileDescriptorProto> inMap = extractProtoMap(fileDescriptorSet);
+        Map<String, FileDescriptor> outMap = new HashMap<>();
+        return convertToFileDescriptorMap(name, inMap, outMap);
+    }
+
+    private static FileDescriptor convertToFileDescriptorMap(String name, Map<String, FileDescriptorProto> inMap,
+        Map<String, FileDescriptor> outMap) {
+        if (outMap.containsKey(name)) {
+            return outMap.get(name);
+        }
+        FileDescriptorProto fileDescriptorProto = inMap.get(name);
+        List<FileDescriptor> dependencies = new ArrayList<>();
+        if (fileDescriptorProto.getDependencyCount() > 0) {
+            LOG.info("more than 0 dependencies: " + fileDescriptorProto.toString());
+            fileDescriptorProto
+                .getDependencyList()
+                .forEach(dependencyName -> dependencies.add(convertToFileDescriptorMap(dependencyName, inMap, outMap)));
+        }
+        try {
+            LOG.info("Number of dependencies: " + Integer.toString(dependencies.size()));
+            FileDescriptor fileDescriptor = 
+                FileDescriptor.buildFrom(
+                    fileDescriptorProto, dependencies.toArray(new FileDescriptor[dependencies.size()]));
+            outMap.put(name, fileDescriptor);
+            return fileDescriptor;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
+        String bucketName, 
+        String fileDescriptorName) throws Exception {
+            try{
+                Storage storage = StorageOptions.getDefaultInstance().getService();
+                Blob blob = storage.get(BlobId.of(bucketName, fileDescriptorName));
+                ReadChannel reader = blob.reader();
+                InputStream inputStream = Channels.newInputStream(reader);
+                FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
+                return new ProtoDescriptor(descriptorSetObject);
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+    public static Descriptor getDescriptorFromCloudStorage(
+        String bucketName, 
+        String fileDescriptorName, 
+        String descriptorFullName) throws Exception {
+            try{
+                return getProtoDescriptorFromCloudStorage(bucketName, fileDescriptorName).getDescriptorByName(descriptorFullName);
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+        }
+
 
 	public static String getFieldType(String in) {
 		String className = "";
@@ -208,13 +297,8 @@ public class ProtobufUtils {
     }
 
     public static TableSchema makeTableSchema(ProtoDescriptor protoDescriptor, Descriptor descriptor, String taxonomyResourcePattern) {
-		//Descriptor d = protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
         LOG.info("Descriptor fullname: " + descriptor.getFullName());
         LOG.info("messageOptions: " + descriptor.getOptions().toString());
-        /*
-        HashMultimap<String, String> messageOptions = getMessageOptions(protoDescriptor, d);
-        String messageDescription = ((Set<String>) messageOptions.get("mdescription")).stream().findFirst().orElse("");
-        */
 
         TableSchema res = new TableSchema();
 
@@ -224,7 +308,6 @@ public class ProtobufUtils {
 		for (FieldDescriptor f : fields) {
             HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
             String description = ((Set<String>) fieldOptions.get("BigQueryFieldDescription")).stream().findFirst().orElse("");
-            //String taxonomyResourcePattern = ".*590903188537942776.*";
             final Pattern categoryFilter = Pattern.compile(taxonomyResourcePattern);
             List<String> categories = ((Set<String>) fieldOptions.get("BigQueryFieldCategories"))
                 .stream()
@@ -268,7 +351,6 @@ public class ProtobufUtils {
 					        .setMode(mode)
                             .setFields(ts.getFields())
                             .setDescription(description)
-                            //.setCategories(fieldCategories)
                             );
 			}
 
@@ -344,12 +426,10 @@ public class ProtobufUtils {
 	public static TableRow makeTableRow(Message message, Descriptor descriptor) {
 		TableRow res = new TableRow();
         List<FieldDescriptor> fields = descriptor.getFields();
-		//List<FieldDescriptor> fields = message.getDescriptorForType().getFields();
 
 		for (FieldDescriptor f : fields) {
 			String type = "STRING";
             
-			//if (!f.isRepeated() && message.hasField(f)) {
             if (!f.isRepeated() ) {
                 if (f.getType().toString().toUpperCase().contains("STRING")) {
 					res.set(f.getName().replace(".", "_"), String.valueOf(message.getField(f)));
@@ -369,15 +449,10 @@ public class ProtobufUtils {
 				} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
 					type = "RECORD";
 					if (message.getAllFields().containsKey(f)) {
-						//TableRow tr = makeTableRow((Message) message.getField(f));
-                        //LOG.info("message.getField(f): " + ((Message) message.getField(f)).toString());
-
                         TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType());
-                        //LOG.info("contains key: "+ tr.toString());
 						res.set(f.getName().replace(".", "_"), tr);
 					}else{
                         TableRow tr = makeTableRow(f.getMessageType());
-                        //LOG.info("doesn't contain key: "+ tr.toString());
 						res.set(f.getName().replace(".", "_"), tr);
                     }
 				}
@@ -408,7 +483,6 @@ public class ProtobufUtils {
 							.collect(Collectors.toList());
 					res.set(f.getName().replace(".", "_"), values);
 				} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
-					    //List<TableRow> values = ((List<Message>) message.getField(f)).stream().map(m -> makeTableRow(m))
                         List<TableRow> values = ((List<Message>) message.getField(f))
                             .stream()
                             .map(m -> makeTableRow(m,  f.getMessageType()))
@@ -419,133 +493,139 @@ public class ProtobufUtils {
 		}
 		return res;
 	}
+
+    public static TableRow makeTableRow(Descriptor descriptor, ProtoDescriptor protoDescriptor) {
+        return makeTableRow(DynamicMessage.newBuilder(descriptor).clear().build(), descriptor, protoDescriptor);
+    }
 
     public static TableRow makeTableRow(Message message, Descriptor descriptor, ProtoDescriptor protoDescriptor) {
 		TableRow res = new TableRow();
         List<FieldDescriptor> fields = descriptor.getFields();
-		//List<FieldDescriptor> fields = message.getDescriptorForType().getFields();
 
 		for (FieldDescriptor f : fields) {
-			String type = "STRING";
-            
             HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
             String bigQueryFieldType = ((Set<String>) fieldOptions.get("BigQueryFieldType")).stream().findFirst().orElse("");
-			//if (!f.isRepeated() && message.hasField(f)) {
             if (!f.isRepeated() ) {
-                if (bigQueryFieldType.contains("STRING")) {
-					res.set(f.getName().replace(".", "_"), String.valueOf(message.getField(f)));
-				} else if (bigQueryFieldType.contains("BYTES")) {
-					res.set(f.getName().replace(".", "_"), (byte[]) message.getField(f));
-				} else if (bigQueryFieldType.contains("INT64")) {
-					res.set(f.getName().replace(".", "_"), (long) message.getField(f));
-				} else if (bigQueryFieldType.contains("BOOL")) {
-					res.set(f.getName().replace(".", "_"), (boolean) message.getField(f));
-				} else if (bigQueryFieldType.contains("FLOAT")
-						|| bigQueryFieldType.contains("DOUBLE")) {
-					res.set(f.getName().replace(".", "_"), (double) message.getField(f));
-				} else if (bigQueryFieldType.contains("DATE")
+                if(bigQueryFieldType.isEmpty()){
+                    if (f.getType().toString().toUpperCase().contains("STRING")) {
+                        res.set(f.getName().replace(".", "_"), String.valueOf(message.getField(f)));
+                    } else if (f.getType().toString().toUpperCase().contains("BYTES")) {
+                        res.set(f.getName().replace(".", "_"), (byte[]) message.getField(f));
+                    } else if (f.getType().toString().toUpperCase().contains("INT32")) {
+                        res.set(f.getName().replace(".", "_"), (int) message.getField(f));
+                    } else if (f.getType().toString().toUpperCase().contains("INT64")) {
+                        res.set(f.getName().replace(".", "_"), (long) message.getField(f));
+                    } else if (f.getType().toString().toUpperCase().contains("BOOL")) {
+                        res.set(f.getName().replace(".", "_"), (boolean) message.getField(f));
+                    } else if (f.getType().toString().toUpperCase().contains("ENUM")) {
+                        res.set(f.getName().replace(".", "_"), ((EnumValueDescriptor) message.getField(f)).getNumber());
+                    } else if (f.getType().toString().toUpperCase().contains("FLOAT")
+                        || f.getType().toString().toUpperCase().contains("DOUBLE")) {
+                        res.set(f.getName().replace(".", "_"), (double) message.getField(f));
+                    } else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
+                        if (message.getAllFields().containsKey(f)) {
+                            TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType(), protoDescriptor);
+                            res.set(f.getName().replace(".", "_"), tr);
+                        }else{
+                            // doesn't contain message, create an empty message
+                            TableRow tr = makeTableRow(f.getMessageType(), protoDescriptor);
+                            res.set(f.getName().replace(".", "_"), tr);
+                        }
+				    }
+                } else if(!bigQueryFieldType.isEmpty()){
+                    if (bigQueryFieldType.contains("STRING")) {
+                        res.set(f.getName().replace(".", "_"), String.valueOf(message.getField(f)));
+                    } else if (bigQueryFieldType.contains("BYTES")) {
+                        res.set(f.getName().replace(".", "_"), (byte[]) message.getField(f));
+                    } else if (bigQueryFieldType.contains("INT64")) {
+                        res.set(f.getName().replace(".", "_"), (long) message.getField(f));
+                    } else if (bigQueryFieldType.contains("BOOL")) {
+                        res.set(f.getName().replace(".", "_"), (boolean) message.getField(f));
+                    } else if (bigQueryFieldType.contains("FLOAT")
+                        || bigQueryFieldType.contains("DOUBLE")) {
+                        res.set(f.getName().replace(".", "_"), (double) message.getField(f));
+                    } else if (bigQueryFieldType.contains("DATE")
                         || bigQueryFieldType.contains("DATETIME")
                         || bigQueryFieldType.contains("TIME")
-						|| bigQueryFieldType.contains("TIMESTAMP")) {
-					res.set(f.getName().replace(".", "_"), String.valueOf(message.getField(f)));
-				}
-                else if (f.getType().toString().toUpperCase().contains("STRING")) {
-					res.set(f.getName().replace(".", "_"), String.valueOf(message.getField(f)));
-				} else if (f.getType().toString().toUpperCase().contains("BYTES")) {
-					res.set(f.getName().replace(".", "_"), (byte[]) message.getField(f));
-				} else if (f.getType().toString().toUpperCase().contains("INT32")) {
-					res.set(f.getName().replace(".", "_"), (int) message.getField(f));
-				} else if (f.getType().toString().toUpperCase().contains("INT64")) {
-					res.set(f.getName().replace(".", "_"), (long) message.getField(f));
-				} else if (f.getType().toString().toUpperCase().contains("BOOL")) {
-					res.set(f.getName().replace(".", "_"), (boolean) message.getField(f));
-				} else if (f.getType().toString().toUpperCase().contains("ENUM")) {
-					res.set(f.getName().replace(".", "_"), ((EnumValueDescriptor) message.getField(f)).getNumber());
-				} else if (f.getType().toString().toUpperCase().contains("FLOAT")
-						|| f.getType().toString().toUpperCase().contains("DOUBLE")) {
-					res.set(f.getName().replace(".", "_"), (double) message.getField(f));
-				} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
-					type = "RECORD";
-					if (message.getAllFields().containsKey(f)) {
-						//TableRow tr = makeTableRow((Message) message.getField(f));
-                        //LOG.info("message.getField(f): " + ((Message) message.getField(f)).toString());
-
-                        TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType());
-                        //LOG.info("contains key: "+ tr.toString());
-						res.set(f.getName().replace(".", "_"), tr);
-					}else{
-                        TableRow tr = makeTableRow(f.getMessageType());
-                        //LOG.info("doesn't contain key: "+ tr.toString());
-						res.set(f.getName().replace(".", "_"), tr);
-                    }
-				}
+                        || bigQueryFieldType.contains("TIMESTAMP")) {
+                        if (!String.valueOf(message.getField(f)).isEmpty()){
+                            res.set(f.getName().replace(".", "_"), String.valueOf(message.getField(f)));
+                        }
+                    } 
+                }
 			} else if (f.isRepeated()) {
-				if (bigQueryFieldType.contains("STRING")) {
-					List<String> values = ((List<Object>) message.getField(f)).stream().map(e -> String.valueOf(e))
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-				} else if (bigQueryFieldType.contains("BYTES")) {
-					List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> (byte[]) e)
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-				} else if (bigQueryFieldType.contains("INT64")) {
-					List<Long> values = ((List<Object>) message.getField(f)).stream().map(e -> (long) e)
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-				} else if (bigQueryFieldType.contains("BOOL")) {
-					List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e)
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-				} else if (bigQueryFieldType.contains("FLOAT")
-						|| bigQueryFieldType.contains("DOUBLE")) {
-					List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e)
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-                } else if (bigQueryFieldType.contains("DATE")
-                        || bigQueryFieldType.contains("DATETIME")
-                        || bigQueryFieldType.contains("TIME")
-						|| bigQueryFieldType.contains("TIMESTAMP")) {
-					List<String> values = ((List<Object>) message.getField(f)).stream().map(e -> String.valueOf(e))
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-                } else if (f.getType().toString().toUpperCase().contains("STRING")) {
-					List<String> values = ((List<Object>) message.getField(f)).stream().map(e -> String.valueOf(e))
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-				} else if (f.getType().toString().toUpperCase().contains("BYTES")) {
-					List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> (byte[]) e)
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-				} else if (f.getType().toString().toUpperCase().contains("INT32")) {
-					List<Integer> values = ((List<Object>) message.getField(f)).stream().map(e -> (int) e)
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-				} else if (f.getType().toString().toUpperCase().contains("INT64")) {
-					List<Long> values = ((List<Object>) message.getField(f)).stream().map(e -> (long) e)
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-				} else if (f.getType().toString().toUpperCase().contains("BOOL")) {
-					List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e)
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-				} else if (f.getType().toString().toUpperCase().contains("FLOAT")
-						|| f.getType().toString().toUpperCase().contains("DOUBLE")) {
-					List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e)
-							.collect(Collectors.toList());
-					res.set(f.getName().replace(".", "_"), values);
-				} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
-					    //List<TableRow> values = ((List<Message>) message.getField(f)).stream().map(m -> makeTableRow(m))
+                if(bigQueryFieldType.isEmpty()){
+                    if (f.getType().toString().toUpperCase().contains("STRING")) {
+                        List<String> values = ((List<Object>) message.getField(f)).stream().map(e -> String.valueOf(e))
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } else if (f.getType().toString().toUpperCase().contains("BYTES")) {
+                        List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> (byte[]) e)
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } else if (f.getType().toString().toUpperCase().contains("INT32")) {
+                        List<Integer> values = ((List<Object>) message.getField(f)).stream().map(e -> (int) e)
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } else if (f.getType().toString().toUpperCase().contains("INT64")) {
+                        List<Long> values = ((List<Object>) message.getField(f)).stream().map(e -> (long) e)
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } else if (f.getType().toString().toUpperCase().contains("BOOL")) {
+                        List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e)
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } else if (f.getType().toString().toUpperCase().contains("FLOAT")
+                            || f.getType().toString().toUpperCase().contains("DOUBLE")) {
+                        List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e)
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
                         List<TableRow> values = ((List<Message>) message.getField(f))
                             .stream()
-                            .map(m -> makeTableRow(m,  f.getMessageType()))
+                            .map(m -> makeTableRow(m,  f.getMessageType(), protoDescriptor))
 							.collect(Collectors.toList());
 					    res.set(f.getName().replace(".", "_"), values);
-				}
+				    }
+                } else if(!bigQueryFieldType.isEmpty()){
+
+                    if (bigQueryFieldType.contains("STRING")) {
+                        List<String> values = ((List<Object>) message.getField(f)).stream().map(e -> String.valueOf(e))
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } else if (bigQueryFieldType.contains("BYTES")) {
+                        List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> (byte[]) e)
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } else if (bigQueryFieldType.contains("INT64")) {
+                        List<Long> values = ((List<Object>) message.getField(f)).stream().map(e -> (long) e)
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } else if (bigQueryFieldType.contains("BOOL")) {
+                        List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e)
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } else if (bigQueryFieldType.contains("FLOAT")
+                            || bigQueryFieldType.contains("DOUBLE")) {
+                        List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e)
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } else if (bigQueryFieldType.contains("DATE")
+                            || bigQueryFieldType.contains("DATETIME")
+                            || bigQueryFieldType.contains("TIME")
+                            || bigQueryFieldType.contains("TIMESTAMP") ) {
+                        List<String> values = ((List<Object>) message.getField(f)).stream().filter(g -> !String.valueOf(g).isEmpty()).map(e -> String.valueOf(e))
+                                .collect(Collectors.toList());
+                        res.set(f.getName().replace(".", "_"), values);
+                    } 
+                }
 			}
 		}
 		return res;
 	}
 
+
+/*
 	// TODO: check repeated vs nested
 	// TODO: check naming conventions
 	public static Message makeMessage(TableRow tablerow, Message.Builder message) {
@@ -770,4 +850,5 @@ public class ProtobufUtils {
 		}
 		return out;
 	}
+    */
 }
