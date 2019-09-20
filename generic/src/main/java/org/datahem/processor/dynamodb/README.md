@@ -31,11 +31,11 @@ TAXONOMY_RESOURCE_PATTERN='' # Optional. Default: '.*'. Example: '75643249843643
 
 ```shell
 mvn compile exec:java \
-      -Dexec.mainClass=org.datahem.processor.generic.GenericStreamPipeline \
+      -Dexec.mainClass=org.datahem.processor.dynamodb.DynamoDbStreamPipeline \
       -Dexec.args=" \
       --project=$PROJECT_ID \
       --jobName=$JOB_NAME \
-      --stagingLocation=gs://$PROJECT_ID-processor/org/datahem/processor/generic/staging \
+      --stagingLocation=gs://$PROJECT_ID-processor/org/datahem/processor/dynamodb/staging \
       --gcpTempLocation=gs://$PROJECT_ID-processor/gcptemp/ \
       --runner=DataflowRunner \
       --zone=$DF_ZONE \

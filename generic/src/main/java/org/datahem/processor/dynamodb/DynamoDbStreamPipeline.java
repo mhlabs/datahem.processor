@@ -1,4 +1,4 @@
-package org.datahem.processor.generic;
+package org.datahem.processor.dynamodb;
 
 /*-
  * ========================LICENSE_START=================================
@@ -107,6 +107,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.DateTimeZone;
 
+import org.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -168,8 +170,39 @@ public class DynamoDbStreamPipeline {
 			public void processElement(ProcessContext c) throws Exception {
                 // Get pubsub message payload and attributes
                 PubsubMessage pubsubMessage = c.element();
-                String payload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
-                Map<String, String> attributes = pubsubMessage.getAttributeMap();
+                String pubsubPayload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
+                HashMap<String, String> attributes = new HashMap<String,String>();
+                attributes.putAll(pubsubMessage.getAttributeMap());
+
+                JSONObject DynamoDbStreamObject = new JSONObject(pubsubPayload);
+                LOG.info("DynamoDbStreamObject: " + DynamoDbStreamObject.toString());
+                JSONObject payloadObject;// = new JSONObject();
+                // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
+                if(!DynamoDbStreamObject.isNull("NewImage") && DynamoDbStreamObject.isNull("OldImage")){
+                    attributes.put("operation", "INSERT");
+                } else if(!DynamoDbStreamObject.isNull("NewImage") && !DynamoDbStreamObject.isNull("OldImage")){
+                    attributes.put("operation", "MODIFY");
+                } else if(DynamoDbStreamObject.isNull("NewImage") && !DynamoDbStreamObject.isNull("OldImage")){
+                    attributes.put("operation", "REMOVE");
+                }
+
+                if(!DynamoDbStreamObject.isNull("NewImage")){
+                    payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
+                    LOG.info("NewImage is not null, PayloadObject: " + payloadObject.toString());
+                } else {
+                    payloadObject = DynamoDbStreamObject.getJSONObject("OldImage");
+                    LOG.info("NewImage is null, PayloadObject: " + payloadObject.toString());
+                }
+
+                // Add meta-data from dynamoDB stream event as attributes
+                if(!DynamoDbStreamObject.isNull("Published")){
+                    attributes.put("dynamoDbStreamPublished",DynamoDbStreamObject.getString("Published"));
+                }
+                if(!DynamoDbStreamObject.isNull("EventId")){
+                    attributes.put("dynamoDbStreamEventId",DynamoDbStreamObject.getString("EventId"));
+                }
+
+                String payload = payloadObject.toString();
 
                 // Parse json to protobuf
                 if(messageDescriptor == null){
