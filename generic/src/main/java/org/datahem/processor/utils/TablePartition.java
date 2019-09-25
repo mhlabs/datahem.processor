@@ -45,7 +45,6 @@ public class TablePartition implements SerializableFunction<ValueInSingleWindow<
     public TableDestination apply(ValueInSingleWindow<TableRow> input) {
         DateTimeFormatter partition = DateTimeFormat.forPattern("yyyyMMdd").withZoneUTC();
         TableReference reference = BigQueryHelpers.parseTableSpec(tableSpec + "$" + input.getWindow().maxTimestamp().toString(partition));
-        //LOG.info("TableReference: " + reference.toString());
         return new TableDestination(reference, tableDescription, new TimePartitioning());
     }
 }
