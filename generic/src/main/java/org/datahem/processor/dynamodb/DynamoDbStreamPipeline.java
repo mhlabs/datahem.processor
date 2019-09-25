@@ -175,23 +175,17 @@ public class DynamoDbStreamPipeline {
                 attributes.putAll(pubsubMessage.getAttributeMap());
 
                 JSONObject DynamoDbStreamObject = new JSONObject(pubsubPayload);
-                LOG.info("DynamoDbStreamObject: " + DynamoDbStreamObject.toString());
-                JSONObject payloadObject;// = new JSONObject();
+                JSONObject payloadObject;
                 // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
-                if(!DynamoDbStreamObject.isNull("NewImage") && DynamoDbStreamObject.isNull("OldImage")){
+                if((DynamoDbStreamObject.isNull("OldImage") || DynamoDbStreamObject.getJSONObject("OldImage").isNull("Id"))){
                     attributes.put("operation", "INSERT");
-                } else if(!DynamoDbStreamObject.isNull("NewImage") && !DynamoDbStreamObject.isNull("OldImage")){
-                    attributes.put("operation", "MODIFY");
-                } else if(DynamoDbStreamObject.isNull("NewImage") && !DynamoDbStreamObject.isNull("OldImage")){
-                    attributes.put("operation", "REMOVE");
-                }
-
-                if(!DynamoDbStreamObject.isNull("NewImage")){
                     payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
-                    LOG.info("NewImage is not null, PayloadObject: " + payloadObject.toString());
-                } else {
+                }else if(DynamoDbStreamObject.isNull("NewImage") || DynamoDbStreamObject.getJSONObject("NewImage").isNull("Id")){
+                    attributes.put("operation", "REMOVE");
                     payloadObject = DynamoDbStreamObject.getJSONObject("OldImage");
-                    LOG.info("NewImage is null, PayloadObject: " + payloadObject.toString());
+                }else {
+                    attributes.put("operation", "MODIFY");
+                    payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
                 }
 
                 // Add meta-data from dynamoDB stream event as attributes

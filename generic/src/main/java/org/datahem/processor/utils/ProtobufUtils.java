@@ -316,7 +316,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 .filter(categoryFilter.asPredicate())
                 .collect(Collectors.toList());
             TableFieldSchema.Categories fieldCategories = new TableFieldSchema.Categories();
-            fieldCategories.setNames(categories);
+            fieldCategories.setNames(categories.isEmpty() ? null : categories);
 			
             String type = "STRING";
 			String mode = "NULLABLE";
@@ -525,12 +525,15 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     } else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
                         if (message.getAllFields().containsKey(f)) {
                             TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType(), protoDescriptor);
-                            res.set(f.getName().replace(".", "_"), tr);
-                        }else{
+                            if(!tr.isEmpty()){
+                                res.set(f.getName().replace(".", "_"), tr);
+                            }
+                        }
+                        /*else{
                             // doesn't contain message, create an empty message
                             TableRow tr = makeTableRow(f.getMessageType(), protoDescriptor);
                             res.set(f.getName().replace(".", "_"), tr);
-                        }
+                        }*/
 				    }
                 } else if(!bigQueryFieldType.isEmpty()){
                     if (bigQueryFieldType.contains("STRING")) {
@@ -558,65 +561,111 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     if (f.getType().toString().toUpperCase().contains("STRING")) {
                         List<String> values = ((List<Object>) message.getField(f)).stream().map(e -> String.valueOf(e))
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
                     } else if (f.getType().toString().toUpperCase().contains("BYTES")) {
                         List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> (byte[]) e)
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
                     } else if (f.getType().toString().toUpperCase().contains("INT32")) {
                         List<Integer> values = ((List<Object>) message.getField(f)).stream().map(e -> (int) e)
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
                     } else if (f.getType().toString().toUpperCase().contains("INT64")) {
                         List<Long> values = ((List<Object>) message.getField(f)).stream().map(e -> (long) e)
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
                     } else if (f.getType().toString().toUpperCase().contains("BOOL")) {
                         List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e)
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
                     } else if (f.getType().toString().toUpperCase().contains("FLOAT")
                             || f.getType().toString().toUpperCase().contains("DOUBLE")) {
                         List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e)
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
                     } else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
                         List<TableRow> values = ((List<Message>) message.getField(f))
                             .stream()
-                            .map(m -> makeTableRow(m,  f.getMessageType(), protoDescriptor))
+                            .map(m -> {
+                                TableRow tr = makeTableRow(m,  f.getMessageType(), protoDescriptor);
+                                if(!tr.isEmpty()){
+                                    return tr;
+                                }else{
+                                    return null;
+                                }
+                            })
+                            .filter(g -> g != null)
 							.collect(Collectors.toList());
-					    res.set(f.getName().replace(".", "_"), values);
+					    if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
 				    }
                 } else if(!bigQueryFieldType.isEmpty()){
 
                     if (bigQueryFieldType.contains("STRING")) {
                         List<String> values = ((List<Object>) message.getField(f)).stream().map(e -> String.valueOf(e))
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
                     } else if (bigQueryFieldType.contains("BYTES")) {
                         List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> (byte[]) e)
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
                     } else if (bigQueryFieldType.contains("INT64")) {
                         List<Long> values = ((List<Object>) message.getField(f)).stream().map(e -> (long) e)
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
                     } else if (bigQueryFieldType.contains("BOOL")) {
                         List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e)
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
                     } else if (bigQueryFieldType.contains("FLOAT")
                             || bigQueryFieldType.contains("DOUBLE")) {
                         List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e)
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
                     } else if (bigQueryFieldType.contains("DATE")
                             || bigQueryFieldType.contains("DATETIME")
                             || bigQueryFieldType.contains("TIME")
                             || bigQueryFieldType.contains("TIMESTAMP") ) {
                         List<String> values = ((List<Object>) message.getField(f)).stream().filter(g -> !String.valueOf(g).isEmpty()).map(e -> String.valueOf(e))
                                 .collect(Collectors.toList());
-                        res.set(f.getName().replace(".", "_"), values);
+                        if(!values.isEmpty()){
+                            res.set(f.getName().replace(".", "_"), values);
+                        }
+                        //res.set(f.getName().replace(".", "_"), values);
                     } 
                 }
 			}
