@@ -39,6 +39,8 @@ import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryHelpers;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
+import org.apache.beam.sdk.io.gcp.bigquery.WriteResult;
+import org.apache.beam.sdk.io.gcp.bigquery.InsertRetryPolicy;
 
 import org.apache.beam.sdk.metrics.Counter;
 import org.apache.beam.sdk.metrics.Metrics;
@@ -114,7 +116,7 @@ public class PubSubBackupPipeline {
         Clustering cluster = new Clustering();
         cluster.setFields(Arrays.asList("topic"));
 			
-    	pipeline
+    	WriteResult writeResult = pipeline
     	.apply("Read from pubsub",
     		PubsubIO
     			.readMessagesWithAttributes()
@@ -155,10 +157,21 @@ public class PubSubBackupPipeline {
 				}))
 				.withFormatFunction(tr -> tr)
       			.withSchema(schema)
+                .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
       			.withTimePartitioning(partition)
                 .withClustering(cluster)
       			.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
       			.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
+        
+        writeResult
+            .getFailedInserts()
+            .apply("LogFailedData", ParDo.of(new DoFn<TableRow, TableRow>() {
+                @ProcessElement
+                public void processElement(ProcessContext c) {
+                    TableRow row = c.element();
+                    LOG.error("Failed to insert: " + row.toString());
+                }
+            }));
 
     	// Run the pipeline
     	pipeline.run();
