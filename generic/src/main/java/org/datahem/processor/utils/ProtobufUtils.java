@@ -68,6 +68,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 
 import java.math.BigInteger;
 
@@ -326,10 +327,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 			}
             String bigQueryFieldType = ((Set<String>) fieldOptions.get("BigQueryFieldType")).stream().findFirst().orElse("");
             String[] standardSqlTypes = {"INT64","NUMERIC","FLOAT64","BOOL","STRING","BYTES","DATE","DATETIME","GEOGRAPHY","TIME","TIMESTAMP"};
-            if(Arrays.stream(standardSqlTypes).anyMatch(bigQueryFieldType::equals)){
-                type = bigQueryFieldType;
-            }
-			else if (f.getType().toString().toUpperCase().contains("BYTES")) {
+            
+			if (f.getType().toString().toUpperCase().contains("BYTES")) {
 				type = "BYTES";
 			} else if (f.getType().toString().toUpperCase().contains("INT") 
                 || f.getType().toString().toUpperCase().contains("ENUM")){
@@ -339,7 +338,9 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 			} else if (f.getType().toString().toUpperCase().contains("FLOAT")
 					|| f.getType().toString().toUpperCase().contains("DOUBLE")) {
 				type = "FLOAT";
-			} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
+			} else if(Arrays.stream(standardSqlTypes).anyMatch(bigQueryFieldType::equals)){
+                type = bigQueryFieldType;
+            } else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
 				type = "RECORD";
 				TableSchema ts = makeTableSchema(protoDescriptor, f.getMessageType(), taxonomyResourcePattern);
 
@@ -498,6 +499,130 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         return makeTableRow(DynamicMessage.newBuilder(descriptor).clear().build(), descriptor, protoDescriptor);
     }
 
+    public static Optional<String> fieldOptionBigQueryRename(HashMultimap<String, String> fieldOptions){
+        return ((Set<String>) fieldOptions.get("BigQueryFieldRename")).stream().findFirst();
+    }
+
+    public static Optional<String> fieldOptionBigQueryType(HashMultimap<String, String> fieldOptions){
+        return ((Set<String>) fieldOptions.get("BigQueryFieldType")).stream().findFirst();
+    }
+
+    public static String fieldOptionBigQueryAppend(HashMultimap<String, String> fieldOptions){
+        String appendix = ((Set<String>) fieldOptions.get("BigQueryFieldRename")).stream().findFirst().orElse("");
+        //if(appendix && findValue)
+        return appendix;
+    }
+
+    public static TableRow getTableRow(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, TableRow tableRow){
+        String[] bigQueryStandardSqlDateTimeTypes = {"DATE","DATETIME","TIME","TIMESTAMP"};
+        HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
+        String fieldName = fieldOptionBigQueryRename(fieldOptions).orElse(f.getName().replace(".", "_"));    
+        String fieldType = fieldOptionBigQueryType(fieldOptions).orElse(f.getType().toString().toUpperCase());
+        String appendix = fieldOptionBigQueryAppend(fieldOptions);
+        
+        if (!f.isRepeated() ) {
+            if (fieldType.contains("STRING")) {
+                return tableRow.set(fieldName, String.valueOf(message.getField(f)) + appendix);
+            } else if (fieldType.contains("BYTES")) {
+                return tableRow.set(fieldName, (byte[]) message.getField(f));
+            } else if (fieldType.contains("INT32")) {
+                return tableRow.set(fieldName, (int) message.getField(f));
+            } else if (fieldType.contains("INT64")) {
+                return tableRow.set(fieldName, (long) message.getField(f));
+            } else if (fieldType.contains("BOOL")) {
+                return tableRow.set(fieldName, (boolean) message.getField(f));
+            } else if (fieldType.contains("ENUM")) {
+                return tableRow.set(fieldName, ((EnumValueDescriptor) message.getField(f)).getNumber());
+            } else if (fieldType.contains("FLOAT") || fieldType.contains("DOUBLE")) {
+                return tableRow.set(fieldName, (double) message.getField(f));
+            } else if(Arrays.stream(bigQueryStandardSqlDateTimeTypes).anyMatch(fieldType::equals)) {
+                if (!String.valueOf(message.getField(f)).isEmpty()){
+                    return tableRow.set(fieldName, String.valueOf(message.getField(f)) + appendix);
+                }
+            } else if (fieldType.contains("MESSAGE")) {
+                if (message.getAllFields().containsKey(f)) {
+                    TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType(), protoDescriptor);
+                    if(!tr.isEmpty()){
+                        return tableRow.set(fieldName, tr);
+                    }
+                }
+            }
+        } else if (f.isRepeated()) {
+            if (fieldType.contains("STRING")) {
+                List<String> values = ((List<Object>) message.getField(f))
+                    .stream()
+                    .map(e -> String.valueOf(e) + appendix)
+                    .collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    return tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("BYTES")) {
+                List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> (byte[]) e).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    return tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("INT32")) {
+                List<Integer> values = ((List<Object>) message.getField(f)).stream().map(e -> (int) e).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    return tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("INT64")) {
+                List<Long> values = ((List<Object>) message.getField(f)).stream().map(e -> (long) e).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    return tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("BOOL")) {
+                List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    return tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("FLOAT") || fieldType.contains("DOUBLE")) {
+                List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    tableRow.set(fieldName, values);
+                }
+            } else if(Arrays.stream(bigQueryStandardSqlDateTimeTypes).anyMatch(fieldType::equals)) {
+                List<String> values = ((List<Object>) message.getField(f))
+                    .stream()
+                    .map(e -> String.valueOf(e) + appendix)
+                    .collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    return tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("MESSAGE")) {
+                List<TableRow> values = ((List<Message>) message.getField(f)).stream()
+                    .map(m -> {
+                        TableRow tr = makeTableRow(m,  f.getMessageType(), protoDescriptor);
+                        if(!tr.isEmpty()){
+                            return tr;
+                        }else{
+                            return null;
+                        }
+                    })
+                    .filter(g -> g != null).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    return tableRow.set(fieldName, values);
+                }
+			}
+        }       
+        return tableRow;
+    }
+
+     public static TableRow makeTableRow(Message message, Descriptor descriptor, ProtoDescriptor protoDescriptor) {
+        TableRow tableRow = new TableRow();
+        List<FieldDescriptor> fields = descriptor.getFields();
+
+		for (FieldDescriptor field : fields) {
+            
+            getTableRow(message, field, protoDescriptor, tableRow);
+
+
+
+        }
+        return tableRow;
+     }
+
+    /*
     public static TableRow makeTableRow(Message message, Descriptor descriptor, ProtoDescriptor protoDescriptor) {
 		TableRow res = new TableRow();
         List<FieldDescriptor> fields = descriptor.getFields();
@@ -529,11 +654,6 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                                 res.set(f.getName().replace(".", "_"), tr);
                             }
                         }
-                        /*else{
-                            // doesn't contain message, create an empty message
-                            TableRow tr = makeTableRow(f.getMessageType(), protoDescriptor);
-                            res.set(f.getName().replace(".", "_"), tr);
-                        }*/
 				    }
                 } else if(!bigQueryFieldType.isEmpty()){
                     if (bigQueryFieldType.contains("STRING")) {
@@ -672,7 +792,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 		}
 		return res;
 	}
-
+*/
 
 /*
 	// TODO: check repeated vs nested
