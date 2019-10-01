@@ -54,6 +54,11 @@ import java.nio.channels.Channels;
 
 import java.lang.StringBuilder;
 
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -68,6 +73,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 
 import java.math.BigInteger;
 
@@ -326,10 +332,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 			}
             String bigQueryFieldType = ((Set<String>) fieldOptions.get("BigQueryFieldType")).stream().findFirst().orElse("");
             String[] standardSqlTypes = {"INT64","NUMERIC","FLOAT64","BOOL","STRING","BYTES","DATE","DATETIME","GEOGRAPHY","TIME","TIMESTAMP"};
-            if(Arrays.stream(standardSqlTypes).anyMatch(bigQueryFieldType::equals)){
-                type = bigQueryFieldType;
-            }
-			else if (f.getType().toString().toUpperCase().contains("BYTES")) {
+            
+			if (f.getType().toString().toUpperCase().contains("BYTES")) {
 				type = "BYTES";
 			} else if (f.getType().toString().toUpperCase().contains("INT") 
                 || f.getType().toString().toUpperCase().contains("ENUM")){
@@ -339,7 +343,9 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 			} else if (f.getType().toString().toUpperCase().contains("FLOAT")
 					|| f.getType().toString().toUpperCase().contains("DOUBLE")) {
 				type = "FLOAT";
-			} else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
+			} else if(Arrays.stream(standardSqlTypes).anyMatch(bigQueryFieldType::equals)){
+                type = bigQueryFieldType;
+            } else if (f.getType().toString().toUpperCase().contains("MESSAGE")) {
 				type = "RECORD";
 				TableSchema ts = makeTableSchema(protoDescriptor, f.getMessageType(), taxonomyResourcePattern);
 
@@ -415,6 +421,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 		return res;
 	}
 
+/*
     public static TableRow makeTableRow(Message message) {
         return makeTableRow(message, message.getDescriptorForType());
     }
@@ -493,11 +500,213 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 		}
 		return res;
 	}
+*/
+    
+
+    public static Optional<String> fieldOptionBigQueryRename(HashMultimap<String, String> fieldOptions){
+        return ((Set<String>) fieldOptions.get("BigQueryFieldRename")).stream().findFirst();
+    }
+
+    public static Optional<String> fieldOptionBigQueryType(HashMultimap<String, String> fieldOptions){
+        return ((Set<String>) fieldOptions.get("BigQueryFieldType")).stream().findFirst();
+    }
+
+    public static String fieldOptionBigQueryAppend(String fieldValue, HashMultimap<String, String> fieldOptions){
+        String appendix = ((Set<String>) fieldOptions.get("BigQueryFieldAppend")).stream().findFirst().orElse("");
+        return (!fieldValue.isEmpty() ? fieldValue + appendix : fieldValue);
+    }
+
+    public static String fieldOptionBigQueryConcatFields(String fieldValue, HashMultimap<String, String> fieldOptions){
+        String appendix = ((Set<String>) fieldOptions.get("BigQueryFieldAppend")).stream().findFirst().orElse("");
+        
+        return (!fieldValue.isEmpty() ? fieldValue + appendix : fieldValue);
+    }
+
+    public static String fieldOptionBigQueryRegexExtract(String value, HashMultimap<String, String> fieldOptions){
+        String regexExtract = ((Set<String>) fieldOptions.get("BigQueryFieldRegexExtract")).stream().findFirst().orElse("");
+        if(!regexExtract.isEmpty()){
+            final Pattern pattern = Pattern.compile(regexExtract);
+            Matcher matcher = pattern.matcher(value);
+            if(matcher.find()){
+                LOG.info("Regex: pattern: " + regexExtract + ", input: " + value + ", output: " + matcher.group(0));
+                return matcher.group(0);
+            }
+        }
+        return value;
+    }
+
+    public static String fieldOptionBigQueryRegexReplace(String value, HashMultimap<String, String> fieldOptions){
+        String regexReplace = ((Set<String>) fieldOptions.get("BigQueryFieldRegexReplace")).stream().findFirst().orElse("");
+        if(!regexReplace.isEmpty()){
+            LOG.info("regexreplace: " + regexReplace + ", output: " + value.replaceAll(regexReplace.split(",")[0], regexReplace.split(",")[1]));
+            return value.replaceAll(regexReplace.split(",")[0].trim(), regexReplace.split(",")[1].trim());
+        }
+        return value;
+    }
+
+    public static String fieldOptionBigQueryLocalToUtc(String value, HashMultimap<String, String> fieldOptions){
+        String timezoneSettings = ((Set<String>) fieldOptions.get("BigQueryFieldLocalToUtc")).stream().findFirst().orElse("");
+        if(!timezoneSettings.isEmpty()){
+            //String localTimezone = "Etc/UTC";
+            //String localPattern = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+            DateTimeFormatter localFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+            //String utcPattern = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+            DateTimeFormatter utcFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
+            String[] timezoneSettingsArr = timezoneSettings.split(",");
+            String localTimezone = timezoneSettingsArr[0].trim();
+            
+            if (timezoneSettingsArr.length == 3){
+                //String localPattern = timezoneSettingsArr[1];
+                localFormatter = DateTimeFormatter.ofPattern(timezoneSettingsArr[1].trim()).withZone(ZoneId.of(localTimezone)); 
+                //String utcPattern = timezoneSettingsArr[2];
+                utcFormatter = DateTimeFormatter.ofPattern(timezoneSettingsArr[2].trim()).withZone(ZoneId.of("Etc/UTC"));
+            }
+
+            //DateTimeFormatter localFormatter = DateTimeFormatter.ofPattern(localPattern).withZone(localTimezone); 
+            LocalDateTime localDateTime = LocalDateTime.parse(value, localFormatter);
+            ZonedDateTime utcDateTime = localDateTime.atZone(ZoneId.of(localTimezone)).withZoneSameInstant(ZoneId.of("UTC"));
+
+            //DateTimeFormatter utcFormatter = DateTimeFormatter.ofPattern(utcPattern).withZone("Etc/UTC");
+            String utc = utcDateTime.format(utcFormatter);
+            LOG.info("fieldOptionBigQueryLocalToUtc: input (local): " + value + ", output (utc): " + utc);
+            return utc;
+        }
+        return value;
+    }
+
+    public static TableRow getTableRow(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, TableRow tableRow){
+        String[] bigQueryStandardSqlDateTimeTypes = {"DATE","DATETIME","TIME","TIMESTAMP"};
+        HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
+        String fieldName = fieldOptionBigQueryRename(fieldOptions).orElse(f.getName().replace(".", "_"));    
+        String fieldType = fieldOptionBigQueryType(fieldOptions).orElse(f.getType().toString().toUpperCase());
+        
+        if (!f.isRepeated() ) {
+            if (fieldType.contains("STRING")) {
+                String fieldValue = String.valueOf(message.getField(f));
+                fieldValue = fieldOptionBigQueryRegexExtract(fieldValue, fieldOptions);
+                fieldValue = fieldOptionBigQueryAppend(fieldValue, fieldOptions);
+                fieldValue = fieldOptionBigQueryRegexReplace(fieldValue, fieldOptions);
+                tableRow.set(fieldName, fieldValue);
+            } else if (fieldType.contains("BYTES")) {
+                tableRow.set(fieldName, (byte[]) message.getField(f));
+            } else if (fieldType.contains("INT32")) {
+                tableRow.set(fieldName, (int) message.getField(f));
+            } else if (fieldType.contains("INT64")) {
+                tableRow.set(fieldName, (long) message.getField(f));
+            } else if (fieldType.contains("BOOL")) {
+                tableRow.set(fieldName, (boolean) message.getField(f));
+            } else if (fieldType.contains("ENUM")) {
+                tableRow.set(fieldName, ((EnumValueDescriptor) message.getField(f)).getNumber());
+            } else if (fieldType.contains("FLOAT") || fieldType.contains("DOUBLE")) {
+                tableRow.set(fieldName, (double) message.getField(f));
+            } else if(Arrays.stream(bigQueryStandardSqlDateTimeTypes).anyMatch(fieldType::equals)) {
+                String fieldValue = String.valueOf(message.getField(f));
+                if (!fieldValue.isEmpty()){
+                    fieldValue = fieldOptionBigQueryRegexExtract(fieldValue, fieldOptions);
+                    fieldValue = fieldOptionBigQueryAppend(fieldValue, fieldOptions);
+                    fieldValue = fieldOptionBigQueryRegexReplace(fieldValue, fieldOptions);
+                    fieldValue = fieldOptionBigQueryLocalToUtc(fieldValue, fieldOptions);
+                    tableRow.set(fieldName, fieldValue);
+                }
+            } else if (fieldType.contains("MESSAGE")) {
+                if (message.getAllFields().containsKey(f)) {
+                    TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType(), protoDescriptor);
+                    if(!tr.isEmpty()){
+                        tableRow.set(fieldName, tr);
+                    }
+                }
+            }
+        } else if (f.isRepeated()) {
+            if (fieldType.contains("STRING")) {
+                List<String> values = ((List<Object>) message.getField(f))
+                    .stream()
+                    .map(e -> {
+                        String fieldValue = String.valueOf(e);
+                        fieldValue = fieldOptionBigQueryRegexExtract(fieldValue, fieldOptions);
+                        fieldValue = fieldOptionBigQueryAppend(fieldValue, fieldOptions);
+                        fieldValue = fieldOptionBigQueryRegexReplace(fieldValue, fieldOptions);
+                        return fieldValue;
+                    })
+                    .collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("BYTES")) {
+                List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> (byte[]) e).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("INT32")) {
+                List<Integer> values = ((List<Object>) message.getField(f)).stream().map(e -> (int) e).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("INT64")) {
+                List<Long> values = ((List<Object>) message.getField(f)).stream().map(e -> (long) e).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("BOOL")) {
+                List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("FLOAT") || fieldType.contains("DOUBLE")) {
+                List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    tableRow.set(fieldName, values);
+                }
+            } else if(Arrays.stream(bigQueryStandardSqlDateTimeTypes).anyMatch(fieldType::equals)) {
+                List<String> values = ((List<Object>) message.getField(f))
+                    .stream()
+                    //.map(e -> String.valueOf(e))
+                    .map(e -> {
+                        String fieldValue = String.valueOf(e);
+                        fieldValue = fieldOptionBigQueryRegexExtract(fieldValue, fieldOptions);
+                        fieldValue = fieldOptionBigQueryAppend(fieldValue, fieldOptions);
+                        fieldValue = fieldOptionBigQueryRegexReplace(fieldValue, fieldOptions);
+                        fieldValue = fieldOptionBigQueryLocalToUtc(fieldValue, fieldOptions);
+                        return fieldValue;
+                    })
+                    .collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    tableRow.set(fieldName, values);
+                }
+            } else if (fieldType.contains("MESSAGE")) {
+                List<TableRow> values = ((List<Message>) message.getField(f)).stream()
+                    .map(m -> {
+                        TableRow tr = makeTableRow(m,  f.getMessageType(), protoDescriptor);
+                        if(!tr.isEmpty()){
+                            return tr;
+                        }else{
+                            return null;
+                        }
+                    })
+                    .filter(g -> g != null).collect(Collectors.toList());
+                if(!values.isEmpty()){
+                    tableRow.set(fieldName, values);
+                }
+			}
+        }       
+        return tableRow;
+    }
 
     public static TableRow makeTableRow(Descriptor descriptor, ProtoDescriptor protoDescriptor) {
         return makeTableRow(DynamicMessage.newBuilder(descriptor).clear().build(), descriptor, protoDescriptor);
     }
 
+     public static TableRow makeTableRow(Message message, Descriptor descriptor, ProtoDescriptor protoDescriptor) {
+        TableRow tableRow = new TableRow();
+        List<FieldDescriptor> fields = descriptor.getFields();
+
+		for (FieldDescriptor field : fields) {
+            tableRow = getTableRow(message, field, protoDescriptor, tableRow);
+        }
+        return tableRow;
+     }
+
+    /*
     public static TableRow makeTableRow(Message message, Descriptor descriptor, ProtoDescriptor protoDescriptor) {
 		TableRow res = new TableRow();
         List<FieldDescriptor> fields = descriptor.getFields();
@@ -529,11 +738,6 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                                 res.set(f.getName().replace(".", "_"), tr);
                             }
                         }
-                        /*else{
-                            // doesn't contain message, create an empty message
-                            TableRow tr = makeTableRow(f.getMessageType(), protoDescriptor);
-                            res.set(f.getName().replace(".", "_"), tr);
-                        }*/
 				    }
                 } else if(!bigQueryFieldType.isEmpty()){
                     if (bigQueryFieldType.contains("STRING")) {
@@ -672,7 +876,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 		}
 		return res;
 	}
-
+*/
 
 /*
 	// TODO: check repeated vs nested
