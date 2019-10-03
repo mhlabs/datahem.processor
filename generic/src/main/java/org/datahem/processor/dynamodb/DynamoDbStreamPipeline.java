@@ -290,7 +290,7 @@ public class DynamoDbStreamPipeline {
                     .writeTableRows()
                     .to(new TablePartition(options.getBigQueryTableSpec(), tableDescription))
                     .withSchema(eventSchema)
-                    //.withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
+                    .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
                     .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
