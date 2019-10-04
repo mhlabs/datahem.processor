@@ -390,18 +390,21 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         }
     }
 
+    public static boolean fieldOptionBigQueryUseDefaultValue(HashMultimap<String, String> fieldOptions){
+        String defaultValue = ((Set<String>) fieldOptions.get("BigQueryFieldUseDefaultValue")).stream().findFirst().orElse("true");
+        if(defaultValue.toLowerCase().equals("false")){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     public static Optional<String> fieldOptionBigQueryType(HashMultimap<String, String> fieldOptions){
         return ((Set<String>) fieldOptions.get("BigQueryFieldType")).stream().findFirst();
     }
 
     public static String fieldOptionBigQueryAppend(String fieldValue, HashMultimap<String, String> fieldOptions){
         String appendix = ((Set<String>) fieldOptions.get("BigQueryFieldAppend")).stream().findFirst().orElse("");
-        return (!fieldValue.isEmpty() ? fieldValue + appendix : fieldValue);
-    }
-
-    public static String fieldOptionBigQueryConcatFields(String fieldValue, HashMultimap<String, String> fieldOptions){
-        String appendix = ((Set<String>) fieldOptions.get("BigQueryFieldAppend")).stream().findFirst().orElse("");
-        
         return (!fieldValue.isEmpty() ? fieldValue + appendix : fieldValue);
     }
 
@@ -473,7 +476,9 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             String fieldType = fieldOptionBigQueryType(fieldOptions).orElse(f.getType().toString().toUpperCase());
             
             if (!f.isRepeated() ) {
-                if (fieldType.contains("STRING")) {
+                boolean useDefaultValue = fieldOptionBigQueryUseDefaultValue(fieldOptions);
+                boolean hasField = message.hasField(f);
+                if (fieldType.contains("STRING") && (useDefaultValue || hasField)) {
                     String fieldValue = String.valueOf(message.getField(f));
                     fieldValue = fieldOptionBigQueryRegexExtract(fieldValue, fieldOptions);
                     fieldValue = fieldOptionBigQueryAppend(fieldValue, fieldOptions);
@@ -481,15 +486,15 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     tableRow.set(fieldName, fieldValue);
                 } else if (fieldType.contains("BYTES")) {
                     tableRow.set(fieldName, (byte[]) message.getField(f));
-                } else if (fieldType.contains("INT32")) {
+                } else if (fieldType.contains("INT32") && (useDefaultValue || hasField)) {
                     tableRow.set(fieldName, (int) message.getField(f));
-                } else if (fieldType.contains("INT64")) {
+                } else if (fieldType.contains("INT64") && (useDefaultValue || hasField)) {
                     tableRow.set(fieldName, (long) message.getField(f));
-                } else if (fieldType.contains("BOOL")) {
+                } else if (fieldType.contains("BOOL") && (useDefaultValue || hasField)) {
                     tableRow.set(fieldName, (boolean) message.getField(f));
                 } else if (fieldType.contains("ENUM")) {
                     tableRow.set(fieldName, ((EnumValueDescriptor) message.getField(f)).getNumber());
-                } else if (fieldType.contains("FLOAT") || fieldType.contains("DOUBLE")) {
+                } else if (fieldType.contains("FLOAT") || fieldType.contains("DOUBLE") && (useDefaultValue || hasField)) {
                     tableRow.set(fieldName, (double) message.getField(f));
                 } else if(Arrays.stream(bigQueryStandardSqlDateTimeTypes).anyMatch(fieldType::equals)) {
                     String fieldValue = String.valueOf(message.getField(f));
