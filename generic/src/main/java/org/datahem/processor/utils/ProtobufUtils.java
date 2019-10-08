@@ -491,10 +491,15 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 } else if (fieldType.contains("INT64") && (useDefaultValue || hasField)) {
                     tableRow.set(fieldName, (long) message.getField(f));
                 } else if (fieldType.contains("BOOL") && (useDefaultValue || hasField)) {
-                    tableRow.set(fieldName, (boolean) message.getField(f));
+                    // fix since JsonFormat.parseBool only parse "true", not "True" or "TRUE"
+                    if(message.getField(f) instanceof String){
+                        tableRow.set(fieldName, Boolean.parseBoolean(String.valueOf(message.getField(f))));
+                    }else{
+                        tableRow.set(fieldName, (boolean) message.getField(f));
+                    }
                 } else if (fieldType.contains("ENUM")) {
                     tableRow.set(fieldName, ((EnumValueDescriptor) message.getField(f)).getNumber());
-                } else if (fieldType.contains("FLOAT") || fieldType.contains("DOUBLE") && (useDefaultValue || hasField)) {
+                } else if ((fieldType.contains("FLOAT") || fieldType.contains("DOUBLE")) && (useDefaultValue || hasField)) {
                     tableRow.set(fieldName, (double) message.getField(f));
                 } else if(Arrays.stream(bigQueryStandardSqlDateTimeTypes).anyMatch(fieldType::equals)) {
                     String fieldValue = String.valueOf(message.getField(f));
