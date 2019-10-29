@@ -22,6 +22,7 @@ import com.google.protobuf.util.JsonFormat;
 import com.google.protobuf.ByteString;
 import com.google.common.collect.HashMultimap;
 
+import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.api.services.bigquery.model.TableReference;
@@ -36,10 +37,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 //import java.util.regex.Pattern;
 //import java.util.regex.Matcher;
-
-import com.google.api.services.bigquery.model.TableFieldSchema;
-import com.google.api.services.bigquery.model.TableRow;
-import com.google.api.services.bigquery.model.TableSchema;
+//import com.google.api.services.bigquery.model.TableRow;
+//import com.google.api.services.bigquery.model.TableSchema;
 
 import java.util.List;
 import java.util.HashMap;
