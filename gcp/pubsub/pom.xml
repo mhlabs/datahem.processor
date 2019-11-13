@@ -5,8 +5,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.datahem</groupId>
-  <artifactId>processor</artifactId>
+  <groupId>org.datahem.processor</groupId>
+  <artifactId>backup-backfill-pipeline</artifactId>
   <version>0.7.2</version>
 
   <packaging>jar</packaging>
@@ -87,7 +87,8 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <finalName>${project.artifactId}-bundled-${project.version}</finalName>
+              <finalName>${project.artifactId}-bundled</finalName>
+              <outputDirectory>${basedir}</outputDirectory>
               <filters>
                 <filter>
                   <artifact>*:*</artifact>

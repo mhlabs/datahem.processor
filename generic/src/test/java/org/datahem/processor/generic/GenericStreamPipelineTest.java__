@@ -129,11 +129,11 @@ public class GenericStreamPipelineTest {
         TableSchema eventSchema = null;
         String tableDescription = "";
         try{
-            ProtoDescriptor protoDescriptor = GenericStreamPipeline.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc");
+            ProtoDescriptor protoDescriptor = GenericStreamPipeline.getProtoDescriptorFromCloudStorage("", "schemas.desc");
             //Descriptor d = protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
             Descriptor d = protoDescriptor.getDescriptorByName("mathem.member.v1.Member");
             eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, d);
-            //eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-schema-registry", "schemas.desc"), "mathem.cartemperature.v1.CarTemperature");
+            //eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getProtoDescriptorFromCloudStorage("", "schemas.desc"), "mathem.cartemperature.v1.CarTemperature");
             HashMultimap<String, String> messageOptions = ProtobufUtils.getMessageOptions(protoDescriptor, d);
             tableDescription = ((Set<String>) messageOptions.get("BigQueryTableDescription")).stream().findFirst().orElse("");
             LOG.info("tableDescription: " + tableDescription);
@@ -143,7 +143,7 @@ public class GenericStreamPipelineTest {
         p
 			.apply(Create.of(Arrays.asList(pm)))
 			.apply(ParDo.of(new PubsubMessageToTableRowFn(
-				StaticValueProvider.of("mathem-ml-datahem-test-schema-registry"),
+				StaticValueProvider.of(""),
                 StaticValueProvider.of("schemas.desc"),
                 StaticValueProvider.of("mathem.cartemperature.v1.CarTemperature"))));
         Assert.assertEquals(true, true);

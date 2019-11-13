@@ -52,34 +52,17 @@ mvn compile exec:java \
       --bigQueryTableSpec=$BIGQUERY_TABLE_SPEC"
 ```
 
-```shell
-mvn compile exec:java \
-      -Dexec.mainClass=org.datahem.processor.generic.GenericStreamPipeline \
-      -Dexec.args=" \
-      --project=$PROJECT_ID \
-      --jobName=$JOB_NAME \
-      --stagingLocation=gs://$PROJECT_ID-processor/org/datahem/processor/generic/staging \
-      --gcpTempLocation=gs://$PROJECT_ID-processor/gcptemp/ \
-      --runner=DataflowRunner \
-      --zone=$DF_ZONE \
-      --region=$DF_REGION \
-      --numWorkers=$DF_NUM_WORKERS \
-      --maxNumWorkers=$DF_MAX_NUM_WORKERS \
-      --diskSizeGb=$DF_DISK_SIZE_GB \
-      --workerMachineType=$DF_WORKER_MACHINE_TYPE \
-      --bucketName=$BUCKET_NAME \
-      --fileDescriptorName=$FILE_DESCRIPTOR_NAME \
-      --fileDescriptorProtoName=$FILE_DESCRIPTOR_PROTO_NAME \
-      --messageType=$MESSAGE_TYPE \
-      --pubsubSubscription=projects/$PROJECT_ID/subscriptions/$PUBSUB_SUBSCRIPTION \
-      --bigQueryTableSpec=$BIGQUERY_TABLE_SPEC"
-```
-
-
-
 ## Create template
 
 ```shell
+mvn compile exec:java \
+      -Dexec.mainClass=org.datahem.processor.dynamodb.DynamoDbStreamPipeline \
+      -Dexec.args=" \
+      --project=$PROJECT_ID \
+      --stagingLocation=gs://$PROJECT_ID-processor/org/datahem/processor/dynamodb/staging \
+      --templateLocation=gs://$PROJECT_ID-processor/templates \
+      --runner=DataflowRunner"
+
    mvn compile exec:java \
       -Dexec.mainClass=com.datahem.processor.kinesis.order.OrderStreamPipeline \
       -Dexec.args=" \
