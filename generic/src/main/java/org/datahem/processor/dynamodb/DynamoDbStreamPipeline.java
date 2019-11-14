@@ -22,6 +22,7 @@ import com.google.protobuf.util.JsonFormat;
 import com.google.protobuf.ByteString;
 import com.google.common.collect.HashMultimap;
 
+import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.api.services.bigquery.model.TableReference;
@@ -36,10 +37,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 //import java.util.regex.Pattern;
 //import java.util.regex.Matcher;
-
-import com.google.api.services.bigquery.model.TableFieldSchema;
-import com.google.api.services.bigquery.model.TableRow;
-import com.google.api.services.bigquery.model.TableSchema;
+//import com.google.api.services.bigquery.model.TableRow;
+//import com.google.api.services.bigquery.model.TableSchema;
 
 import java.util.List;
 import java.util.HashMap;
@@ -138,6 +137,12 @@ public class DynamoDbStreamPipeline {
 		@Description("pubsubSubscription")
 		ValueProvider<String> getPubsubSubscription();
 		void setPubsubSubscription(ValueProvider<String> subscription);
+
+/*
+        @Description("config")
+		ValueProvider<String> getConfig();
+		void setConfig(ValueProvider<String> config);
+*/
 
         @Description("BigQuery Table Spec [project_id]:[dataset_id].[table_id] or [dataset_id].[table_id]")
 		ValueProvider<String> getBigQueryTableSpec();
@@ -246,6 +251,9 @@ public class DynamoDbStreamPipeline {
 				}catch(IllegalArgumentException e){
                     LOG.error("IllegalArgumentException: ", e);
                     LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
+				}catch(Exception e){
+                    LOG.error("Exception: ", e);
+                    LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
 				}
     		}
   }
@@ -273,7 +281,8 @@ public class DynamoDbStreamPipeline {
                     .readMessagesWithAttributes()
                     .fromSubscription(options.getPubsubSubscription())
                     .withIdAttribute("uuid")
-                    .withTimestampAttribute("timestamp"))
+                    //.withTimestampAttribute("timestamp")
+                    ) //remove and rely on pubsub timestamp instead to avoid writing to partitions older than 31 days?
             // Combine steps PubsubMessage -> DynamicMessage -> TableRow into one step and make generic (beam 2.X will fix dynamic messages in proto coder)
             .apply("PubsubMessage to TableRow", ParDo.of(new PubsubMessageToTableRowFn(
 				options.getBucketName(),
@@ -290,12 +299,16 @@ public class DynamoDbStreamPipeline {
                     .writeTableRows()
                     .to(new TablePartition(options.getBigQueryTableSpec(), tableDescription))
                     .withSchema(eventSchema)
+                    .skipInvalidRows()
+                    .ignoreUnknownValues()
+                    //.withExtendedErrorInfo()
                     .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
                     .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
         writeResult
             .getFailedInserts()
+            //.getFailedInsertsWithErr()
             .apply("LogFailedData", ParDo.of(new DoFn<TableRow, TableRow>() {
                 @ProcessElement
                 public void processElement(ProcessContext c) {
