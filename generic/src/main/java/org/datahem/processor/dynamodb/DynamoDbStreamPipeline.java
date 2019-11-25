@@ -1,4 +1,4 @@
-package org.datahem.processor.generic;
+package org.datahem.processor.dynamodb;
 
 /*-
  * ========================LICENSE_START=================================
@@ -22,6 +22,7 @@ import com.google.protobuf.util.JsonFormat;
 import com.google.protobuf.ByteString;
 import com.google.common.collect.HashMultimap;
 
+import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.api.services.bigquery.model.TableReference;
@@ -36,10 +37,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 //import java.util.regex.Pattern;
 //import java.util.regex.Matcher;
-
-import com.google.api.services.bigquery.model.TableFieldSchema;
-import com.google.api.services.bigquery.model.TableRow;
-import com.google.api.services.bigquery.model.TableSchema;
+//import com.google.api.services.bigquery.model.TableRow;
+//import com.google.api.services.bigquery.model.TableSchema;
 
 import java.util.List;
 import java.util.HashMap;
@@ -107,12 +106,14 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.DateTimeZone;
 
+import org.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GenericStreamPipeline {
+public class DynamoDbStreamPipeline {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(GenericStreamPipeline.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DynamoDbStreamPipeline.class);
 
 	public interface Options extends PipelineOptions, GcpOptions {
 
@@ -136,6 +137,12 @@ public class GenericStreamPipeline {
 		@Description("pubsubSubscription")
 		ValueProvider<String> getPubsubSubscription();
 		void setPubsubSubscription(ValueProvider<String> subscription);
+
+/*
+        @Description("config")
+		ValueProvider<String> getConfig();
+		void setConfig(ValueProvider<String> config);
+*/
 
         @Description("BigQuery Table Spec [project_id]:[dataset_id].[table_id] or [dataset_id].[table_id]")
 		ValueProvider<String> getBigQueryTableSpec();
@@ -168,8 +175,33 @@ public class GenericStreamPipeline {
 			public void processElement(ProcessContext c) throws Exception {
                 // Get pubsub message payload and attributes
                 PubsubMessage pubsubMessage = c.element();
-                String payload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
-                Map<String, String> attributes = pubsubMessage.getAttributeMap();
+                String pubsubPayload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
+                HashMap<String, String> attributes = new HashMap<String,String>();
+                attributes.putAll(pubsubMessage.getAttributeMap());
+
+                JSONObject DynamoDbStreamObject = new JSONObject(pubsubPayload);
+                JSONObject payloadObject;
+                // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
+                if((DynamoDbStreamObject.isNull("OldImage") || DynamoDbStreamObject.getJSONObject("OldImage").isNull("Id"))){
+                    attributes.put("operation", "INSERT");
+                    payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
+                }else if(DynamoDbStreamObject.isNull("NewImage") || DynamoDbStreamObject.getJSONObject("NewImage").isNull("Id")){
+                    attributes.put("operation", "REMOVE");
+                    payloadObject = DynamoDbStreamObject.getJSONObject("OldImage");
+                }else {
+                    attributes.put("operation", "MODIFY");
+                    payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
+                }
+
+                // Add meta-data from dynamoDB stream event as attributes
+                if(!DynamoDbStreamObject.isNull("Published")){
+                    attributes.put("dynamoDbStreamPublished",DynamoDbStreamObject.getString("Published"));
+                }
+                if(!DynamoDbStreamObject.isNull("EventId")){
+                    attributes.put("dynamoDbStreamEventId",DynamoDbStreamObject.getString("EventId"));
+                }
+
+                String payload = payloadObject.toString();
 
                 // Parse json to protobuf
                 if(messageDescriptor == null){
@@ -219,6 +251,9 @@ public class GenericStreamPipeline {
 				}catch(IllegalArgumentException e){
                     LOG.error("IllegalArgumentException: ", e);
                     LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
+				}catch(Exception e){
+                    LOG.error("Exception: ", e);
+                    LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
 				}
     		}
   }
@@ -247,7 +282,7 @@ public class GenericStreamPipeline {
                     .fromSubscription(options.getPubsubSubscription())
                     .withIdAttribute("uuid")
                     //.withTimestampAttribute("timestamp")
-                    )
+                    ) //remove and rely on pubsub timestamp instead to avoid writing to partitions older than 31 days?
             // Combine steps PubsubMessage -> DynamicMessage -> TableRow into one step and make generic (beam 2.X will fix dynamic messages in proto coder)
             .apply("PubsubMessage to TableRow", ParDo.of(new PubsubMessageToTableRowFn(
 				options.getBucketName(),
@@ -266,12 +301,14 @@ public class GenericStreamPipeline {
                     .withSchema(eventSchema)
                     .skipInvalidRows()
                     .ignoreUnknownValues()
+                    //.withExtendedErrorInfo()
                     .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
                     .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
         writeResult
             .getFailedInserts()
+            //.getFailedInsertsWithErr()
             .apply("LogFailedData", ParDo.of(new DoFn<TableRow, TableRow>() {
                 @ProcessElement
                 public void processElement(ProcessContext c) {

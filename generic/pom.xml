@@ -6,8 +6,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.datahem.processor</groupId>
-  <artifactId>generic</artifactId>
-  <version>0.7.2</version>
+  <artifactId>generic-pipeline</artifactId>
+  <version>0.7.3</version>
 
   <packaging>jar</packaging>
 
@@ -81,7 +81,8 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <finalName>${project.artifactId}-bundled-${project.version}</finalName>
+              <finalName>${project.artifactId}-bundled</finalName>
+              <outputDirectory>${basedir}</outputDirectory>
               <filters>
                 <filter>
                   <artifact>*:*</artifact>
@@ -218,6 +219,13 @@
         <artifactId>httpclient</artifactId>
         <version>4.5.5</version>
     </dependency>
+
+    <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20190722</version>
+    </dependency>
+
 
     <dependency>
         <groupId>joda-time</groupId>
