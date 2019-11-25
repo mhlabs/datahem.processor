@@ -246,7 +246,8 @@ public class GenericStreamPipeline {
                     .readMessagesWithAttributes()
                     .fromSubscription(options.getPubsubSubscription())
                     .withIdAttribute("uuid")
-                    .withTimestampAttribute("timestamp"))
+                    //.withTimestampAttribute("timestamp")
+                    )
             // Combine steps PubsubMessage -> DynamicMessage -> TableRow into one step and make generic (beam 2.X will fix dynamic messages in proto coder)
             .apply("PubsubMessage to TableRow", ParDo.of(new PubsubMessageToTableRowFn(
 				options.getBucketName(),
@@ -263,6 +264,8 @@ public class GenericStreamPipeline {
                     .writeTableRows()
                     .to(new TablePartition(options.getBigQueryTableSpec(), tableDescription))
                     .withSchema(eventSchema)
+                    .skipInvalidRows()
+                    .ignoreUnknownValues()
                     .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
                     .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
