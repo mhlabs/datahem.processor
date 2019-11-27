@@ -64,6 +64,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -467,7 +468,23 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
     }
 */
 
-    public static TableRow getTableRow(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, TableRow tableRow){
+    public static Optional<Object> fieldOptionCoalesce(Message message, FieldDescriptor f, Descriptor descriptor, HashMultimap<String, String> fieldOptions){
+        String coalesceSettings = ((Set<String>) fieldOptions.get("fieldCoalesce")).stream().findFirst().orElse("");
+        if(!coalesceSettings.isEmpty()){
+            String[] coalesceSettingsArr = coalesceSettings.split(",");
+
+            return Stream.of(coalesceSettingsArr)
+                .map(c -> message.hasField(descriptor.findFieldByName(c)) ? message.getField(descriptor.findFieldByName(c)) : null)
+                .filter(Objects::nonNull)
+                .findFirst();
+                //.orElse(null);
+        } else{
+            return Optional.empty();
+            //return null;
+        }
+    }
+
+    public static TableRow getTableRow(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, TableRow tableRow, Descriptor descriptor){
         String[] bigQueryStandardSqlDateTimeTypes = {"DATE","DATETIME","TIME","TIMESTAMP"};
         HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
         
@@ -475,6 +492,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             String fieldName = fieldOptionBigQueryRename(fieldOptions).orElse(f.getName().replace(".", "_"));    
             String fieldType = fieldOptionBigQueryType(fieldOptions).orElse(f.getType().toString().toUpperCase());
             
+            Object fieldVal = fieldOptionCoalesce(message, f, descriptor, fieldOptions).orElse(message.getField(f));
+
             if (!f.isRepeated() ) {
                 boolean useDefaultValue = fieldOptionBigQueryUseDefaultValue(fieldOptions);
                 boolean hasField = message.hasField(f);
@@ -503,7 +522,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     tableRow.set(fieldName, (double) message.getField(f));
                 } else if(Arrays.stream(bigQueryStandardSqlDateTimeTypes).anyMatch(fieldType::equals)) {
                     String fieldValue = String.valueOf(message.getField(f));
-                    if (!fieldValue.isEmpty()){
+                    if (!fieldValue.isEmpty() && !fieldValue.matches("(0001-01-01).(00:00:00).*")){
                         fieldValue = fieldOptionBigQueryRegexExtract(fieldValue, fieldOptions);
                         fieldValue = fieldOptionBigQueryAppend(fieldValue, fieldOptions);
                         fieldValue = fieldOptionBigQueryRegexReplace(fieldValue, fieldOptions);
@@ -602,7 +621,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         List<FieldDescriptor> fields = descriptor.getFields();
 
 		for (FieldDescriptor field : fields) {
-            tableRow = getTableRow(message, field, protoDescriptor, tableRow);
+            tableRow = getTableRow(message, field, protoDescriptor, tableRow, descriptor);
         }
         return tableRow;
      }
