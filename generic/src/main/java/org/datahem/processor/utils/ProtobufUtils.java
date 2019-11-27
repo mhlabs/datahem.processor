@@ -468,7 +468,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
     }
 */
 
-    public static Optional<Object> fieldOptionCoalesce(Message message, FieldDescriptor f, Descriptor descriptor, HashMultimap<String, String> fieldOptions){
+    public static Optional<Object> fieldOptionCoalesce(Message message, Descriptor descriptor, HashMultimap<String, String> fieldOptions){
         String coalesceSettings = ((Set<String>) fieldOptions.get("fieldCoalesce")).stream().findFirst().orElse("");
         if(!coalesceSettings.isEmpty()){
             String[] coalesceSettingsArr = coalesceSettings.split(",");
@@ -492,7 +492,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             String fieldName = fieldOptionBigQueryRename(fieldOptions).orElse(f.getName().replace(".", "_"));    
             String fieldType = fieldOptionBigQueryType(fieldOptions).orElse(f.getType().toString().toUpperCase());
             
-            Object fieldVal = fieldOptionCoalesce(message, f, descriptor, fieldOptions).orElse(message.getField(f));
+            Object fieldVal = fieldOptionCoalesce(message, descriptor, fieldOptions).orElse(message.getField(f));
 
             if (!f.isRepeated() ) {
                 boolean useDefaultValue = fieldOptionBigQueryUseDefaultValue(fieldOptions);

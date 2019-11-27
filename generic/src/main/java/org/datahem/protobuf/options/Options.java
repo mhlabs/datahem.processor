@@ -3,20 +3,6 @@
 
 package org.datahem.protobuf.options;
 
-/*-
- * ========================LICENSE_START=================================
- * DataHem
- * %%
- * Copyright (C) 2018 - 2019 MatHem Sverige AB
- * %%
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
- * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
- * =========================LICENSE_END==================================
- */
-
 public final class Options {
   private Options() {}
   public static void registerAllExtensions(
@@ -26,6 +12,14 @@ public final class Options {
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldDescription);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldCategories);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldType);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldRename);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldAppend);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldRegexExtract);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldRegexReplace);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldLocalToUtc);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldHidden);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldUseDefaultValue);
+    registry.add(org.datahem.protobuf.options.Options.fieldCoalesce);
   }
 
   public static void registerAllExtensions(
@@ -57,6 +51,10 @@ public final class Options {
         null);
   public static final int BIGQUERYFIELDDESCRIPTION_FIELD_NUMBER = 66666667;
   /**
+   * <pre>
+   * [DescriptionString] Example: "A timestamp."
+   * </pre>
+   *
    * <code>extend .google.protobuf.FieldOptions { ... }</code>
    */
   public static final
@@ -68,6 +66,10 @@ public final class Options {
         null);
   public static final int BIGQUERYFIELDCATEGORIES_FIELD_NUMBER = 66666668;
   /**
+   * <pre>
+   * [PolicyTag1, PolicyTag2,...] Example:
+   * </pre>
+   *
    * <code>extend .google.protobuf.FieldOptions { ... }</code>
    */
   public static final
@@ -79,12 +81,137 @@ public final class Options {
         null);
   public static final int BIGQUERYFIELDTYPE_FIELD_NUMBER = 66666669;
   /**
+   * <pre>
+   * [BigQueryDataType] Example: "TIMESTAMP"
+   * </pre>
+   *
    * <code>extend .google.protobuf.FieldOptions { ... }</code>
    */
   public static final
     com.google.protobuf.GeneratedMessage.GeneratedExtension<
       com.google.protobuf.DescriptorProtos.FieldOptions,
       java.lang.String> bigQueryFieldType = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
+  public static final int BIGQUERYFIELDRENAME_FIELD_NUMBER = 66666670;
+  /**
+   * <pre>
+   * [NewFieldName] Example: "LocalDateTime"
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> bigQueryFieldRename = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
+  public static final int BIGQUERYFIELDAPPEND_FIELD_NUMBER = 66666671;
+  /**
+   * <pre>
+   * [AppendString] Example: "Europe/Stockholm"
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> bigQueryFieldAppend = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
+  public static final int BIGQUERYFIELDREGEXEXTRACT_FIELD_NUMBER = 66666672;
+  /**
+   * <pre>
+   * [RegexPattern] Example "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])(T| )(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]"
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> bigQueryFieldRegexExtract = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
+  public static final int BIGQUERYFIELDREGEXREPLACE_FIELD_NUMBER = 66666673;
+  /**
+   * <pre>
+   * [RegexPattern, ReplacementString] Example: "(&#92;&#92;+(2[0-3]|[01][0-9]):[0-5][0-9]),Europe/Stockholm"
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> bigQueryFieldRegexReplace = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
+  public static final int BIGQUERYFIELDLOCALTOUTC_FIELD_NUMBER = 66666674;
+  /**
+   * <pre>
+   * [LocalTimezone, LocalPattern, UtcPattern ] Example: "Europe/Stockholm, yyyy-MM-dd'T'HH:mm:ss, yyyy-MM-dd'T'HH:mm:ssXXX"
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> bigQueryFieldLocalToUtc = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
+  public static final int BIGQUERYFIELDHIDDEN_FIELD_NUMBER = 66666675;
+  /**
+   * <pre>
+   *[Hidden] Example: "true"
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> bigQueryFieldHidden = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
+  public static final int BIGQUERYFIELDUSEDEFAULTVALUE_FIELD_NUMBER = 66666676;
+  /**
+   * <pre>
+   *[Hidden] Example: "false"
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> bigQueryFieldUseDefaultValue = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
+  public static final int FIELDCOALESCE_FIELD_NUMBER = 66666677;
+  /**
+   * <pre>
+   * Use value from first non-null field in the same message
+   * [field1, field2, field3, ... ] Example: "removedDate, lastModifiedDate, createdDate"
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> fieldCoalesce = com.google.protobuf.GeneratedMessage
           .newFileScopedGeneratedExtension(
         java.lang.String.class,
         null);
@@ -107,8 +234,21 @@ public final class Options {
       "\253\201\345\037 \001(\t:A\n\027BigQueryFieldCategories\022\035.go" +
       "ogle.protobuf.FieldOptions\030\254\201\345\037 \001(\t:;\n\021B" +
       "igQueryFieldType\022\035.google.protobuf.Field" +
-      "Options\030\255\201\345\037 \001(\tB\036\n\034org.datahem.protobuf" +
-      ".optionsb\006proto3"
+      "Options\030\255\201\345\037 \001(\t:=\n\023BigQueryFieldRename\022" +
+      "\035.google.protobuf.FieldOptions\030\256\201\345\037 \001(\t:" +
+      "=\n\023BigQueryFieldAppend\022\035.google.protobuf" +
+      ".FieldOptions\030\257\201\345\037 \001(\t:C\n\031BigQueryFieldR" +
+      "egexExtract\022\035.google.protobuf.FieldOptio" +
+      "ns\030\260\201\345\037 \001(\t:C\n\031BigQueryFieldRegexReplace" +
+      "\022\035.google.protobuf.FieldOptions\030\261\201\345\037 \001(\t" +
+      ":A\n\027BigQueryFieldLocalToUtc\022\035.google.pro" +
+      "tobuf.FieldOptions\030\262\201\345\037 \001(\t:=\n\023BigQueryF" +
+      "ieldHidden\022\035.google.protobuf.FieldOption" +
+      "s\030\263\201\345\037 \001(\t:F\n\034BigQueryFieldUseDefaultVal" +
+      "ue\022\035.google.protobuf.FieldOptions\030\264\201\345\037 \001" +
+      "(\t:7\n\rfieldCoalesce\022\035.google.protobuf.Fi" +
+      "eldOptions\030\265\201\345\037 \001(\tB\036\n\034org.datahem.proto" +
+      "buf.optionsb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -128,6 +268,14 @@ public final class Options {
     bigQueryFieldDescription.internalInit(descriptor.getExtensions().get(2));
     bigQueryFieldCategories.internalInit(descriptor.getExtensions().get(3));
     bigQueryFieldType.internalInit(descriptor.getExtensions().get(4));
+    bigQueryFieldRename.internalInit(descriptor.getExtensions().get(5));
+    bigQueryFieldAppend.internalInit(descriptor.getExtensions().get(6));
+    bigQueryFieldRegexExtract.internalInit(descriptor.getExtensions().get(7));
+    bigQueryFieldRegexReplace.internalInit(descriptor.getExtensions().get(8));
+    bigQueryFieldLocalToUtc.internalInit(descriptor.getExtensions().get(9));
+    bigQueryFieldHidden.internalInit(descriptor.getExtensions().get(10));
+    bigQueryFieldUseDefaultValue.internalInit(descriptor.getExtensions().get(11));
+    fieldCoalesce.internalInit(descriptor.getExtensions().get(12));
     com.google.protobuf.DescriptorProtos.getDescriptor();
   }
 
