@@ -17,6 +17,7 @@ package org.datahem.processor.generic;
 
 import io.anemos.metastore.core.proto.*;
 import org.datahem.processor.generic.GenericStreamPipeline.PubsubMessageToTableRowFn;
+import org.datahem.processor.utils.ProtobufUtils;
 
 import com.google.gson.Gson;
 
@@ -109,7 +110,6 @@ public class GenericStreamPipelineTest {
 
     String testPayload = "{\"Temperature\":10.0, \"Car\":\"abc123\", \"Timestamp\":\"2019-05-23T13:13:13\", \"Date\":\"2019-05-13\"}";
 
-
     byte[] payload = testPayload.getBytes(StandardCharsets.UTF_8);
 	private Map<String,String> attributes = new HashMap<String, String>(){
 		{
@@ -125,28 +125,43 @@ public class GenericStreamPipelineTest {
 
 	@Test
 	public void userPageviewTest(){
+
+        List<TableRow> attributes = new ArrayList<TableRow>();
+        //TableRow attr = new TableRow().set("key", "source").set("value", "test");
+
+        attributes.add(new TableRow().set("key", "source").set("value", "test"));
+        attributes.add(new TableRow().set("key", "uuid").set("value", "123-456-abc"));
+        attributes.add(new TableRow().set("key", "timestamp").set("value", "2013-08-16T23:36:32.444Z"));
+
+        TableRow temperatureTR = new TableRow()
+            .set("Temperature", 10.0)
+            .set("Car", "abc123")
+            .set("Timestamp", "2019-05-23T13:13:13")
+            .set("_ATTRIBUTES", attributes);
+
+
         LOG.info("payload: " + testPayload);
         TableSchema eventSchema = null;
         String tableDescription = "";
         try{
-            ProtoDescriptor protoDescriptor = GenericStreamPipeline.getProtoDescriptorFromCloudStorage("", "schemas.desc");
-            //Descriptor d = protoDescriptor.getDescriptorByName("mathem.cartemperature.v1.CarTemperature");
-            Descriptor d = protoDescriptor.getDescriptorByName("mathem.member.v1.Member");
-            eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, d);
-            //eventSchema = ProtobufUtils.makeTableSchema(GenericStreamPipeline.getProtoDescriptorFromCloudStorage("", "schemas.desc"), "mathem.cartemperature.v1.CarTemperature");
-            HashMultimap<String, String> messageOptions = ProtobufUtils.getMessageOptions(protoDescriptor, d);
+            ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage("", "schemas.desc");
+            Descriptor descriptor = protoDescriptor.getDescriptorByName("mathem.distribution.tms_truck_temperature.truck_temperature.v1.TruckTemperature");
+            eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, ".*590903188537942776.*");
+            LOG.info("eventSchema: " + eventSchema.toString());
+            HashMultimap<String, String> messageOptions = ProtobufUtils.getMessageOptions(protoDescriptor, descriptor);
             tableDescription = ((Set<String>) messageOptions.get("BigQueryTableDescription")).stream().findFirst().orElse("");
-            LOG.info("tableDescription: " + tableDescription);
         }catch (Exception e) {
             e.printStackTrace();
         }
-        p
+
+        PCollection<TableRow> output = p
 			.apply(Create.of(Arrays.asList(pm)))
 			.apply(ParDo.of(new PubsubMessageToTableRowFn(
 				StaticValueProvider.of(""),
                 StaticValueProvider.of("schemas.desc"),
-                StaticValueProvider.of("mathem.cartemperature.v1.CarTemperature"))));
-        Assert.assertEquals(true, true);
+                StaticValueProvider.of("mathem.distribution.tms_truck_temperature.truck_temperature.v1.TruckTemperature"))));
+        //Assert.assertEquals(true, true);
+        PAssert.that(output).containsInAnyOrder(temperatureTR);
         p.run();
     }
 }

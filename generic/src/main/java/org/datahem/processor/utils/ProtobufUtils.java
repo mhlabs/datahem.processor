@@ -431,6 +431,15 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         return value;
     }
 
+    public static double fieldOptionDivide(Double value, HashMultimap<String, String> fieldOptions){
+        String divisorString = ((Set<String>) fieldOptions.get("fieldDivide")).stream().findFirst().orElse("");
+        if(!divisorString.isEmpty() && value != 0){
+            double divisor = Double.parseDouble(divisorString);
+            return value/divisor;
+        }
+        return value;
+    }
+
     public static String fieldOptionBigQueryLocalToUtc(String value, HashMultimap<String, String> fieldOptions){
         String timezoneSettings = ((Set<String>) fieldOptions.get("BigQueryFieldLocalToUtc")).stream().findFirst().orElse("");
         if(!timezoneSettings.isEmpty()){
@@ -467,6 +476,14 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         return value;
     }
 */
+
+    public static Optional<Boolean> fieldOptionFilter(String value, HashMultimap<String, String> fieldOptions){
+        String filterPattern = ((Set<String>) fieldOptions.get("fieldFilter")).stream().findFirst().orElse("");
+        if(!filterPattern.isEmpty() && !value.isEmpty()){
+            return Optional.of(value.matches("filterPattern"));
+        }
+        return Optional.empty();
+    }
 
     public static Optional<Object> fieldOptionCoalesce(Message message, Descriptor descriptor, HashMultimap<String, String> fieldOptions){
         String coalesceSettings = ((Set<String>) fieldOptions.get("fieldCoalesce")).stream().findFirst().orElse("");
@@ -519,10 +536,13 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 } else if (fieldType.contains("ENUM")) {
                     tableRow.set(fieldName, ((EnumValueDescriptor) message.getField(f)).getNumber());
                 } else if ((fieldType.contains("FLOAT") || fieldType.contains("DOUBLE")) && (useDefaultValue || hasField)) {
-                    tableRow.set(fieldName, (double) message.getField(f));
+                    double fieldValue = (double) message.getField(f);
+                    fieldValue = fieldOptionDivide(fieldValue, fieldOptions);
+                    tableRow.set(fieldName, fieldValue);
+                    //tableRow.set(fieldName, (double) message.getField(f));
                 } else if(Arrays.stream(bigQueryStandardSqlDateTimeTypes).anyMatch(fieldType::equals)) {
                     String fieldValue = String.valueOf(message.getField(f));
-                    if (!fieldValue.isEmpty() && !fieldValue.matches("(0001-01-01).(00:00:00).*")){
+                    if (!fieldValue.isEmpty() && fieldOptionFilter(fieldValue, fieldOptions).orElse(true)){
                         fieldValue = fieldOptionBigQueryRegexExtract(fieldValue, fieldOptions);
                         fieldValue = fieldOptionBigQueryAppend(fieldValue, fieldOptions);
                         fieldValue = fieldOptionBigQueryRegexReplace(fieldValue, fieldOptions);
