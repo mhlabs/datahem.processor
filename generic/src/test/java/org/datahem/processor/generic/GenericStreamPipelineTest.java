@@ -108,7 +108,7 @@ public class GenericStreamPipelineTest {
 	
 	@Rule public transient TestPipeline p = TestPipeline.create();
 
-    String testPayload = "{\"Temperature\":10.0, \"Car\":\"abc123\", \"Timestamp\":\"2019-05-23T13:13:13\", \"Date\":\"2019-05-13\"}";
+    String testPayload = "{\"StringField\":\"hello world\"}";
 
     byte[] payload = testPayload.getBytes(StandardCharsets.UTF_8);
 	private Map<String,String> attributes = new HashMap<String, String>(){
@@ -127,16 +127,13 @@ public class GenericStreamPipelineTest {
 	public void userPageviewTest(){
 
         List<TableRow> attributes = new ArrayList<TableRow>();
-        //TableRow attr = new TableRow().set("key", "source").set("value", "test");
 
         attributes.add(new TableRow().set("key", "source").set("value", "test"));
         attributes.add(new TableRow().set("key", "uuid").set("value", "123-456-abc"));
         attributes.add(new TableRow().set("key", "timestamp").set("value", "2013-08-16T23:36:32.444Z"));
 
         TableRow temperatureTR = new TableRow()
-            .set("Temperature", 10.0)
-            .set("Car", "abc123")
-            .set("Timestamp", "2019-05-23T13:13:13")
+            .set("StringField", "hello world")
             .set("_ATTRIBUTES", attributes);
 
 
@@ -144,8 +141,8 @@ public class GenericStreamPipelineTest {
         TableSchema eventSchema = null;
         String tableDescription = "";
         try{
-            ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage("", "schemas.desc");
-            Descriptor descriptor = protoDescriptor.getDescriptorByName("mathem.distribution.tms_truck_temperature.truck_temperature.v1.TruckTemperature");
+            ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-descriptor", "testSchemas.desc");
+            Descriptor descriptor = protoDescriptor.getDescriptorByName("datahem.test.TestWithoutOptions");
             eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, ".*590903188537942776.*");
             LOG.info("eventSchema: " + eventSchema.toString());
             HashMultimap<String, String> messageOptions = ProtobufUtils.getMessageOptions(protoDescriptor, descriptor);
@@ -157,9 +154,9 @@ public class GenericStreamPipelineTest {
         PCollection<TableRow> output = p
 			.apply(Create.of(Arrays.asList(pm)))
 			.apply(ParDo.of(new PubsubMessageToTableRowFn(
-				StaticValueProvider.of(""),
-                StaticValueProvider.of("schemas.desc"),
-                StaticValueProvider.of("mathem.distribution.tms_truck_temperature.truck_temperature.v1.TruckTemperature"))));
+				StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
+                StaticValueProvider.of("testSchemas.desc"),
+                StaticValueProvider.of("datahem.test.TestWithoutOptions"))));
         //Assert.assertEquals(true, true);
         PAssert.that(output).containsInAnyOrder(temperatureTR);
         p.run();

@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package datahem.test;
+
+import "datahem/options/options.proto";
+
+option java_multiple_files = true;
+option java_package = "org.datahem.test";
+
+enum WithOptionsEnum {
+        Foo = 0;
+        Bar = 1;
+        Baz = 2;
+}
+
+message TestWithOptions {
+
+    string StringField = 1 [
+        (datahem.options.BigQueryFieldAppend) = "Appendix"
+    ];
+
+    int32 Int32Field = 2;
+
+    int64 Int64Field = 3;
+
+    double DoubleField = 4 [
+        (datahem.options.fieldDivide) = "10"
+    ];
+
+    float FloatField = 5;
+
+    bool BoolField = 6;
+
+    bytes BytesField = 7;
+
+    WithOptionsEnum EnumField = 8;
+
+    MessageChildWithOptions messageChild = 9;
+
+    repeated MessageChildWithOptions repeatedMessage = 10;
+
+    repeated string repeatedString = 11;
+
+    repeated int32 repeatedInt32 = 12;
+
+    repeated int64 repeatedInt64 = 13;
+
+    repeated double repeatedDouble = 14;
+
+    repeated float repeatedFloat = 15;
+
+    repeated bool repeatedBool = 16;
+
+    repeated bytes repeatedBytes = 17;
+
+    repeated WithOptionsEnum repeatedEnum = 18;
+
+    string BigQueryTime = 19 [
+        (datahem.options.BigQueryFieldType) = "TIME",
+        (datahem.options.BigQueryFieldAppend) = ":00"
+    ];
+
+    string BigQueryDate = 20 [
+        (datahem.options.BigQueryFieldType) = "DATE"
+    ];
+
+    string BigQueryDatetime = 21 [
+        (datahem.options.BigQueryFieldType) = "DATETIME",
+        (datahem.options.BigQueryFieldAppend) = ":00"
+    ];
+
+    string BigQueryTimestamp = 22 [
+        (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+        (datahem.options.BigQueryFieldAppend) = ":00"
+    ];
+
+}
+
+message MessageChildWithOptions {
+    string StringField = 1 [
+        (datahem.options.BigQueryFieldAppend) = "Appendix"
+    ];
+
+    int32 Int32Field = 2;
+
+    int64 Int64Field = 3;
+
+    double DoubleField = 4;
+
+    float FloatField = 5;
+
+    bool BoolField = 6;
+
+}

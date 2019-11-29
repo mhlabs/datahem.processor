@@ -193,6 +193,7 @@ public class GenericStreamPipeline {
                         builder.clear();
                         // Parse but allow for unknown fields
                         JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
+                        LOG.info("ignoring unknown fields");
                     }
 					try{
                         // Add pubsub message attributes in a protobuf map
@@ -208,6 +209,7 @@ public class GenericStreamPipeline {
                     }
 					DynamicMessage message = builder.build();
                     //transform protobuf to tablerow
+                    LOG.info(message.toString());
                     TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor, protoDescriptor);
                     c.output(tr);
                 }catch(java.lang.NullPointerException e){

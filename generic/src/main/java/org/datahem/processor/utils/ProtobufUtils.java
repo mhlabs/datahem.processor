@@ -521,7 +521,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     fieldValue = fieldOptionBigQueryRegexReplace(fieldValue, fieldOptions);
                     tableRow.set(fieldName, fieldValue);
                 } else if (fieldType.contains("BYTES")) {
-                    tableRow.set(fieldName, (byte[]) message.getField(f));
+                    tableRow.set(fieldName, ((ByteString) message.getField(f)).toByteArray());
+                    
                 } else if (fieldType.contains("INT32") && (useDefaultValue || hasField)) {
                     tableRow.set(fieldName, (int) message.getField(f));
                 } else if (fieldType.contains("INT64") && (useDefaultValue || hasField)) {
@@ -535,11 +536,14 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     }
                 } else if (fieldType.contains("ENUM")) {
                     tableRow.set(fieldName, ((EnumValueDescriptor) message.getField(f)).getNumber());
-                } else if ((fieldType.contains("FLOAT") || fieldType.contains("DOUBLE")) && (useDefaultValue || hasField)) {
+                } else if ((fieldType.contains("FLOAT")) && (useDefaultValue || hasField)) {
+                    double fieldValue = (double)(float) message.getField(f);
+                    fieldValue = fieldOptionDivide(fieldValue, fieldOptions);
+                    tableRow.set(fieldName, fieldValue);
+                } else if ((fieldType.contains("DOUBLE")) && (useDefaultValue || hasField)) {
                     double fieldValue = (double) message.getField(f);
                     fieldValue = fieldOptionDivide(fieldValue, fieldOptions);
                     tableRow.set(fieldName, fieldValue);
-                    //tableRow.set(fieldName, (double) message.getField(f));
                 } else if(Arrays.stream(bigQueryStandardSqlDateTimeTypes).anyMatch(fieldType::equals)) {
                     String fieldValue = String.valueOf(message.getField(f));
                     if (!fieldValue.isEmpty() && fieldOptionFilter(fieldValue, fieldOptions).orElse(true)){

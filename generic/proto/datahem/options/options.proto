@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package datahem.options;
+
+import "google/protobuf/descriptor.proto";
+
+option java_package = "org.datahem.protobuf.options";
+
+extend google.protobuf.MessageOptions {
+    string BigQueryTableReference = 66666667;
+    string BigQueryTableDescription = 66666668;
+}
+
+extend google.protobuf.FieldOptions {
+
+    // Sets a description for the field in BigQuery
+    // [DescriptionString] Example: "A timestamp."
+    string BigQueryFieldDescription = 66666667;
+
+    // Sets a policy tag on the field in BigQuery
+    // [PolicyTag1, PolicyTag2,...] Example:
+    string BigQueryFieldCategories = 66666668;
+
+    // Sets a specified data type on the field in bigquery, if not set the corresponding protobuf data type is used for mapping
+    //String [BigQueryDataType] Example: "TIMESTAMP"
+    string BigQueryFieldType = 66666669; 
+
+    // Rename a field
+    //String [NewFieldName] Example: "LocalDateTime"
+    string BigQueryFieldRename = 66666670; 
+
+    // Append string to value
+    //String [AppendString] Example: "Europe/Stockholm"
+    string BigQueryFieldAppend = 66666671; 
+
+    // Extract part of value (string)
+    //String [RegexPattern] Example "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])(T| )(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]"
+    string BigQueryFieldRegexExtract = 66666672; 
+
+    // Replace part of value (string)
+    //String [RegexPattern, ReplacementString] Example: "(\\+(2[0-3]|[01][0-9]):[0-5][0-9]),Europe/Stockholm"
+    string BigQueryFieldRegexReplace = 66666673; 
+
+    // Convert timestamp from local zone to UTC
+    //String [LocalTimezone, LocalPattern, UtcPattern ] Example: "Europe/Stockholm, yyyy-MM-dd'T'HH:mm:ss, yyyy-MM-dd'T'HH:mm:ssXXX"
+    string BigQueryFieldLocalToUtc = 66666674; 
+
+    //Hide field from BigQuery table
+    //boolean [Hidden] Example: "true"
+    string BigQueryFieldHidden = 66666675;
+
+    //Use default protobuf value or not if field is null, default is false
+    //boolean [UseDefault] Example: "false"
+    string BigQueryFieldUseDefaultValue = 66666676; 
+
+    //replace value with first non-null value
+    //Object [field1, field2, ...] Example: "removedDate, lastModifiedDate, creationDate"
+    string fieldCoalesce = 66666677; 
+
+    //Divide field value with divisor
+    //double [divisor] Example: "100"
+    string fieldDivide = 66666678;
+
+    //Filter string with regex pattern
+    //String [pattern] Example: "^((?!0001-01-01.00:00:00).)*$"
+    string fieldFilter = 66666679;
+}
