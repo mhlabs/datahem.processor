@@ -60,6 +60,8 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.DateTimeZone;
 import org.joda.time.DateTime;
 
+import org.json.JSONObject;
+
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import static org.junit.Assert.*;
@@ -120,6 +122,24 @@ public class GenericStreamPipelineTest {
 
 	@Test
 	public void withoutOptionsTest(){
+
+        JsonObject testPay = Json.createObjectBuilder()
+            .add("StringField", "a string")
+            .add("Int32Field", 32) 
+            .add("Int64Field", 64) 
+            .add("DoubleField", 1.1) 
+            .add("FloatField", 1) 
+            .add("BoolField", true) 
+            .add("BytesField",  Base64.getEncoder().encodeToString("bytes".getBytes())) 
+            .add("EnumField", 1)
+            .add("repeatedString", new JSONArray().put("one").put("two").put("three"))//[\"one\",\"two\",\"three\"]",
+            .add("repeatedInt32", )//[32,64,128]",
+            .add("repeatedInt64", )//[64,128,256]",
+            .add("repeatedDouble", )//[1.0,1.2,1.3]",
+            .add("repeatedFloat", )//[1,2,3]),
+            .add("repeatedBool", )//[true,false,true]),
+            .add("repeatedBytes", )//["Ynl0ZXM=","Ynl0ZXM=","Ynl0ZXM="])
+            .add("repeatedEnum", );//[0,1,2])
         
         String testPayload = "{" + String.join(",",
             "\"StringField\":\"a string\"",
@@ -168,6 +188,14 @@ public class GenericStreamPipelineTest {
             .set("repeatedEnum", Stream.of(0,1,2).collect(Collectors.toList()))
             .set("_ATTRIBUTES", attributes);
 
+            TableRow childMessage = assertTableRow
+                .clone()
+                .set("stringMap", attributes);
+            childMessage.remove("_ATTRIBUTES");
+
+            assertTableRow
+                .set("messageChild", childMessage)
+                .set("repeatedMessage", Stream.of(childMessage,childMessage).collect(Collectors.toList()));
 
         LOG.info("payload: " + testPayload);
         TableSchema eventSchema = null;
