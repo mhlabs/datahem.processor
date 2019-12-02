@@ -577,7 +577,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                         tableRow.set(fieldName, values);
                     }
                 } else if (fieldType.contains("BYTES")) {
-                    List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> (byte[]) e).collect(Collectors.toList());
+                    List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> ((ByteString) e).toByteArray()).collect(Collectors.toList());
                     if(!values.isEmpty()){
                         tableRow.set(fieldName, values);
                     }
@@ -591,13 +591,23 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     if(!values.isEmpty()){
                         tableRow.set(fieldName, values);
                     }
+                } else if (fieldType.contains("ENUM")) {
+                    List<Integer> values = ((List<Object>) message.getField(f)).stream().map(e -> ((EnumValueDescriptor) e).getNumber()).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
                 } else if (fieldType.contains("BOOL")) {
                     List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e).collect(Collectors.toList());
                     if(!values.isEmpty()){
                         tableRow.set(fieldName, values);
                     }
-                } else if (fieldType.contains("FLOAT") || fieldType.contains("DOUBLE")) {
+                } else if (fieldType.contains("DOUBLE")) {
                     List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
+                } else if (fieldType.contains("FLOAT")) {
+                    List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double)(float) e).collect(Collectors.toList());
                     if(!values.isEmpty()){
                         tableRow.set(fieldName, values);
                     }
