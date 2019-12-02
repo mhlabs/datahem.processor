@@ -61,6 +61,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.DateTime;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -123,43 +124,41 @@ public class GenericStreamPipelineTest {
 	@Test
 	public void withoutOptionsTest(){
 
-        JsonObject testPay = Json.createObjectBuilder()
-            .add("StringField", "a string")
-            .add("Int32Field", 32) 
-            .add("Int64Field", 64) 
-            .add("DoubleField", 1.1) 
-            .add("FloatField", 1) 
-            .add("BoolField", true) 
-            .add("BytesField",  Base64.getEncoder().encodeToString("bytes".getBytes())) 
-            .add("EnumField", 1)
-            .add("repeatedString", new JSONArray().put("one").put("two").put("three"))//[\"one\",\"two\",\"three\"]",
-            .add("repeatedInt32", )//[32,64,128]",
-            .add("repeatedInt64", )//[64,128,256]",
-            .add("repeatedDouble", )//[1.0,1.2,1.3]",
-            .add("repeatedFloat", )//[1,2,3]),
-            .add("repeatedBool", )//[true,false,true]),
-            .add("repeatedBytes", )//["Ynl0ZXM=","Ynl0ZXM=","Ynl0ZXM="])
-            .add("repeatedEnum", );//[0,1,2])
+        JSONObject testPayloadObject = new JSONObject()
+            .put("StringField", "a string")
+            .put("Int32Field", 32) 
+            .put("Int64Field", 64) 
+            .put("DoubleField", 1.1) 
+            .put("FloatField", 1) 
+            .put("BoolField", true) 
+            .put("BytesField",  Base64.getEncoder().encodeToString("bytes".getBytes())) 
+            .put("EnumField", 1)
+            .put("repeatedString", new JSONArray().put("one").put("two").put("three"))
+            .put("repeatedInt32", new JSONArray().put(32).put(64).put(128))
+            .put("repeatedInt64", new JSONArray().put(64).put(128).put(256))
+            .put("repeatedDouble", new JSONArray().put(1.1).put(1.2).put(1.3))
+            .put("repeatedFloat", new JSONArray().put(1).put(2).put(3))
+            .put("repeatedBool", new JSONArray().put("true").put("false").put("true"))
+            .put("repeatedBytes", new JSONArray()
+                .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
+                .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
+                .put(Base64.getEncoder().encodeToString("bytes".getBytes())))
+            .put("repeatedEnum", new JSONArray().put(0).put(1).put(2));
         
-        String testPayload = "{" + String.join(",",
-            "\"StringField\":\"a string\"",
-            "\"Int32Field\" : 32", 
-            "\"Int64Field\" : 64", 
-            "\"DoubleField\" : 1.1", 
-            "\"FloatField\" : 1", 
-            "\"BoolField\" : true", 
-            "\"BytesField\" : \"" + Base64.getEncoder().encodeToString("bytes".getBytes()) + "\"", 
-            "\"EnumField\" : 1",
-            "\"repeatedString\" : [\"one\",\"two\",\"three\"]",
-            "\"repeatedInt32\" : [32,64,128]",
-            "\"repeatedInt64\" : [64,128,256]",
-            "\"repeatedDouble\" : [1.0,1.2,1.3]",
-            "\"repeatedFloat\" : [1,2,3]",
-            "\"repeatedBool\" : [true,false,true]",
-            "\"repeatedBytes\" : [\"Ynl0ZXM=\",\"Ynl0ZXM=\",\"Ynl0ZXM=\"]",
-            "\"repeatedEnum\" : [0,1,2]"
-        ) + "}";
+        JSONObject messageChild = new JSONObject(testPayloadObject.toString());
+        messageChild.remove("_ATTRIBUTES");
+        messageChild.put("stringMap", new JSONObject()
+            .put("timestamp", "2013-08-16T23:36:32.444Z")
+            .put("uuid", "123-456-abc")
+            .put("source", "test"));
 
+        testPayloadObject
+            .put("messageChild", messageChild)
+            .put("repeatedMessage", new JSONArray()
+                .put(messageChild)
+                .put(messageChild));
+
+        String testPayload = testPayloadObject.toString();
         byte[] payload = testPayload.getBytes(StandardCharsets.UTF_8);
         PubsubMessage pm = new PubsubMessage(payload, attributes);
 
@@ -168,6 +167,25 @@ public class GenericStreamPipelineTest {
         attributes.add(new TableRow().set("key", "source").set("value", "test"));
         attributes.add(new TableRow().set("key", "uuid").set("value", "123-456-abc"));
         attributes.add(new TableRow().set("key", "timestamp").set("value", "2013-08-16T23:36:32.444Z"));
+
+        TableRow childMessage = new TableRow()
+                .set("StringField", "a string")
+                .set("Int32Field", 32)
+                .set("Int64Field", 64)
+                .set("DoubleField", 1.1)
+                .set("FloatField", 1.0)
+                .set("BoolField", true)
+                .set("BytesField", "Ynl0ZXM=")
+                .set("EnumField", 1)
+                .set("repeatedString", Stream.of("one", "two", "three").collect(Collectors.toList()))
+                .set("repeatedInt32", Stream.of(32, 64, 128).collect(Collectors.toList()))
+                .set("repeatedInt64", Stream.of(64, 128, 256).collect(Collectors.toList()))
+                .set("repeatedDouble", Stream.of(1.1, 1.2, 1.3).collect(Collectors.toList()))
+                .set("repeatedFloat", Stream.of(1.0, 2.0, 3.0).collect(Collectors.toList()))
+                .set("repeatedBool", Stream.of(true, false, true).collect(Collectors.toList()))
+                .set("repeatedBytes", Stream.of("Ynl0ZXM=", "Ynl0ZXM=", "Ynl0ZXM=").collect(Collectors.toList()))
+                .set("repeatedEnum", Stream.of(0,1,2).collect(Collectors.toList()))
+                .set("stringMap", attributes);
 
         TableRow assertTableRow = new TableRow()
             .set("StringField", "a string")
@@ -178,24 +196,17 @@ public class GenericStreamPipelineTest {
             .set("BoolField", true)
             .set("BytesField", "Ynl0ZXM=")
             .set("EnumField", 1)
+            .set("messageChild", childMessage)
+            .set("repeatedMessage", Stream.of(childMessage,childMessage).collect(Collectors.toList()))
             .set("repeatedString", Stream.of("one", "two", "three").collect(Collectors.toList()))
             .set("repeatedInt32", Stream.of(32, 64, 128).collect(Collectors.toList()))
             .set("repeatedInt64", Stream.of(64, 128, 256).collect(Collectors.toList()))
-            .set("repeatedDouble", Stream.of(1.0, 1.2, 1.3).collect(Collectors.toList()))
+            .set("repeatedDouble", Stream.of(1.1, 1.2, 1.3).collect(Collectors.toList()))
             .set("repeatedFloat", Stream.of(1.0, 2.0, 3.0).collect(Collectors.toList()))
             .set("repeatedBool", Stream.of(true, false, true).collect(Collectors.toList()))
             .set("repeatedBytes", Stream.of("Ynl0ZXM=", "Ynl0ZXM=", "Ynl0ZXM=").collect(Collectors.toList()))
             .set("repeatedEnum", Stream.of(0,1,2).collect(Collectors.toList()))
             .set("_ATTRIBUTES", attributes);
-
-            TableRow childMessage = assertTableRow
-                .clone()
-                .set("stringMap", attributes);
-            childMessage.remove("_ATTRIBUTES");
-
-            assertTableRow
-                .set("messageChild", childMessage)
-                .set("repeatedMessage", Stream.of(childMessage,childMessage).collect(Collectors.toList()));
 
         LOG.info("payload: " + testPayload);
         TableSchema eventSchema = null;
