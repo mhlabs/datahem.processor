@@ -55,13 +55,13 @@ extend google.protobuf.FieldOptions {
 
     //replace value with first non-null value
     //Object [field1, field2, ...] Example: "removedDate, lastModifiedDate, creationDate"
-    string fieldCoalesce = 66666677; 
+    string BigQueryFieldCoalesce = 66666677; 
 
     //Divide field value with divisor
     //double [divisor] Example: "100"
-    string fieldDivide = 66666678;
+    string BigQueryFieldDivide = 66666678;
 
     //Filter string with regex pattern
     //String [pattern] Example: "^((?!0001-01-01.00:00:00).)*$"
-    string fieldFilter = 66666679;
+    string BigQueryFieldFilter = 66666679;
 }

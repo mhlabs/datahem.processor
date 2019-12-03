@@ -15,19 +15,81 @@ enum WithOptionsEnum {
 
 message TestWithOptions {
 
-    string StringField = 1 [
+    string StringAppendix = 1 [
         (datahem.options.BigQueryFieldAppend) = "Appendix"
     ];
 
-    int32 Int32Field = 2;
-
-    int64 Int64Field = 3;
-
-    double DoubleField = 4 [
-        (datahem.options.fieldDivide) = "10"
+    string StringFilter = 2 [
+        (datahem.options.BigQueryFieldFilter) = ".*filter.*"
     ];
 
-    float FloatField = 5;
+    string StringCoalesce = 3 [
+        (datahem.options.BigQueryFieldCoalesce) = "StringAppendix,StringFilter"
+    ];
+
+    double DoubleField = 4 [
+        (datahem.options.BigQueryFieldDivide) = "10"
+    ];
+
+    int32 Int32Field = 5;
+
+    int32 Int32Coalesce = 6 [
+        (datahem.options.BigQueryFieldCoalesce) = "Int32Field"
+    ];
+
+    string BigQueryDatetimeFiltered = 7 [
+        (datahem.options.BigQueryFieldType) = "DATETIME",
+        (datahem.options.BigQueryFieldFilter) = "^((?!0001-01-01.00:00:00).)*$"
+    ];
+
+    string BigQueryTimestampFiltered = 8 [
+        (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+        (datahem.options.BigQueryFieldFilter) = "^((?!0001-01-01.00:00:00).)*$"
+    ];
+
+    string BigQueryDatetimeNotFiltered = 9 [
+        (datahem.options.BigQueryFieldType) = "DATETIME",
+        (datahem.options.BigQueryFieldFilter) = "^((?!0001-01-01.00:00:00).)*$"
+    ];
+
+    string BigQueryTimestampNotFiltered = 10 [
+        (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+        (datahem.options.BigQueryFieldFilter) = "^((?!0001-01-01.00:00:00).)*$"
+    ];
+
+    string StringField = 11 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+    
+    int32 Int32Field = 12 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    int64 Int64Field = 13 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    double DoubleField = 14 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    float FloatField = 15 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    bool BoolField = 16 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    bytes BytesField = 17 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    WithOptionsEnum EnumField = 18 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+
 
     bool BoolField = 6;
 
