@@ -81,37 +81,37 @@ message TestSchemaOptions {
             (datahem.options.BigQueryFieldRename) = "RenamedRepeatedString"
     ];
 
-    repeated string repeatedInt32 = 12 [
+    repeated int32 repeatedInt32 = 12 [
             (datahem.options.BigQueryFieldDescription) = "A repeated int32.",
             (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
             (datahem.options.BigQueryFieldRename) = "RenamedRepeatedInt32"
     ];
 
-    repeated string repeatedInt64 = 13 [
+    repeated int64 repeatedInt64 = 13 [
             (datahem.options.BigQueryFieldDescription) = "A repeated int64.",
             (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
             (datahem.options.BigQueryFieldRename) = "RenamedRepeatedInt64"
     ];
 
-    repeated string repeatedDouble = 14 [
+    repeated double repeatedDouble = 14 [
             (datahem.options.BigQueryFieldDescription) = "A repeated double.",
             (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
             (datahem.options.BigQueryFieldRename) = "RenamedRepeatedDouble"
     ];
 
-    repeated string repeatedFloat = 15 [
+    repeated float repeatedFloat = 15 [
             (datahem.options.BigQueryFieldDescription) = "A repeated float.",
             (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
             (datahem.options.BigQueryFieldRename) = "RenamedRepeatedFloat"
     ];
 
-    repeated string repeatedBool = 16 [
+    repeated bool repeatedBool = 16 [
             (datahem.options.BigQueryFieldDescription) = "A repeated bool.",
             (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
             (datahem.options.BigQueryFieldRename) = "RenamedRepeatedBool"
     ];
 
-    repeated string repeatedBytes = 17 [
+    repeated bytes repeatedBytes = 17 [
             (datahem.options.BigQueryFieldDescription) = "A repeated bytes.",
             (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
             (datahem.options.BigQueryFieldRename) = "RenamedRepeatedBytes"

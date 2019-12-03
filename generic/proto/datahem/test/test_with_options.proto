@@ -39,22 +39,6 @@ message TestWithOptions {
 
     repeated MessageChildWithOptions repeatedMessage = 10;
 
-    repeated string repeatedString = 11;
-
-    repeated int32 repeatedInt32 = 12;
-
-    repeated int64 repeatedInt64 = 13;
-
-    repeated double repeatedDouble = 14;
-
-    repeated float repeatedFloat = 15;
-
-    repeated bool repeatedBool = 16;
-
-    repeated bytes repeatedBytes = 17;
-
-    repeated WithOptionsEnum repeatedEnum = 18;
-
     string BigQueryTime = 19 [
         (datahem.options.BigQueryFieldType) = "TIME",
         (datahem.options.BigQueryFieldAppend) = ":00"

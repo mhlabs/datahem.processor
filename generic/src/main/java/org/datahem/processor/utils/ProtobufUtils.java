@@ -537,8 +537,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 } else if (fieldType.contains("ENUM")) {
                     tableRow.set(fieldName, ((EnumValueDescriptor) message.getField(f)).getNumber());
                 } else if ((fieldType.contains("FLOAT")) && (useDefaultValue || hasField)) {
-                    double fieldValue = (double)(float) message.getField(f);
-                    fieldValue = fieldOptionDivide(fieldValue, fieldOptions);
+                    float fieldValue = (float) message.getField(f);
+                    //fieldValue = fieldOptionDivide(fieldValue, fieldOptions);
                     tableRow.set(fieldName, fieldValue);
                 } else if ((fieldType.contains("DOUBLE")) && (useDefaultValue || hasField)) {
                     double fieldValue = (double) message.getField(f);
@@ -607,7 +607,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                         tableRow.set(fieldName, values);
                     }
                 } else if (fieldType.contains("FLOAT")) {
-                    List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double)(float) e).collect(Collectors.toList());
+                    List<Float> values = ((List<Object>) message.getField(f)).stream().map(e -> (float) e).collect(Collectors.toList());
                     if(!values.isEmpty()){
                         tableRow.set(fieldName, values);
                     }
