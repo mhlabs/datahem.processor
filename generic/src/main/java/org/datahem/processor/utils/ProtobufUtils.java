@@ -315,6 +315,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 		for (FieldDescriptor f : fields) {
             HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
             if(!fieldOptionBigQueryHidden(fieldOptions)){
+                String fieldName = fieldOptionBigQueryRename(fieldOptions).orElse(f.getName().replace(".", "_"));
                 String description = ((Set<String>) fieldOptions.get("BigQueryFieldDescription")).stream().findFirst().orElse("");
                 final Pattern categoryFilter = Pattern.compile(taxonomyResourcePattern);
                 List<String> categories = ((Set<String>) fieldOptions.get("BigQueryFieldCategories"))
@@ -354,7 +355,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     schema_fields
                         .add(
                             new TableFieldSchema()
-                                .setName(f.getName().replace(".", "_"))
+                                //.setName(f.getName().replace(".", "_"))
+                                .setName(fieldName)
                                 .setType(type)
                                 .setMode(mode)
                                 .setFields(ts.getFields())
@@ -365,7 +367,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 if (!type.equals("RECORD")) {
                     schema_fields
                             .add(new TableFieldSchema()
-                                .setName(f.getName().replace(".", "_"))
+                                //.setName(f.getName().replace(".", "_"))
+                                .setName(fieldName)
                                 .setType(type)
                                 .setMode(mode)
                                 .setDescription(description)

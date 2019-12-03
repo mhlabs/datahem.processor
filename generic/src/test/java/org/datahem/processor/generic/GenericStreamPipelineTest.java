@@ -393,8 +393,8 @@ public class GenericStreamPipelineTest {
         
         TableSchema assertAttributesSchema = new TableSchema();
         List<TableFieldSchema> attributesFields = new ArrayList<TableFieldSchema>();
-        attributesFields.add(new TableFieldSchema().setName("key").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
-        attributesFields.add(new TableFieldSchema().setName("value").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
+        attributesFields.add(new TableFieldSchema().setName("key").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(new TableFieldSchema.Categories().setNames(null)));
+        attributesFields.add(new TableFieldSchema().setName("value").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(new TableFieldSchema.Categories().setNames(null)));
         assertAttributesSchema.setFields(attributesFields);
         
         TableSchema assertChildSchema = new TableSchema();
@@ -416,22 +416,22 @@ public class GenericStreamPipelineTest {
         fields.add(new TableFieldSchema().setName("RenamedFloat").setType("FLOAT").setMode("NULLABLE").setDescription("A float").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedBool").setType("BOOLEAN").setMode("NULLABLE").setDescription("A bool").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedBytes").setType("BYTES").setMode("NULLABLE").setDescription("A bytes").setCategories(fieldCategories));
-        fields.add(new TableFieldSchema().setName("RenamedEnum").setType("INTEGER").setMode("NULLABLE").setDescription("An enum").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedEnum").setType("INTEGER").setMode("NULLABLE").setDescription("An enum.").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedMessageChild").setType("RECORD").setMode("NULLABLE").setDescription("A message (record)").setFields(assertChildSchema.getFields()));
         fields.add(new TableFieldSchema().setName("RenamedRepeatedMessage").setType("RECORD").setMode("REPEATED").setDescription("A repeated message.").setFields(assertChildSchema.getFields()));
         fields.add(new TableFieldSchema().setName("RenamedRepeatedString").setType("STRING").setMode("REPEATED").setDescription("A repeated string.").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedRepeatedInt32").setType("INTEGER").setMode("REPEATED").setDescription("A repeated int32.").setCategories(fieldCategories));
-        fields.add(new TableFieldSchema().setName("RenamedRepeatedInt64").setType("INTEGER").setMode("REPEATED").setDescription("A reapeated int64.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedRepeatedInt64").setType("INTEGER").setMode("REPEATED").setDescription("A repeated int64.").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedRepeatedDouble").setType("FLOAT").setMode("REPEATED").setDescription("A repeated double.").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedRepeatedFloat").setType("FLOAT").setMode("REPEATED").setDescription("A repeated float.").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedRepeatedBool").setType("BOOLEAN").setMode("REPEATED").setDescription("A repeated bool.").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedRepeatedBytes").setType("BYTES").setMode("REPEATED").setDescription("A repeated bytes.").setCategories(fieldCategories));
-        fields.add(new TableFieldSchema().setName("RenamedRepeatedEnum").setType("INTEGER").setMode("REPEATED").setDescription("A repeated enoum.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedRepeatedEnum").setType("INTEGER").setMode("REPEATED").setDescription("A repeated enum.").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedBigQueryTime").setType("TIME").setMode("NULLABLE").setDescription("A BigQuery TIME.").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedBigQueryDate").setType("DATE").setMode("NULLABLE").setDescription("A BigQuery DATE.").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedBigQueryDatetime").setType("DATETIME").setMode("NULLABLE").setDescription("A BigQuery DATETIME.").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedBigQueryTimestamp").setType("TIMESTAMP").setMode("NULLABLE").setDescription("A BigQuery TIMESTAMP.").setCategories(fieldCategories));
-        fields.add(new TableFieldSchema().setName("_ATTRIBUTES").setType("RECORD").setMode("REPEATED").setDescription("A string map.").setFields(assertAttributesSchema.getFields()));
+        fields.add(new TableFieldSchema().setName("RenamedAttributesMap").setType("RECORD").setMode("REPEATED").setDescription("A string map.").setFields(assertAttributesSchema.getFields()));
         assertSchema.setFields(fields);
         
         //END OUTPUT TABLESCHEMA
