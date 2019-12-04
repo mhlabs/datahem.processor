@@ -1,4 +1,4 @@
-package org.datahem.processor.generic;
+package org.datahem.processor.dynamodb;
 
 /*-
  * ========================LICENSE_START=================================
@@ -16,7 +16,7 @@ package org.datahem.processor.generic;
 
 
 import io.anemos.metastore.core.proto.*;
-import org.datahem.processor.generic.GenericStreamPipeline.*;
+import org.datahem.processor.dynamodb.DynamoDbStreamPipeline.*;
 import org.datahem.processor.utils.ProtobufUtils;
 
 import com.google.gson.Gson;
@@ -106,9 +106,9 @@ import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 
 @RunWith(JUnit4.class)
-public class GenericStreamPipelineTest {
+public class DynamoDbStreamPipelineTest {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(GenericStreamPipelineTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DynamoDbStreamPipelineTest.class);
 	
 	@Rule public transient TestPipeline p = TestPipeline.create();
 
@@ -159,10 +159,12 @@ public class GenericStreamPipelineTest {
                 .put(messageChild)
                 .put(messageChild));
 
-        String testPayload = testPayloadObject.toString();
+        String testPayload = new JSONObject().put("NewImage",testPayloadObject).toString();
         byte[] payload = testPayload.getBytes(StandardCharsets.UTF_8);
         PubsubMessage pm = new PubsubMessage(payload, attributes);
+        //END INPUT
 
+        //BEGIN OUTPUT TABLEROW
         List<TableRow> attributes = new ArrayList<TableRow>();
         attributes.add(new TableRow().set("key", "source").set("value", "test"));
         attributes.add(new TableRow().set("key", "uuid").set("value", "123-456-abc"));
@@ -186,6 +188,12 @@ public class GenericStreamPipelineTest {
                 .set("repeatedBytes", Stream.of("Ynl0ZXM=", "Ynl0ZXM=", "Ynl0ZXM=").collect(Collectors.toList()))
                 .set("repeatedEnum", Stream.of(0,1,2).collect(Collectors.toList()))
                 .set("stringMap", attributes);
+        
+        attributes = new ArrayList<TableRow>();
+        attributes.add(new TableRow().set("key", "source").set("value", "test"));
+        attributes.add(new TableRow().set("key", "uuid").set("value", "123-456-abc"));
+        attributes.add(new TableRow().set("key", "operation").set("value", "INSERT"));
+        attributes.add(new TableRow().set("key", "timestamp").set("value", "2013-08-16T23:36:32.444Z"));
 
         TableRow assertTableRow = new TableRow()
             .set("StringField", "a string")
@@ -278,7 +286,7 @@ public class GenericStreamPipelineTest {
 
             PCollection<TableRow> output = p
                 .apply(Create.of(Arrays.asList(pm)))
-                .apply(ParDo.of(new GenericStreamPipeline.PubsubMessageToTableRowFn(
+                .apply(ParDo.of(new DynamoDbStreamPipeline.PubsubMessageToTableRowFn(
                     StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
                     StaticValueProvider.of("testSchemas.desc"),
                     StaticValueProvider.of("datahem.test.TestWithoutOptions"))));
@@ -339,7 +347,7 @@ public class GenericStreamPipelineTest {
             .put("HiddenStringField", "a hidden string");
             
 
-        String testPayload = testPayloadObject.toString();
+        String testPayload = new JSONObject().put("NewImage",testPayloadObject).toString();
         byte[] payload = testPayload.getBytes(StandardCharsets.UTF_8);
         PubsubMessage pm = new PubsubMessage(payload, attributes);
         //END INPUT
@@ -348,6 +356,7 @@ public class GenericStreamPipelineTest {
         List<TableRow> attributes = new ArrayList<TableRow>();
         attributes.add(new TableRow().set("key", "source").set("value", "test"));
         attributes.add(new TableRow().set("key", "uuid").set("value", "123-456-abc"));
+        attributes.add(new TableRow().set("key", "operation").set("value", "INSERT"));
         attributes.add(new TableRow().set("key", "timestamp").set("value", "2013-08-16T23:36:32.444Z"));
 
         TableRow childMessage = new TableRow()
@@ -450,7 +459,7 @@ public class GenericStreamPipelineTest {
 
             PCollection<TableRow> output = p
                 .apply(Create.of(Arrays.asList(pm)))
-                .apply(ParDo.of(new GenericStreamPipeline.PubsubMessageToTableRowFn(
+                .apply(ParDo.of(new DynamoDbStreamPipeline.PubsubMessageToTableRowFn(
                     StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
                     StaticValueProvider.of("testSchemas.desc"),
                     StaticValueProvider.of("datahem.test.TestSchemaOptions"))));
@@ -496,8 +505,8 @@ public class GenericStreamPipelineTest {
             .put("LocalTimestampWithoutOptionalTToUtc","2019-01-01 12:00:00")
             .put("LocalTimestampWithOptionalTToUtc","2019-01-01T12:00:00");
             
-
-        String testPayload = testPayloadObject.toString();
+ 
+        String testPayload = new JSONObject().put("NewImage",testPayloadObject).toString();
         byte[] payload = testPayload.getBytes(StandardCharsets.UTF_8);
         PubsubMessage pm = new PubsubMessage(payload, attributes);
         //END INPUT
@@ -506,6 +515,7 @@ public class GenericStreamPipelineTest {
         List<TableRow> attributes = new ArrayList<TableRow>();
         attributes.add(new TableRow().set("key", "source").set("value", "test"));
         attributes.add(new TableRow().set("key", "uuid").set("value", "123-456-abc"));
+        attributes.add(new TableRow().set("key", "operation").set("value", "INSERT"));
         attributes.add(new TableRow().set("key", "timestamp").set("value", "2013-08-16T23:36:32.444Z"));
 
         TableRow assertTableRow = new TableRow()
@@ -587,7 +597,7 @@ public class GenericStreamPipelineTest {
         try{
             PCollection<TableRow> output = p
                 .apply(Create.of(Arrays.asList(pm)))
-                .apply(ParDo.of(new GenericStreamPipeline.PubsubMessageToTableRowFn(
+                .apply(ParDo.of(new DynamoDbStreamPipeline.PubsubMessageToTableRowFn(
                     StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
                     StaticValueProvider.of("testSchemas.desc"),
                     StaticValueProvider.of("datahem.test.TestWithOptions"))));
@@ -598,4 +608,5 @@ public class GenericStreamPipelineTest {
             e.printStackTrace();
         }
     }
+
 }

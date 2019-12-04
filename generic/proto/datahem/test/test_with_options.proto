@@ -89,42 +89,43 @@ message TestWithOptions {
         (datahem.options.BigQueryFieldUseDefaultValue) = "false"
     ];
 
-    string BigQueryTime = 19 [
+    string BigQueryTimeAppend = 19 [
         (datahem.options.BigQueryFieldType) = "TIME",
         (datahem.options.BigQueryFieldAppend) = ":00"
     ];
 
-    string BigQueryDate = 20 [
-        (datahem.options.BigQueryFieldType) = "DATE"
-    ];
-
-    string BigQueryDatetime = 21 [
+    string BigQueryDatetimeAppend = 21 [
         (datahem.options.BigQueryFieldType) = "DATETIME",
         (datahem.options.BigQueryFieldAppend) = ":00"
     ];
 
-    string BigQueryTimestamp = 22 [
+    string BigQueryTimestampAppend = 22 [
         (datahem.options.BigQueryFieldType) = "TIMESTAMP",
         (datahem.options.BigQueryFieldAppend) = ":00"
     ];
 
+    string LocalTimestampWithWrongOffsetToUtc = 23  [
+            (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+            (datahem.options.BigQueryFieldRegexExtract) = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])(T| )(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]",
+            (datahem.options.BigQueryFieldLocalToUtc) = "Europe/Stockholm, yyyy-MM-dd'T'HH:mm:ss, yyyy-MM-dd'T'HH:mm:ssXXX"
+        ];
+
+    string DatetimeToDate = 24 [
+            (datahem.options.BigQueryFieldType) = "DATE",
+            (datahem.options.BigQueryFieldRegexExtract) = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])"
+        ];
+
+    string LocalTimestampWithoutOptionalTToUtc = 25 [
+            (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+            (datahem.options.BigQueryFieldRegexExtract) = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])(T| )(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]",
+            (datahem.options.BigQueryFieldLocalToUtc) = "Europe/Stockholm, yyyy-MM-dd['T'][ ]HH:mm:ss, yyyy-MM-dd'T'HH:mm:ssXXX"
+        ];
+    
+    string LocalTimestampWithOptionalTToUtc = 26 [
+            (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+            (datahem.options.BigQueryFieldRegexExtract) = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])(T| )(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]",
+            (datahem.options.BigQueryFieldLocalToUtc) = "Europe/Stockholm, yyyy-MM-dd['T'][ ]HH:mm:ss, yyyy-MM-dd'T'HH:mm:ssXXX"
+        ];
+
     map<string,string> _ATTRIBUTES = 300;
-
-}
-
-message MessageChildWithOptions {
-    string StringField = 1 [
-        (datahem.options.BigQueryFieldAppend) = "Appendix"
-    ];
-
-    int32 Int32Field = 2;
-
-    int64 Int64Field = 3;
-
-    double DoubleField = 4;
-
-    float FloatField = 5;
-
-    bool BoolField = 6;
-
 }

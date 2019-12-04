@@ -355,7 +355,6 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     schema_fields
                         .add(
                             new TableFieldSchema()
-                                //.setName(f.getName().replace(".", "_"))
                                 .setName(fieldName)
                                 .setType(type)
                                 .setMode(mode)
@@ -367,7 +366,6 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 if (!type.equals("RECORD")) {
                     schema_fields
                             .add(new TableFieldSchema()
-                                //.setName(f.getName().replace(".", "_"))
                                 .setName(fieldName)
                                 .setType(type)
                                 .setMode(mode)
@@ -418,7 +416,6 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             final Pattern pattern = Pattern.compile(regexExtract);
             Matcher matcher = pattern.matcher(value);
             if(matcher.find()){
-                //LOG.info("Regex: pattern: " + regexExtract + ", input: " + value + ", output: " + matcher.group(0));
                 return matcher.group(0);
             }
         }
@@ -459,7 +456,6 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             LocalDateTime localDateTime = LocalDateTime.parse(value, localFormatter);
             ZonedDateTime utcDateTime = localDateTime.atZone(ZoneId.of(localTimezone)).withZoneSameInstant(ZoneId.of("UTC"));
             String utc = utcDateTime.format(utcFormatter);
-            //LOG.info("fieldOptionBigQueryLocalToUtc: input (local): " + value + ", output (utc): " + utc);
             return utc;
         }
         return value;
@@ -482,9 +478,9 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 
     public static Optional<Boolean> fieldOptionFilter(String value, HashMultimap<String, String> fieldOptions){
         String filterPattern = ((Set<String>) fieldOptions.get("BigQueryFieldFilter")).stream().findFirst().orElse("");
-        LOG.info(filterPattern);
         if(!filterPattern.isEmpty() && !value.isEmpty()){
-            return Optional.of(value.matches("filterPattern"));
+            LOG.info(filterPattern);
+            return Optional.of(value.matches(filterPattern));
         }
         return Optional.empty();
     }
@@ -542,7 +538,6 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     tableRow.set(fieldName, ((EnumValueDescriptor) fieldVal).getNumber());
                 } else if ((fieldType.contains("FLOAT")) && (useDefaultValue || hasField)) {
                     float fieldValue = (float) fieldVal;
-                    //fieldValue = fieldOptionDivide(fieldValue, fieldOptions);
                     tableRow.set(fieldName, fieldValue);
                 } else if ((fieldType.contains("DOUBLE")) && (useDefaultValue || hasField)) {
                     double fieldValue = (double) fieldVal;
