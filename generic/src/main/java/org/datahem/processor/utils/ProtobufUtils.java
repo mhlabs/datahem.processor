@@ -435,7 +435,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
     }
 
     public static double fieldOptionDivide(Double value, HashMultimap<String, String> fieldOptions){
-        String divisorString = ((Set<String>) fieldOptions.get("fieldDivide")).stream().findFirst().orElse("");
+        String divisorString = ((Set<String>) fieldOptions.get("BigQueryFieldDivide")).stream().findFirst().orElse("");
         if(!divisorString.isEmpty() && value != 0){
             double divisor = Double.parseDouble(divisorString);
             return value/divisor;
@@ -481,7 +481,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 */
 
     public static Optional<Boolean> fieldOptionFilter(String value, HashMultimap<String, String> fieldOptions){
-        String filterPattern = ((Set<String>) fieldOptions.get("fieldFilter")).stream().findFirst().orElse("");
+        String filterPattern = ((Set<String>) fieldOptions.get("BigQueryFieldFilter")).stream().findFirst().orElse("");
+        LOG.info(filterPattern);
         if(!filterPattern.isEmpty() && !value.isEmpty()){
             return Optional.of(value.matches("filterPattern"));
         }
@@ -489,7 +490,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
     }
 
     public static Optional<Object> fieldOptionCoalesce(Message message, Descriptor descriptor, HashMultimap<String, String> fieldOptions){
-        String coalesceSettings = ((Set<String>) fieldOptions.get("fieldCoalesce")).stream().findFirst().orElse("");
+        String coalesceSettings = ((Set<String>) fieldOptions.get("BigQueryFieldCoalesce")).stream().findFirst().orElse("");
         if(!coalesceSettings.isEmpty()){
             String[] coalesceSettingsArr = coalesceSettings.split(",");
 
@@ -517,38 +518,38 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             if (!f.isRepeated() ) {
                 boolean useDefaultValue = fieldOptionBigQueryUseDefaultValue(fieldOptions);
                 boolean hasField = message.hasField(f);
-                if (fieldType.contains("STRING") && (useDefaultValue || hasField)) {
-                    String fieldValue = String.valueOf(message.getField(f));
+                if (fieldType.contains("STRING") && (useDefaultValue || hasField) && fieldOptionFilter(String.valueOf(fieldVal), fieldOptions).orElse(true)) {
+                    String fieldValue = String.valueOf(fieldVal);
                     fieldValue = fieldOptionBigQueryRegexExtract(fieldValue, fieldOptions);
                     fieldValue = fieldOptionBigQueryAppend(fieldValue, fieldOptions);
                     fieldValue = fieldOptionBigQueryRegexReplace(fieldValue, fieldOptions);
                     tableRow.set(fieldName, fieldValue);
-                } else if (fieldType.contains("BYTES")) {
-                    tableRow.set(fieldName, ((ByteString) message.getField(f)).toByteArray());
+                } else if (fieldType.contains("BYTES") && (useDefaultValue || hasField)) {
+                    tableRow.set(fieldName, ((ByteString) fieldVal).toByteArray());
                     
                 } else if (fieldType.contains("INT32") && (useDefaultValue || hasField)) {
-                    tableRow.set(fieldName, (int) message.getField(f));
+                    tableRow.set(fieldName, (int) fieldVal);
                 } else if (fieldType.contains("INT64") && (useDefaultValue || hasField)) {
-                    tableRow.set(fieldName, (long) message.getField(f));
+                    tableRow.set(fieldName, (long) fieldVal);
                 } else if (fieldType.contains("BOOL") && (useDefaultValue || hasField)) {
                     // fix since JsonFormat.parseBool only parse "true", not "True" or "TRUE"
-                    if(message.getField(f) instanceof String){
-                        tableRow.set(fieldName, Boolean.parseBoolean(String.valueOf(message.getField(f))));
+                    if(fieldVal instanceof String){
+                        tableRow.set(fieldName, Boolean.parseBoolean(String.valueOf(fieldVal)));
                     }else{
-                        tableRow.set(fieldName, (boolean) message.getField(f));
+                        tableRow.set(fieldName, (boolean) fieldVal);
                     }
-                } else if (fieldType.contains("ENUM")) {
-                    tableRow.set(fieldName, ((EnumValueDescriptor) message.getField(f)).getNumber());
+                } else if (fieldType.contains("ENUM") && (useDefaultValue || hasField)) {
+                    tableRow.set(fieldName, ((EnumValueDescriptor) fieldVal).getNumber());
                 } else if ((fieldType.contains("FLOAT")) && (useDefaultValue || hasField)) {
-                    float fieldValue = (float) message.getField(f);
+                    float fieldValue = (float) fieldVal;
                     //fieldValue = fieldOptionDivide(fieldValue, fieldOptions);
                     tableRow.set(fieldName, fieldValue);
                 } else if ((fieldType.contains("DOUBLE")) && (useDefaultValue || hasField)) {
-                    double fieldValue = (double) message.getField(f);
+                    double fieldValue = (double) fieldVal;
                     fieldValue = fieldOptionDivide(fieldValue, fieldOptions);
                     tableRow.set(fieldName, fieldValue);
                 } else if(Arrays.stream(bigQueryStandardSqlDateTimeTypes).anyMatch(fieldType::equals)) {
-                    String fieldValue = String.valueOf(message.getField(f));
+                    String fieldValue = String.valueOf(fieldVal);
                     if (!fieldValue.isEmpty() && fieldOptionFilter(fieldValue, fieldOptions).orElse(true)){
                         fieldValue = fieldOptionBigQueryRegexExtract(fieldValue, fieldOptions);
                         fieldValue = fieldOptionBigQueryAppend(fieldValue, fieldOptions);
@@ -558,7 +559,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     }
                 } else if (fieldType.contains("MESSAGE")) {
                     if (message.getAllFields().containsKey(f)) {
-                        TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType(), protoDescriptor);
+                        TableRow tr = makeTableRow((Message) fieldVal, f.getMessageType(), protoDescriptor);
                         if(!tr.isEmpty()){
                             tableRow.set(fieldName, tr);
                         }

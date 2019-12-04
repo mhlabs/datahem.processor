@@ -57,49 +57,37 @@ message TestWithOptions {
         (datahem.options.BigQueryFieldFilter) = "^((?!0001-01-01.00:00:00).)*$"
     ];
 
-    string StringField = 11 [
+    string StringDefaultFalse = 11 [
         (datahem.options.BigQueryFieldUseDefaultValue) = "false"
     ];
     
-    int32 Int32Field = 12 [
+    int32 Int32DefaultFalse = 12 [
         (datahem.options.BigQueryFieldUseDefaultValue) = "false"
     ];
 
-    int64 Int64Field = 13 [
+    int64 Int64DefaultFalse = 13 [
         (datahem.options.BigQueryFieldUseDefaultValue) = "false"
     ];
 
-    double DoubleField = 14 [
+    double DoubleDefaultFalse = 14 [
         (datahem.options.BigQueryFieldUseDefaultValue) = "false"
     ];
 
-    float FloatField = 15 [
+    float FloatDefaultFalse = 15 [
         (datahem.options.BigQueryFieldUseDefaultValue) = "false"
     ];
 
-    bool BoolField = 16 [
+    bool BoolDefaultFalse = 16 [
         (datahem.options.BigQueryFieldUseDefaultValue) = "false"
     ];
 
-    bytes BytesField = 17 [
+    bytes BytesDefaultFalse = 17 [
         (datahem.options.BigQueryFieldUseDefaultValue) = "false"
     ];
 
-    WithOptionsEnum EnumField = 18 [
+    WithOptionsEnum EnumDefaultFalse = 18 [
         (datahem.options.BigQueryFieldUseDefaultValue) = "false"
     ];
-
-
-
-    bool BoolField = 6;
-
-    bytes BytesField = 7;
-
-    WithOptionsEnum EnumField = 8;
-
-    MessageChildWithOptions messageChild = 9;
-
-    repeated MessageChildWithOptions repeatedMessage = 10;
 
     string BigQueryTime = 19 [
         (datahem.options.BigQueryFieldType) = "TIME",
@@ -119,6 +107,8 @@ message TestWithOptions {
         (datahem.options.BigQueryFieldType) = "TIMESTAMP",
         (datahem.options.BigQueryFieldAppend) = ":00"
     ];
+
+    map<string,string> _ATTRIBUTES = 300;
 
 }
 

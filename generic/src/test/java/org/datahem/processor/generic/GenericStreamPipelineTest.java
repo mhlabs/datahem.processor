@@ -296,6 +296,7 @@ public class GenericStreamPipelineTest {
     }
 */
 
+/*
     @Test
 	public void withSchemaOptionsTest(){
 
@@ -458,6 +459,183 @@ public class GenericStreamPipelineTest {
                     StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
                     StaticValueProvider.of("testSchemas.desc"),
                     StaticValueProvider.of("datahem.test.TestSchemaOptions"))));
+            PAssert.that(output).containsInAnyOrder(assertTableRow);
+            p.run();
+
+            Assert.assertEquals(eventSchema, assertSchema);
+        }catch (Exception e) {
+            LOG.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }*/
+
+    
+    @Test
+	public void withOptionsTest(){
+
+        //BEGIN INPUT
+        JSONObject messageChild = new JSONObject()
+            .put("StringField", "a string")
+            .put("Int32Field", 32) 
+            .put("Int64Field", 64) 
+            .put("DoubleField", 1.1) 
+            .put("FloatField", 1.1) 
+            .put("BoolField", true) 
+            .put("HiddenStringField", "a hidden string");
+
+        JSONObject testPayloadObject = new JSONObject()
+            .put("StringAppendix", "a string")
+            .put("StringFilter", "filter a string")
+            .put("StringCoalesce", "")
+            .put("DoubleField", 100)/*
+            .put("Int32Field", 32) 
+            .put("Int64Field", 64) 
+            .put("DoubleField", 1.1) 
+            .put("FloatField", 1.1) 
+            .put("BoolField", true) 
+            .put("BytesField",  Base64.getEncoder().encodeToString("bytes".getBytes())) 
+            .put("EnumField", 1)
+            .put("messageChild", messageChild)
+            .put("repeatedMessage", new JSONArray()
+                .put(messageChild)
+                .put(messageChild))
+            .put("repeatedString", new JSONArray().put("one").put("two").put("three"))
+            .put("repeatedInt32", new JSONArray().put(32).put(64).put(128))
+            .put("repeatedInt64", new JSONArray().put(64).put(128).put(256))
+            .put("repeatedDouble", new JSONArray().put(1.1).put(1.2).put(1.3))
+            .put("repeatedFloat", new JSONArray().put(1.1).put(1.2).put(1.3))
+            .put("repeatedBool", new JSONArray().put("true").put("false").put("true"))
+            .put("repeatedBytes", new JSONArray()
+                .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
+                .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
+                .put(Base64.getEncoder().encodeToString("bytes".getBytes())))
+            .put("repeatedEnum", new JSONArray().put(0).put(1).put(2))
+            .put("HiddenStringField", "a hidden string")
+            .put("BigQueryTime", "19:00:00")
+            .put("BigQueryDate", "2019-12-03")
+            .put("BigQueryDatetime", "2019-12-03 19:00:00")
+            .put("BigQueryTimestamp", "2019-12-03T21:00:00+02:00")
+            .put("HiddenStringField", "a hidden string")*/;
+            
+
+        String testPayload = testPayloadObject.toString();
+        byte[] payload = testPayload.getBytes(StandardCharsets.UTF_8);
+        PubsubMessage pm = new PubsubMessage(payload, attributes);
+        //END INPUT
+
+        //BEGIN OUTPUT TABLEROW
+        List<TableRow> attributes = new ArrayList<TableRow>();
+        attributes.add(new TableRow().set("key", "source").set("value", "test"));
+        attributes.add(new TableRow().set("key", "uuid").set("value", "123-456-abc"));
+        attributes.add(new TableRow().set("key", "timestamp").set("value", "2013-08-16T23:36:32.444Z"));
+
+        TableRow childMessage = new TableRow()
+                .set("RenamedChildString", "a string")
+                .set("RenamedChildInt32", 32)
+                .set("RenamedChildInt64", 64)
+                .set("RenamedChildDouble", 1.1d)
+                .set("RenamedChildFloat", 1.1f)
+                .set("RenamedChildBool", true);
+
+        TableRow assertTableRow = new TableRow()
+            .set("StringAppendix", "a stringAppendix")
+            .set("DoubleField", 10)
+            /*
+            .set("RenamedInt32", 32)
+            .set("RenamedInt64", 64L)
+            .set("RenamedDouble", 1.1d)
+            .set("RenamedFloat", 1.1f)
+            .set("RenamedBool", true)
+            .set("RenamedBytes", "Ynl0ZXM=")
+            .set("RenamedEnum", 1)
+            .set("RenamedMessageChild", childMessage)
+            .set("RenamedRepeatedMessage", Stream.of(childMessage,childMessage).collect(Collectors.toList()))
+            .set("RenamedRepeatedString", Stream.of("one", "two", "three").collect(Collectors.toList()))
+            .set("RenamedRepeatedInt32", Stream.of(32, 64, 128).collect(Collectors.toList()))
+            .set("RenamedRepeatedInt64", Stream.of(64L, 128L, 256L).collect(Collectors.toList()))
+            .set("RenamedRepeatedDouble", Stream.of(1.1d, 1.2d, 1.3d).collect(Collectors.toList()))
+            .set("RenamedRepeatedFloat", Stream.of(1.1f, 1.2f, 1.3f).collect(Collectors.toList()))
+            .set("RenamedRepeatedBool", Stream.of(true, false, true).collect(Collectors.toList()))
+            .set("RenamedRepeatedBytes", Stream.of("Ynl0ZXM=", "Ynl0ZXM=", "Ynl0ZXM=").collect(Collectors.toList()))
+            .set("RenamedRepeatedEnum", Stream.of(0,1,2).collect(Collectors.toList()))
+            .set("RenamedBigQueryTime", "19:00:00")
+            .set("RenamedBigQueryDate", "2019-12-03")
+            .set("RenamedBigQueryDatetime", "2019-12-03 19:00:00")
+            .set("RenamedBigQueryTimestamp", "2019-12-03T21:00:00+02:00")*/
+            .set("_ATTRIBUTES", attributes);
+            
+        //END OUTPUT TABLEROW
+        
+        //BEGIN OUTPUT TABLESCHEMA
+        TableFieldSchema.Categories fieldCategories = new TableFieldSchema.Categories().setNames(null);
+        
+        TableSchema assertAttributesSchema = new TableSchema();
+        List<TableFieldSchema> attributesFields = new ArrayList<TableFieldSchema>();
+        attributesFields.add(new TableFieldSchema().setName("key").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
+        attributesFields.add(new TableFieldSchema().setName("value").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
+        assertAttributesSchema.setFields(attributesFields);
+        
+        TableSchema assertChildSchema = new TableSchema();
+        List<TableFieldSchema> childFields = new ArrayList<TableFieldSchema>();
+        childFields.add(new TableFieldSchema().setName("RenamedChildString").setType("STRING").setMode("NULLABLE").setDescription("A String").setCategories(fieldCategories));
+        childFields.add(new TableFieldSchema().setName("RenamedChildInt32").setType("INTEGER").setMode("NULLABLE").setDescription("An int32").setCategories(fieldCategories));
+        childFields.add(new TableFieldSchema().setName("RenamedChildInt64").setType("INTEGER").setMode("NULLABLE").setDescription("An int64").setCategories(fieldCategories));
+        childFields.add(new TableFieldSchema().setName("RenamedChildDouble").setType("FLOAT").setMode("NULLABLE").setDescription("A double").setCategories(fieldCategories));
+        childFields.add(new TableFieldSchema().setName("RenamedChildFloat").setType("FLOAT").setMode("NULLABLE").setDescription("A float").setCategories(fieldCategories));
+        childFields.add(new TableFieldSchema().setName("RenamedChildBool").setType("BOOLEAN").setMode("NULLABLE").setDescription("A bool").setCategories(fieldCategories));
+        assertChildSchema.setFields(childFields);
+
+        TableSchema assertSchema = new TableSchema();
+        List<TableFieldSchema> fields = new ArrayList<TableFieldSchema>();
+        fields.add(new TableFieldSchema().setName("RenamedString").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));/*
+        fields.add(new TableFieldSchema().setName("RenamedInt32").setType("INTEGER").setMode("NULLABLE").setDescription("An int32").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedInt64").setType("INTEGER").setMode("NULLABLE").setDescription("An int64").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedDouble").setType("FLOAT").setMode("NULLABLE").setDescription("A double").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedFloat").setType("FLOAT").setMode("NULLABLE").setDescription("A float").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedBool").setType("BOOLEAN").setMode("NULLABLE").setDescription("A bool").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedBytes").setType("BYTES").setMode("NULLABLE").setDescription("A bytes").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedEnum").setType("INTEGER").setMode("NULLABLE").setDescription("An enum.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedMessageChild").setType("RECORD").setMode("NULLABLE").setDescription("A message (record)").setFields(assertChildSchema.getFields()));
+        fields.add(new TableFieldSchema().setName("RenamedRepeatedMessage").setType("RECORD").setMode("REPEATED").setDescription("A repeated message.").setFields(assertChildSchema.getFields()));
+        fields.add(new TableFieldSchema().setName("RenamedRepeatedString").setType("STRING").setMode("REPEATED").setDescription("A repeated string.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedRepeatedInt32").setType("INTEGER").setMode("REPEATED").setDescription("A repeated int32.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedRepeatedInt64").setType("INTEGER").setMode("REPEATED").setDescription("A repeated int64.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedRepeatedDouble").setType("FLOAT").setMode("REPEATED").setDescription("A repeated double.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedRepeatedFloat").setType("FLOAT").setMode("REPEATED").setDescription("A repeated float.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedRepeatedBool").setType("BOOLEAN").setMode("REPEATED").setDescription("A repeated bool.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedRepeatedBytes").setType("BYTES").setMode("REPEATED").setDescription("A repeated bytes.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedRepeatedEnum").setType("INTEGER").setMode("REPEATED").setDescription("A repeated enum.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedBigQueryTime").setType("TIME").setMode("NULLABLE").setDescription("A BigQuery TIME.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedBigQueryDate").setType("DATE").setMode("NULLABLE").setDescription("A BigQuery DATE.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedBigQueryDatetime").setType("DATETIME").setMode("NULLABLE").setDescription("A BigQuery DATETIME.").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("RenamedBigQueryTimestamp").setType("TIMESTAMP").setMode("NULLABLE").setDescription("A BigQuery TIMESTAMP.").setCategories(fieldCategories));*/
+        fields.add(new TableFieldSchema().setName("_ATTRIBUTES").setType("RECORD").setMode("REPEATED").setDescription("").setFields(assertAttributesSchema.getFields()));
+        assertSchema.setFields(fields);
+        
+        //END OUTPUT TABLESCHEMA
+
+        LOG.info("payload: " + testPayload);
+        TableSchema eventSchema = null;
+        String tableDescription = "";
+        try{
+            ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-descriptor", "testSchemas.desc");
+            Descriptor descriptor = protoDescriptor.getDescriptorByName("datahem.test.TestWithOptions");
+            eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, ".*1234567890.*");
+            LOG.info("eventSchema: " + eventSchema.toString());
+            HashMultimap<String, String> messageOptions = ProtobufUtils.getMessageOptions(protoDescriptor, descriptor);
+            tableDescription = ((Set<String>) messageOptions.get("BigQueryTableDescription")).stream().findFirst().orElse("");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try{
+
+            PCollection<TableRow> output = p
+                .apply(Create.of(Arrays.asList(pm)))
+                .apply(ParDo.of(new PubsubMessageToTableRowFn(
+                    StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
+                    StaticValueProvider.of("testSchemas.desc"),
+                    StaticValueProvider.of("datahem.test.TestWithOptions"))));
             PAssert.that(output).containsInAnyOrder(assertTableRow);
             p.run();
 

@@ -33,9 +33,9 @@ public final class Options {
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldLocalToUtc);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldHidden);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldUseDefaultValue);
-    registry.add(org.datahem.protobuf.options.Options.fieldCoalesce);
-    registry.add(org.datahem.protobuf.options.Options.fieldDivide);
-    registry.add(org.datahem.protobuf.options.Options.fieldFilter);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldCoalesce);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldDivide);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldFilter);
   }
 
   public static void registerAllExtensions(
@@ -225,7 +225,7 @@ public final class Options {
           .newFileScopedGeneratedExtension(
         java.lang.String.class,
         null);
-  public static final int FIELDCOALESCE_FIELD_NUMBER = 66666677;
+  public static final int BIGQUERYFIELDCOALESCE_FIELD_NUMBER = 66666677;
   /**
    * <pre>
    *replace value with first non-null value
@@ -237,11 +237,11 @@ public final class Options {
   public static final
     com.google.protobuf.GeneratedMessage.GeneratedExtension<
       com.google.protobuf.DescriptorProtos.FieldOptions,
-      java.lang.String> fieldCoalesce = com.google.protobuf.GeneratedMessage
+      java.lang.String> bigQueryFieldCoalesce = com.google.protobuf.GeneratedMessage
           .newFileScopedGeneratedExtension(
         java.lang.String.class,
         null);
-  public static final int FIELDDIVIDE_FIELD_NUMBER = 66666678;
+  public static final int BIGQUERYFIELDDIVIDE_FIELD_NUMBER = 66666678;
   /**
    * <pre>
    *Divide field value with divisor
@@ -253,11 +253,11 @@ public final class Options {
   public static final
     com.google.protobuf.GeneratedMessage.GeneratedExtension<
       com.google.protobuf.DescriptorProtos.FieldOptions,
-      java.lang.String> fieldDivide = com.google.protobuf.GeneratedMessage
+      java.lang.String> bigQueryFieldDivide = com.google.protobuf.GeneratedMessage
           .newFileScopedGeneratedExtension(
         java.lang.String.class,
         null);
-  public static final int FIELDFILTER_FIELD_NUMBER = 66666679;
+  public static final int BIGQUERYFIELDFILTER_FIELD_NUMBER = 66666679;
   /**
    * <pre>
    *Filter string with regex pattern
@@ -269,7 +269,7 @@ public final class Options {
   public static final
     com.google.protobuf.GeneratedMessage.GeneratedExtension<
       com.google.protobuf.DescriptorProtos.FieldOptions,
-      java.lang.String> fieldFilter = com.google.protobuf.GeneratedMessage
+      java.lang.String> bigQueryFieldFilter = com.google.protobuf.GeneratedMessage
           .newFileScopedGeneratedExtension(
         java.lang.String.class,
         null);
@@ -304,12 +304,12 @@ public final class Options {
       "ieldHidden\022\035.google.protobuf.FieldOption" +
       "s\030\263\201\345\037 \001(\t:F\n\034BigQueryFieldUseDefaultVal" +
       "ue\022\035.google.protobuf.FieldOptions\030\264\201\345\037 \001" +
-      "(\t:7\n\rfieldCoalesce\022\035.google.protobuf.Fi" +
-      "eldOptions\030\265\201\345\037 \001(\t:5\n\013fieldDivide\022\035.goo" +
-      "gle.protobuf.FieldOptions\030\266\201\345\037 \001(\t:5\n\013fi" +
-      "eldFilter\022\035.google.protobuf.FieldOptions" +
-      "\030\267\201\345\037 \001(\tB\036\n\034org.datahem.protobuf.option" +
-      "sb\006proto3"
+      "(\t:?\n\025BigQueryFieldCoalesce\022\035.google.pro" +
+      "tobuf.FieldOptions\030\265\201\345\037 \001(\t:=\n\023BigQueryF" +
+      "ieldDivide\022\035.google.protobuf.FieldOption" +
+      "s\030\266\201\345\037 \001(\t:=\n\023BigQueryFieldFilter\022\035.goog" +
+      "le.protobuf.FieldOptions\030\267\201\345\037 \001(\tB\036\n\034org" +
+      ".datahem.protobuf.optionsb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -336,9 +336,9 @@ public final class Options {
     bigQueryFieldLocalToUtc.internalInit(descriptor.getExtensions().get(9));
     bigQueryFieldHidden.internalInit(descriptor.getExtensions().get(10));
     bigQueryFieldUseDefaultValue.internalInit(descriptor.getExtensions().get(11));
-    fieldCoalesce.internalInit(descriptor.getExtensions().get(12));
-    fieldDivide.internalInit(descriptor.getExtensions().get(13));
-    fieldFilter.internalInit(descriptor.getExtensions().get(14));
+    bigQueryFieldCoalesce.internalInit(descriptor.getExtensions().get(12));
+    bigQueryFieldDivide.internalInit(descriptor.getExtensions().get(13));
+    bigQueryFieldFilter.internalInit(descriptor.getExtensions().get(14));
     com.google.protobuf.DescriptorProtos.getDescriptor();
   }
 
