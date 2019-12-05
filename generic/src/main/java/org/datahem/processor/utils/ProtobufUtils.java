@@ -109,13 +109,13 @@ public class ProtobufUtils {
         FileDescriptorProto fileDescriptorProto = inMap.get(name);
         List<FileDescriptor> dependencies = new ArrayList<>();
         if (fileDescriptorProto.getDependencyCount() > 0) {
-            LOG.info("more than 0 dependencies: " + fileDescriptorProto.toString());
+            //LOG.info("more than 0 dependencies: " + fileDescriptorProto.toString());
             fileDescriptorProto
                 .getDependencyList()
                 .forEach(dependencyName -> dependencies.add(convertToFileDescriptorMap(dependencyName, inMap, outMap)));
         }
         try {
-            LOG.info("Number of dependencies: " + Integer.toString(dependencies.size()));
+            //LOG.info("Number of dependencies: " + Integer.toString(dependencies.size()));
             FileDescriptor fileDescriptor = 
                 FileDescriptor.buildFrom(
                     fileDescriptorProto, dependencies.toArray(new FileDescriptor[dependencies.size()]));
@@ -304,8 +304,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
     }
 
     public static TableSchema makeTableSchema(ProtoDescriptor protoDescriptor, Descriptor descriptor, String taxonomyResourcePattern) {
-        LOG.info("Descriptor fullname: " + descriptor.getFullName());
-        LOG.info("messageOptions: " + descriptor.getOptions().toString());
+        //LOG.info("Descriptor fullname: " + descriptor.getFullName());
+        //LOG.info("messageOptions: " + descriptor.getOptions().toString());
 
         TableSchema res = new TableSchema();
 
@@ -375,7 +375,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             }
         }
 		res.setFields(schema_fields);
-        LOG.info("table schema" + res.toString());
+        //LOG.info("table schema" + res.toString());
 		return res;
 	}   
 
@@ -479,7 +479,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
     public static Optional<Boolean> fieldOptionFilter(String value, HashMultimap<String, String> fieldOptions){
         String filterPattern = ((Set<String>) fieldOptions.get("BigQueryFieldFilter")).stream().findFirst().orElse("");
         if(!filterPattern.isEmpty() && !value.isEmpty()){
-            LOG.info(filterPattern);
+            //LOG.info(filterPattern);
             return Optional.of(value.matches(filterPattern));
         }
         return Optional.empty();
@@ -493,11 +493,13 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             return Stream.of(coalesceSettingsArr)
                 .map(c -> message.hasField(descriptor.findFieldByName(c)) ? message.getField(descriptor.findFieldByName(c)) : null)
                 .filter(Objects::nonNull)
+                .filter(m -> {
+                    return String.valueOf(m).matches("^((?!0001-01-01.00:00:00).)*$"); //Treat 0001-01-01 00:00:00 as null
+                })
                 .findFirst();
                 //.orElse(null);
         } else{
             return Optional.empty();
-            //return null;
         }
     }
 

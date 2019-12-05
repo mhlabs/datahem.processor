@@ -270,14 +270,14 @@ public class DynamoDbStreamPipelineTest {
         fields.add(new TableFieldSchema().setName("_ATTRIBUTES").setType("RECORD").setMode("REPEATED").setDescription("").setFields(assertAttributesSchema.getFields()));
         assertSchema.setFields(fields);
 
-        LOG.info("payload: " + testPayload);
         TableSchema eventSchema = null;
         String tableDescription = "";
         try{
             ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-descriptor", "testSchemas.desc");
             Descriptor descriptor = protoDescriptor.getDescriptorByName("datahem.test.TestWithoutOptions");
             eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, ".*590903188537942776.*");
-            LOG.info("eventSchema: " + eventSchema.toString());
+            Assert.assertEquals(eventSchema, assertSchema);
+            LOG.info("withoutOptionsTest assert TableSchema without errors.");
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -292,8 +292,7 @@ public class DynamoDbStreamPipelineTest {
                     StaticValueProvider.of("datahem.test.TestWithoutOptions"))));
             PAssert.that(output).containsInAnyOrder(assertTableRow);
             p.run();
-
-            Assert.assertEquals(eventSchema, assertSchema);
+            LOG.info("withoutOptionsTest assert TableRow without errors.");
         }catch (Exception e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
@@ -443,14 +442,14 @@ public class DynamoDbStreamPipelineTest {
         
         //END OUTPUT TABLESCHEMA
 
-        LOG.info("payload: " + testPayload);
         TableSchema eventSchema = null;
         String tableDescription = "";
         try{
             ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-descriptor", "testSchemas.desc");
             Descriptor descriptor = protoDescriptor.getDescriptorByName("datahem.test.TestSchemaOptions");
             eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, ".*1234567890.*");
-            LOG.info("eventSchema: " + eventSchema.toString());
+            Assert.assertEquals(eventSchema, assertSchema);
+            LOG.info("withOptionsTest assert TableSchema without errors.");
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -465,8 +464,7 @@ public class DynamoDbStreamPipelineTest {
                     StaticValueProvider.of("datahem.test.TestSchemaOptions"))));
             PAssert.that(output).containsInAnyOrder(assertTableRow);
             p.run();
-
-            Assert.assertEquals(eventSchema, assertSchema);
+            LOG.info("withSchemaOptionsTest assert TableRow without errors.");
         }catch (Exception e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
@@ -533,6 +531,7 @@ public class DynamoDbStreamPipelineTest {
             .set("DatetimeToDate","2019-01-01")
             .set("LocalTimestampWithoutOptionalTToUtc","2019-01-01T11:00:00Z")
             .set("LocalTimestampWithOptionalTToUtc","2019-01-01T11:00:00Z")
+            .set("PartitionTimestamp", "2018-12-31T23:00:00Z")
             .set("_ATTRIBUTES", attributes);
             
         //END OUTPUT TABLEROW
@@ -573,12 +572,11 @@ public class DynamoDbStreamPipelineTest {
         fields.add(new TableFieldSchema().setName("DatetimeToDate").setType("DATE").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("LocalTimestampWithoutOptionalTToUtc").setType("TIMESTAMP").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("LocalTimestampWithOptionalTToUtc").setType("TIMESTAMP").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("PartitionTimestamp").setType("TIMESTAMP").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("_ATTRIBUTES").setType("RECORD").setMode("REPEATED").setDescription("").setFields(assertAttributesSchema.getFields()));
         assertSchema.setFields(fields);
         
         //END OUTPUT TABLESCHEMA
-
-        LOG.info("payload: " + testPayload);
         
         //Test Schema generation
         TableSchema eventSchema = null;
@@ -587,8 +585,8 @@ public class DynamoDbStreamPipelineTest {
             ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-descriptor", "testSchemas.desc");
             Descriptor descriptor = protoDescriptor.getDescriptorByName("datahem.test.TestWithOptions");
             eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, ".*1234567890.*");
-            LOG.info("eventSchema: " + eventSchema.toString());
             Assert.assertEquals(eventSchema, assertSchema);
+            LOG.info("withOptionsTest assert TableSchema without errors.");
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -603,6 +601,7 @@ public class DynamoDbStreamPipelineTest {
                     StaticValueProvider.of("datahem.test.TestWithOptions"))));
             PAssert.that(output).containsInAnyOrder(assertTableRow);
             p.run();
+            LOG.info("withOptionsTest assert TableRow without errors.");
         }catch (Exception e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
