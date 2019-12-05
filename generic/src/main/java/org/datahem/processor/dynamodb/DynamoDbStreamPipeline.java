@@ -49,6 +49,7 @@ import java.io.InputStream;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
+import org.apache.beam.sdk.io.gcp.bigquery.BigQueryInsertError;
 import org.apache.beam.sdk.io.gcp.bigquery.WriteResult;
 import org.apache.beam.sdk.io.gcp.bigquery.InsertRetryPolicy;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryHelpers;
@@ -147,6 +148,11 @@ public class DynamoDbStreamPipeline {
         @Description("BigQuery Table Spec [project_id]:[dataset_id].[table_id] or [dataset_id].[table_id]")
 		ValueProvider<String> getBigQueryTableSpec();
 		void setBigQueryTableSpec(ValueProvider<String> value);
+
+        @Description("BigQuery insert error table")
+		@Default.String("backup.error")
+		ValueProvider<String> getBigQueryErrorTableSpec();
+		void setBigQueryErrorTableSpec(ValueProvider<String> value);
 	}
 
     public static class PubsubMessageToTableRowFn extends DoFn<PubsubMessage,TableRow> {
@@ -172,9 +178,10 @@ public class DynamoDbStreamPipeline {
         }
 		
 		@ProcessElement
-			public void processElement(ProcessContext c) throws Exception {
+			//public void processElement(ProcessContext c) throws Exception {
+            public void processElement(@Element <PubsubMessage> pubsubMessage, ) throws Exception {
                 // Get pubsub message payload and attributes
-                PubsubMessage pubsubMessage = c.element();
+                //PubsubMessage pubsubMessage = c.element();
                 String pubsubPayload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
                 HashMap<String, String> attributes = new HashMap<String,String>();
                 attributes.putAll(pubsubMessage.getAttributeMap());
@@ -263,6 +270,14 @@ public class DynamoDbStreamPipeline {
 		Pipeline pipeline = Pipeline.create(options);
         TableSchema eventSchema = null;
         String tableDescription = "";
+        
+        TableSchema errorSchema = new TableSchema();
+        List<TableFieldSchema> errorSchemaFields = new ArrayList<TableFieldSchema>();
+        errorSchemaFields.add(new TableFieldSchema().setName("Table").setType("STRING").setMode("NULLABLE").setDescription(""));
+        errorSchemaFields.add(new TableFieldSchema().setName("TableRow").setType("STRING").setMode("NULLABLE").setDescription(""));
+        errorSchemaFields.add(new TableFieldSchema().setName("Error").setType("STRING").setMode("NULLABLE").setDescription(""));
+        errorSchemaFields.add(new TableFieldSchema().setName("ErrorType").setType("STRING").setMode("NULLABLE").setDescription(""));
+        errorSchema.setFields(errorSchemaFields);
 
         try{
             ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get());
@@ -301,21 +316,44 @@ public class DynamoDbStreamPipeline {
                     .withSchema(eventSchema)
                     .skipInvalidRows()
                     .ignoreUnknownValues()
-                    //.withExtendedErrorInfo()
+                    .withExtendedErrorInfo()
                     .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
                     .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
         writeResult
-            .getFailedInserts()
-            //.getFailedInsertsWithErr()
+            /*.getFailedInserts()
             .apply("LogFailedData", ParDo.of(new DoFn<TableRow, TableRow>() {
                 @ProcessElement
                 public void processElement(ProcessContext c) {
                     TableRow row = c.element();
                     LOG.error("Failed to insert: " + row.toString());
                 }
-            }));
+            }))*/
+            .getFailedInsertsWithErr()
+            .apply("Transform failed inserts", ParDo.of(new DoFn<BigQueryInsertError, TableRow>() {
+                @ProcessElement
+                public void processElement(ProcessContext c) {
+                    BigQueryInsertError bqError = c.element();
+                    TableRow bqErrorRow = new TableRow();
+                    bqErrorRow.set("Table", bqError.getTable().toString());
+                    bqErrorRow.set("TableRow", bqError.getRow().toString());
+                    bqErrorRow.set("Error", bqError.getError().toString());
+                    bqErrorRow.set("ErrorType", "BIGQUERY.INSERT_ERROR");
+                    LOG.error("Failed to insert: " + bqError.getError().toString());
+                    c.output(bqErrorRow);
+                }
+            }))
+            .apply("Write errors to bigquery error table", 
+                BigQueryIO
+                    .writeTableRows()
+                    .to(new TablePartition(options.getBigQueryErrorTableSpec(), "BigQuery Insert error table"))
+                    .withSchema(errorSchema)
+                    .skipInvalidRows()
+                    .ignoreUnknownValues()
+                    .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
+                    .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+                    .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
         
         pipeline.run();
     }
