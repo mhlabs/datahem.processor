@@ -185,93 +185,93 @@ public class DynamoDbStreamPipeline {
         }
 		
 		@ProcessElement
-			//public void processElement(ProcessContext c) throws Exception {
-            public void processElement(@Element PubsubMessage pubsubMessage, MultiOutputReceiver out) throws Exception {
-                // Get pubsub message payload and attributes
-                //PubsubMessage pubsubMessage = c.element();
-                String pubsubPayload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
-                HashMap<String, String> attributes = new HashMap<String,String>();
-                attributes.putAll(pubsubMessage.getAttributeMap());
+        public void processElement(@Element PubsubMessage pubsubMessage, MultiOutputReceiver out) throws Exception {
+            // Get pubsub message payload and attributes
+            String pubsubPayload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
+            HashMap<String, String> attributes = new HashMap<String,String>();
+            attributes.putAll(pubsubMessage.getAttributeMap());
 
-                JSONObject DynamoDbStreamObject = new JSONObject(pubsubPayload);
-                JSONObject payloadObject;
-                // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
-                if((DynamoDbStreamObject.isNull("OldImage") || DynamoDbStreamObject.getJSONObject("OldImage").isNull("Id"))){
-                    attributes.put("operation", "INSERT");
-                    payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
-                }else if(DynamoDbStreamObject.isNull("NewImage") || DynamoDbStreamObject.getJSONObject("NewImage").isNull("Id")){
-                    attributes.put("operation", "REMOVE");
-                    payloadObject = DynamoDbStreamObject.getJSONObject("OldImage");
-                }else {
-                    attributes.put("operation", "MODIFY");
-                    payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
-                }
+            JSONObject DynamoDbStreamObject = new JSONObject(pubsubPayload);
+            JSONObject payloadObject;
+            // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
+            if((DynamoDbStreamObject.isNull("OldImage") || DynamoDbStreamObject.getJSONObject("OldImage").isNull("Id"))){
+                attributes.put("operation", "INSERT");
+                payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
+            }else if(DynamoDbStreamObject.isNull("NewImage") || DynamoDbStreamObject.getJSONObject("NewImage").isNull("Id")){
+                attributes.put("operation", "REMOVE");
+                payloadObject = DynamoDbStreamObject.getJSONObject("OldImage");
+            }else {
+                attributes.put("operation", "MODIFY");
+                payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
+            }
 
-                // Add meta-data from dynamoDB stream event as attributes
-                if(!DynamoDbStreamObject.isNull("Published")){
-                    attributes.put("dynamoDbStreamPublished",DynamoDbStreamObject.getString("Published"));
-                }
-                if(!DynamoDbStreamObject.isNull("EventId")){
-                    attributes.put("dynamoDbStreamEventId",DynamoDbStreamObject.getString("EventId"));
-                }
+            // Add meta-data from dynamoDB stream event as attributes
+            if(!DynamoDbStreamObject.isNull("Published")){
+                attributes.put("dynamoDbStreamPublished",DynamoDbStreamObject.getString("Published"));
+            }
+            if(!DynamoDbStreamObject.isNull("EventId")){
+                attributes.put("dynamoDbStreamEventId",DynamoDbStreamObject.getString("EventId"));
+            }
 
-                String payload = payloadObject.toString();
+            String payload = payloadObject.toString();
 
-                // Parse json to protobuf
-                if(messageDescriptor == null){
-                    // fetch the message descriptor if current one is null for some reason
-                    LOG.warn("message descriptor is null, creating new from descriptor in cloud storage...");
-                    messageDescriptor = ProtobufUtils.getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
+            if(messageDescriptor == null){
+                // fetch the message descriptor if current one is null for some reason
+                LOG.warn("message descriptor is null, creating new from descriptor in cloud storage...");
+                messageDescriptor = ProtobufUtils.getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
+            }
+            if(protoDescriptor == null){
+                // fetch the proto descriptor if current one is null for some reason
+                LOG.warn("protoDescriptor is null, creating new from descriptor in cloud storage...");
+                protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
+            }
+            // Parse json to protobuf
+            try{
+                DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
+                try{
+                    // Parse but don't allow unknown fields
+                    JsonFormat.parser().merge(payload, builder);
+                }catch(InvalidProtocolBufferException e){
+                    // Alert if unknown fields exist in message
+                    LOG.error("Unknown fields in message, doesn't match current schema " + descriptorFullName.get(), e);
+                    builder.clear();
+                    // Parse but allow for unknown fields
+                    JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
                 }
-                if(protoDescriptor == null){
-                    // fetch the proto descriptor if current one is null for some reason
-                    LOG.warn("protoDescriptor is null, creating new from descriptor in cloud storage...");
-                    protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
-                }
-				try{
-                    DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
-                    try{
-                        // Parse but don't allow unknown fields
-                        JsonFormat.parser().merge(payload, builder);
-                    }catch(InvalidProtocolBufferException e){
-                        // Alert if unknown fields exist in message
-                        LOG.error("Unknown fields in message, doesn't match current schema " + descriptorFullName.get(), e);
-                        builder.clear();
-                        // Parse but allow for unknown fields
-                        JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
-                    }
-					try{
-                        // Add pubsub message attributes in a protobuf map
-                        attributes.entrySet().forEach(attribute -> {
-                            DynamicMessage.Builder attributeBuilder = DynamicMessage.newBuilder(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry")); // ATTRIBUTESEntry type is generated by protoc
-                            attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("key"), attribute.getKey());
-                            attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("value"), attribute.getValue());
-                            builder.addRepeatedField(messageDescriptor.findFieldByName("_ATTRIBUTES"),attributeBuilder.build());
-                            });
-                    }catch(java.lang.NullPointerException e){
-                        LOG.error("No _ATTRIBUTES field in message", e);
-                        LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
-                    }
-					DynamicMessage message = builder.build();
-                    //transform protobuf to tablerow
-                    TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor, protoDescriptor);
-                    out.get(successTag).output(tr);
-                    //c.output(tr);
+                try{
+                    // Add pubsub message attributes in a protobuf map
+                    attributes.entrySet().forEach(attribute -> {
+                        DynamicMessage.Builder attributeBuilder = DynamicMessage.newBuilder(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry")); // ATTRIBUTESEntry type is generated by protoc
+                        attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("key"), attribute.getKey());
+                        attributeBuilder.setField(messageDescriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("value"), attribute.getValue());
+                        builder.addRepeatedField(messageDescriptor.findFieldByName("_ATTRIBUTES"),attributeBuilder.build());
+                        });
                 }catch(java.lang.NullPointerException e){
-                    out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
-                    LOG.error("No descriptor?", e);
+                    LOG.error("No _ATTRIBUTES field in message", e);
                     LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
-				}catch(InvalidProtocolBufferException e){
-					LOG.error("invalid protocol buffer exception: ", e);
-                    LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
-				}catch(IllegalArgumentException e){
-                    LOG.error("IllegalArgumentException: ", e);
-                    LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
-				}catch(Exception e){
-                    LOG.error("Exception: ", e);
-                    LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
-				}
-    		}
+                }
+                DynamicMessage message = builder.build();
+                //transform protobuf to tablerow
+                TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor, protoDescriptor);
+                out.get(successTag).output(tr);
+            }catch(java.lang.NullPointerException e){
+                out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
+                LOG.error("No descriptor?", e);
+                LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
+            }catch(InvalidProtocolBufferException e){
+                out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
+                LOG.error("invalid protocol buffer exception: ", e);
+                LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
+            }catch(IllegalArgumentException e){
+                out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
+                LOG.error("IllegalArgumentException: ", e);
+                LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
+            }catch(Exception e){
+                out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
+                LOG.error("Exception: ", e);
+                LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
+            }
+        }
   }
 
 	public static void main(String[] args) throws IOException {
@@ -280,13 +280,7 @@ public class DynamoDbStreamPipeline {
         TableSchema eventSchema = null;
         String tableDescription = "";
         
-        TableSchema errorSchema = new TableSchema();
-        List<TableFieldSchema> errorSchemaFields = new ArrayList<TableFieldSchema>();
-        errorSchemaFields.add(new TableFieldSchema().setName("Target").setType("STRING").setMode("NULLABLE").setDescription(""));
-        errorSchemaFields.add(new TableFieldSchema().setName("Message").setType("STRING").setMode("NULLABLE").setDescription(""));
-        errorSchemaFields.add(new TableFieldSchema().setName("Error").setType("STRING").setMode("NULLABLE").setDescription(""));
-        errorSchemaFields.add(new TableFieldSchema().setName("ErrorType").setType("STRING").setMode("NULLABLE").setDescription(""));
-        errorSchema.setFields(errorSchemaFields);
+        TableSchema errorSchema = Failure.getTableSchema();
 
         try{
             ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get());
@@ -299,7 +293,6 @@ public class DynamoDbStreamPipeline {
             e.printStackTrace();
         }
 
-		//WriteResult writeResult = pipeline
         PCollectionTuple results = pipeline
             .apply("Read json as string from pubsub", 
                 PubsubIO
@@ -322,44 +315,40 @@ public class DynamoDbStreamPipeline {
                 TupleTagList.of(deadLetterTag)
             ));
             
-            
-            WriteResult writeResult = results.get(successTag)
-            .apply("Write to bigquery", 
-                BigQueryIO
-                    .writeTableRows()
-                    .to(new TablePartition(options.getBigQueryTableSpec(), tableDescription))
-                    .withSchema(eventSchema)
-                    .skipInvalidRows()
-                    .ignoreUnknownValues()
-                    .withExtendedErrorInfo()
-                    .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
-                    .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-                    .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
-
-        writeResult
-            .getFailedInsertsWithErr()
-            .apply("Transform failed inserts", ParDo.of(new DoFn<BigQueryInsertError, TableRow>() {
-                @ProcessElement
-                public void processElement(ProcessContext c) {
-                    BigQueryInsertError bqError = c.element();
-                    LOG.error("Failed to insert: " + bqError.getError().toString());
-                    c.output(new Failure(
-                        bqError.getTable().toString(), 
-                        bqError.getRow().toString(), 
-                        bqError.getError().toString(), 
-                        "BIGQUERY_INSERT_ERROR").getAsTableRow());
-                }
-            }))
-            .apply("Write errors to bigquery error table", 
-                BigQueryIO
-                    .writeTableRows()
-                    .to(new TablePartition(options.getBigQueryErrorTableSpec(), "BigQuery Insert error table"))
-                    .withSchema(errorSchema)
-                    .skipInvalidRows()
-                    .ignoreUnknownValues()
-                    .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
-                    .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-                    .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
+            results.get(successTag)
+                .apply("Write to bigquery", 
+                    BigQueryIO
+                        .writeTableRows()
+                        .to(new TablePartition(options.getBigQueryTableSpec(), tableDescription))
+                        .withSchema(eventSchema)
+                        .skipInvalidRows()
+                        .ignoreUnknownValues()
+                        .withExtendedErrorInfo()
+                        .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
+                        .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND))//;
+                .getFailedInsertsWithErr()
+                .apply("Transform failed inserts", ParDo.of(new DoFn<BigQueryInsertError, TableRow>() {
+                    @ProcessElement
+                    public void processElement(@Element BigQueryInsertError bqError, OutputReceiver<TableRow> out) {
+                        LOG.error("Failed to insert: " + bqError.getError().toString());
+                        out.output(new Failure(
+                            bqError.getTable().toString(), 
+                            bqError.getRow().toString(), 
+                            bqError.getError().toString(), 
+                            "BIGQUERY_INSERT_ERROR").getAsTableRow());
+                    }
+                }))
+                .apply("Write errors to bigquery error table", 
+                    BigQueryIO
+                        .writeTableRows()
+                        .to(new TablePartition(options.getBigQueryErrorTableSpec(), "BigQuery Insert error table"))
+                        .withSchema(errorSchema)
+                        .skipInvalidRows()
+                        .ignoreUnknownValues()
+                        .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
+                        .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
         
         results.get(deadLetterTag)
             .apply("Write processing errors to bigquery error table", 
