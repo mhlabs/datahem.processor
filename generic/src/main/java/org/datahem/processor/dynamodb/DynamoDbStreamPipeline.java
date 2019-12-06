@@ -16,6 +16,7 @@ package org.datahem.processor.dynamodb;
 
 import org.datahem.processor.utils.ProtobufUtils;
 import org.datahem.processor.utils.TablePartition;
+import org.datahem.processor.utils.Failure;
 import io.anemos.metastore.core.proto.*;
 
 import com.google.protobuf.util.JsonFormat;
@@ -273,35 +274,6 @@ public class DynamoDbStreamPipeline {
     		}
   }
 
-  public static class Failure{
-        private String target;
-        private String message;
-        private String error;
-        private String errorType;
-
-    public Failure(String target, String message, String error, String errorType){
-        this.target = target;
-        this.message = message;
-        this.error = error;
-        this.errorType = errorType;
-    }
-
-    public String getTarget(){return target;}
-    public String getMessage(){return message;}
-    public String getError(){return error;}
-    public String getErrorType(){return errorType;}
-
-    public TableRow getAsTableRow(){
-        TableRow outputRow = new TableRow();
-        outputRow.set("Target", this.getTarget());
-        outputRow.set("Message", this.getMessage());
-        outputRow.set("Error", this.getError());
-        outputRow.set("ErrorType", this.getError());
-        return outputRow;
-    }
-
-  }
-
 	public static void main(String[] args) throws IOException {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
@@ -365,14 +337,6 @@ public class DynamoDbStreamPipeline {
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
         writeResult
-            /*.getFailedInserts()
-            .apply("LogFailedData", ParDo.of(new DoFn<TableRow, TableRow>() {
-                @ProcessElement
-                public void processElement(ProcessContext c) {
-                    TableRow row = c.element();
-                    LOG.error("Failed to insert: " + row.toString());
-                }
-            }))*/
             .getFailedInsertsWithErr()
             .apply("Transform failed inserts", ParDo.of(new DoFn<BigQueryInsertError, TableRow>() {
                 @ProcessElement
@@ -384,13 +348,6 @@ public class DynamoDbStreamPipeline {
                         bqError.getRow().toString(), 
                         bqError.getError().toString(), 
                         "BIGQUERY_INSERT_ERROR").getAsTableRow());
-                    /*TableRow bqErrorRow = new TableRow();
-                    bqErrorRow.set("Target", bqError.getTable().toString());
-                    bqErrorRow.set("Message", bqError.getRow().toString());
-                    bqErrorRow.set("Error", bqError.getError().toString());
-                    bqErrorRow.set("ErrorType", "BIGQUERY_INSERT_ERROR");*/
-                    //LOG.error("Failed to insert: " + bqError.getError().toString());
-                    //c.output(bqErrorRow);
                 }
             }))
             .apply("Write errors to bigquery error table", 
@@ -405,19 +362,6 @@ public class DynamoDbStreamPipeline {
                     .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
         
         results.get(deadLetterTag)
-        /*
-            .apply("Transform processing errors", ParDo.of(new DoFn<TableRow, TableRow>() {
-                @ProcessElement
-                public void processElement(ProcessContext c) {
-                    Failure failure = c.element();
-                    TableRow outputRow = new TableRow();
-                    outputRow.set("Table", failure.getTable().toString());
-                    outputRow.set("TableRow", failure.toString());
-                    outputRow.set("Error", failure.getError().toString());
-                    outputRow.set("ErrorType", "BEAM_PROCESSING_ERROR");
-                    c.output(outputRow);
-                }
-            }))*/
             .apply("Write processing errors to bigquery error table", 
                 BigQueryIO
                     .writeTableRows()
