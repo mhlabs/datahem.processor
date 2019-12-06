@@ -77,6 +77,9 @@ import org.apache.beam.sdk.transforms.windowing.FixedWindows;
 import org.apache.beam.sdk.transforms.windowing.Window;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
+import org.apache.beam.sdk.values.PCollectionTuple;
+import org.apache.beam.sdk.values.TupleTag;
+import org.apache.beam.sdk.values.TupleTagList;
 
 import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
 import com.google.protobuf.Descriptors.FileDescriptor;
@@ -115,6 +118,9 @@ import org.slf4j.LoggerFactory;
 public class DynamoDbStreamPipeline {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(DynamoDbStreamPipeline.class);
+
+    final static TupleTag<TableRow> successTag = new TupleTag<TableRow>(){};
+    final static TupleTag<TableRow> deadLetterTag = new TupleTag<TableRow>(){};
 
 	public interface Options extends PipelineOptions, GcpOptions {
 
@@ -179,7 +185,7 @@ public class DynamoDbStreamPipeline {
 		
 		@ProcessElement
 			//public void processElement(ProcessContext c) throws Exception {
-            public void processElement(@Element <PubsubMessage> pubsubMessage, ) throws Exception {
+            public void processElement(@Element PubsubMessage pubsubMessage, MultiOutputReceiver out) throws Exception {
                 // Get pubsub message payload and attributes
                 //PubsubMessage pubsubMessage = c.element();
                 String pubsubPayload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
@@ -248,8 +254,10 @@ public class DynamoDbStreamPipeline {
 					DynamicMessage message = builder.build();
                     //transform protobuf to tablerow
                     TableRow tr = ProtobufUtils.makeTableRow(message, messageDescriptor, protoDescriptor);
-                    c.output(tr);
+                    out.get(successTag).output(tr);
+                    //c.output(tr);
                 }catch(java.lang.NullPointerException e){
+                    out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
                     LOG.error("No descriptor?", e);
                     LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
 				}catch(InvalidProtocolBufferException e){
@@ -265,6 +273,35 @@ public class DynamoDbStreamPipeline {
     		}
   }
 
+  public static class Failure{
+        private String target;
+        private String message;
+        private String error;
+        private String errorType;
+
+    public Failure(String target, String message, String error, String errorType){
+        this.target = target;
+        this.message = message;
+        this.error = error;
+        this.errorType = errorType;
+    }
+
+    public String getTarget(){return target;}
+    public String getMessage(){return message;}
+    public String getError(){return error;}
+    public String getErrorType(){return errorType;}
+
+    public TableRow getAsTableRow(){
+        TableRow outputRow = new TableRow();
+        outputRow.set("Target", this.getTarget());
+        outputRow.set("Message", this.getMessage());
+        outputRow.set("Error", this.getError());
+        outputRow.set("ErrorType", this.getError());
+        return outputRow;
+    }
+
+  }
+
 	public static void main(String[] args) throws IOException {
 		Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
 		Pipeline pipeline = Pipeline.create(options);
@@ -273,8 +310,8 @@ public class DynamoDbStreamPipeline {
         
         TableSchema errorSchema = new TableSchema();
         List<TableFieldSchema> errorSchemaFields = new ArrayList<TableFieldSchema>();
-        errorSchemaFields.add(new TableFieldSchema().setName("Table").setType("STRING").setMode("NULLABLE").setDescription(""));
-        errorSchemaFields.add(new TableFieldSchema().setName("TableRow").setType("STRING").setMode("NULLABLE").setDescription(""));
+        errorSchemaFields.add(new TableFieldSchema().setName("Target").setType("STRING").setMode("NULLABLE").setDescription(""));
+        errorSchemaFields.add(new TableFieldSchema().setName("Message").setType("STRING").setMode("NULLABLE").setDescription(""));
         errorSchemaFields.add(new TableFieldSchema().setName("Error").setType("STRING").setMode("NULLABLE").setDescription(""));
         errorSchemaFields.add(new TableFieldSchema().setName("ErrorType").setType("STRING").setMode("NULLABLE").setDescription(""));
         errorSchema.setFields(errorSchemaFields);
@@ -290,25 +327,31 @@ public class DynamoDbStreamPipeline {
             e.printStackTrace();
         }
 
-		WriteResult writeResult = pipeline
+		//WriteResult writeResult = pipeline
+        PCollectionTuple results = pipeline
             .apply("Read json as string from pubsub", 
                 PubsubIO
                     .readMessagesWithAttributes()
                     .fromSubscription(options.getPubsubSubscription())
                     .withIdAttribute("uuid")
-                    //.withTimestampAttribute("timestamp")
-                    ) //remove and rely on pubsub timestamp instead to avoid writing to partitions older than 31 days?
+                    )
+            .apply("Fixed Windows",
+                Window.<PubsubMessage>into(FixedWindows.of(Duration.standardMinutes(1)))
+                    .withAllowedLateness(Duration.standardDays(7))
+                    .discardingFiredPanes()
+                )
             // Combine steps PubsubMessage -> DynamicMessage -> TableRow into one step and make generic (beam 2.X will fix dynamic messages in proto coder)
             .apply("PubsubMessage to TableRow", ParDo.of(new PubsubMessageToTableRowFn(
 				options.getBucketName(),
                 options.getFileDescriptorName(),
                 options.getDescriptorFullName()
-            )))
-            .apply("Fixed Windows",
-                Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
-                    .withAllowedLateness(Duration.standardDays(7))
-                    .discardingFiredPanes()
-                )
+            )).withOutputTags(
+                successTag,
+                TupleTagList.of(deadLetterTag)
+            ));
+            
+            
+            WriteResult writeResult = results.get(successTag)
             .apply("Write to bigquery", 
                 BigQueryIO
                     .writeTableRows()
@@ -335,16 +378,47 @@ public class DynamoDbStreamPipeline {
                 @ProcessElement
                 public void processElement(ProcessContext c) {
                     BigQueryInsertError bqError = c.element();
-                    TableRow bqErrorRow = new TableRow();
-                    bqErrorRow.set("Table", bqError.getTable().toString());
-                    bqErrorRow.set("TableRow", bqError.getRow().toString());
-                    bqErrorRow.set("Error", bqError.getError().toString());
-                    bqErrorRow.set("ErrorType", "BIGQUERY.INSERT_ERROR");
                     LOG.error("Failed to insert: " + bqError.getError().toString());
-                    c.output(bqErrorRow);
+                    c.output(new Failure(
+                        bqError.getTable().toString(), 
+                        bqError.getRow().toString(), 
+                        bqError.getError().toString(), 
+                        "BIGQUERY_INSERT_ERROR").getAsTableRow());
+                    /*TableRow bqErrorRow = new TableRow();
+                    bqErrorRow.set("Target", bqError.getTable().toString());
+                    bqErrorRow.set("Message", bqError.getRow().toString());
+                    bqErrorRow.set("Error", bqError.getError().toString());
+                    bqErrorRow.set("ErrorType", "BIGQUERY_INSERT_ERROR");*/
+                    //LOG.error("Failed to insert: " + bqError.getError().toString());
+                    //c.output(bqErrorRow);
                 }
             }))
             .apply("Write errors to bigquery error table", 
+                BigQueryIO
+                    .writeTableRows()
+                    .to(new TablePartition(options.getBigQueryErrorTableSpec(), "BigQuery Insert error table"))
+                    .withSchema(errorSchema)
+                    .skipInvalidRows()
+                    .ignoreUnknownValues()
+                    .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
+                    .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+                    .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
+        
+        results.get(deadLetterTag)
+        /*
+            .apply("Transform processing errors", ParDo.of(new DoFn<TableRow, TableRow>() {
+                @ProcessElement
+                public void processElement(ProcessContext c) {
+                    Failure failure = c.element();
+                    TableRow outputRow = new TableRow();
+                    outputRow.set("Table", failure.getTable().toString());
+                    outputRow.set("TableRow", failure.toString());
+                    outputRow.set("Error", failure.getError().toString());
+                    outputRow.set("ErrorType", "BEAM_PROCESSING_ERROR");
+                    c.output(outputRow);
+                }
+            }))*/
+            .apply("Write processing errors to bigquery error table", 
                 BigQueryIO
                     .writeTableRows()
                     .to(new TablePartition(options.getBigQueryErrorTableSpec(), "BigQuery Insert error table"))
