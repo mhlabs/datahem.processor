@@ -342,7 +342,7 @@ public class DynamoDbStreamPipeline {
                 .apply("Write errors to bigquery error table", 
                     BigQueryIO
                         .writeTableRows()
-                        .to(new TablePartition(options.getBigQueryErrorTableSpec(), "BigQuery Insert error table"))
+                        .to(new TablePartition(options.getBigQueryErrorTableSpec().get(), "BigQuery Insert error table"))
                         .withSchema(errorSchema)
                         .skipInvalidRows()
                         .ignoreUnknownValues()
