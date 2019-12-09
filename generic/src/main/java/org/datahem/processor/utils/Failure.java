@@ -43,7 +43,7 @@ import java.util.List;
         outputRow.set("Target", this.getTarget());
         outputRow.set("Message", this.getMessage());
         outputRow.set("Error", this.getError());
-        outputRow.set("ErrorType", this.getError());
+        outputRow.set("ErrorType", this.getErrorType());
         return outputRow;
     }
 
