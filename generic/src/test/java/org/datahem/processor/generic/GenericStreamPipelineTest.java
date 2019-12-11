@@ -474,6 +474,7 @@ public class GenericStreamPipelineTest {
             .put("DoubleField", 100.0)
             .put("Int32Field", 10)
             .put("BigQueryDatetimeFiltered","0001-01-01 00:00:00")
+            //.put("BigQueryDatetimeFiltered","")
             .put("BigQueryTimestampFiltered","0001-01-01T00:00:00+02:00")
             .put("BigQueryDatetimeNotFiltered","2019-01-01 00:00:00")
             .put("BigQueryTimestampNotFiltered","2019-01-01T00:00:00+02:00")

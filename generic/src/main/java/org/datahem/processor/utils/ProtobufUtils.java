@@ -494,7 +494,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 .map(c -> message.hasField(descriptor.findFieldByName(c)) ? message.getField(descriptor.findFieldByName(c)) : null)
                 .filter(Objects::nonNull)
                 .filter(m -> {
-                    return String.valueOf(m).matches("^((?!0001-01-01.00:00:00).)*$"); //Treat 0001-01-01 00:00:00 as null
+                    return (!String.valueOf(m).isEmpty() && String.valueOf(m).matches("^((?!0001-01-01.00:00:00).)*$")); //Treat 0001-01-01 00:00:00 as null
                 })
                 .findFirst();
                 //.orElse(null);
