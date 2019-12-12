@@ -326,7 +326,7 @@ public class DynamoDbStreamPipeline {
                         .withExtendedErrorInfo()
                         .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
                         .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND))//;
+                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND))
                 .getFailedInsertsWithErr()
                 .apply("Transform failed inserts", ParDo.of(new DoFn<BigQueryInsertError, TableRow>() {
                     @ProcessElement
@@ -339,6 +339,10 @@ public class DynamoDbStreamPipeline {
                             "BIGQUERY_INSERT_ERROR").getAsTableRow());
                     }
                 }))
+                .apply("Fixed Windows",
+                    Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
+                        .withAllowedLateness(Duration.standardDays(7))
+                        .discardingFiredPanes())
                 .apply("Write errors to bigquery error table", 
                     BigQueryIO
                         .writeTableRows()
