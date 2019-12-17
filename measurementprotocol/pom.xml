@@ -200,52 +200,50 @@
       <version>${beam.version}</version>
     </dependency>
     <dependency>
-   <groupId>org.apache.beam</groupId>
-   <artifactId>beam-runners-direct-java</artifactId>
-   <version>${beam.version}</version>
-   <scope>runtime</scope>
-</dependency>
+        <groupId>org.apache.beam</groupId>
+        <artifactId>beam-runners-direct-java</artifactId>
+        <version>${beam.version}</version>
+        <scope>runtime</scope>
+    </dependency>
 
 
 <!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-bigquery -->
+<!--
 <dependency>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-bigquery</artifactId>
     <version>1.49.0</version>
-</dependency>
+</dependency>-->
 
 <!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client -->
+    <!--
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client</artifactId>
       <version>1.22.0</version>
-      <!--    <version>1.23.0</version> -->
       <exclusions>
-        <!-- Exclude an old version of guava that is being pulled
-             in by a transitive dependency of google-api-client -->
         <exclusion>
           <groupId>com.google.guava</groupId>
           <artifactId>guava-jdk5</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
-
+-->
 
 <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-pubsub -->
+    <!--
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-pubsub</artifactId>
       <version>v1-rev10-1.22.0</version>
-          <!--<version>v1-rev383-1.23.0</version>-->
       <exclusions>
-        <!-- Exclude an old version of guava that is being pulled
-             in by a transitive dependency of google-api-client -->
         <exclusion>
           <groupId>com.google.guava</groupId>
           <artifactId>guava-jdk5</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
+    -->
 
 <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 <dependency>
