@@ -38,6 +38,9 @@ import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.Decoder;
+import tech.allegro.schema.json2avro.converter.AvroConversionException;
+import tech.allegro.schema.json2avro.converter.JsonAvroConverter;
+import org.apache.avro.message.BinaryMessageDecoder;
 
 import java.util.Map;
 import java.lang.reflect.Type;
@@ -46,7 +49,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
-public class Test {
+public class Test4 {
 	//private static DatastoreCache cache = new DatastoreCache();
 
     private static final String JSON_V1 = "{ \"name\":\"Frank\", \"age\":47}";
@@ -70,7 +73,7 @@ public class Test {
     private static final Schema SCHEMA_V5 = new Schema.Parser().parse(SCHEMA_STR_V5);
     private static final Schema SCHEMA_V6 = new Schema.Parser().parse(SCHEMA_STR_V6);
 
-    //mvn compile exec:java -Dexec.mainClass="org.datahem.avro.message.Test"
+    //mvn compile exec:java -Dexec.mainClass="org.datahem.avro.message.Test4"
     public static void main(String[] args) throws IOException {
     	DatastoreCache cache = new DatastoreCache();
 		cache.addSchema(SCHEMA_V1);
@@ -79,9 +82,20 @@ public class Test {
 		cache.addSchema(SCHEMA_V4);
 		cache.addSchema(SCHEMA_V5);
 		cache.addSchema(SCHEMA_V6);
-		DynamicBinaryMessageDecoder<Record> decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, cache);
+		BinaryMessageDecoder<Record> decoder = new BinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, cache);
+        System.out.println(Converters.avroBinaryToJson(Converters.jsonToAvroBinary(JSON_V1, SCHEMA_V1), decoder));
+        System.out.println(AvroToBigQuery.getTableRow(Converters.jsonToAvroRecord(JSON_V1, SCHEMA_V1)).toPrettyString());
+        System.out.println(AvroToBigQuery.getTableSchemaRecord(Converters.jsonToAvroRecord(JSON_V1, SCHEMA_V1).getSchema()).toString());
+        
+        
 		
         System.out.println("V1");
+        JsonAvroConverter converter = new JsonAvroConverter();
+        byte[] binaryJson = converter.convertToJson(Converters.avroBinaryToRecord(Converters.jsonToAvroBinary(JSON_V1, SCHEMA_V1), decoder));
+        System.out.println(new String(binaryJson));
+        //byte[] avro = converter.convertToAvro(json.getBytes(), schema);
+        
+        /*
         System.out.println(JSON_V1);
         System.out.println(Converters.avroBinaryToJson(Converters.jsonToAvroBinary(JSON_V1, SCHEMA_V1), decoder));
         System.out.println(AvroToBigQuery.getTableRow(Converters.jsonToAvroRecord(JSON_V1, SCHEMA_V1)).toPrettyString());
@@ -98,5 +112,6 @@ public class Test {
         System.out.println(Converters.avroBinaryToJson(Converters.jsonToAvroBinary(JSON_V3, SCHEMA_V3), decoder));
         System.out.println(AvroToBigQuery.getTableRow(Converters.jsonToAvroRecord(JSON_V3, SCHEMA_V3)).toPrettyString());
         System.out.println(AvroToBigQuery.getTableSchemaRecord(Converters.jsonToAvroRecord(JSON_V3, SCHEMA_V3).getSchema()).toString());
+        */
     }
 }
