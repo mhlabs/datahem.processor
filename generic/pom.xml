@@ -7,7 +7,7 @@
 
   <groupId>org.datahem.processor</groupId>
   <artifactId>generic-pipeline</artifactId>
-  <version>0.7.3</version>
+  <version>0.8.0</version>
 
   <packaging>jar</packaging>
 
@@ -205,7 +205,7 @@
     <dependency>
         <groupId>com.google.apis</groupId>
         <artifactId>google-api-services-bigquery</artifactId>
-        <version>v2-rev434-1.25.0</version>
+        <version>v2-rev454-1.25.0</version>
     </dependency>
 
     <dependency>

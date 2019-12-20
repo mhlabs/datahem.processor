@@ -15,7 +15,8 @@ package org.datahem.processor.utils;
  */
 
 import com.google.api.services.bigquery.model.TableFieldSchema;
-import com.google.api.services.bigquery.model.TableFieldSchema.Categories;
+//import com.google.api.services.bigquery.model.TableFieldSchema.Categories;
+import com.google.api.services.bigquery.model.TableFieldSchema.PolicyTags;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 
@@ -317,15 +318,15 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             if(!fieldOptionBigQueryHidden(fieldOptions)){
                 String fieldName = fieldOptionBigQueryRename(fieldOptions).orElse(f.getName().replace(".", "_"));
                 String description = ((Set<String>) fieldOptions.get("BigQueryFieldDescription")).stream().findFirst().orElse("");
-                final Pattern categoryFilter = Pattern.compile(taxonomyResourcePattern);
-                List<String> categories = ((Set<String>) fieldOptions.get("BigQueryFieldCategories"))
+                final Pattern policyTagFilter = Pattern.compile(taxonomyResourcePattern);
+                List<String> policyTags = ((Set<String>) fieldOptions.get("BigQueryFieldPolicyTags"))
                     .stream()
-                    .map(categoriesOption -> categoriesOption.split(","))
-                    .flatMap(categoriesArray -> Arrays.stream(categoriesArray))
-                    .filter(categoryFilter.asPredicate())
+                    .map(policyTagsOption -> policyTagsOption.split(","))
+                    .flatMap(policyTagsArray -> Arrays.stream(policyTagsArray))
+                    .filter(policyTagFilter.asPredicate())
                     .collect(Collectors.toList());
-                TableFieldSchema.Categories fieldCategories = new TableFieldSchema.Categories();
-                fieldCategories.setNames(categories.isEmpty() ? null : categories);
+                TableFieldSchema.PolicyTags fieldPolicyTags = new TableFieldSchema.PolicyTags();
+                fieldPolicyTags.setNames(policyTags.isEmpty() ? null : policyTags);
                 
                 String type = "STRING";
                 String mode = "NULLABLE";
@@ -370,7 +371,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                                 .setType(type)
                                 .setMode(mode)
                                 .setDescription(description)
-                                .setCategories(fieldCategories));
+                                .setPolicyTags(fieldPolicyTags));
                 }
             }
         }

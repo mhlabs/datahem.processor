@@ -36,6 +36,7 @@ public final class Options {
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldCoalesce);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldDivide);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldFilter);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldPolicyTags);
   }
 
   public static void registerAllExtensions(
@@ -84,8 +85,8 @@ public final class Options {
   public static final int BIGQUERYFIELDCATEGORIES_FIELD_NUMBER = 66666668;
   /**
    * <pre>
-   * Sets a policy tag on the field in BigQuery
-   * [PolicyTag1, PolicyTag2,...] Example:
+   * Deprecated. Sets a category on the field in BigQuery
+   * [Category1, Category2,...] Example:
    * </pre>
    *
    * <code>extend .google.protobuf.FieldOptions { ... }</code>
@@ -273,6 +274,22 @@ public final class Options {
           .newFileScopedGeneratedExtension(
         java.lang.String.class,
         null);
+  public static final int BIGQUERYFIELDPOLICYTAGS_FIELD_NUMBER = 66666680;
+  /**
+   * <pre>
+   * Sets a policy tag on the field in BigQuery
+   * [PolicyTag1, PolicyTag2,...] At most one policytag can be used per field
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> bigQueryFieldPolicyTags = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -308,8 +325,10 @@ public final class Options {
       "tobuf.FieldOptions\030\265\201\345\037 \001(\t:=\n\023BigQueryF" +
       "ieldDivide\022\035.google.protobuf.FieldOption" +
       "s\030\266\201\345\037 \001(\t:=\n\023BigQueryFieldFilter\022\035.goog" +
-      "le.protobuf.FieldOptions\030\267\201\345\037 \001(\tB\036\n\034org" +
-      ".datahem.protobuf.optionsb\006proto3"
+      "le.protobuf.FieldOptions\030\267\201\345\037 \001(\t:A\n\027Big" +
+      "QueryFieldPolicyTags\022\035.google.protobuf.F" +
+      "ieldOptions\030\270\201\345\037 \001(\tB\036\n\034org.datahem.prot" +
+      "obuf.optionsb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -339,6 +358,7 @@ public final class Options {
     bigQueryFieldCoalesce.internalInit(descriptor.getExtensions().get(12));
     bigQueryFieldDivide.internalInit(descriptor.getExtensions().get(13));
     bigQueryFieldFilter.internalInit(descriptor.getExtensions().get(14));
+    bigQueryFieldPolicyTags.internalInit(descriptor.getExtensions().get(15));
     com.google.protobuf.DescriptorProtos.getDescriptor();
   }
 

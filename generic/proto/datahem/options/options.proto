@@ -17,8 +17,8 @@ extend google.protobuf.FieldOptions {
     // [DescriptionString] Example: "A timestamp."
     string BigQueryFieldDescription = 66666667;
 
-    // Sets a policy tag on the field in BigQuery
-    // [PolicyTag1, PolicyTag2,...] Example:
+    // Deprecated. Sets a category on the field in BigQuery
+    // [Category1, Category2,...] Example:
     string BigQueryFieldCategories = 66666668;
 
     // Sets a specified data type on the field in bigquery, if not set the corresponding protobuf data type is used for mapping
@@ -64,4 +64,8 @@ extend google.protobuf.FieldOptions {
     //Filter string with regex pattern
     //String [pattern] Example: "^((?!0001-01-01.00:00:00).)*$"
     string BigQueryFieldFilter = 66666679;
+
+    // Sets a policy tag on the field in BigQuery
+    // [PolicyTag1, PolicyTag2,...] At most one policytag can be used per field
+    string BigQueryFieldPolicyTags = 66666680;
 }
