@@ -64,6 +64,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -108,13 +109,13 @@ public class ProtobufUtils {
         FileDescriptorProto fileDescriptorProto = inMap.get(name);
         List<FileDescriptor> dependencies = new ArrayList<>();
         if (fileDescriptorProto.getDependencyCount() > 0) {
-            LOG.info("more than 0 dependencies: " + fileDescriptorProto.toString());
+            //LOG.info("more than 0 dependencies: " + fileDescriptorProto.toString());
             fileDescriptorProto
                 .getDependencyList()
                 .forEach(dependencyName -> dependencies.add(convertToFileDescriptorMap(dependencyName, inMap, outMap)));
         }
         try {
-            LOG.info("Number of dependencies: " + Integer.toString(dependencies.size()));
+            //LOG.info("Number of dependencies: " + Integer.toString(dependencies.size()));
             FileDescriptor fileDescriptor = 
                 FileDescriptor.buildFrom(
                     fileDescriptorProto, dependencies.toArray(new FileDescriptor[dependencies.size()]));
@@ -303,8 +304,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
     }
 
     public static TableSchema makeTableSchema(ProtoDescriptor protoDescriptor, Descriptor descriptor, String taxonomyResourcePattern) {
-        LOG.info("Descriptor fullname: " + descriptor.getFullName());
-        LOG.info("messageOptions: " + descriptor.getOptions().toString());
+        //LOG.info("Descriptor fullname: " + descriptor.getFullName());
+        //LOG.info("messageOptions: " + descriptor.getOptions().toString());
 
         TableSchema res = new TableSchema();
 
@@ -314,6 +315,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 		for (FieldDescriptor f : fields) {
             HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
             if(!fieldOptionBigQueryHidden(fieldOptions)){
+                String fieldName = fieldOptionBigQueryRename(fieldOptions).orElse(f.getName().replace(".", "_"));
                 String description = ((Set<String>) fieldOptions.get("BigQueryFieldDescription")).stream().findFirst().orElse("");
                 final Pattern categoryFilter = Pattern.compile(taxonomyResourcePattern);
                 List<String> categories = ((Set<String>) fieldOptions.get("BigQueryFieldCategories"))
@@ -353,7 +355,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     schema_fields
                         .add(
                             new TableFieldSchema()
-                                .setName(f.getName().replace(".", "_"))
+                                .setName(fieldName)
                                 .setType(type)
                                 .setMode(mode)
                                 .setFields(ts.getFields())
@@ -364,7 +366,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 if (!type.equals("RECORD")) {
                     schema_fields
                             .add(new TableFieldSchema()
-                                .setName(f.getName().replace(".", "_"))
+                                .setName(fieldName)
                                 .setType(type)
                                 .setMode(mode)
                                 .setDescription(description)
@@ -373,7 +375,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             }
         }
 		res.setFields(schema_fields);
-        LOG.info("table schema" + res.toString());
+        //LOG.info("table schema" + res.toString());
 		return res;
 	}   
 
@@ -414,7 +416,6 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             final Pattern pattern = Pattern.compile(regexExtract);
             Matcher matcher = pattern.matcher(value);
             if(matcher.find()){
-                //LOG.info("Regex: pattern: " + regexExtract + ", input: " + value + ", output: " + matcher.group(0));
                 return matcher.group(0);
             }
         }
@@ -426,6 +427,15 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         if(!regexReplace.isEmpty()){
             //LOG.info("regexreplace: " + regexReplace + ", output: " + value.replaceAll(regexReplace.split(",")[0], regexReplace.split(",")[1]));
             return value.replaceAll(regexReplace.split(",")[0].trim(), regexReplace.split(",")[1].trim());
+        }
+        return value;
+    }
+
+    public static double fieldOptionDivide(Double value, HashMultimap<String, String> fieldOptions){
+        String divisorString = ((Set<String>) fieldOptions.get("BigQueryFieldDivide")).stream().findFirst().orElse("");
+        if(!divisorString.isEmpty() && value != 0){
+            double divisor = Double.parseDouble(divisorString);
+            return value/divisor;
         }
         return value;
     }
@@ -446,7 +456,6 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             LocalDateTime localDateTime = LocalDateTime.parse(value, localFormatter);
             ZonedDateTime utcDateTime = localDateTime.atZone(ZoneId.of(localTimezone)).withZoneSameInstant(ZoneId.of("UTC"));
             String utc = utcDateTime.format(utcFormatter);
-            //LOG.info("fieldOptionBigQueryLocalToUtc: input (local): " + value + ", output (utc): " + utc);
             return utc;
         }
         return value;
@@ -467,7 +476,34 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
     }
 */
 
-    public static TableRow getTableRow(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, TableRow tableRow){
+    public static Optional<Boolean> fieldOptionFilter(String value, HashMultimap<String, String> fieldOptions){
+        String filterPattern = ((Set<String>) fieldOptions.get("BigQueryFieldFilter")).stream().findFirst().orElse("");
+        if(!filterPattern.isEmpty() && !value.isEmpty()){
+            //LOG.info(filterPattern);
+            return Optional.of(value.matches(filterPattern));
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<Object> fieldOptionCoalesce(Message message, Descriptor descriptor, HashMultimap<String, String> fieldOptions){
+        String coalesceSettings = ((Set<String>) fieldOptions.get("BigQueryFieldCoalesce")).stream().findFirst().orElse("");
+        if(!coalesceSettings.isEmpty()){
+            String[] coalesceSettingsArr = coalesceSettings.split(",");
+
+            return Stream.of(coalesceSettingsArr)
+                .map(c -> message.hasField(descriptor.findFieldByName(c)) ? message.getField(descriptor.findFieldByName(c)) : null)
+                .filter(Objects::nonNull)
+                .filter(m -> {
+                    return (!String.valueOf(m).isEmpty() && String.valueOf(m).matches("^((?!0001-01-01.00:00:00).)*$")); //Treat 0001-01-01 00:00:00 as null
+                })
+                .findFirst();
+                //.orElse(null);
+        } else{
+            return Optional.empty();
+        }
+    }
+
+    public static TableRow getTableRow(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, TableRow tableRow, Descriptor descriptor){
         String[] bigQueryStandardSqlDateTimeTypes = {"DATE","DATETIME","TIME","TIMESTAMP"};
         HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
         
@@ -475,35 +511,43 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             String fieldName = fieldOptionBigQueryRename(fieldOptions).orElse(f.getName().replace(".", "_"));    
             String fieldType = fieldOptionBigQueryType(fieldOptions).orElse(f.getType().toString().toUpperCase());
             
+            Object fieldVal = fieldOptionCoalesce(message, descriptor, fieldOptions).orElse(message.getField(f));
+
             if (!f.isRepeated() ) {
                 boolean useDefaultValue = fieldOptionBigQueryUseDefaultValue(fieldOptions);
                 boolean hasField = message.hasField(f);
-                if (fieldType.contains("STRING") && (useDefaultValue || hasField)) {
-                    String fieldValue = String.valueOf(message.getField(f));
+                if (fieldType.contains("STRING") && (useDefaultValue || hasField) && fieldOptionFilter(String.valueOf(fieldVal), fieldOptions).orElse(true)) {
+                    String fieldValue = String.valueOf(fieldVal);
                     fieldValue = fieldOptionBigQueryRegexExtract(fieldValue, fieldOptions);
                     fieldValue = fieldOptionBigQueryAppend(fieldValue, fieldOptions);
                     fieldValue = fieldOptionBigQueryRegexReplace(fieldValue, fieldOptions);
                     tableRow.set(fieldName, fieldValue);
-                } else if (fieldType.contains("BYTES")) {
-                    tableRow.set(fieldName, (byte[]) message.getField(f));
+                } else if (fieldType.contains("BYTES") && (useDefaultValue || hasField)) {
+                    tableRow.set(fieldName, ((ByteString) fieldVal).toByteArray());
+                    
                 } else if (fieldType.contains("INT32") && (useDefaultValue || hasField)) {
-                    tableRow.set(fieldName, (int) message.getField(f));
+                    tableRow.set(fieldName, (int) fieldVal);
                 } else if (fieldType.contains("INT64") && (useDefaultValue || hasField)) {
-                    tableRow.set(fieldName, (long) message.getField(f));
+                    tableRow.set(fieldName, (long) fieldVal);
                 } else if (fieldType.contains("BOOL") && (useDefaultValue || hasField)) {
                     // fix since JsonFormat.parseBool only parse "true", not "True" or "TRUE"
-                    if(message.getField(f) instanceof String){
-                        tableRow.set(fieldName, Boolean.parseBoolean(String.valueOf(message.getField(f))));
+                    if(fieldVal instanceof String){
+                        tableRow.set(fieldName, Boolean.parseBoolean(String.valueOf(fieldVal)));
                     }else{
-                        tableRow.set(fieldName, (boolean) message.getField(f));
+                        tableRow.set(fieldName, (boolean) fieldVal);
                     }
-                } else if (fieldType.contains("ENUM")) {
-                    tableRow.set(fieldName, ((EnumValueDescriptor) message.getField(f)).getNumber());
-                } else if ((fieldType.contains("FLOAT") || fieldType.contains("DOUBLE")) && (useDefaultValue || hasField)) {
-                    tableRow.set(fieldName, (double) message.getField(f));
+                } else if (fieldType.contains("ENUM") && (useDefaultValue || hasField)) {
+                    tableRow.set(fieldName, ((EnumValueDescriptor) fieldVal).getNumber());
+                } else if ((fieldType.contains("FLOAT")) && (useDefaultValue || hasField)) {
+                    float fieldValue = (float) fieldVal;
+                    tableRow.set(fieldName, fieldValue);
+                } else if ((fieldType.contains("DOUBLE")) && (useDefaultValue || hasField)) {
+                    double fieldValue = (double) fieldVal;
+                    fieldValue = fieldOptionDivide(fieldValue, fieldOptions);
+                    tableRow.set(fieldName, fieldValue);
                 } else if(Arrays.stream(bigQueryStandardSqlDateTimeTypes).anyMatch(fieldType::equals)) {
-                    String fieldValue = String.valueOf(message.getField(f));
-                    if (!fieldValue.isEmpty()){
+                    String fieldValue = String.valueOf(fieldVal);
+                    if (!fieldValue.isEmpty() && fieldOptionFilter(fieldValue, fieldOptions).orElse(true)){
                         fieldValue = fieldOptionBigQueryRegexExtract(fieldValue, fieldOptions);
                         fieldValue = fieldOptionBigQueryAppend(fieldValue, fieldOptions);
                         fieldValue = fieldOptionBigQueryRegexReplace(fieldValue, fieldOptions);
@@ -512,7 +556,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     }
                 } else if (fieldType.contains("MESSAGE")) {
                     if (message.getAllFields().containsKey(f)) {
-                        TableRow tr = makeTableRow((Message) message.getField(f), f.getMessageType(), protoDescriptor);
+                        TableRow tr = makeTableRow((Message) fieldVal, f.getMessageType(), protoDescriptor);
                         if(!tr.isEmpty()){
                             tableRow.set(fieldName, tr);
                         }
@@ -534,7 +578,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                         tableRow.set(fieldName, values);
                     }
                 } else if (fieldType.contains("BYTES")) {
-                    List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> (byte[]) e).collect(Collectors.toList());
+                    List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> ((ByteString) e).toByteArray()).collect(Collectors.toList());
                     if(!values.isEmpty()){
                         tableRow.set(fieldName, values);
                     }
@@ -548,13 +592,23 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     if(!values.isEmpty()){
                         tableRow.set(fieldName, values);
                     }
+                } else if (fieldType.contains("ENUM")) {
+                    List<Integer> values = ((List<Object>) message.getField(f)).stream().map(e -> ((EnumValueDescriptor) e).getNumber()).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
                 } else if (fieldType.contains("BOOL")) {
                     List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e).collect(Collectors.toList());
                     if(!values.isEmpty()){
                         tableRow.set(fieldName, values);
                     }
-                } else if (fieldType.contains("FLOAT") || fieldType.contains("DOUBLE")) {
+                } else if (fieldType.contains("DOUBLE")) {
                     List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
+                } else if (fieldType.contains("FLOAT")) {
+                    List<Float> values = ((List<Object>) message.getField(f)).stream().map(e -> (float) e).collect(Collectors.toList());
                     if(!values.isEmpty()){
                         tableRow.set(fieldName, values);
                     }
@@ -602,7 +656,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         List<FieldDescriptor> fields = descriptor.getFields();
 
 		for (FieldDescriptor field : fields) {
-            tableRow = getTableRow(message, field, protoDescriptor, tableRow);
+            tableRow = getTableRow(message, field, protoDescriptor, tableRow, descriptor);
         }
         return tableRow;
      }

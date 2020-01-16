@@ -1,0 +1,204 @@
+syntax = "proto3";
+
+package datahem.test;
+
+import "datahem/options/options.proto";
+
+option java_multiple_files = true;
+option java_package = "org.datahem.test";
+
+enum TypeEnum {
+        Foos = 0;
+        Bars = 1;
+        Bazs = 2;
+}
+
+message TestSchemaOptions {
+
+    option (datahem.options.BigQueryTableDescription) =  "This is a table for test entities";
+
+    string StringField = 1 [
+        (datahem.options.BigQueryFieldDescription) = "A String",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedString"
+    ];
+
+    int32 Int32Field = 2 [
+        (datahem.options.BigQueryFieldDescription) = "An int32",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedInt32"
+    ];
+
+    int64 Int64Field = 3 [
+        (datahem.options.BigQueryFieldDescription) = "An int64",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedInt64"
+    ];
+
+    double DoubleField = 4 [
+        (datahem.options.BigQueryFieldDescription) = "A double",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedDouble"
+    ];
+
+    float FloatField = 5 [
+        (datahem.options.BigQueryFieldDescription) = "A float",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedFloat"
+    ];
+
+    bool BoolField = 6 [
+        (datahem.options.BigQueryFieldDescription) = "A bool",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedBool"
+    ];
+
+    bytes BytesField = 7 [
+        (datahem.options.BigQueryFieldDescription) = "A bytes",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedBytes"
+    ];
+
+    TypeEnum EnumField = 8 [
+            (datahem.options.BigQueryFieldDescription) = "An enum.",
+            (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+            (datahem.options.BigQueryFieldRename) = "RenamedEnum"
+    ];
+
+    MessageChildSchemaOptions messageChild = 9  [
+            (datahem.options.BigQueryFieldDescription) = "A message (record)",
+            (datahem.options.BigQueryFieldRename) = "RenamedMessageChild"
+    ];
+
+    repeated MessageChildSchemaOptions repeatedMessage = 10 [
+            (datahem.options.BigQueryFieldDescription) = "A repeated message.",
+            (datahem.options.BigQueryFieldRename) = "RenamedRepeatedMessage"
+    ];
+
+    repeated string repeatedString = 11 [
+            (datahem.options.BigQueryFieldDescription) = "A repeated string.",
+            (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+            (datahem.options.BigQueryFieldRename) = "RenamedRepeatedString"
+    ];
+
+    repeated int32 repeatedInt32 = 12 [
+            (datahem.options.BigQueryFieldDescription) = "A repeated int32.",
+            (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+            (datahem.options.BigQueryFieldRename) = "RenamedRepeatedInt32"
+    ];
+
+    repeated int64 repeatedInt64 = 13 [
+            (datahem.options.BigQueryFieldDescription) = "A repeated int64.",
+            (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+            (datahem.options.BigQueryFieldRename) = "RenamedRepeatedInt64"
+    ];
+
+    repeated double repeatedDouble = 14 [
+            (datahem.options.BigQueryFieldDescription) = "A repeated double.",
+            (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+            (datahem.options.BigQueryFieldRename) = "RenamedRepeatedDouble"
+    ];
+
+    repeated float repeatedFloat = 15 [
+            (datahem.options.BigQueryFieldDescription) = "A repeated float.",
+            (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+            (datahem.options.BigQueryFieldRename) = "RenamedRepeatedFloat"
+    ];
+
+    repeated bool repeatedBool = 16 [
+            (datahem.options.BigQueryFieldDescription) = "A repeated bool.",
+            (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+            (datahem.options.BigQueryFieldRename) = "RenamedRepeatedBool"
+    ];
+
+    repeated bytes repeatedBytes = 17 [
+            (datahem.options.BigQueryFieldDescription) = "A repeated bytes.",
+            (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+            (datahem.options.BigQueryFieldRename) = "RenamedRepeatedBytes"
+    ];
+
+    repeated TypeEnum repeatedEnum = 18 [
+            (datahem.options.BigQueryFieldDescription) = "A repeated enum.",
+            (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+            (datahem.options.BigQueryFieldRename) = "RenamedRepeatedEnum"
+    ];
+
+    string BigQueryTime = 19 [
+        (datahem.options.BigQueryFieldDescription) = "A BigQuery TIME.",
+        (datahem.options.BigQueryFieldType) = "TIME",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedBigQueryTime"
+    ];
+
+    string BigQueryDate = 20 [
+        (datahem.options.BigQueryFieldDescription) = "A BigQuery DATE.",
+        (datahem.options.BigQueryFieldType) = "DATE",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedBigQueryDate"
+    ];
+
+    string BigQueryDatetime = 21 [
+        (datahem.options.BigQueryFieldDescription) = "A BigQuery DATETIME.",
+        (datahem.options.BigQueryFieldType) = "DATETIME",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedBigQueryDatetime"
+    ];
+
+    string BigQueryTimestamp = 22 [
+        (datahem.options.BigQueryFieldDescription) = "A BigQuery TIMESTAMP.",
+        (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedBigQueryTimestamp"
+    ];
+
+    string HiddenStringField = 23 [
+        (datahem.options.BigQueryFieldHidden) = "true"
+    ];
+
+    map<string,string> _ATTRIBUTES = 300 [
+        (datahem.options.BigQueryFieldDescription) = "A string map.",
+        (datahem.options.BigQueryFieldRename) = "RenamedAttributesMap" 
+    ];
+}
+
+message MessageChildSchemaOptions {
+    string StringField = 1 [
+        (datahem.options.BigQueryFieldDescription) = "A String",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedChildString"
+    ];
+
+    int32 Int32Field = 2 [
+        (datahem.options.BigQueryFieldDescription) = "An int32",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedChildInt32"
+    ];
+
+    int64 Int64Field = 3 [
+        (datahem.options.BigQueryFieldDescription) = "An int64",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedChildInt64"
+    ];
+
+    double DoubleField = 4 [
+        (datahem.options.BigQueryFieldDescription) = "A double",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedChildDouble"
+    ];
+
+    float FloatField = 5 [
+        (datahem.options.BigQueryFieldDescription) = "A float",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedChildFloat"
+    ];
+
+    bool BoolField = 6 [
+        (datahem.options.BigQueryFieldDescription) = "A bool",
+        (datahem.options.BigQueryFieldCategories) = "projects/datahem/taxonomies/1234567890/categories/1234567890",
+        (datahem.options.BigQueryFieldRename) = "RenamedChildBool"
+    ];
+
+    string HiddenStringField = 7 [
+        (datahem.options.BigQueryFieldHidden) = "true"
+    ];
+}

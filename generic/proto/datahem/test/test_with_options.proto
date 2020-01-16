@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package datahem.test;
+
+import "datahem/options/options.proto";
+
+option java_multiple_files = true;
+option java_package = "org.datahem.test";
+
+enum WithOptionsEnum {
+        Foo = 0;
+        Bar = 1;
+        Baz = 2;
+}
+
+message TestWithOptions {
+
+    string StringAppendix = 1 [
+        (datahem.options.BigQueryFieldAppend) = "Appendix"
+    ];
+
+    string StringFilter = 2 [
+        (datahem.options.BigQueryFieldFilter) = ".*filter.*"
+    ];
+
+    string StringCoalesce = 3 [
+        (datahem.options.BigQueryFieldCoalesce) = "StringAppendix,StringFilter"
+    ];
+
+    double DoubleField = 4 [
+        (datahem.options.BigQueryFieldDivide) = "10"
+    ];
+
+    int32 Int32Field = 5;
+
+    int32 Int32Coalesce = 6 [
+        (datahem.options.BigQueryFieldCoalesce) = "Int32Field"
+    ];
+
+    string BigQueryDatetimeFiltered = 7 [
+        (datahem.options.BigQueryFieldType) = "DATETIME",
+        (datahem.options.BigQueryFieldFilter) = "^((?!0001-01-01.00:00:00).)*$"
+    ];
+
+    string BigQueryTimestampFiltered = 8 [
+        (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+        (datahem.options.BigQueryFieldFilter) = "^((?!0001-01-01.00:00:00).)*$"
+    ];
+
+    string BigQueryDatetimeNotFiltered = 9 [
+        (datahem.options.BigQueryFieldType) = "DATETIME",
+        (datahem.options.BigQueryFieldFilter) = "^((?!0001-01-01.00:00:00).)*$"
+    ];
+
+    string BigQueryTimestampNotFiltered = 10 [
+        (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+        (datahem.options.BigQueryFieldFilter) = "^((?!0001-01-01.00:00:00).)*$"
+    ];
+
+    string StringDefaultFalse = 11 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+    
+    int32 Int32DefaultFalse = 12 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    int64 Int64DefaultFalse = 13 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    double DoubleDefaultFalse = 14 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    float FloatDefaultFalse = 15 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    bool BoolDefaultFalse = 16 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    bytes BytesDefaultFalse = 17 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    WithOptionsEnum EnumDefaultFalse = 18 [
+        (datahem.options.BigQueryFieldUseDefaultValue) = "false"
+    ];
+
+    string BigQueryTimeAppend = 19 [
+        (datahem.options.BigQueryFieldType) = "TIME",
+        (datahem.options.BigQueryFieldAppend) = ":00"
+    ];
+
+    string BigQueryDatetimeAppend = 21 [
+        (datahem.options.BigQueryFieldType) = "DATETIME",
+        (datahem.options.BigQueryFieldAppend) = ":00"
+    ];
+
+    string BigQueryTimestampAppend = 22 [
+        (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+        (datahem.options.BigQueryFieldAppend) = ":00"
+    ];
+
+    string LocalTimestampWithWrongOffsetToUtc = 23  [
+            (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+            (datahem.options.BigQueryFieldRegexExtract) = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])(T| )(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]",
+            (datahem.options.BigQueryFieldLocalToUtc) = "Europe/Stockholm, yyyy-MM-dd'T'HH:mm:ss, yyyy-MM-dd'T'HH:mm:ssXXX"
+        ];
+
+    string DatetimeToDate = 24 [
+            (datahem.options.BigQueryFieldType) = "DATE",
+            (datahem.options.BigQueryFieldRegexExtract) = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])"
+        ];
+
+    string LocalTimestampWithoutOptionalTToUtc = 25 [
+            (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+            (datahem.options.BigQueryFieldRegexExtract) = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])(T| )(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]",
+            (datahem.options.BigQueryFieldLocalToUtc) = "Europe/Stockholm, yyyy-MM-dd['T'][ ]HH:mm:ss, yyyy-MM-dd'T'HH:mm:ssXXX"
+        ];
+    
+    string LocalTimestampWithOptionalTToUtc = 26 [
+            (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+            (datahem.options.BigQueryFieldRegexExtract) = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])(T| )(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]",
+            (datahem.options.BigQueryFieldLocalToUtc) = "Europe/Stockholm, yyyy-MM-dd['T'][ ]HH:mm:ss, yyyy-MM-dd'T'HH:mm:ssXXX"
+        ];
+
+    string PartitionTimestamp = 27 [
+        (datahem.options.BigQueryFieldType) = "TIMESTAMP",
+        (datahem.options.BigQueryFieldCoalesce) = "BigQueryTimestampFiltered,BigQueryTimestampNotFiltered",
+        (datahem.options.BigQueryFieldRegexExtract) = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])(T| )(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]",
+        (datahem.options.BigQueryFieldLocalToUtc) = "Europe/Stockholm, yyyy-MM-dd['T'][ ]HH:mm:ss, yyyy-MM-dd'T'HH:mm:ssXXX"
+    ];
+
+    map<string,string> _ATTRIBUTES = 300;
+}
