@@ -193,40 +193,41 @@ public class DynamoDbStreamPipeline {
 
             JSONObject DynamoDbStreamObject = new JSONObject(pubsubPayload);
             JSONObject payloadObject;
-            // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
-            if((DynamoDbStreamObject.isNull("OldImage") || DynamoDbStreamObject.getJSONObject("OldImage").isNull("Id"))){
-                attributes.put("operation", "INSERT");
-                payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
-            }else if(DynamoDbStreamObject.isNull("NewImage") || DynamoDbStreamObject.getJSONObject("NewImage").isNull("Id")){
-                attributes.put("operation", "REMOVE");
-                payloadObject = DynamoDbStreamObject.getJSONObject("OldImage");
-            }else {
-                attributes.put("operation", "MODIFY");
-                payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
-            }
-
-            // Add meta-data from dynamoDB stream event as attributes
-            if(!DynamoDbStreamObject.isNull("Published")){
-                attributes.put("dynamoDbStreamPublished",DynamoDbStreamObject.getString("Published"));
-            }
-            if(!DynamoDbStreamObject.isNull("EventId")){
-                attributes.put("dynamoDbStreamEventId",DynamoDbStreamObject.getString("EventId"));
-            }
-
-            String payload = payloadObject.toString();
-
-            if(messageDescriptor == null){
-                // fetch the message descriptor if current one is null for some reason
-                LOG.warn("message descriptor is null, creating new from descriptor in cloud storage...");
-                messageDescriptor = ProtobufUtils.getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
-            }
-            if(protoDescriptor == null){
-                // fetch the proto descriptor if current one is null for some reason
-                LOG.warn("protoDescriptor is null, creating new from descriptor in cloud storage...");
-                protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
-            }
-            // Parse json to protobuf
+            String payload = "";
             try{
+                // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
+                if((DynamoDbStreamObject.isNull("OldImage") || DynamoDbStreamObject.getJSONObject("OldImage").isNull("Id"))){
+                    attributes.put("operation", "INSERT");
+                    payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
+                }else if(DynamoDbStreamObject.isNull("NewImage") || DynamoDbStreamObject.getJSONObject("NewImage").isNull("Id")){
+                    attributes.put("operation", "REMOVE");
+                    payloadObject = DynamoDbStreamObject.getJSONObject("OldImage");
+                }else {
+                    attributes.put("operation", "MODIFY");
+                    payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
+                }
+
+                payload = payloadObject.toString();
+
+                // Add meta-data from dynamoDB stream event as attributes
+                if(!DynamoDbStreamObject.isNull("Published")){
+                    attributes.put("dynamoDbStreamPublished",DynamoDbStreamObject.getString("Published"));
+                }
+                if(!DynamoDbStreamObject.isNull("EventId")){
+                    attributes.put("dynamoDbStreamEventId",DynamoDbStreamObject.getString("EventId"));
+                }
+
+                if(messageDescriptor == null){
+                    // fetch the message descriptor if current one is null for some reason
+                    LOG.warn("message descriptor is null, creating new from descriptor in cloud storage...");
+                    messageDescriptor = ProtobufUtils.getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
+                }
+                if(protoDescriptor == null){
+                    // fetch the proto descriptor if current one is null for some reason
+                    LOG.warn("protoDescriptor is null, creating new from descriptor in cloud storage...");
+                    protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
+                }
+                // Parse json to protobuf
                 DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
                 try{
                     // Parse but don't allow unknown fields
@@ -265,6 +266,10 @@ public class DynamoDbStreamPipeline {
             }catch(IllegalArgumentException e){
                 out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
                 LOG.error("IllegalArgumentException: ", e);
+                LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
+            }catch(org.json.JSONException e){
+                out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
+                LOG.error("org.json.JSONException: ", e);
                 LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
             }catch(Exception e){
                 out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
