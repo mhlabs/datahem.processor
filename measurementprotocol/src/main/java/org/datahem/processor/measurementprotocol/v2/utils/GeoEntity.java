@@ -29,10 +29,16 @@ public class GeoEntity{
 	public Geo build(Map<String, String> pm){
         try{
             Geo.Builder builder = Geo.newBuilder();
+            // headers from appEngine
             Optional.ofNullable(pm.get("X-AppEngine-Country")).ifPresent(builder::setCountry);
             Optional.ofNullable(pm.get("X-AppEngine-Region")).ifPresent(builder::setRegion);
             Optional.ofNullable(pm.get("X-AppEngine-City")).ifPresent(builder::setCity);
             Optional.ofNullable(pm.get("X-AppEngine-CityLatLong")).ifPresent(builder::setCityLatLong);
+            // headers from cloudfunctions are lowercase
+            Optional.ofNullable(pm.get("x-appengine-country")).ifPresent(builder::setCountry);
+            Optional.ofNullable(pm.get("x-appengine-region")).ifPresent(builder::setRegion);
+            Optional.ofNullable(pm.get("x-appengine-city")).ifPresent(builder::setCity);
+            Optional.ofNullable(pm.get("x-appengine-citylatlong")).ifPresent(builder::setCityLatLong);
             return builder.build();
         }
         catch(IllegalArgumentException e){
