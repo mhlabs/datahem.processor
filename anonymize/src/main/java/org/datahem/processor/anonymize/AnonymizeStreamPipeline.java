@@ -19,6 +19,7 @@ import org.datahem.processor.utils.TablePartition;
 import org.datahem.processor.utils.Failure;
 import io.anemos.metastore.core.proto.*;
 
+
 import com.google.protobuf.util.JsonFormat;
 import com.google.protobuf.ByteString;
 import com.google.common.collect.HashMultimap;
@@ -187,6 +188,9 @@ public class AnonymizeStreamPipeline {
 		@ProcessElement
         public void processElement(@Element PubsubMessage pubsubMessage, OutputReceiver<PubsubMessage> out) throws Exception {
             // Get pubsub message payload and attributes
+            LOG.info(bucketName.get());
+            LOG.info(fileDescriptorName.get());
+            LOG.info(descriptorFullName.get());
             String pubsubPayload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
             HashMap<String, String> attributes = new HashMap<String,String>();
             attributes.putAll(pubsubMessage.getAttributeMap());

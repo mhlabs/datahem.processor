@@ -16,8 +16,9 @@ package org.datahem.processor.anonymize;
 
 
 import io.anemos.metastore.core.proto.*;
-//import org.datahem.processor.anonymize.AnonymizeStreamPipeline.*;
+import org.datahem.processor.anonymize.AnonymizeStreamPipeline.*;
 import org.datahem.processor.utils.ProtobufUtils;
+//import org.datahem.processor.anonymize.*;
 
 import com.google.gson.Gson;
 
@@ -90,6 +91,7 @@ import java.util.Collections;
 import java.util.stream.Stream;
 import java.util.Base64;
 import java.util.Iterator;
+import com.google.protobuf.ByteString;
 
 import com.google.cloud.ReadChannel;
 import com.google.cloud.storage.Storage;
@@ -123,156 +125,30 @@ public class AnonymizePipelineTest {
 	
 	@Rule public transient TestPipeline p = TestPipeline.create();
 
-    public static class ConvertToDLPRow extends DoFn<String, Table.Row> {
-        @ProcessElement
-        public void processElement(@Element String inputJson, OutputReceiver<Table.Row> out) {
-         LOG.info("inputJson: " + inputJson);
-        JSONObject jso = new JSONObject(inputJson);
-        Table.Row.Builder tableRowBuilder = Table.Row.newBuilder();
-        Iterator<String> row = jso.keys();
-        while(row.hasNext()){
-            tableRowBuilder.addValues(Value.newBuilder().setStringValue(jso.getString(row.next())));
-            //tableRowBuilder.addValues(Value.newBuilder().setStringValue("hello"));
-        }
-        //tableRowBuilder.addValues(Value.newBuilder().setStringValue("hello"));
-        Table.Row dlpRow = tableRowBuilder.build();
-        LOG.info("DLPRow {}", dlpRow.toString());
-        out.output(dlpRow);
-        }
-    }
-
-
-    public static class DLPTokenizationDoFn extends DoFn<KV<String, Iterable<Table.Row>>, Table.Row> {
-        private DlpServiceClient dlpServiceClient;
-        private boolean inspectTemplateExist;
-        private String dlpProjectId;
-        private String deIdentifyTemplateName;
-        private String inspectTemplateName;
-        private DeidentifyContentRequest.Builder requestBuilder;
-
-        public DLPTokenizationDoFn(
-            String dlpProjectId, 
-            String deIdentifyTemplateName, 
-            String inspectTemplateName) {
-        this.dlpProjectId = dlpProjectId;
-        this.dlpServiceClient = null;
-        this.deIdentifyTemplateName = deIdentifyTemplateName;
-        this.inspectTemplateName = inspectTemplateName;
-        this.inspectTemplateExist = false;
-        }
-
-        @Setup
-        public void setup() {
-            if (this.inspectTemplateName != null) {
-                this.inspectTemplateExist = true;
-            }
-            if (this.deIdentifyTemplateName != null) {
-                this.requestBuilder =
-                    DeidentifyContentRequest.newBuilder()
-                        .setParent(ProjectName.of(this.dlpProjectId).toString())
-                        .setDeidentifyTemplateName(this.deIdentifyTemplateName);
-                if (this.inspectTemplateExist) {
-                this.requestBuilder.setInspectTemplateName(this.inspectTemplateName);
-                }
-            }
-        }
-
-        @StartBundle
-        public void startBundle() throws SQLException {
-
-            try {
-                this.dlpServiceClient = DlpServiceClient.create();
-
-            } catch (IOException e) {
-                LOG.error("Failed to create DLP Service Client", e.getMessage());
-                throw new RuntimeException(e);
-            }
-        }
-
-        @FinishBundle
-        public void finishBundle() throws Exception {
-            if (this.dlpServiceClient != null) {
-                this.dlpServiceClient.close();
-            }
-        }
-
-        @ProcessElement
-        public void processElement(ProcessContext c) {
-
-            List<FieldId> dlpTableHeaders =
-                Util.bqLogSchema.getFieldNames().stream()
-                    .map(header -> FieldId.newBuilder().setName(header).build())
-                    .collect(Collectors.toList());
-
-            List<Table.Row> rows = new ArrayList<>();
-            c.element().getValue().forEach(rows::add);
-            Table dlpTable = Table.newBuilder().addAllHeaders(dlpTableHeaders).addAllRows(rows).build();
-            ContentItem tableItem = ContentItem.newBuilder().setTable(dlpTable).build();
-            this.requestBuilder.setItem(tableItem);
-            DeidentifyContentResponse response =
-                dlpServiceClient.deidentifyContent(this.requestBuilder.build());
-            Table tokenizedData = response.getItem().getTable();
-            List<Table.Row> outputRows = tokenizedData.getRowsList();
-            outputRows.forEach(
-                row -> {
-                    LOG.debug("Tokenized Row {}", row);
-                    c.output(row);
-                });
-        }
-  }
-
-
-	@Test
-	public void withoutOptionsTest(){
-
-        String testPayload = new JSONObject()
-            .put("email", "foo@bar.com").toString();
-
-        //String testPayload = new JSONObject().put("NewImage",testPayloadObject).toString();
-        
-        try{
-            LOG.info("ok ");
-            PCollection<Table.Row> output = p
-                .apply(Create.of(Arrays.asList(testPayload)))
-                .apply("Transform json to DlpRow",ParDo.of(new ConvertToDLPRow()))
-                .apply("With Keys", WithKeys.of(UUID.randomUUID().toString()))
-                .apply("Group Into Batches", GroupIntoBatches.<String, Table.Row>ofSize(batchSize()))
-                .setCoder(
-                    KvCoder.of(StringUtf8Coder.of(), IterableCoder.of(ProtoCoder.of(Table.Row.class))))
-                .apply("DLP Tokenization",
-                    ParDo.of(new DLPTokenizationDoFn(projectId(), deidTemplateName(), inspectTemplateName())));
-
-            //PAssert.that(output).containsInAnyOrder(assertTableRow);
-            p.run();
-            LOG.info("withoutOptionsTest assert TableRow without errors.");
-        }catch (Exception e) {
-            LOG.info("error");
-            LOG.error(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
+ 
     @Test
 	public void cleanPubsubMessageTest(){
 
         String json = new JSONObject().put("email", "foo@bar.com").toString();
-                
-                ByteString bs = ByteString.copyFromUtf8(json);
-                byte[] jsonPayload = bs.toByteArray();
+        HashMap<String, String> attributes = new HashMap<String,String>();
+        attributes.put("foo","bar");        
+        ByteString bs = ByteString.copyFromUtf8(json);
+        byte[] jsonPayload = bs.toByteArray();
 
-				PubsubMessage newPubsubMessage = new PubsubMessage(jsonPayload, attributes);
-
-        //String testPayload = 
+        PubsubMessage newPubsubMessage = new PubsubMessage(jsonPayload, attributes);
         
+        ValueProvider<String> bucketName = p.newProvider("mathem-ml-datahem-test-descriptor");
+        ValueProvider<String> fileDescriptorName = p.newProvider("schemas.desc");
+        ValueProvider<String> descriptorFullName = p.newProvider("mathem.commerce.member_service.member.v2.Member");
+
         try{
             LOG.info("ok ");
-            PCollection<Table.Row> output = p
-                .apply(Create.of(Arrays.asList(testPubsubMessage)))
-                //.apply("Transform json to PubsubMessage",ParDo.of(new ConvertToDLPRow()))
+            PCollection<PubsubMessage> output = p
+                .apply(Create.of(Arrays.asList(newPubsubMessage)))
                 .apply("PubsubMessage to TableRow", ParDo.of(new CleanPubsubMessageFn(
-                    options.getBucketName(),
-                    options.getFileDescriptorName(),
-                    options.getDescriptorFullName()
+                    bucketName,
+                    fileDescriptorName,
+                    descriptorFullName
                 )));
 
             //PAssert.that(output).containsInAnyOrder(assertTableRow);
