@@ -251,4 +251,37 @@ public class AnonymizePipelineTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+	public void cleanPubsubMessageTest(){
+
+        String json = new JSONObject().put("email", "foo@bar.com").toString();
+                
+                ByteString bs = ByteString.copyFromUtf8(json);
+                byte[] jsonPayload = bs.toByteArray();
+
+				PubsubMessage newPubsubMessage = new PubsubMessage(jsonPayload, attributes);
+
+        //String testPayload = 
+        
+        try{
+            LOG.info("ok ");
+            PCollection<Table.Row> output = p
+                .apply(Create.of(Arrays.asList(testPubsubMessage)))
+                //.apply("Transform json to PubsubMessage",ParDo.of(new ConvertToDLPRow()))
+                .apply("PubsubMessage to TableRow", ParDo.of(new CleanPubsubMessageFn(
+                    options.getBucketName(),
+                    options.getFileDescriptorName(),
+                    options.getDescriptorFullName()
+                )));
+
+            //PAssert.that(output).containsInAnyOrder(assertTableRow);
+            p.run();
+            LOG.info("withoutOptionsTest assert TableRow without errors.");
+        }catch (Exception e) {
+            LOG.info("error");
+            LOG.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
