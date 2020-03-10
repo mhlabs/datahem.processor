@@ -49,6 +49,7 @@ import io.anemos.metastore.core.proto.*;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.ByteArrayInputStream;
 
 import java.nio.channels.Channels;
 
@@ -132,8 +133,11 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             try{
                 Storage storage = StorageOptions.getDefaultInstance().getService();
                 Blob blob = storage.get(BlobId.of(bucketName, fileDescriptorName));
-                ReadChannel reader = blob.reader();
-                InputStream inputStream = Channels.newInputStream(reader);
+                //LOG.info(blob.toString());
+                //ReadChannel reader = blob.reader();
+                //InputStream inputStream = Channels.newInputStream(reader);
+                
+                InputStream inputStream = new ByteArrayInputStream(storage.readAllBytes(BlobId.of(bucketName, fileDescriptorName)));
                 FileDescriptorSet descriptorSetObject = FileDescriptorSet.parseFrom(inputStream);
                 return new ProtoDescriptor(descriptorSetObject);
             }catch (Exception e){

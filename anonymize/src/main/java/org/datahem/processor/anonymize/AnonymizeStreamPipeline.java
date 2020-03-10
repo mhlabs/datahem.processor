@@ -174,6 +174,7 @@ public class AnonymizeStreamPipeline {
 	  		ValueProvider<String> bucketName,
 	  		ValueProvider<String> fileDescriptorName,
             ValueProvider<String> descriptorFullName) {
+                 LOG.info("ok 2");
 		     	this.bucketName = bucketName;
 		     	this.fileDescriptorName = fileDescriptorName;
                 this.descriptorFullName = descriptorFullName;
@@ -181,13 +182,19 @@ public class AnonymizeStreamPipeline {
         
         @Setup
         public void setup() throws Exception {
+             LOG.info("ok 3");
+             LOG.info(bucketName.get());
+            LOG.info(fileDescriptorName.get());
+            LOG.info(descriptorFullName.get());
             messageDescriptor = ProtobufUtils.getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
             protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
+            LOG.info("ok 4");
         }
 		
 		@ProcessElement
         public void processElement(@Element PubsubMessage pubsubMessage, OutputReceiver<PubsubMessage> out) throws Exception {
             // Get pubsub message payload and attributes
+             LOG.info("ok 5");
             LOG.info(bucketName.get());
             LOG.info(fileDescriptorName.get());
             LOG.info(descriptorFullName.get());
@@ -200,37 +207,19 @@ public class AnonymizeStreamPipeline {
             String payload = "";
             try{
                 // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
-                if((DynamoDbStreamObject.isNull("OldImage") || DynamoDbStreamObject.getJSONObject("OldImage").isNull("Id"))){
-                    attributes.put("operation", "INSERT");
-                    payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
-                }else if(DynamoDbStreamObject.isNull("NewImage") || DynamoDbStreamObject.getJSONObject("NewImage").isNull("Id")){
-                    attributes.put("operation", "REMOVE");
-                    payloadObject = DynamoDbStreamObject.getJSONObject("OldImage");
-                }else {
-                    attributes.put("operation", "MODIFY");
-                    payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
+                if(!DynamoDbStreamObject.isNull("OldImage")){
+                    //attributes.put("operation", "INSERT");
+                    //payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
+                }
+                if(!DynamoDbStreamObject.isNull("NewImage")){
+                    //attributes.put("operation", "REMOVE");
+                    //payloadObject = DynamoDbStreamObject.getJSONObject("OldImage");
                 }
 
                 payload = payloadObject.toString();
 
-                // Add meta-data from dynamoDB stream event as attributes
-                if(!DynamoDbStreamObject.isNull("Published")){
-                    attributes.put("dynamoDbStreamPublished",DynamoDbStreamObject.getString("Published"));
-                }
-                if(!DynamoDbStreamObject.isNull("EventId")){
-                    attributes.put("dynamoDbStreamEventId",DynamoDbStreamObject.getString("EventId"));
-                }
-
-                if(messageDescriptor == null){
-                    // fetch the message descriptor if current one is null for some reason
-                    LOG.warn("message descriptor is null, creating new from descriptor in cloud storage...");
-                    messageDescriptor = ProtobufUtils.getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
-                }
-                if(protoDescriptor == null){
-                    // fetch the proto descriptor if current one is null for some reason
-                    LOG.warn("protoDescriptor is null, creating new from descriptor in cloud storage...");
-                    protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
-                }
+                
+                
                 // Parse json to protobuf
                 DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
                 try{
@@ -246,6 +235,7 @@ public class AnonymizeStreamPipeline {
                
                 DynamicMessage message = builder.build();
                 String json = JsonFormat.printer().omittingInsignificantWhitespace().print(message);
+                LOG.info(json);
                 
                 ByteString bs = ByteString.copyFromUtf8(json);
                 byte[] jsonPayload = bs.toByteArray();

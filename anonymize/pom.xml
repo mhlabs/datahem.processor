@@ -21,7 +21,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <surefire-plugin.version>2.20</surefire-plugin.version>
     <java.version>1.8</java.version>
-    <beam.version>2.19.0</beam.version>
+    <beam.version>2.15.0</beam.version>
     <!--<license.dir>${basedir}</license.dir>-->
     <!--<license.copyrightOwners>MatHem Sverige AB</license.copyrightOwners>-->
     <license.licenseName>agpl_v3_later</license.licenseName>
@@ -164,6 +164,21 @@
     </pluginManagement>
   </build>
 
+<!--
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client-bom</artifactId>
+      <version>1.30.3</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>-->
+
+
+
   <dependencies>
     <dependency>
         <groupId>org.apache.beam</groupId>
@@ -202,13 +217,19 @@
         <scope>runtime</scope>
     </dependency>
 
+<!--
+<dependency>
+        <groupId>com.google.cloud</groupId>
+        <artifactId>google-cloud-core-http</artifactId>
+        <version>1.91.0</version>
+    </dependency>
+
 
 <dependency>
-    <groupId>com.google.apis</groupId>
-    <artifactId>google-api-services-bigquery</artifactId>
-    <version>v2-rev458-1.25.0</version>
-</dependency>
-
+    <groupId>com.google.api-client</groupId>
+    <artifactId>google-api-client</artifactId>
+    <version>1.30.9</version>
+</dependency>-->
 
 <dependency>
     <groupId>com.google.cloud</groupId>
@@ -216,13 +237,32 @@
     <version>1.105.0</version>
 </dependency>
 
+<dependency>
+    <groupId>com.google.apis</groupId>
+    <artifactId>google-api-services-bigquery</artifactId>
+    <version>v2-rev458-1.25.0</version>
+</dependency>
 
-    
+ <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.0-jre</version>
+        </dependency>
+
+    <!--
 <dependency>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-dlp</artifactId>
     <version>0.99.0-beta</version>
+</dependency>-->
+
+<!--dependency>
+<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.5.12</version>
 </dependency>
+-->
 
 <!--
     <dependency>
@@ -244,13 +284,14 @@
         <artifactId>joda-time</artifactId>
         <version>2.4</version>
     </dependency>
+
 <!--
     <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>20.0</version>
-    </dependency>
--->
+    </dependency>-->
+
     <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>

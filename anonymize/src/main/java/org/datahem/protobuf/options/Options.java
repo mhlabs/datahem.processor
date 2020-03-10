@@ -3,20 +3,6 @@
 
 package org.datahem.protobuf.options;
 
-/*-
- * ========================LICENSE_START=================================
- * DataHem
- * %%
- * Copyright (C) 2018 - 2019 MatHem Sverige AB
- * %%
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
- * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
- * =========================LICENSE_END==================================
- */
-
 public final class Options {
   private Options() {}
   public static void registerAllExtensions(
@@ -36,6 +22,7 @@ public final class Options {
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldCoalesce);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldDivide);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldFilter);
+    registry.add(org.datahem.protobuf.options.Options.forgetField);
   }
 
   public static void registerAllExtensions(
@@ -273,6 +260,22 @@ public final class Options {
           .newFileScopedGeneratedExtension(
         java.lang.String.class,
         null);
+  public static final int FORGETFIELD_FIELD_NUMBER = 66666680;
+  /**
+   * <pre>
+   *Forget a field by replacing value
+   *String [pattern] Example: "deleted_member&#64;mathem.se"
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> forgetField = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -308,8 +311,10 @@ public final class Options {
       "tobuf.FieldOptions\030\265\201\345\037 \001(\t:=\n\023BigQueryF" +
       "ieldDivide\022\035.google.protobuf.FieldOption" +
       "s\030\266\201\345\037 \001(\t:=\n\023BigQueryFieldFilter\022\035.goog" +
-      "le.protobuf.FieldOptions\030\267\201\345\037 \001(\tB\036\n\034org" +
-      ".datahem.protobuf.optionsb\006proto3"
+      "le.protobuf.FieldOptions\030\267\201\345\037 \001(\t:5\n\013For" +
+      "getField\022\035.google.protobuf.FieldOptions\030" +
+      "\270\201\345\037 \001(\tB\036\n\034org.datahem.protobuf.options" +
+      "b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -339,6 +344,7 @@ public final class Options {
     bigQueryFieldCoalesce.internalInit(descriptor.getExtensions().get(12));
     bigQueryFieldDivide.internalInit(descriptor.getExtensions().get(13));
     bigQueryFieldFilter.internalInit(descriptor.getExtensions().get(14));
+    forgetField.internalInit(descriptor.getExtensions().get(15));
     com.google.protobuf.DescriptorProtos.getDescriptor();
   }
 
