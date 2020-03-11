@@ -664,4 +664,117 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         }
         return tableRow;
      }
+
+     public static Message forgetFields(Message message, Descriptor descriptor, ProtoDescriptor protoDescriptor) {
+        DynamicMessage.Builder builder = DynamicMessage.newBuilder(message);
+        List<FieldDescriptor> fields = descriptor.getFields();
+
+		for (FieldDescriptor field : fields) {
+            forgetField(message, field, protoDescriptor, builder, descriptor);
+        }
+        return builder.build();
+     }
+
+    public static void forgetField(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, DynamicMessage.Builder builder, Descriptor descriptor){
+        HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
+        
+            String fieldName = f.getName(); 
+            Object fieldVal = message.getField(f);
+            String fieldType = f.getType().toString().toUpperCase();
+            String forgetField = fieldOptionForgetField(fieldOptions);    
+
+            if (!f.isRepeated() ) {
+                if (fieldType.contains("STRING")) {
+                    builder.setField(f, (forgetField.isEmpty() ? String.valueOf(fieldVal) : forgetField));
+                } else if (fieldType.contains("BYTES")) {
+                    builder.setField(f, (forgetField.isEmpty() ? ((ByteString) fieldVal).toByteArray() : ByteString.copyFromUtf8(forgetField).toByteArray()));
+                } else if (fieldType.contains("INT32")) {
+                    builder.setField(f, (forgetField.isEmpty() ? (int) fieldVal : Integer.parseInt(forgetField)));
+                } else if (fieldType.contains("INT64")) {
+                    builder.setField(f, (forgetField.isEmpty() ? (long) fieldVal : Long.parseLong(forgetField)));
+                } else if (fieldType.contains("BOOL")) {
+                    // fix since JsonFormat.parseBool only parse "true", not "True" or "TRUE"
+                    if(fieldVal instanceof String){
+                        builder.setField(f, (forgetField.isEmpty() ? Boolean.parseBoolean(String.valueOf(fieldVal)) : Boolean.parseBoolean(forgetField)));
+                    }else{
+                        builder.setField(f, (forgetField.isEmpty() ? (boolean) fieldVal : Boolean.parseBoolean(forgetField)));
+                    }
+                } else if (fieldType.contains("ENUM")) {
+                    builder.setField(f, ((EnumValueDescriptor) fieldVal).getNumber());
+                } else if (fieldType.contains("FLOAT")) {
+                    builder.setField(f, (forgetField.isEmpty() ? (float) fieldVal : Float.parseFloat(forgetField)));
+                } else if (fieldType.contains("DOUBLE")) {
+                    builder.setField(f, (forgetField.isEmpty() ? (double) fieldVal : Double.parseDouble(forgetField)));
+                } else if (fieldType.contains("MESSAGE")) {
+                    if (message.getAllFields().containsKey(f)) {
+                        Message fieldMessage = forgetFields((Message) fieldVal, f.getMessageType(), protoDescriptor);
+                        if(!fieldMessage.isInitialized()){
+                            builder.setField(f, fieldMessage);
+                        }
+                    }
+                }
+            } else if (f.isRepeated()) {
+                if (fieldType.contains("STRING")) {
+                    ((List<Object>) message.getField(f)).forEach((val) -> {
+                        builder.addRepeatedField(f, (forgetField.isEmpty() ? String.valueOf(val) : forgetField));
+                    });
+                } /*else if (fieldType.contains("BYTES")) {
+                    List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> ((ByteString) e).toByteArray()).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
+                } else if (fieldType.contains("INT32")) {
+                    List<Integer> values = ((List<Object>) message.getField(f)).stream().map(e -> (int) e).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
+                } else if (fieldType.contains("INT64")) {
+                    List<Long> values = ((List<Object>) message.getField(f)).stream().map(e -> (long) e).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
+                } else if (fieldType.contains("ENUM")) {
+                    List<Integer> values = ((List<Object>) message.getField(f)).stream().map(e -> ((EnumValueDescriptor) e).getNumber()).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
+                } else if (fieldType.contains("BOOL")) {
+                    List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
+                } else if (fieldType.contains("DOUBLE")) {
+                    List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
+                } else if (fieldType.contains("FLOAT")) {
+                    List<Float> values = ((List<Object>) message.getField(f)).stream().map(e -> (float) e).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
+                } else if (fieldType.contains("MESSAGE")) {
+                    List<TableRow> values = ((List<Message>) message.getField(f)).stream()
+                        .map(m -> {
+                            TableRow tr = makeTableRow(m,  f.getMessageType(), protoDescriptor);
+                            if(!tr.isEmpty()){
+                                return tr;
+                            }else{
+                                return null;
+                            }
+                        })
+                        .filter(g -> g != null).collect(Collectors.toList());
+                    if(!values.isEmpty()){
+                        tableRow.set(fieldName, values);
+                    }
+                }*/
+            }
+               
+        //return tableRow;
+    }
+
+    public static String fieldOptionForgetField(HashMultimap<String, String> fieldOptions){
+        return ((Set<String>) fieldOptions.get("forgetField")).stream().findFirst().orElse("");
+    }
+
 }

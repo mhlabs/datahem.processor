@@ -203,41 +203,39 @@ public class AnonymizeStreamPipeline {
             attributes.putAll(pubsubMessage.getAttributeMap());
 
             JSONObject DynamoDbStreamObject = new JSONObject(pubsubPayload);
-            JSONObject payloadObject;
+            JSONObject payloadObject = new JSONObject();
             String payload = "";
             try{
                 // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
-                if(!DynamoDbStreamObject.isNull("OldImage")){
-                    //attributes.put("operation", "INSERT");
-                    //payloadObject = DynamoDbStreamObject.getJSONObject("NewImage");
-                }
-                if(!DynamoDbStreamObject.isNull("NewImage")){
-                    //attributes.put("operation", "REMOVE");
-                    //payloadObject = DynamoDbStreamObject.getJSONObject("OldImage");
-                }
-
-                payload = payloadObject.toString();
-
-                
-                
-                // Parse json to protobuf
                 DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
-                try{
-                    // Parse but don't allow unknown fields
-                    JsonFormat.parser().merge(payload, builder);
-                }catch(InvalidProtocolBufferException e){
-                    // Alert if unknown fields exist in message
-                    LOG.error("Unknown fields in message, doesn't match current schema " + descriptorFullName.get(), e);
+                if(!DynamoDbStreamObject.isNull("NewImage")){
+                    JsonFormat.parser().merge(DynamoDbStreamObject.getJSONObject("NewImage").toString(), builder);
+                    DynamicMessage message = builder.build();
+                    Message cleanMessage = forgetFields(message, messageDescriptor, protoDescriptor);
+                    String json = JsonFormat.printer().omittingInsignificantWhitespace().print(cleanMessage);
+                    payloadObject.put("NewImage", new JSONObject(json));
                     builder.clear();
-                    // Parse but allow for unknown fields
-                    JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
                 }
-               
-                DynamicMessage message = builder.build();
-                String json = JsonFormat.printer().omittingInsignificantWhitespace().print(message);
-                LOG.info(json);
+                if(!DynamoDbStreamObject.isNull("OldImage")){
+                    JsonFormat.parser().merge(DynamoDbStreamObject.getJSONObject("OldImage").toString(), builder);
+                    DynamicMessage message = builder.build();
+                    String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(message);
+                    payloadObject.put("OldImage", new JSONObject(json));
+                    builder.clear();
+                }
+                if(DynamoDbStreamObject.isNull("OldImage") && DynamoDbStreamObject.isNull("NewImage")){
+                    JsonFormat.parser().merge(DynamoDbStreamObject.toString(), builder);
+                    DynamicMessage message = builder.build();
+                    String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(message);
+                    payloadObject = new JSONObject(json);
+                    builder.clear();
+                }
                 
-                ByteString bs = ByteString.copyFromUtf8(json);
+                LOG.info(pubsubPayload);
+                payload = payloadObject.toString();
+                LOG.info(payload);
+                
+                ByteString bs = ByteString.copyFromUtf8(payload);
                 byte[] jsonPayload = bs.toByteArray();
 
 				PubsubMessage newPubsubMessage = new PubsubMessage(jsonPayload, attributes);
@@ -298,7 +296,6 @@ public class AnonymizeStreamPipeline {
                     .withAllowedLateness(Duration.standardDays(7))
                     .discardingFiredPanes()
                 )
-            // Combine steps PubsubMessage -> DynamicMessage -> TableRow into one step and make generic (beam 2.X will fix dynamic messages in proto coder)
             .apply("PubsubMessage to TableRow", ParDo.of(new CleanPubsubMessageFn(
 				options.getBucketName(),
                 options.getFileDescriptorName(),
