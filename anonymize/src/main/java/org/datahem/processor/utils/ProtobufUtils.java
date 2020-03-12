@@ -44,7 +44,11 @@ import com.google.protobuf.DescriptorProtos.FileDescriptorProto;
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.ByteString;
-
+/*import com.google.protobuf.EnumValue;
+import com.google.protobuf.EnumValue.Builder;
+import com.google.protobuf.Enum;
+import com.google.protobuf.Enum.Builder;
+*/
 import io.anemos.metastore.core.proto.*;
 
 import java.io.InputStream;
@@ -685,6 +689,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
 
             if (!f.isRepeated() ) {
                 if (fieldType.contains("STRING")) {
+                    LOG.info("forgetfield: " + forgetField + ", fieldval: " + String.valueOf(fieldVal));
                     builder.setField(f, (forgetField.isEmpty() ? String.valueOf(fieldVal) : forgetField));
                 } else if (fieldType.contains("BYTES")) {
                     builder.setField(f, (forgetField.isEmpty() ? ((ByteString) fieldVal).toByteArray() : ByteString.copyFromUtf8(forgetField).toByteArray()));
@@ -700,7 +705,8 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                         builder.setField(f, (forgetField.isEmpty() ? (boolean) fieldVal : Boolean.parseBoolean(forgetField)));
                     }
                 } else if (fieldType.contains("ENUM")) {
-                    builder.setField(f, ((EnumValueDescriptor) fieldVal).getNumber());
+                    LOG.info("fieldval: " + fieldVal);
+                    builder.setField(f, f.getEnumType().findValueByName(String.valueOf(fieldVal)));
                 } else if (fieldType.contains("FLOAT")) {
                     builder.setField(f, (forgetField.isEmpty() ? (float) fieldVal : Float.parseFloat(forgetField)));
                 } else if (fieldType.contains("DOUBLE")) {
@@ -718,63 +724,55 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     ((List<Object>) message.getField(f)).forEach((val) -> {
                         builder.addRepeatedField(f, (forgetField.isEmpty() ? String.valueOf(val) : forgetField));
                     });
-                } /*else if (fieldType.contains("BYTES")) {
-                    List<byte[]> values = ((List<Object>) message.getField(f)).stream().map(e -> ((ByteString) e).toByteArray()).collect(Collectors.toList());
-                    if(!values.isEmpty()){
-                        tableRow.set(fieldName, values);
-                    }
+                } else if (fieldType.contains("BYTES")) {
+                    ((List<Object>) message.getField(f)).forEach((val) -> {
+                        builder.addRepeatedField(f, (forgetField.isEmpty() ? ((ByteString) val).toByteArray() : ByteString.copyFromUtf8(forgetField).toByteArray()));
+                    });
                 } else if (fieldType.contains("INT32")) {
-                    List<Integer> values = ((List<Object>) message.getField(f)).stream().map(e -> (int) e).collect(Collectors.toList());
-                    if(!values.isEmpty()){
-                        tableRow.set(fieldName, values);
-                    }
+                    ((List<Object>) message.getField(f)).forEach((val) -> {
+                        builder.addRepeatedField(f, (forgetField.isEmpty() ? (int) val : Integer.parseInt(forgetField)));
+                    });
                 } else if (fieldType.contains("INT64")) {
-                    List<Long> values = ((List<Object>) message.getField(f)).stream().map(e -> (long) e).collect(Collectors.toList());
-                    if(!values.isEmpty()){
-                        tableRow.set(fieldName, values);
-                    }
+                    ((List<Object>) message.getField(f)).forEach((val) -> {
+                        builder.addRepeatedField(f, (forgetField.isEmpty() ? (long) val : Long.parseLong(forgetField)));
+                    });/*
                 } else if (fieldType.contains("ENUM")) {
-                    List<Integer> values = ((List<Object>) message.getField(f)).stream().map(e -> ((EnumValueDescriptor) e).getNumber()).collect(Collectors.toList());
-                    if(!values.isEmpty()){
-                        tableRow.set(fieldName, values);
-                    }
+                    ((List<Object>) message.getField(f)).forEach((val) -> {
+                        builder.addRepeatedField(f, ((EnumValueDescriptor) val).getNumber());
+                    });*/
                 } else if (fieldType.contains("BOOL")) {
-                    List<Boolean> values = ((List<Object>) message.getField(f)).stream().map(e -> (boolean) e).collect(Collectors.toList());
-                    if(!values.isEmpty()){
-                        tableRow.set(fieldName, values);
-                    }
+                    ((List<Object>) message.getField(f)).forEach((val) -> {
+                        if(fieldVal instanceof String){
+                            builder.addRepeatedField(f, (forgetField.isEmpty() ? Boolean.parseBoolean(String.valueOf(val)) : Boolean.parseBoolean(forgetField)));
+                        }else{
+                            builder.addRepeatedField(f, (forgetField.isEmpty() ? (boolean) val : Boolean.parseBoolean(forgetField)));
+                        }
+                    });
                 } else if (fieldType.contains("DOUBLE")) {
-                    List<Double> values = ((List<Object>) message.getField(f)).stream().map(e -> (double) e).collect(Collectors.toList());
-                    if(!values.isEmpty()){
-                        tableRow.set(fieldName, values);
-                    }
+                    ((List<Object>) message.getField(f)).forEach((val) -> {
+                        builder.addRepeatedField(f, (forgetField.isEmpty() ? (double) val : Double.parseDouble(forgetField)));
+                    });
                 } else if (fieldType.contains("FLOAT")) {
-                    List<Float> values = ((List<Object>) message.getField(f)).stream().map(e -> (float) e).collect(Collectors.toList());
-                    if(!values.isEmpty()){
-                        tableRow.set(fieldName, values);
-                    }
+                    ((List<Object>) message.getField(f)).forEach((val) -> {
+                        builder.addRepeatedField(f, (forgetField.isEmpty() ? (float) val : Float.parseFloat(forgetField)));
+                    });
                 } else if (fieldType.contains("MESSAGE")) {
-                    List<TableRow> values = ((List<Message>) message.getField(f)).stream()
-                        .map(m -> {
-                            TableRow tr = makeTableRow(m,  f.getMessageType(), protoDescriptor);
-                            if(!tr.isEmpty()){
-                                return tr;
-                            }else{
-                                return null;
+                    
+                    ((List<Object>) message.getField(f)).forEach((val) -> {
+                        //if (message.getAllFields().containsKey(f)) {
+                            Message fieldMessage = forgetFields((Message) val, f.getMessageType(), protoDescriptor);
+                            if(!fieldMessage.isInitialized()){
+                                builder.addRepeatedField(f, fieldMessage);
                             }
-                        })
-                        .filter(g -> g != null).collect(Collectors.toList());
-                    if(!values.isEmpty()){
-                        tableRow.set(fieldName, values);
-                    }
-                }*/
+                        //}
+                    });   
+                }
             }
-               
         //return tableRow;
     }
 
     public static String fieldOptionForgetField(HashMultimap<String, String> fieldOptions){
-        return ((Set<String>) fieldOptions.get("forgetField")).stream().findFirst().orElse("");
+        return ((Set<String>) fieldOptions.get("ForgetField")).stream().findFirst().orElse("");
     }
 
 }

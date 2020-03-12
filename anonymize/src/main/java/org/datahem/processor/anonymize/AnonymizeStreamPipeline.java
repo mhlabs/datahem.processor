@@ -88,6 +88,7 @@ import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
 import com.google.protobuf.Descriptors.FileDescriptor;
 import com.google.protobuf.DescriptorProtos.FileDescriptorProto;
 import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Message;
 import com.google.protobuf.DynamicMessage;
 import com.google.protobuf.DynamicMessage.Builder;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -211,22 +212,27 @@ public class AnonymizeStreamPipeline {
                 if(!DynamoDbStreamObject.isNull("NewImage")){
                     JsonFormat.parser().merge(DynamoDbStreamObject.getJSONObject("NewImage").toString(), builder);
                     DynamicMessage message = builder.build();
-                    Message cleanMessage = forgetFields(message, messageDescriptor, protoDescriptor);
+                    Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor);
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().print(cleanMessage);
+                    //String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(message);
                     payloadObject.put("NewImage", new JSONObject(json));
                     builder.clear();
                 }
                 if(!DynamoDbStreamObject.isNull("OldImage")){
                     JsonFormat.parser().merge(DynamoDbStreamObject.getJSONObject("OldImage").toString(), builder);
                     DynamicMessage message = builder.build();
-                    String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(message);
+                    Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor);
+                    String json = JsonFormat.printer().omittingInsignificantWhitespace().print(cleanMessage);
+                    //String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(message);
                     payloadObject.put("OldImage", new JSONObject(json));
                     builder.clear();
                 }
                 if(DynamoDbStreamObject.isNull("OldImage") && DynamoDbStreamObject.isNull("NewImage")){
                     JsonFormat.parser().merge(DynamoDbStreamObject.toString(), builder);
                     DynamicMessage message = builder.build();
-                    String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(message);
+                    Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor);
+                    String json = JsonFormat.printer().omittingInsignificantWhitespace().print(cleanMessage);
+                    //String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(message);
                     payloadObject = new JSONObject(json);
                     builder.clear();
                 }
