@@ -674,12 +674,12 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         List<FieldDescriptor> fields = descriptor.getFields();
 
 		for (FieldDescriptor field : fields) {
-            forgetField(message, field, protoDescriptor, builder, descriptor);
+            builder = forgetField(message, field, protoDescriptor, builder, descriptor);
         }
         return builder.build();
      }
 
-    public static void forgetField(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, DynamicMessage.Builder builder, Descriptor descriptor){
+    public static DynamicMessage.Builder forgetField(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, DynamicMessage.Builder builder, Descriptor descriptor){
         HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
         
             String fieldName = f.getName(); 
@@ -688,91 +688,132 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
             String forgetField = fieldOptionForgetField(fieldOptions);    
 
             if (!f.isRepeated() ) {
-                if (fieldType.contains("STRING")) {
-                    LOG.info("forgetfield: " + forgetField + ", fieldval: " + String.valueOf(fieldVal));
-                    builder.setField(f, (forgetField.isEmpty() ? String.valueOf(fieldVal) : forgetField));
-                } else if (fieldType.contains("BYTES")) {
-                    builder.setField(f, (forgetField.isEmpty() ? ((ByteString) fieldVal).toByteArray() : ByteString.copyFromUtf8(forgetField).toByteArray()));
-                } else if (fieldType.contains("INT32")) {
-                    builder.setField(f, (forgetField.isEmpty() ? (int) fieldVal : Integer.parseInt(forgetField)));
-                } else if (fieldType.contains("INT64")) {
-                    builder.setField(f, (forgetField.isEmpty() ? (long) fieldVal : Long.parseLong(forgetField)));
-                } else if (fieldType.contains("BOOL")) {
-                    // fix since JsonFormat.parseBool only parse "true", not "True" or "TRUE"
-                    if(fieldVal instanceof String){
-                        builder.setField(f, (forgetField.isEmpty() ? Boolean.parseBoolean(String.valueOf(fieldVal)) : Boolean.parseBoolean(forgetField)));
-                    }else{
-                        builder.setField(f, (forgetField.isEmpty() ? (boolean) fieldVal : Boolean.parseBoolean(forgetField)));
-                    }
-                } else if (fieldType.contains("ENUM")) {
-                    LOG.info("fieldval: " + fieldVal);
-                    builder.setField(f, f.getEnumType().findValueByName(String.valueOf(fieldVal)));
-                } else if (fieldType.contains("FLOAT")) {
-                    builder.setField(f, (forgetField.isEmpty() ? (float) fieldVal : Float.parseFloat(forgetField)));
-                } else if (fieldType.contains("DOUBLE")) {
-                    builder.setField(f, (forgetField.isEmpty() ? (double) fieldVal : Double.parseDouble(forgetField)));
-                } else if (fieldType.contains("MESSAGE")) {
+                LOG.info("fieldname: " + fieldName + ", fieldtype: " + fieldType + ", forgetfield: " + forgetField + ", fieldval: " + String.valueOf(fieldVal));
+                if(forgetField != null ){
+                    LOG.info("forget field!");
+                    if (fieldType.contains("STRING")) {
+                        //if(forgetField == null ) builder.setField(f, String.valueOf(fieldVal));
+                        if(forgetField.equals("Null")) {builder.clearField(f); LOG.info("clear field!");}
+                        else if(!forgetField.isEmpty()) builder.setField(f, forgetField);
+                    } else if (fieldType.contains("BYTES")) {
+                        if(forgetField == null ) builder.setField(f, ((ByteString) fieldVal).toByteArray());
+                        else if(!forgetField.isEmpty()) builder.setField(f, ByteString.copyFromUtf8(forgetField).toByteArray());
+                        //builder.setField(f, (forgetField.isEmpty() ? ((ByteString) fieldVal).toByteArray() : ByteString.copyFromUtf8(forgetField).toByteArray()));
+                    } else if (fieldType.contains("INT32")) {
+                        if(forgetField == null ) builder.setField(f, (int) fieldVal);
+                        else if(!forgetField.isEmpty()) builder.setField(f, Integer.parseInt(forgetField));
+                        //builder.setField(f, (forgetField.isEmpty() ? (int) fieldVal : Integer.parseInt(forgetField)));
+                    } else if (fieldType.contains("INT64")) {
+                        if(forgetField == null ) builder.setField(f, (long) fieldVal);
+                        else if(!forgetField.isEmpty()) builder.setField(f, Long.parseLong(forgetField));
+                        //builder.setField(f, (forgetField.isEmpty() ? (long) fieldVal : Long.parseLong(forgetField)));
+                    } else if (fieldType.contains("BOOL")) {
+                        // fix since JsonFormat.parseBool only parse "true", not "True" or "TRUE"
+                        if(forgetField == null && fieldVal instanceof String) builder.setField(f, Boolean.parseBoolean(String.valueOf(fieldVal)));
+                        else if(forgetField == null && fieldVal instanceof Boolean) builder.setField(f, (boolean) fieldVal);
+                        else if(!forgetField.isEmpty()) builder.setField(f, Boolean.parseBoolean(forgetField));
+                        /*
+                        if(fieldVal instanceof String){
+                            builder.setField(f, (forgetField.isEmpty() ? Boolean.parseBoolean(String.valueOf(fieldVal)) : Boolean.parseBoolean(forgetField)));
+                        }else{
+                            builder.setField(f, (forgetField.isEmpty() ? (boolean) fieldVal : Boolean.parseBoolean(forgetField)));
+                        }*/
+                    } else if (fieldType.contains("ENUM")) {
+                        builder.setField(f, f.getEnumType().findValueByName(String.valueOf(fieldVal)));
+                    } else if (fieldType.contains("FLOAT")) {
+                        if(forgetField == null ) builder.setField(f, (float) fieldVal);
+                        else if(!forgetField.isEmpty()) builder.setField(f, Float.parseFloat(forgetField));
+                        //builder.setField(f, (forgetField.isEmpty() ? (float) fieldVal : Float.parseFloat(forgetField)));
+                    } else if (fieldType.contains("DOUBLE")) {
+                        if(forgetField.equals("Null")) builder.clearField(f);
+                        //if(forgetField == null ) builder.setField(f, (double) fieldVal);
+                        else if(!forgetField.isEmpty()) builder.setField(f, Double.parseDouble(forgetField));
+                        //builder.setField(f, (forgetField.isEmpty() ? (double) fieldVal : Double.parseDouble(forgetField)));
+                    } 
+                }    
+                if (fieldType.contains("MESSAGE")) {
                     if (message.getAllFields().containsKey(f)) {
                         Message fieldMessage = forgetFields((Message) fieldVal, f.getMessageType(), protoDescriptor);
-                        if(!fieldMessage.isInitialized()){
+                        //if(!fieldMessage.isInitialized()){
                             builder.setField(f, fieldMessage);
-                        }
+                        //}
                     }
                 }
             } else if (f.isRepeated()) {
-                if (fieldType.contains("STRING")) {
-                    ((List<Object>) message.getField(f)).forEach((val) -> {
-                        builder.addRepeatedField(f, (forgetField.isEmpty() ? String.valueOf(val) : forgetField));
-                    });
-                } else if (fieldType.contains("BYTES")) {
-                    ((List<Object>) message.getField(f)).forEach((val) -> {
-                        builder.addRepeatedField(f, (forgetField.isEmpty() ? ((ByteString) val).toByteArray() : ByteString.copyFromUtf8(forgetField).toByteArray()));
-                    });
-                } else if (fieldType.contains("INT32")) {
-                    ((List<Object>) message.getField(f)).forEach((val) -> {
-                        builder.addRepeatedField(f, (forgetField.isEmpty() ? (int) val : Integer.parseInt(forgetField)));
-                    });
-                } else if (fieldType.contains("INT64")) {
-                    ((List<Object>) message.getField(f)).forEach((val) -> {
-                        builder.addRepeatedField(f, (forgetField.isEmpty() ? (long) val : Long.parseLong(forgetField)));
-                    });/*
-                } else if (fieldType.contains("ENUM")) {
-                    ((List<Object>) message.getField(f)).forEach((val) -> {
-                        builder.addRepeatedField(f, ((EnumValueDescriptor) val).getNumber());
-                    });*/
-                } else if (fieldType.contains("BOOL")) {
-                    ((List<Object>) message.getField(f)).forEach((val) -> {
-                        if(fieldVal instanceof String){
-                            builder.addRepeatedField(f, (forgetField.isEmpty() ? Boolean.parseBoolean(String.valueOf(val)) : Boolean.parseBoolean(forgetField)));
-                        }else{
-                            builder.addRepeatedField(f, (forgetField.isEmpty() ? (boolean) val : Boolean.parseBoolean(forgetField)));
-                        }
-                    });
-                } else if (fieldType.contains("DOUBLE")) {
-                    ((List<Object>) message.getField(f)).forEach((val) -> {
-                        builder.addRepeatedField(f, (forgetField.isEmpty() ? (double) val : Double.parseDouble(forgetField)));
-                    });
-                } else if (fieldType.contains("FLOAT")) {
-                    ((List<Object>) message.getField(f)).forEach((val) -> {
-                        builder.addRepeatedField(f, (forgetField.isEmpty() ? (float) val : Float.parseFloat(forgetField)));
-                    });
-                } else if (fieldType.contains("MESSAGE")) {
+                if(forgetField != null ){
+                    if (fieldType.contains("STRING")) {
+                        ((List<Object>) message.getField(f)).forEach((val) -> {
+                            if(forgetField == null ) builder.addRepeatedField(f, String.valueOf(val));
+                            else if(!forgetField.isEmpty()) builder.addRepeatedField(f, forgetField);
+                            //builder.addRepeatedField(f, (forgetField.isEmpty() ? String.valueOf(val) : forgetField));
+                        });
+                    } else if (fieldType.contains("BYTES")) {
+                        ((List<Object>) message.getField(f)).forEach((val) -> {
+                            if(forgetField == null ) builder.addRepeatedField(f, ((ByteString) val).toByteArray());
+                            else if(!forgetField.isEmpty()) builder.addRepeatedField(f, ByteString.copyFromUtf8(forgetField).toByteArray());
+                            //builder.addRepeatedField(f, (forgetField.isEmpty() ? ((ByteString) val).toByteArray() : ByteString.copyFromUtf8(forgetField).toByteArray()));
+                        });
+                    } else if (fieldType.contains("INT32")) {
+                        ((List<Object>) message.getField(f)).forEach((val) -> {
+                            if(forgetField == null ) builder.addRepeatedField(f, (int) val);
+                            else if(!forgetField.isEmpty()) builder.addRepeatedField(f, Integer.parseInt(forgetField));
+                            //builder.addRepeatedField(f, (forgetField.isEmpty() ? (int) val : Integer.parseInt(forgetField)));
+                        });
+                    } else if (fieldType.contains("INT64")) {
+                        ((List<Object>) message.getField(f)).forEach((val) -> {
+                            if(forgetField == null ) builder.addRepeatedField(f, (long) val);
+                            else if(!forgetField.isEmpty()) builder.addRepeatedField(f, Long.parseLong(forgetField));
+                            //builder.addRepeatedField(f, (forgetField.isEmpty() ? (long) val : Long.parseLong(forgetField)));
+                        });
+                    } else if (fieldType.contains("ENUM")) {
+                        ((List<Object>) message.getField(f)).forEach((val) -> {
+                            if(forgetField == null ) builder.addRepeatedField(f, f.getEnumType().findValueByName(String.valueOf(val)));
+                            else if(!forgetField.isEmpty()) builder.addRepeatedField(f, f.getEnumType().findValueByName(String.valueOf(forgetField)));
+                            //builder.addRepeatedField(f, ((EnumValueDescriptor) val).getNumber());
+                        });
+                    } else if (fieldType.contains("BOOL")) {
+                        ((List<Object>) message.getField(f)).forEach((val) -> {
+                            if(forgetField == null && val instanceof String) builder.addRepeatedField(f, Boolean.parseBoolean(String.valueOf(val)));
+                            else if(forgetField == null && val instanceof Boolean) builder.addRepeatedField(f, (boolean) val);
+                            else if(!forgetField.isEmpty()) builder.addRepeatedField(f, Boolean.parseBoolean(forgetField));
+                            /*
+                            if(fieldVal instanceof String){
+                                builder.addRepeatedField(f, (forgetField.isEmpty() ? Boolean.parseBoolean(String.valueOf(val)) : Boolean.parseBoolean(forgetField)));
+                            }else{
+                                builder.addRepeatedField(f, (forgetField.isEmpty() ? (boolean) val : Boolean.parseBoolean(forgetField)));
+                            }*/
+                        });
+                    } else if (fieldType.contains("DOUBLE")) {
+                        ((List<Object>) message.getField(f)).forEach((val) -> {
+                            if(forgetField == null ) builder.addRepeatedField(f, (double) val);
+                            else if(!forgetField.isEmpty()) builder.addRepeatedField(f, Double.parseDouble(forgetField));
+                            //builder.addRepeatedField(f, (forgetField.isEmpty() ? (double) val : Double.parseDouble(forgetField)));
+                        });
+                    } else if (fieldType.contains("FLOAT")) {
+                        ((List<Object>) message.getField(f)).forEach((val) -> {
+                            if(forgetField == null ) builder.addRepeatedField(f, (float) val);
+                            else if(!forgetField.isEmpty()) builder.addRepeatedField(f, Float.parseFloat(forgetField));
+                            //builder.addRepeatedField(f, (forgetField.isEmpty() ? (float) val : Float.parseFloat(forgetField)));
+                        });
+                    }
+                }
+                if (fieldType.contains("MESSAGE")) {
                     
                     ((List<Object>) message.getField(f)).forEach((val) -> {
                         //if (message.getAllFields().containsKey(f)) {
                             Message fieldMessage = forgetFields((Message) val, f.getMessageType(), protoDescriptor);
-                            if(!fieldMessage.isInitialized()){
+                            //if(!fieldMessage.isInitialized()){
                                 builder.addRepeatedField(f, fieldMessage);
-                            }
+                            //}
                         //}
                     });   
                 }
             }
-        //return tableRow;
+        return builder;
     }
 
     public static String fieldOptionForgetField(HashMultimap<String, String> fieldOptions){
-        return ((Set<String>) fieldOptions.get("ForgetField")).stream().findFirst().orElse("");
+        return ((Set<String>) fieldOptions.get("ForgetField")).stream().findFirst().orElse(null);
     }
 
 }
