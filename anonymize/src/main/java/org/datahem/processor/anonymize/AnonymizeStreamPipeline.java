@@ -183,10 +183,11 @@ public class AnonymizeStreamPipeline {
         
         @Setup
         public void setup() throws Exception {
-             LOG.info("ok 3");
+/*             LOG.info("ok 3");
              LOG.info(bucketName.get());
             LOG.info(fileDescriptorName.get());
             LOG.info(descriptorFullName.get());
+*/
             messageDescriptor = ProtobufUtils.getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
             protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
             LOG.info("ok 4");
@@ -195,10 +196,11 @@ public class AnonymizeStreamPipeline {
 		@ProcessElement
         public void processElement(@Element PubsubMessage pubsubMessage, OutputReceiver<PubsubMessage> out) throws Exception {
             // Get pubsub message payload and attributes
-             LOG.info("ok 5");
+/*
             LOG.info(bucketName.get());
             LOG.info(fileDescriptorName.get());
             LOG.info(descriptorFullName.get());
+*/
             String pubsubPayload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
             HashMap<String, String> attributes = new HashMap<String,String>();
             attributes.putAll(pubsubMessage.getAttributeMap());
@@ -213,25 +215,24 @@ public class AnonymizeStreamPipeline {
                     JsonFormat.parser().merge(DynamoDbStreamObject.getJSONObject("NewImage").toString(), builder);
                     DynamicMessage message = builder.build();
                     Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor);
-                    //String json = JsonFormat.printer().omittingInsignificantWhitespace().print(cleanMessage);
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(cleanMessage);
                     payloadObject.put("NewImage", new JSONObject(json));
+                    payloadObject.getJSONObject("NewImage").remove("_ATTRIBUTES");
                     builder.clear();
                 }
                 if(!DynamoDbStreamObject.isNull("OldImage")){
                     JsonFormat.parser().merge(DynamoDbStreamObject.getJSONObject("OldImage").toString(), builder);
                     DynamicMessage message = builder.build();
                     Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor);
-                    //String json = JsonFormat.printer().omittingInsignificantWhitespace().print(cleanMessage);
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(cleanMessage);
                     payloadObject.put("OldImage", new JSONObject(json));
+                    payloadObject.getJSONObject("OldImage").remove("_ATTRIBUTES");
                     builder.clear();
                 }
                 if(DynamoDbStreamObject.isNull("OldImage") && DynamoDbStreamObject.isNull("NewImage")){
                     JsonFormat.parser().merge(DynamoDbStreamObject.toString(), builder);
                     DynamicMessage message = builder.build();
                     Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor);
-                    //String json = JsonFormat.printer().omittingInsignificantWhitespace().print(cleanMessage);
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(cleanMessage);
                     payloadObject = new JSONObject(json);
                     builder.clear();
@@ -245,8 +246,6 @@ public class AnonymizeStreamPipeline {
                 byte[] jsonPayload = bs.toByteArray();
 
 				PubsubMessage newPubsubMessage = new PubsubMessage(jsonPayload, attributes);
-
-                LOG.info(newPubsubMessage.getAttributeMap().toString());
 
                 out.output(newPubsubMessage);
             }catch(java.lang.NullPointerException e){
@@ -285,7 +284,6 @@ public class AnonymizeStreamPipeline {
             ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(options.getBucketName().get(), options.getFileDescriptorName().get());
             Descriptor descriptor = protoDescriptor.getDescriptorByName(options.getDescriptorFullName().get());
             eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, options.getTaxonomyResourcePattern().get());
-            //LOG.info("eventSchema: " + eventSchema.toString());
             HashMultimap<String, String> messageOptions = ProtobufUtils.getMessageOptions(protoDescriptor, descriptor);
             tableDescription = ((Set<String>) messageOptions.get("BigQueryTableDescription")).stream().findFirst().orElse("");
         }catch (Exception e) {
