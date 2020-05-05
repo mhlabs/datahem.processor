@@ -246,6 +246,8 @@ public class AnonymizeStreamPipeline {
 
 				PubsubMessage newPubsubMessage = new PubsubMessage(jsonPayload, attributes);
 
+                LOG.info(newPubsubMessage.getAttributeMap().toString());
+
                 out.output(newPubsubMessage);
             }catch(java.lang.NullPointerException e){
                 //out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
