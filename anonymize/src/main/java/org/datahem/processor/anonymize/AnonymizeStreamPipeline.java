@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.UUID;
+import java.util.Base64;
 //import java.util.regex.Pattern;
 //import java.util.regex.Matcher;
 //import com.google.api.services.bigquery.model.TableRow;
@@ -129,9 +130,20 @@ public class AnonymizeStreamPipeline {
 
 	public interface Options extends PipelineOptions, GcpOptions {
 
+        @Description("BigQuery query to extract fields to anonymize")
+	  	String getQuery();
+	  	void setQuery(String query);
 
+/*
+        @Description("Pub/Sub subscription to push anonymized messages to")
+	    ValueProvider<String> getPubsubSubscription();
+	    void setPubsubSubscription(ValueProvider<String> subscription);  */
 
-        @Description("bucketName")
+        @Description("Pub/Sub topic to push anonymized messages to")
+	    ValueProvider<String> getPubsubTopic();
+	    void setPubsubTopic(ValueProvider<String> subscription);  
+
+        @Description("bucketName where schema resides")
 		ValueProvider<String> getBucketName();
 		void setBucketName(ValueProvider<String> value);
 	
@@ -143,24 +155,18 @@ public class AnonymizeStreamPipeline {
 		ValueProvider<String> getDescriptorFullName();
 		void setDescriptorFullName(ValueProvider<String> value);
 
-        @Description("taxonomyResourcePattern")
+        @Description("taxonomyResourcePattern to filter out fields to anonymize")
 		@Default.String(".*")
 		ValueProvider<String> getTaxonomyResourcePattern();
 		void setTaxonomyResourcePattern(ValueProvider<String> value);
 		
-		@Description("pubsubSubscription")
-		ValueProvider<String> getPubsubSubscription();
-		void setPubsubSubscription(ValueProvider<String> subscription);
+        @Description("BigQuery Table Spec [project_id]:[dataset_id].[table_id] or [dataset_id].[table_id]")
+		ValueProvider<String> getRecoveryTableSpec();
+		void setRecoveryTableSpec(ValueProvider<String> value);
 
         @Description("BigQuery Table Spec [project_id]:[dataset_id].[table_id] or [dataset_id].[table_id]")
-		ValueProvider<String> getBigQueryTableSpec();
-		void setBigQueryTableSpec(ValueProvider<String> value);
-
-        @Description("BigQuery insert error table")
-		@Default.String("backup.error")
-		ValueProvider<String> getBigQueryErrorTableSpec();
-		void setBigQueryErrorTableSpec(ValueProvider<String> value);
-        
+		ValueProvider<String> getAnonymizedTableSpec();
+		void setAnonymizedTableSpec(ValueProvider<String> value);
 	}
 
 
@@ -290,23 +296,46 @@ public class AnonymizeStreamPipeline {
             e.printStackTrace();
         }
 
-        PCollection results = pipeline
-            .apply("Read json as string from pubsub", 
-                PubsubIO
-                    .readMessagesWithAttributes()
-                    .fromSubscription(options.getPubsubSubscription())
-                    .withIdAttribute("uuid")
-                    )
+        PCollection<TableRow> rawRows = pipeline
+            .apply("BigQuery SELECT job",
+    		    BigQueryIO
+                    .readTableRows()
+                    .fromQuery(options.getQuery())
+                    .usingStandardSql());
+        
+        PCollection<PubsubMessage> anonymized = rawRows
+            .apply("TableRow to PubSubMessage", 
+                ParDo.of(new DoFn<TableRow,PubsubMessage>() {
+                    @ProcessElement
+                    public void processElement(@Element TableRow row, OutputReceiver<PubsubMessage> out)  {
+                        //TableRow row = c.element();
+                        String b = (String) row.get("data");
+                        byte[] payload = Base64.getDecoder().decode(b.getBytes());
+                        //byte[] payload = b.getBytes();
+                        List<TableRow> repeated = (List<TableRow>) row.get("attributes");
+                        HashMap<String, String> attributes = repeated
+                            .stream()
+                            .collect(HashMap::new, (map,record)-> map.put((String) record.get("key"), (String) record.get("value")), HashMap::putAll);
+                        PubsubMessage pubSubMessage = new PubsubMessage(payload, attributes); 
+                        out.output(pubSubMessage);
+            }}))
             .apply("Fixed Windows",
                 Window.<PubsubMessage>into(FixedWindows.of(Duration.standardMinutes(1)))
                     .withAllowedLateness(Duration.standardDays(7))
                     .discardingFiredPanes()
                 )
-            .apply("PubsubMessage to TableRow", ParDo.of(new CleanPubsubMessageFn(
+            .apply("Anonymize pubsubMessage", ParDo.of(new CleanPubsubMessageFn(
 				options.getBucketName(),
                 options.getFileDescriptorName(),
                 options.getDescriptorFullName()
             )));
+        
+        anonymized
+            .apply("Write to live pubsub topic",
+				PubsubIO
+					.writeMessages()
+					.to(options.getPubsubTopic()));
+
             /*.withOutputTags(
                 successTag//,
                 //TupleTagList.of(deadLetterTag)
