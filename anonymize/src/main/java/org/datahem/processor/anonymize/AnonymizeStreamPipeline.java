@@ -31,6 +31,7 @@ import com.google.api.services.bigquery.model.TableReference;
 import com.google.api.services.bigquery.model.TimePartitioning;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,7 @@ import org.apache.beam.sdk.io.gcp.bigquery.InsertRetryPolicy;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryHelpers;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
+import com.google.api.services.bigquery.model.Clustering;
 
 import org.apache.beam.sdk.metrics.Counter;
 import org.apache.beam.sdk.metrics.Metrics;
@@ -71,11 +73,13 @@ import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.options.Validation.Required;
 import org.apache.beam.sdk.options.ValueProvider;
 import org.apache.beam.sdk.options.ValueProvider.StaticValueProvider;
+import org.apache.beam.sdk.options.ValueProvider.NestedValueProvider;
 import org.apache.beam.sdk.transforms.Count;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.MapElements;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
+import org.apache.beam.sdk.transforms.SerializableFunction;
 import org.apache.beam.sdk.transforms.SimpleFunction;
 import org.apache.beam.sdk.transforms.windowing.FixedWindows;
 import org.apache.beam.sdk.transforms.windowing.Window;
@@ -296,12 +300,49 @@ public class AnonymizeStreamPipeline {
             e.printStackTrace();
         }
 
+        //Attributes tablefield
+		List<TableFieldSchema> attributeFieldSchemaList = new ArrayList<>();
+		attributeFieldSchemaList.add(new TableFieldSchema().setName("key").setType("STRING"));
+		attributeFieldSchemaList.add(new TableFieldSchema().setName("value").setType("STRING"));
+		
+		//TableFields
+		List<TableFieldSchema> fieldsSchemaList = new ArrayList<>();
+	    fieldsSchemaList.add(new TableFieldSchema().setName("publish_time").setType("TIMESTAMP").setMode("REQUIRED"));
+        fieldsSchemaList.add(new TableFieldSchema().setName("topic").setType("STRING"));
+	    fieldsSchemaList.add(new TableFieldSchema().setName("attributes").setType("RECORD").setMode("REPEATED").setFields(attributeFieldSchemaList));
+	    fieldsSchemaList.add(new TableFieldSchema().setName("data").setType("BYTES").setMode("REQUIRED"));
+		
+	    TableSchema schema = new TableSchema().setFields(fieldsSchemaList);
+	    TimePartitioning partition = new TimePartitioning().setField("publish_time");
+
+        Clustering cluster = new Clustering();
+        cluster.setFields(Arrays.asList("topic"));
+
         PCollection<TableRow> rawRows = pipeline
             .apply("BigQuery SELECT job",
     		    BigQueryIO
                     .readTableRows()
                     .fromQuery(options.getQuery())
                     .usingStandardSql());
+        
+        rawRows.apply("InsertToRecoveryTable",
+      		BigQueryIO
+				.<TableRow>write()
+				.to(NestedValueProvider.of(
+					options.getRecoveryTableSpec(),
+					new SerializableFunction<String, String>() {
+						@Override
+						public String apply(String tableSpec) {
+							return tableSpec.replaceAll("[^A-Za-z0-9.]", "");
+						}
+				}))
+				.withFormatFunction(tr -> tr)
+      			.withSchema(schema)
+                .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
+      			.withTimePartitioning(partition)
+                .withClustering(cluster)
+      			.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+      			.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
         
         PCollection<PubsubMessage> anonymized = rawRows
             .apply("TableRow to PubSubMessage", 
@@ -335,65 +376,49 @@ public class AnonymizeStreamPipeline {
 				PubsubIO
 					.writeMessages()
 					.to(options.getPubsubTopic()));
+        
+        anonymized
+            .apply("ConvertDataToTableRows", ParDo.of(new DoFn<PubsubMessage, TableRow>() {
+			@ProcessElement
+			public void processElement(ProcessContext c) throws Exception {
+	        	PubsubMessage pubsubMessage = c.element();
+				
+				Map<String, String> attributeMap = pubsubMessage.getAttributeMap();
+	        	List<TableRow> attributes = new ArrayList<>();
+	        	if (attributeMap != null) {
+	        		attributeMap.forEach((k,v)-> {
+	        			attributes.add(new TableRow().set("key",k).set("value", v));
+        			});
+				}
+	        	DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
+	        	TableRow tableRow = new TableRow()
+	        		.set("publish_time", c.timestamp().toString(partition))
+	        		.set("topic", attributeMap.get("topic"))
+                    .set("attributes", attributes)
+	        		.set("data", pubsubMessage.getPayload());
+	        	
+	        	c.output(tableRow);
+    		}
+		}))
+    	.apply("InsertToAnonymizedTable",
+      		BigQueryIO
+				.<TableRow>write()
+				.to(NestedValueProvider.of(
+					options.getAnonymizedTableSpec(),
+					new SerializableFunction<String, String>() {
+						@Override
+						public String apply(String tableSpec) {
+							return tableSpec.replaceAll("[^A-Za-z0-9.]", "");
+						}
+				}))
+				.withFormatFunction(tr -> tr)
+      			.withSchema(schema)
+                .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
+      			.withTimePartitioning(partition)
+                .withClustering(cluster)
+      			.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+      			.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
-            /*.withOutputTags(
-                successTag//,
-                //TupleTagList.of(deadLetterTag)
-            ));*/
-            
-            /*
-            results.get(successTag)
-                .apply("Write to bigquery", 
-                    BigQueryIO
-                        .writeTableRows()
-                        .to(new TablePartition(options.getBigQueryTableSpec(), tableDescription))
-                        .withSchema(eventSchema)
-                        .skipInvalidRows()
-                        .ignoreUnknownValues()
-                        .withExtendedErrorInfo()
-                        .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
-                        .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND))
-                .getFailedInsertsWithErr()
-                .apply("Transform failed inserts", ParDo.of(new DoFn<BigQueryInsertError, TableRow>() {
-                    @ProcessElement
-                    public void processElement(@Element BigQueryInsertError bqError, OutputReceiver<TableRow> out) {
-                        LOG.error("Failed to insert: " + bqError.getError().toString());
-                        out.output(new Failure(
-                            bqError.getTable().toString(), 
-                            bqError.getRow().toString(), 
-                            bqError.getError().toString(), 
-                            "BIGQUERY_INSERT_ERROR").getAsTableRow());
-                    }
-                }))
-                .apply("Fixed Windows",
-                    Window.<TableRow>into(FixedWindows.of(Duration.standardMinutes(1)))
-                        .withAllowedLateness(Duration.standardDays(7))
-                        .discardingFiredPanes())
-                .apply("Write errors to bigquery error table", 
-                    BigQueryIO
-                        .writeTableRows()
-                        .to(new TablePartition(options.getBigQueryErrorTableSpec(), "BigQuery Insert error table"))
-                        .withSchema(errorSchema)
-                        .skipInvalidRows()
-                        .ignoreUnknownValues()
-                        .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
-                        .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
-                
-
-        results.get(deadLetterTag)
-            .apply("Write processing errors to bigquery error table", 
-                BigQueryIO
-                    .writeTableRows()
-                    .to(new TablePartition(options.getBigQueryErrorTableSpec(), "BigQuery Insert error table"))
-                    .withSchema(errorSchema)
-                    .skipInvalidRows()
-                    .ignoreUnknownValues()
-                    .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
-                    .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-                    .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
-        */
         pipeline.run();
     }
 }
