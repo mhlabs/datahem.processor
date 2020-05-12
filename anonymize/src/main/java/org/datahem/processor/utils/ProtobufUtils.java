@@ -669,20 +669,20 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         return tableRow;
      }
 
-     public static Message forgetFields(Message message, Descriptor descriptor, ProtoDescriptor protoDescriptor) {
+     public static Message forgetFields(Message message, Descriptor descriptor, ProtoDescriptor protoDescriptor, String taxonomyResourcePattern) {
         DynamicMessage.Builder builder = DynamicMessage.newBuilder(message);
         List<FieldDescriptor> fields = descriptor.getFields();
 
 		for (FieldDescriptor field : fields) {
-            builder = forgetField(message, field, protoDescriptor, builder, descriptor);
+            builder = forgetField(message, field, protoDescriptor, builder, descriptor, taxonomyResourcePattern);
         }
         return builder.build();
      }
 
-    public static DynamicMessage.Builder forgetField(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, DynamicMessage.Builder builder, Descriptor descriptor){
+    public static DynamicMessage.Builder forgetField(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, DynamicMessage.Builder builder, Descriptor descriptor, String taxonomyResourcePattern){
         HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);
         
-            String taxonomyResourcePattern = "894904220142199737";
+            //String taxonomyResourcePattern = "894904220142199737";
             String fieldName = f.getName(); 
             Object fieldVal = message.getField(f);
             String fieldType = f.getType().toString().toUpperCase();
@@ -751,7 +751,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                 }    
                 if (fieldType.contains("MESSAGE")) {
                     if (message.getAllFields().containsKey(f)) {
-                        Message fieldMessage = forgetFields((Message) fieldVal, f.getMessageType(), protoDescriptor);
+                        Message fieldMessage = forgetFields((Message) fieldVal, f.getMessageType(), protoDescriptor, taxonomyResourcePattern);
                         //if(!fieldMessage.isInitialized()){
                             builder.setField(f, fieldMessage);
                         //}
@@ -819,7 +819,7 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     
                     ((List<Object>) message.getField(f)).forEach((val) -> {
                         //if (message.getAllFields().containsKey(f)) {
-                            Message fieldMessage = forgetFields((Message) val, f.getMessageType(), protoDescriptor);
+                            Message fieldMessage = forgetFields((Message) val, f.getMessageType(), protoDescriptor, taxonomyResourcePattern);
                             //if(!fieldMessage.isInitialized()){
                                 builder.addRepeatedField(f, fieldMessage);
                             //}

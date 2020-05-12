@@ -145,6 +145,7 @@ public class AnonymizePipelineTest {
         ValueProvider<String> bucketName = p.newProvider("mathem-ml-datahem-test-descriptor");
         ValueProvider<String> fileDescriptorName = p.newProvider("schemas.desc");
         ValueProvider<String> descriptorFullName = p.newProvider("mathem.commerce.member_service.member.v2.Member");
+        ValueProvider<String> taxonomyResourcePattern = p.newProvider("894904220142199737");
 
         try{
             LOG.info("ok ");
@@ -153,7 +154,8 @@ public class AnonymizePipelineTest {
                 .apply("PubsubMessage to TableRow", ParDo.of(new CleanPubsubMessageFn(
                     bucketName,
                     fileDescriptorName,
-                    descriptorFullName
+                    descriptorFullName,
+                    taxonomyResourcePattern
                 )));
 
             //PAssert.that(output).containsInAnyOrder(assertTableRow);

@@ -138,11 +138,6 @@ public class AnonymizeStreamPipeline {
 	  	String getQuery();
 	  	void setQuery(String query);
 
-/*
-        @Description("Pub/Sub subscription to push anonymized messages to")
-	    ValueProvider<String> getPubsubSubscription();
-	    void setPubsubSubscription(ValueProvider<String> subscription);  */
-
         @Description("Pub/Sub topic to push anonymized messages to")
 	    ValueProvider<String> getPubsubTopic();
 	    void setPubsubTopic(ValueProvider<String> subscription);  
@@ -180,15 +175,18 @@ public class AnonymizeStreamPipeline {
         ValueProvider<String> bucketName;
         ValueProvider<String> fileDescriptorName;
         ValueProvider<String> descriptorFullName;
+        ValueProvider<String> taxonomyResourcePattern;
 		
 	  	public CleanPubsubMessageFn(
 	  		ValueProvider<String> bucketName,
 	  		ValueProvider<String> fileDescriptorName,
-            ValueProvider<String> descriptorFullName) {
+            ValueProvider<String> descriptorFullName,
+            ValueProvider<String> taxonomyResourcePattern) {
                  LOG.info("ok 2");
 		     	this.bucketName = bucketName;
 		     	this.fileDescriptorName = fileDescriptorName;
                 this.descriptorFullName = descriptorFullName;
+                this.taxonomyResourcePattern = taxonomyResourcePattern;
 	   	}
         
         @Setup
@@ -224,7 +222,7 @@ public class AnonymizeStreamPipeline {
                 if(!DynamoDbStreamObject.isNull("NewImage")){
                     JsonFormat.parser().merge(DynamoDbStreamObject.getJSONObject("NewImage").toString(), builder);
                     DynamicMessage message = builder.build();
-                    Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor);
+                    Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor, taxonomyResourcePattern.get());
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(cleanMessage);
                     payloadObject.put("NewImage", new JSONObject(json));
                     payloadObject.getJSONObject("NewImage").remove("_ATTRIBUTES");
@@ -233,7 +231,7 @@ public class AnonymizeStreamPipeline {
                 if(!DynamoDbStreamObject.isNull("OldImage")){
                     JsonFormat.parser().merge(DynamoDbStreamObject.getJSONObject("OldImage").toString(), builder);
                     DynamicMessage message = builder.build();
-                    Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor);
+                    Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor, taxonomyResourcePattern.get());
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(cleanMessage);
                     payloadObject.put("OldImage", new JSONObject(json));
                     payloadObject.getJSONObject("OldImage").remove("_ATTRIBUTES");
@@ -242,7 +240,7 @@ public class AnonymizeStreamPipeline {
                 if(DynamoDbStreamObject.isNull("OldImage") && DynamoDbStreamObject.isNull("NewImage")){
                     JsonFormat.parser().merge(DynamoDbStreamObject.toString(), builder);
                     DynamicMessage message = builder.build();
-                    Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor);
+                    Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor, taxonomyResourcePattern.get());
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(cleanMessage);
                     payloadObject = new JSONObject(json);
                     builder.clear();
@@ -338,7 +336,7 @@ public class AnonymizeStreamPipeline {
 				}))
 				.withFormatFunction(tr -> tr)
       			.withSchema(schema)
-                .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
+                //.withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
       			.withTimePartitioning(partition)
                 .withClustering(cluster)
       			.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
@@ -360,15 +358,17 @@ public class AnonymizeStreamPipeline {
                         PubsubMessage pubSubMessage = new PubsubMessage(payload, attributes); 
                         out.output(pubSubMessage);
             }}))
+            /*
             .apply("Fixed Windows",
                 Window.<PubsubMessage>into(FixedWindows.of(Duration.standardMinutes(1)))
                     .withAllowedLateness(Duration.standardDays(7))
                     .discardingFiredPanes()
-                )
+                )*/
             .apply("Anonymize pubsubMessage", ParDo.of(new CleanPubsubMessageFn(
 				options.getBucketName(),
                 options.getFileDescriptorName(),
-                options.getDescriptorFullName()
+                options.getDescriptorFullName(),
+                options.getTaxonomyResourcePattern()
             )));
         
         anonymized
@@ -391,8 +391,9 @@ public class AnonymizeStreamPipeline {
         			});
 				}
 	        	DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
+                LOG.info(c.timestamp().toString(partition));
 	        	TableRow tableRow = new TableRow()
-	        		.set("publish_time", c.timestamp().toString(partition))
+	        		.set("publish_time", attributeMap.get("timestamp"))
 	        		.set("topic", attributeMap.get("topic"))
                     .set("attributes", attributes)
 	        		.set("data", pubsubMessage.getPayload());
@@ -413,7 +414,7 @@ public class AnonymizeStreamPipeline {
 				}))
 				.withFormatFunction(tr -> tr)
       			.withSchema(schema)
-                .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
+                //.withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
       			.withTimePartitioning(partition)
                 .withClustering(cluster)
       			.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
