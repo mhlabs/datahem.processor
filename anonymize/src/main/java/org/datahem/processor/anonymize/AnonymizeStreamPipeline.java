@@ -420,6 +420,6 @@ public class AnonymizeStreamPipeline {
       			.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
       			.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
-        pipeline.run();
+        pipeline.run().waitUntilFinish();
     }
 }
