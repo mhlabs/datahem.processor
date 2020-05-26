@@ -7,7 +7,7 @@ package org.datahem.protobuf.options;
  * ========================LICENSE_START=================================
  * DataHem
  * %%
- * Copyright (C) 2018 - 2019 MatHem Sverige AB
+ * Copyright (C) 2018 - 2020 MatHem Sverige AB
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
@@ -24,7 +24,7 @@ public final class Options {
     registry.add(org.datahem.protobuf.options.Options.bigQueryTableReference);
     registry.add(org.datahem.protobuf.options.Options.bigQueryTableDescription);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldDescription);
-    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldCategories);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryFieldPolicyTags);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldType);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldRename);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldAppend);
@@ -36,6 +36,8 @@ public final class Options {
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldCoalesce);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldDivide);
     registry.add(org.datahem.protobuf.options.Options.bigQueryFieldFilter);
+    registry.add(org.datahem.protobuf.options.Options.forgetField);
+    registry.add(org.datahem.protobuf.options.Options.bigQueryAttribute);
   }
 
   public static void registerAllExtensions(
@@ -81,7 +83,7 @@ public final class Options {
           .newFileScopedGeneratedExtension(
         java.lang.String.class,
         null);
-  public static final int BIGQUERYFIELDCATEGORIES_FIELD_NUMBER = 66666668;
+  public static final int BIGQUERYFIELDPOLICYTAGS_FIELD_NUMBER = 66666668;
   /**
    * <pre>
    * Sets a policy tag on the field in BigQuery
@@ -93,7 +95,7 @@ public final class Options {
   public static final
     com.google.protobuf.GeneratedMessage.GeneratedExtension<
       com.google.protobuf.DescriptorProtos.FieldOptions,
-      java.lang.String> bigQueryFieldCategories = com.google.protobuf.GeneratedMessage
+      java.lang.String> bigQueryFieldPolicyTags = com.google.protobuf.GeneratedMessage
           .newFileScopedGeneratedExtension(
         java.lang.String.class,
         null);
@@ -273,6 +275,38 @@ public final class Options {
           .newFileScopedGeneratedExtension(
         java.lang.String.class,
         null);
+  public static final int FORGETFIELD_FIELD_NUMBER = 66666680;
+  /**
+   * <pre>
+   *Forget a field by replacing value
+   *String [pattern] Example: "deleted_member&#64;mathem.se"
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> forgetField = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
+  public static final int BIGQUERYATTRIBUTE_FIELD_NUMBER = 66666681;
+  /**
+   * <pre>
+   *Get _ATTRIBUTE value for key
+   *String [pattern] Example: "key"
+   * </pre>
+   *
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> bigQueryAttribute = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -289,7 +323,7 @@ public final class Options {
       "ryTableDescription\022\037.google.protobuf.Mes" +
       "sageOptions\030\254\201\345\037 \001(\t:B\n\030BigQueryFieldDes" +
       "cription\022\035.google.protobuf.FieldOptions\030" +
-      "\253\201\345\037 \001(\t:A\n\027BigQueryFieldCategories\022\035.go" +
+      "\253\201\345\037 \001(\t:A\n\027BigQueryFieldPolicyTags\022\035.go" +
       "ogle.protobuf.FieldOptions\030\254\201\345\037 \001(\t:;\n\021B" +
       "igQueryFieldType\022\035.google.protobuf.Field" +
       "Options\030\255\201\345\037 \001(\t:=\n\023BigQueryFieldRename\022" +
@@ -308,8 +342,11 @@ public final class Options {
       "tobuf.FieldOptions\030\265\201\345\037 \001(\t:=\n\023BigQueryF" +
       "ieldDivide\022\035.google.protobuf.FieldOption" +
       "s\030\266\201\345\037 \001(\t:=\n\023BigQueryFieldFilter\022\035.goog" +
-      "le.protobuf.FieldOptions\030\267\201\345\037 \001(\tB\036\n\034org" +
-      ".datahem.protobuf.optionsb\006proto3"
+      "le.protobuf.FieldOptions\030\267\201\345\037 \001(\t:5\n\013For" +
+      "getField\022\035.google.protobuf.FieldOptions\030" +
+      "\270\201\345\037 \001(\t:;\n\021BigQueryAttribute\022\035.google.p" +
+      "rotobuf.FieldOptions\030\271\201\345\037 \001(\tB\036\n\034org.dat" +
+      "ahem.protobuf.optionsb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -327,7 +364,7 @@ public final class Options {
     bigQueryTableReference.internalInit(descriptor.getExtensions().get(0));
     bigQueryTableDescription.internalInit(descriptor.getExtensions().get(1));
     bigQueryFieldDescription.internalInit(descriptor.getExtensions().get(2));
-    bigQueryFieldCategories.internalInit(descriptor.getExtensions().get(3));
+    bigQueryFieldPolicyTags.internalInit(descriptor.getExtensions().get(3));
     bigQueryFieldType.internalInit(descriptor.getExtensions().get(4));
     bigQueryFieldRename.internalInit(descriptor.getExtensions().get(5));
     bigQueryFieldAppend.internalInit(descriptor.getExtensions().get(6));
@@ -339,6 +376,8 @@ public final class Options {
     bigQueryFieldCoalesce.internalInit(descriptor.getExtensions().get(12));
     bigQueryFieldDivide.internalInit(descriptor.getExtensions().get(13));
     bigQueryFieldFilter.internalInit(descriptor.getExtensions().get(14));
+    forgetField.internalInit(descriptor.getExtensions().get(15));
+    bigQueryAttribute.internalInit(descriptor.getExtensions().get(16));
     com.google.protobuf.DescriptorProtos.getDescriptor();
   }
 

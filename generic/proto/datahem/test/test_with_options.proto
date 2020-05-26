@@ -134,5 +134,9 @@ message TestWithOptions {
         (datahem.options.BigQueryFieldLocalToUtc) = "Europe/Stockholm, yyyy-MM-dd['T'][ ]HH:mm:ss, yyyy-MM-dd'T'HH:mm:ssXXX"
     ];
 
+    string StringAttribute = 28 [
+        (datahem.options.BigQueryAttribute) = "timestamp"
+    ];
+
     map<string,string> _ATTRIBUTES = 300;
 }

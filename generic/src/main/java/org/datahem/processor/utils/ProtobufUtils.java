@@ -503,6 +503,25 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
         }
     }
 
+    public static Optional<String> fieldOptionAttribute(Message message, Descriptor descriptor, HashMultimap<String, String> fieldOptions){
+        String key = ((Set<String>) fieldOptions.get("BigQueryAttribute")).stream().findFirst().orElse("");
+        if(!key.isEmpty()){
+            //descriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("key");
+
+            return ((List<Message>) message.getField(descriptor.findFieldByName("ATTRIBUTESEntry"))).stream()
+                .map(m -> {
+                    if(m.getField(descriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("key")) == key){
+                        return (String) m.getField(descriptor.findNestedTypeByName("ATTRIBUTESEntry").findFieldByName("value"));
+                    }else{
+                        return null;
+                    }
+                })
+                .filter(g -> g != null).findFirst();
+        } else{
+            return Optional.empty();
+        }
+    }
+
     public static TableRow getTableRow(Message message, FieldDescriptor f, ProtoDescriptor protoDescriptor, TableRow tableRow, Descriptor descriptor){
         String[] bigQueryStandardSqlDateTimeTypes = {"DATE","DATETIME","TIME","TIMESTAMP"};
         HashMultimap<String, String> fieldOptions = getFieldOptions(protoDescriptor, f);

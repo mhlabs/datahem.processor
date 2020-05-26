@@ -121,7 +121,7 @@ public class DynamoDbStreamPipelineTest {
 		}
 	};
 
-
+/*
 	@Test
 	public void withoutOptionsTest(){
 
@@ -470,7 +470,7 @@ public class DynamoDbStreamPipelineTest {
             e.printStackTrace();
         }
     }
-
+*/
     
     @Test
 	public void withOptionsTest(){
@@ -493,6 +493,7 @@ public class DynamoDbStreamPipelineTest {
             .put("LocalTimestampWithWrongOffsetToUtc","2019-01-01T12:00:00+00:00")
             .put("DatetimeToDate","2019-01-01 00:00:00")
             .put("LocalTimestampWithoutOptionalTToUtc","2019-01-01 12:00:00")
+            .put("StringAttribute", "a string")
             .put("LocalTimestampWithOptionalTToUtc","2019-01-01T12:00:00");
             
  
@@ -565,6 +566,7 @@ public class DynamoDbStreamPipelineTest {
         fields.add(new TableFieldSchema().setName("LocalTimestampWithoutOptionalTToUtc").setType("TIMESTAMP").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("LocalTimestampWithOptionalTToUtc").setType("TIMESTAMP").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("PartitionTimestamp").setType("TIMESTAMP").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
+        fields.add(new TableFieldSchema().setName("StringAttribute").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("_ATTRIBUTES").setType("RECORD").setMode("REPEATED").setDescription("").setFields(assertAttributesSchema.getFields()));
         assertSchema.setFields(fields);
         

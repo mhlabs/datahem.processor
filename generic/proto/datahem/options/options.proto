@@ -19,7 +19,7 @@ extend google.protobuf.FieldOptions {
 
     // Sets a policy tag on the field in BigQuery
     // [PolicyTag1, PolicyTag2,...] Example:
-    string BigQueryFieldCategories = 66666668;
+    string BigQueryFieldPolicyTags = 66666668;
 
     // Sets a specified data type on the field in bigquery, if not set the corresponding protobuf data type is used for mapping
     //String [BigQueryDataType] Example: "TIMESTAMP"
@@ -64,4 +64,12 @@ extend google.protobuf.FieldOptions {
     //Filter string with regex pattern
     //String [pattern] Example: "^((?!0001-01-01.00:00:00).)*$"
     string BigQueryFieldFilter = 66666679;
+
+    //Forget a field by replacing value
+    //String [pattern] Example: "deleted_member@mathem.se"
+    string ForgetField = 66666680;
+
+    //Get _ATTRIBUTE value for key
+    //String [pattern] Example: "key"
+    string BigQueryAttribute = 66666681;
 }
