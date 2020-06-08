@@ -220,10 +220,14 @@ public class AnonymizeStreamPipeline {
                 // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
                 DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
                 if(!DynamoDbStreamObject.isNull("NewImage")){
+                    log.info("builder");
                     JsonFormat.parser().merge(DynamoDbStreamObject.getJSONObject("NewImage").toString(), builder);
                     DynamicMessage message = builder.build();
+                    log.info("clean message");
                     Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor, taxonomyResourcePattern.get());
+                    log.info("print message");
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(cleanMessage);
+                    log.info("put object");
                     payloadObject.put("NewImage", new JSONObject(json));
                     payloadObject.getJSONObject("NewImage").remove("_ATTRIBUTES");
                     builder.clear();
