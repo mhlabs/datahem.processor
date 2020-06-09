@@ -816,8 +816,10 @@ public static ProtoDescriptor getProtoDescriptorFromCloudStorage(
                     }
                 }
                 if (fieldType.contains("MESSAGE")) {
-                    
-                    ((List<Object>) message.getField(f)).forEach((val) -> {
+                    List<Object> tmp = (List<Object>) message.getField(f);
+                    builder.clearField(f);
+                    tmp.forEach((val) -> {
+                    //((List<Object>) message.getField(f)).forEach((val) -> {
                         //if (message.getAllFields().containsKey(f)) {
                             Message fieldMessage = forgetFields((Message) val, f.getMessageType(), protoDescriptor, taxonomyResourcePattern);
                             //if(!fieldMessage.isInitialized()){

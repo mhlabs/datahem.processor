@@ -221,32 +221,36 @@ public class AnonymizeStreamPipeline {
                 DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
                 if(!DynamoDbStreamObject.isNull("NewImage")){
                     LOG.info("builder");
-                    JsonFormat.parser().merge(DynamoDbStreamObject.getJSONObject("NewImage").toString(), builder);
+                    LOG.info(DynamoDbStreamObject.getJSONObject("NewImage").toString());
+                    JsonFormat.parser().ignoringUnknownFields().merge(DynamoDbStreamObject.getJSONObject("NewImage").toString(), builder);
                     DynamicMessage message = builder.build();
+                    LOG.info(message.toString());
                     LOG.info("clean message");
                     Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor, taxonomyResourcePattern.get());
                     LOG.info("print message");
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(cleanMessage);
                     LOG.info("put object");
+                    LOG.info(json);
                     payloadObject.put("NewImage", new JSONObject(json));
-                    payloadObject.getJSONObject("NewImage").remove("_ATTRIBUTES");
+                    payloadObject.getJSONObject("NewImage").remove("ATTRIBUTES");
                     builder.clear();
                 }
                 if(!DynamoDbStreamObject.isNull("OldImage")){
-                    JsonFormat.parser().merge(DynamoDbStreamObject.getJSONObject("OldImage").toString(), builder);
+                    JsonFormat.parser().ignoringUnknownFields().merge(DynamoDbStreamObject.getJSONObject("OldImage").toString(), builder);
                     DynamicMessage message = builder.build();
                     Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor, taxonomyResourcePattern.get());
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(cleanMessage);
                     payloadObject.put("OldImage", new JSONObject(json));
-                    payloadObject.getJSONObject("OldImage").remove("_ATTRIBUTES");
+                    payloadObject.getJSONObject("OldImage").remove("ATTRIBUTES");
                     builder.clear();
                 }
                 if(DynamoDbStreamObject.isNull("OldImage") && DynamoDbStreamObject.isNull("NewImage")){
-                    JsonFormat.parser().merge(DynamoDbStreamObject.toString(), builder);
+                    JsonFormat.parser().ignoringUnknownFields().merge(DynamoDbStreamObject.toString(), builder);
                     DynamicMessage message = builder.build();
                     Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor, taxonomyResourcePattern.get());
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(cleanMessage);
                     payloadObject = new JSONObject(json);
+                    payloadObject.remove("ATTRIBUTES");
                     builder.clear();
                 }
                 
