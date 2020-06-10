@@ -182,7 +182,6 @@ public class AnonymizeStreamPipeline {
 	  		ValueProvider<String> fileDescriptorName,
             ValueProvider<String> descriptorFullName,
             ValueProvider<String> taxonomyResourcePattern) {
-                 LOG.info("ok 2");
 		     	this.bucketName = bucketName;
 		     	this.fileDescriptorName = fileDescriptorName;
                 this.descriptorFullName = descriptorFullName;
@@ -191,24 +190,14 @@ public class AnonymizeStreamPipeline {
         
         @Setup
         public void setup() throws Exception {
-/*             LOG.info("ok 3");
-             LOG.info(bucketName.get());
-            LOG.info(fileDescriptorName.get());
-            LOG.info(descriptorFullName.get());
-*/
+
             messageDescriptor = ProtobufUtils.getDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get(), descriptorFullName.get());
             protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage(bucketName.get(), fileDescriptorName.get());
-            LOG.info("ok 4");
         }
 		
 		@ProcessElement
         public void processElement(@Element PubsubMessage pubsubMessage, OutputReceiver<PubsubMessage> out) throws Exception {
             // Get pubsub message payload and attributes
-/*
-            LOG.info(bucketName.get());
-            LOG.info(fileDescriptorName.get());
-            LOG.info(descriptorFullName.get());
-*/
             String pubsubPayload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
             HashMap<String, String> attributes = new HashMap<String,String>();
             attributes.putAll(pubsubMessage.getAttributeMap());
@@ -220,17 +209,10 @@ public class AnonymizeStreamPipeline {
                 // add operation and payload according to dynamodb 'NEW_AND_OLD_IMAGES' stream view type
                 DynamicMessage.Builder builder = DynamicMessage.newBuilder(messageDescriptor);
                 if(!DynamoDbStreamObject.isNull("NewImage")){
-                    LOG.info("builder");
-                    LOG.info(DynamoDbStreamObject.getJSONObject("NewImage").toString());
                     JsonFormat.parser().ignoringUnknownFields().merge(DynamoDbStreamObject.getJSONObject("NewImage").toString(), builder);
                     DynamicMessage message = builder.build();
-                    LOG.info(message.toString());
-                    LOG.info("clean message");
                     Message cleanMessage = ProtobufUtils.forgetFields(message, messageDescriptor, protoDescriptor, taxonomyResourcePattern.get());
-                    LOG.info("print message");
                     String json = JsonFormat.printer().omittingInsignificantWhitespace().includingDefaultValueFields().print(cleanMessage);
-                    LOG.info("put object");
-                    LOG.info(json);
                     payloadObject.put("NewImage", new JSONObject(json));
                     payloadObject.getJSONObject("NewImage").remove("ATTRIBUTES");
                     builder.clear();
@@ -254,10 +236,7 @@ public class AnonymizeStreamPipeline {
                     builder.clear();
                 }
                 
-                LOG.info(pubsubPayload);
                 payload = payloadObject.toString();
-                LOG.info(payload);
-                
                 ByteString bs = ByteString.copyFromUtf8(payload);
                 byte[] jsonPayload = bs.toByteArray();
 
@@ -265,23 +244,18 @@ public class AnonymizeStreamPipeline {
 
                 out.output(newPubsubMessage);
             }catch(java.lang.NullPointerException e){
-                //out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
                 LOG.error("No descriptor?", e);
                 LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
             }catch(InvalidProtocolBufferException e){
-                //out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
                 LOG.error("invalid protocol buffer exception: ", e);
                 LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
             }catch(IllegalArgumentException e){
-                //out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
                 LOG.error("IllegalArgumentException: ", e);
                 LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
             }catch(org.json.JSONException e){
-                //out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
                 LOG.error("org.json.JSONException: ", e);
                 LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
             }catch(Exception e){
-                //out.get(deadLetterTag).output(new Failure(descriptorFullName.get(), payload, e.toString(), "BEAM_PROCESSING_ERROR").getAsTableRow());
                 LOG.error("Exception: ", e);
                 LOG.error("Message payload: " + payload + ", Message attributes: " + attributes.toString());
             }
@@ -344,7 +318,6 @@ public class AnonymizeStreamPipeline {
 				}))
 				.withFormatFunction(tr -> tr)
       			.withSchema(schema)
-                //.withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
       			.withTimePartitioning(partition)
                 .withClustering(cluster)
       			.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
@@ -355,10 +328,8 @@ public class AnonymizeStreamPipeline {
                 ParDo.of(new DoFn<TableRow,PubsubMessage>() {
                     @ProcessElement
                     public void processElement(@Element TableRow row, OutputReceiver<PubsubMessage> out)  {
-                        //TableRow row = c.element();
                         String b = (String) row.get("data");
                         byte[] payload = Base64.getDecoder().decode(b.getBytes());
-                        //byte[] payload = b.getBytes();
                         List<TableRow> repeated = (List<TableRow>) row.get("attributes");
                         HashMap<String, String> attributes = repeated
                             .stream()
@@ -366,12 +337,6 @@ public class AnonymizeStreamPipeline {
                         PubsubMessage pubSubMessage = new PubsubMessage(payload, attributes); 
                         out.output(pubSubMessage);
             }}))
-            /*
-            .apply("Fixed Windows",
-                Window.<PubsubMessage>into(FixedWindows.of(Duration.standardMinutes(1)))
-                    .withAllowedLateness(Duration.standardDays(7))
-                    .discardingFiredPanes()
-                )*/
             .apply("Anonymize pubsubMessage", ParDo.of(new CleanPubsubMessageFn(
 				options.getBucketName(),
                 options.getFileDescriptorName(),
@@ -399,7 +364,6 @@ public class AnonymizeStreamPipeline {
         			});
 				}
 	        	DateTimeFormatter partition = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss").withZoneUTC();
-                LOG.info(c.timestamp().toString(partition));
 	        	TableRow tableRow = new TableRow()
 	        		.set("publish_time", attributeMap.get("timestamp"))
 	        		.set("topic", attributeMap.get("topic"))
@@ -422,7 +386,6 @@ public class AnonymizeStreamPipeline {
 				}))
 				.withFormatFunction(tr -> tr)
       			.withSchema(schema)
-                //.withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
       			.withTimePartitioning(partition)
                 .withClustering(cluster)
       			.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
