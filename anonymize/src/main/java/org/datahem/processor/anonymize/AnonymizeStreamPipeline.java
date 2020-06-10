@@ -313,7 +313,7 @@ public class AnonymizeStreamPipeline {
 					new SerializableFunction<String, String>() {
 						@Override
 						public String apply(String tableSpec) {
-							return tableSpec.replaceAll("[^A-Za-z0-9.]", "");
+							return tableSpec.replaceAll("[^A-Za-z0-9._]", "");
 						}
 				}))
 				.withFormatFunction(tr -> tr)
@@ -381,7 +381,7 @@ public class AnonymizeStreamPipeline {
 					new SerializableFunction<String, String>() {
 						@Override
 						public String apply(String tableSpec) {
-							return tableSpec.replaceAll("[^A-Za-z0-9.]", "");
+							return tableSpec.replaceAll("[^A-Za-z0-9._]", "");
 						}
 				}))
 				.withFormatFunction(tr -> tr)
