@@ -7,6 +7,6 @@ steps:
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/gcp/pubsub:$TAG_NAME', './gcp/pubsub/']
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/gcp/pubsub:latest', './gcp/pubsub/']
-images: ['gcr.io/$PROJECT_ID/gcp/pubsub']
+images: ['gcr.io/$PROJECT_ID/backup-backfill-pipeline']
 substitutions:
   TAG_NAME: 0.7.2
