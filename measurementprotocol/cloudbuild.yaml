@@ -1,12 +1,12 @@
 # gcloud builds submit --config=./measurementprotocol/cloudbuild.yaml . --substitutions=_VERSION=1.2.0
 steps:
-- name: maven:3.6.2-jdk-8-slim
-  entrypoint: 'mvn'
-  args: ['package','-f','./measurementprotocol/pom.xml']
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/measurementprotocol-v2:${_VERSION}', './measurementprotocol/.']
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/measurementprotocol-v2:latest', './measurementprotocol/.']
+  - name: maven:3.6.2-jdk-8-slim
+    entrypoint: 'mvn'
+    args: ['package','-f','./measurementprotocol/pom.xml']
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/measurementprotocol-v2:${_VERSION}', './measurementprotocol/.']
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/measurementprotocol-v2:latest', './measurementprotocol/.']
 images: ['gcr.io/$PROJECT_ID/measurementprotocol-v2']
 substitutions:
-    _VERSION: 1.2.0
+  _VERSION: 1.2.0
