@@ -111,7 +111,7 @@ public class PubSubBackupPipeline {
                 }))
                 .apply("InsertTableRowsToBigQuery",
                         BigQueryIO
-                                .writeTableRows()
+                                .<TableRow>write()
                                 .to(NestedValueProvider.of(
                                         options.getBigQueryTableSpec(),
                                         new SerializableFunction<String, String>() {
@@ -122,7 +122,7 @@ public class PubSubBackupPipeline {
                                         }))
                                 .withFormatFunction(tr -> tr)
                                 .withSchema(schema)
-                                .withFailedInsertRetryPolicy(InsertRetryPolicy.neverRetry())
+                                .withFailedInsertRetryPolicy(InsertRetryPolicy.retryTransientErrors())
                                 .withTimePartitioning(partition)
                                 .withClustering(cluster)
                                 .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)

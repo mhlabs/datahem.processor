@@ -57,34 +57,6 @@ public class GenericStreamPipeline {
 
     private static final Logger LOG = LoggerFactory.getLogger(GenericStreamPipeline.class);
 
-    public interface Options extends PipelineOptions, GcpOptions {
-
-        @Description("Protobuf Java package")
-        ValueProvider<String> getProtoJavaPackage();
-
-        void setProtoJavaPackage(ValueProvider<String> value);
-
-        @Description("Protobuf Java Outer Class Name")
-        ValueProvider<String> getProtoJavaOuterClassName();
-
-        void setProtoJavaOuterClassName(ValueProvider<String> value);
-
-        @Description("Protobuf Java Class Name")
-        ValueProvider<String> getProtoJavaClassName();
-
-        void setProtoJavaClassName(ValueProvider<String> value);
-
-        @Description("Pub/Sub topic")
-        ValueProvider<String> getPubsubTopic();
-
-        void setPubsubTopic(ValueProvider<String> value);
-
-        @Description("Pub/Sub subscription")
-        ValueProvider<String> getPubsubSubscription();
-
-        void setPubsubSubscription(ValueProvider<String> subscription);
-    }
-
     public static void main(String[] args) throws IOException {
         Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
         Pipeline pipeline = Pipeline.create(options);
@@ -133,6 +105,35 @@ public class GenericStreamPipeline {
                                     .withSchema(schema));
         } catch (Exception e) {
         }
+
         pipeline.run();
+    }
+
+    public interface Options extends PipelineOptions, GcpOptions {
+
+        @Description("Protobuf Java package")
+        ValueProvider<String> getProtoJavaPackage();
+
+        void setProtoJavaPackage(ValueProvider<String> value);
+
+        @Description("Protobuf Java Outer Class Name")
+        ValueProvider<String> getProtoJavaOuterClassName();
+
+        void setProtoJavaOuterClassName(ValueProvider<String> value);
+
+        @Description("Protobuf Java Class Name")
+        ValueProvider<String> getProtoJavaClassName();
+
+        void setProtoJavaClassName(ValueProvider<String> value);
+
+        @Description("Pub/Sub topic")
+        ValueProvider<String> getPubsubTopic();
+
+        void setPubsubTopic(ValueProvider<String> value);
+
+        @Description("Pub/Sub subscription")
+        ValueProvider<String> getPubsubSubscription();
+
+        void setPubsubSubscription(ValueProvider<String> subscription);
     }
 }
