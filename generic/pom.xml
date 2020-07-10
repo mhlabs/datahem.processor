@@ -211,12 +211,6 @@
 
         <dependency>
             <groupId>com.google.cloud</groupId>
-            <artifactId>google-cloud-bigquery</artifactId>
-            <version>1.116.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-storage</artifactId>
             <version>1.70.0</version>
         </dependency>

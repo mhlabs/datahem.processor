@@ -111,7 +111,7 @@ public class PubSubBackupPipeline {
                 }))
                 .apply("InsertTableRowsToBigQuery",
                         BigQueryIO
-                                .<TableRow>write()
+                                .writeTableRows()
                                 .to(NestedValueProvider.of(
                                         options.getBigQueryTableSpec(),
                                         new SerializableFunction<String, String>() {
