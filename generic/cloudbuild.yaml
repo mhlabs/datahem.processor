@@ -4,9 +4,9 @@ steps:
   entrypoint: 'mvn'
   args: ['package','-f','./generic/pom.xml']
 - name: gcr.io/cloud-builders/docker
-  args: ['build','-t', 'gcr.io/$PROJECT_ID/generic:${_VERSION}', './generic/']
+  args: ['build','-t', 'gcr.io/$PROJECT_ID/generic-pipeline:${_VERSION}', './generic/']
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/generic:latest', './generic/']
-images: ['gcr.io/$PROJECT_ID/generic']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/generic-pipeline:latest', './generic/']
+images: ['gcr.io/$PROJECT_ID/generic-pipeline']
 substitutions:
     _VERSION: 0.8.0
