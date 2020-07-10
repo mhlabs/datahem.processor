@@ -10,9 +10,9 @@ package org.datahem.protobuf.measurementprotocol.v2;
  * Copyright (C) 2018 - 2019 Robert Sahlin
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
@@ -20,1368 +20,1445 @@ package org.datahem.protobuf.measurementprotocol.v2;
 /**
  * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Transaction}
  */
-public  final class Transaction extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:datahem.protobuf.measurementprotocol.v2.Transaction)
-    TransactionOrBuilder {
-  // Use Transaction.newBuilder() to construct.
-  private Transaction(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private Transaction() {
-    id_ = "";
-    revenue_ = 0D;
-    tax_ = 0D;
-    shipping_ = 0D;
-    affiliation_ = "";
-    currency_ = "";
-    coupon_ = "";
-    action_ = "";
-  }
+public final class Transaction extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:datahem.protobuf.measurementprotocol.v2.Transaction)
+        TransactionOrBuilder {
+    // Use Transaction.newBuilder() to construct.
+    private Transaction(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+    }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-  }
-  private Transaction(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    int mutable_bitField0_ = 0;
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          default: {
-            if (!input.skipField(tag)) {
-              done = true;
+    private Transaction() {
+        id_ = "";
+        revenue_ = 0D;
+        tax_ = 0D;
+        shipping_ = 0D;
+        affiliation_ = "";
+        currency_ = "";
+        coupon_ = "";
+        action_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+        return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+
+    private Transaction(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        int mutable_bitField0_ = 0;
+        try {
+            boolean done = false;
+            while (!done) {
+                int tag = input.readTag();
+                switch (tag) {
+                    case 0:
+                        done = true;
+                        break;
+                    default: {
+                        if (!input.skipField(tag)) {
+                            done = true;
+                        }
+                        break;
+                    }
+                    case 10: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        id_ = s;
+                        break;
+                    }
+                    case 17: {
+
+                        revenue_ = input.readDouble();
+                        break;
+                    }
+                    case 25: {
+
+                        tax_ = input.readDouble();
+                        break;
+                    }
+                    case 33: {
+
+                        shipping_ = input.readDouble();
+                        break;
+                    }
+                    case 42: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        affiliation_ = s;
+                        break;
+                    }
+                    case 50: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        currency_ = s;
+                        break;
+                    }
+                    case 58: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        coupon_ = s;
+                        break;
+                    }
+                    case 66: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        action_ = s;
+                        break;
+                    }
+                }
             }
-            break;
-          }
-          case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            id_ = s;
-            break;
-          }
-          case 17: {
-
-            revenue_ = input.readDouble();
-            break;
-          }
-          case 25: {
-
-            tax_ = input.readDouble();
-            break;
-          }
-          case 33: {
-
-            shipping_ = input.readDouble();
-            break;
-          }
-          case 42: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            affiliation_ = s;
-            break;
-          }
-          case 50: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            currency_ = s;
-            break;
-          }
-          case 58: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            coupon_ = s;
-            break;
-          }
-          case 66: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            action_ = s;
-            break;
-          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(
+                    e).setUnfinishedMessage(this);
+        } finally {
+            makeExtensionsImmutable();
         }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      makeExtensionsImmutable();
     }
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_descriptor;
-  }
 
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            org.datahem.protobuf.measurementprotocol.v2.Transaction.class, org.datahem.protobuf.measurementprotocol.v2.Transaction.Builder.class);
-  }
-
-  public static final int ID_FIELD_NUMBER = 1;
-  private volatile java.lang.Object id_;
-  /**
-   * <pre>
-   *ti	The transaction ID of the ecommerce transaction.
-   * </pre>
-   *
-   * <code>optional string id = 1;</code>
-   */
-  public java.lang.String getId() {
-    java.lang.Object ref = id_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      id_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *ti	The transaction ID of the ecommerce transaction.
-   * </pre>
-   *
-   * <code>optional string id = 1;</code>
-   */
-  public com.google.protobuf.ByteString
-      getIdBytes() {
-    java.lang.Object ref = id_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      id_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int REVENUE_FIELD_NUMBER = 2;
-  private double revenue_;
-  /**
-   * <pre>
-   *tr	 Total transaction revenue
-   * </pre>
-   *
-   * <code>optional double revenue = 2;</code>
-   */
-  public double getRevenue() {
-    return revenue_;
-  }
-
-  public static final int TAX_FIELD_NUMBER = 3;
-  private double tax_;
-  /**
-   * <pre>
-   *tt	Total transaction tax
-   * </pre>
-   *
-   * <code>optional double tax = 3;</code>
-   */
-  public double getTax() {
-    return tax_;
-  }
-
-  public static final int SHIPPING_FIELD_NUMBER = 4;
-  private double shipping_;
-  /**
-   * <pre>
-   *ts  Total transaction shipping cost, expressed as the value passed to Analytics multiplied by 10^6. (e.g., 2.40 would be given as 2400000).
-   * </pre>
-   *
-   * <code>optional double shipping = 4;</code>
-   */
-  public double getShipping() {
-    return shipping_;
-  }
-
-  public static final int AFFILIATION_FIELD_NUMBER = 5;
-  private volatile java.lang.Object affiliation_;
-  /**
-   * <pre>
-   *ta	 The affiliate information passed to the ecommerce tracking code.
-   * </pre>
-   *
-   * <code>optional string affiliation = 5;</code>
-   */
-  public java.lang.String getAffiliation() {
-    java.lang.Object ref = affiliation_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      affiliation_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *ta	 The affiliate information passed to the ecommerce tracking code.
-   * </pre>
-   *
-   * <code>optional string affiliation = 5;</code>
-   */
-  public com.google.protobuf.ByteString
-      getAffiliationBytes() {
-    java.lang.Object ref = affiliation_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      affiliation_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int CURRENCY_FIELD_NUMBER = 6;
-  private volatile java.lang.Object currency_;
-  /**
-   * <pre>
-   *cu	The local currency code for the transaction.
-   * </pre>
-   *
-   * <code>optional string currency = 6;</code>
-   */
-  public java.lang.String getCurrency() {
-    java.lang.Object ref = currency_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      currency_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *cu	The local currency code for the transaction.
-   * </pre>
-   *
-   * <code>optional string currency = 6;</code>
-   */
-  public com.google.protobuf.ByteString
-      getCurrencyBytes() {
-    java.lang.Object ref = currency_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      currency_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int COUPON_FIELD_NUMBER = 7;
-  private volatile java.lang.Object coupon_;
-  /**
-   * <pre>
-   *tcc	 The coupon code associated with the transaction.
-   * </pre>
-   *
-   * <code>optional string coupon = 7;</code>
-   */
-  public java.lang.String getCoupon() {
-    java.lang.Object ref = coupon_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      coupon_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *tcc	 The coupon code associated with the transaction.
-   * </pre>
-   *
-   * <code>optional string coupon = 7;</code>
-   */
-  public com.google.protobuf.ByteString
-      getCouponBytes() {
-    java.lang.Object ref = coupon_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      coupon_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int ACTION_FIELD_NUMBER = 8;
-  private volatile java.lang.Object action_;
-  /**
-   * <pre>
-   *pa
-   * </pre>
-   *
-   * <code>optional string action = 8;</code>
-   */
-  public java.lang.String getAction() {
-    java.lang.Object ref = action_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      action_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *pa
-   * </pre>
-   *
-   * <code>optional string action = 8;</code>
-   */
-  public com.google.protobuf.ByteString
-      getActionBytes() {
-    java.lang.Object ref = action_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      action_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  private byte memoizedIsInitialized = -1;
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    if (!getIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
-    }
-    if (revenue_ != 0D) {
-      output.writeDouble(2, revenue_);
-    }
-    if (tax_ != 0D) {
-      output.writeDouble(3, tax_);
-    }
-    if (shipping_ != 0D) {
-      output.writeDouble(4, shipping_);
-    }
-    if (!getAffiliationBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, affiliation_);
-    }
-    if (!getCurrencyBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, currency_);
-    }
-    if (!getCouponBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, coupon_);
-    }
-    if (!getActionBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 8, action_);
-    }
-  }
-
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (!getIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
-    }
-    if (revenue_ != 0D) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeDoubleSize(2, revenue_);
-    }
-    if (tax_ != 0D) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeDoubleSize(3, tax_);
-    }
-    if (shipping_ != 0D) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeDoubleSize(4, shipping_);
-    }
-    if (!getAffiliationBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, affiliation_);
-    }
-    if (!getCurrencyBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, currency_);
-    }
-    if (!getCouponBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, coupon_);
-    }
-    if (!getActionBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, action_);
-    }
-    memoizedSize = size;
-    return size;
-  }
-
-  private static final long serialVersionUID = 0L;
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v2.Transaction)) {
-      return super.equals(obj);
-    }
-    org.datahem.protobuf.measurementprotocol.v2.Transaction other = (org.datahem.protobuf.measurementprotocol.v2.Transaction) obj;
-
-    boolean result = true;
-    result = result && getId()
-        .equals(other.getId());
-    result = result && (
-        java.lang.Double.doubleToLongBits(getRevenue())
-        == java.lang.Double.doubleToLongBits(
-            other.getRevenue()));
-    result = result && (
-        java.lang.Double.doubleToLongBits(getTax())
-        == java.lang.Double.doubleToLongBits(
-            other.getTax()));
-    result = result && (
-        java.lang.Double.doubleToLongBits(getShipping())
-        == java.lang.Double.doubleToLongBits(
-            other.getShipping()));
-    result = result && getAffiliation()
-        .equals(other.getAffiliation());
-    result = result && getCurrency()
-        .equals(other.getCurrency());
-    result = result && getCoupon()
-        .equals(other.getCoupon());
-    result = result && getAction()
-        .equals(other.getAction());
-    return result;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
-    hash = (37 * hash) + ID_FIELD_NUMBER;
-    hash = (53 * hash) + getId().hashCode();
-    hash = (37 * hash) + REVENUE_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        java.lang.Double.doubleToLongBits(getRevenue()));
-    hash = (37 * hash) + TAX_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        java.lang.Double.doubleToLongBits(getTax()));
-    hash = (37 * hash) + SHIPPING_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        java.lang.Double.doubleToLongBits(getShipping()));
-    hash = (37 * hash) + AFFILIATION_FIELD_NUMBER;
-    hash = (53 * hash) + getAffiliation().hashCode();
-    hash = (37 * hash) + CURRENCY_FIELD_NUMBER;
-    hash = (53 * hash) + getCurrency().hashCode();
-    hash = (37 * hash) + COUPON_FIELD_NUMBER;
-    hash = (53 * hash) + getCoupon().hashCode();
-    hash = (37 * hash) + ACTION_FIELD_NUMBER;
-    hash = (53 * hash) + getAction().hashCode();
-    hash = (29 * hash) + unknownFields.hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v2.Transaction prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Transaction}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:datahem.protobuf.measurementprotocol.v2.Transaction)
-      org.datahem.protobuf.measurementprotocol.v2.TransactionOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_descriptor;
+    getDescriptor() {
+        return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              org.datahem.protobuf.measurementprotocol.v2.Transaction.class, org.datahem.protobuf.measurementprotocol.v2.Transaction.Builder.class);
+    internalGetFieldAccessorTable() {
+        return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        org.datahem.protobuf.measurementprotocol.v2.Transaction.class, org.datahem.protobuf.measurementprotocol.v2.Transaction.Builder.class);
     }
 
-    // Construct using org.datahem.protobuf.measurementprotocol.v2.Transaction.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object id_;
 
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
-    }
-    public Builder clear() {
-      super.clear();
-      id_ = "";
-
-      revenue_ = 0D;
-
-      tax_ = 0D;
-
-      shipping_ = 0D;
-
-      affiliation_ = "";
-
-      currency_ = "";
-
-      coupon_ = "";
-
-      action_ = "";
-
-      return this;
-    }
-
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_descriptor;
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Transaction getDefaultInstanceForType() {
-      return org.datahem.protobuf.measurementprotocol.v2.Transaction.getDefaultInstance();
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Transaction build() {
-      org.datahem.protobuf.measurementprotocol.v2.Transaction result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Transaction buildPartial() {
-      org.datahem.protobuf.measurementprotocol.v2.Transaction result = new org.datahem.protobuf.measurementprotocol.v2.Transaction(this);
-      result.id_ = id_;
-      result.revenue_ = revenue_;
-      result.tax_ = tax_;
-      result.shipping_ = shipping_;
-      result.affiliation_ = affiliation_;
-      result.currency_ = currency_;
-      result.coupon_ = coupon_;
-      result.action_ = action_;
-      onBuilt();
-      return result;
-    }
-
-    public Builder clone() {
-      return (Builder) super.clone();
-    }
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
-      return (Builder) super.setField(field, value);
-    }
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return (Builder) super.clearField(field);
-    }
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return (Builder) super.clearOneof(oneof);
-    }
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
-      return (Builder) super.setRepeatedField(field, index, value);
-    }
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
-      return (Builder) super.addRepeatedField(field, value);
-    }
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof org.datahem.protobuf.measurementprotocol.v2.Transaction) {
-        return mergeFrom((org.datahem.protobuf.measurementprotocol.v2.Transaction)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Transaction other) {
-      if (other == org.datahem.protobuf.measurementprotocol.v2.Transaction.getDefaultInstance()) return this;
-      if (!other.getId().isEmpty()) {
-        id_ = other.id_;
-        onChanged();
-      }
-      if (other.getRevenue() != 0D) {
-        setRevenue(other.getRevenue());
-      }
-      if (other.getTax() != 0D) {
-        setTax(other.getTax());
-      }
-      if (other.getShipping() != 0D) {
-        setShipping(other.getShipping());
-      }
-      if (!other.getAffiliation().isEmpty()) {
-        affiliation_ = other.affiliation_;
-        onChanged();
-      }
-      if (!other.getCurrency().isEmpty()) {
-        currency_ = other.currency_;
-        onChanged();
-      }
-      if (!other.getCoupon().isEmpty()) {
-        coupon_ = other.coupon_;
-        onChanged();
-      }
-      if (!other.getAction().isEmpty()) {
-        action_ = other.action_;
-        onChanged();
-      }
-      onChanged();
-      return this;
-    }
-
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      org.datahem.protobuf.measurementprotocol.v2.Transaction parsedMessage = null;
-      try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (org.datahem.protobuf.measurementprotocol.v2.Transaction) e.getUnfinishedMessage();
-        throw e.unwrapIOException();
-      } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
-      return this;
-    }
-
-    private java.lang.Object id_ = "";
     /**
      * <pre>
-     *ti	The transaction ID of the ecommerce transaction.
+     * ti	The transaction ID of the ecommerce transaction.
      * </pre>
      *
      * <code>optional string id = 1;</code>
      */
     public java.lang.String getId() {
-      java.lang.Object ref = id_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        id_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = id_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            id_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *ti	The transaction ID of the ecommerce transaction.
+     * ti	The transaction ID of the ecommerce transaction.
      * </pre>
      *
      * <code>optional string id = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getIdBytes() {
-      java.lang.Object ref = id_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        id_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *ti	The transaction ID of the ecommerce transaction.
-     * </pre>
-     *
-     * <code>optional string id = 1;</code>
-     */
-    public Builder setId(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      id_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *ti	The transaction ID of the ecommerce transaction.
-     * </pre>
-     *
-     * <code>optional string id = 1;</code>
-     */
-    public Builder clearId() {
-      
-      id_ = getDefaultInstance().getId();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *ti	The transaction ID of the ecommerce transaction.
-     * </pre>
-     *
-     * <code>optional string id = 1;</code>
-     */
-    public Builder setIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      id_ = value;
-      onChanged();
-      return this;
+    getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            id_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private double revenue_ ;
+    public static final int REVENUE_FIELD_NUMBER = 2;
+    private double revenue_;
+
     /**
      * <pre>
-     *tr	 Total transaction revenue
+     * tr	 Total transaction revenue
      * </pre>
      *
      * <code>optional double revenue = 2;</code>
      */
     public double getRevenue() {
-      return revenue_;
-    }
-    /**
-     * <pre>
-     *tr	 Total transaction revenue
-     * </pre>
-     *
-     * <code>optional double revenue = 2;</code>
-     */
-    public Builder setRevenue(double value) {
-      
-      revenue_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *tr	 Total transaction revenue
-     * </pre>
-     *
-     * <code>optional double revenue = 2;</code>
-     */
-    public Builder clearRevenue() {
-      
-      revenue_ = 0D;
-      onChanged();
-      return this;
+        return revenue_;
     }
 
-    private double tax_ ;
+    public static final int TAX_FIELD_NUMBER = 3;
+    private double tax_;
+
     /**
      * <pre>
-     *tt	Total transaction tax
+     * tt	Total transaction tax
      * </pre>
      *
      * <code>optional double tax = 3;</code>
      */
     public double getTax() {
-      return tax_;
-    }
-    /**
-     * <pre>
-     *tt	Total transaction tax
-     * </pre>
-     *
-     * <code>optional double tax = 3;</code>
-     */
-    public Builder setTax(double value) {
-      
-      tax_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *tt	Total transaction tax
-     * </pre>
-     *
-     * <code>optional double tax = 3;</code>
-     */
-    public Builder clearTax() {
-      
-      tax_ = 0D;
-      onChanged();
-      return this;
+        return tax_;
     }
 
-    private double shipping_ ;
+    public static final int SHIPPING_FIELD_NUMBER = 4;
+    private double shipping_;
+
     /**
      * <pre>
-     *ts  Total transaction shipping cost, expressed as the value passed to Analytics multiplied by 10^6. (e.g., 2.40 would be given as 2400000).
+     * ts  Total transaction shipping cost, expressed as the value passed to Analytics multiplied by 10^6. (e.g., 2.40 would be given as 2400000).
      * </pre>
      *
      * <code>optional double shipping = 4;</code>
      */
     public double getShipping() {
-      return shipping_;
-    }
-    /**
-     * <pre>
-     *ts  Total transaction shipping cost, expressed as the value passed to Analytics multiplied by 10^6. (e.g., 2.40 would be given as 2400000).
-     * </pre>
-     *
-     * <code>optional double shipping = 4;</code>
-     */
-    public Builder setShipping(double value) {
-      
-      shipping_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *ts  Total transaction shipping cost, expressed as the value passed to Analytics multiplied by 10^6. (e.g., 2.40 would be given as 2400000).
-     * </pre>
-     *
-     * <code>optional double shipping = 4;</code>
-     */
-    public Builder clearShipping() {
-      
-      shipping_ = 0D;
-      onChanged();
-      return this;
+        return shipping_;
     }
 
-    private java.lang.Object affiliation_ = "";
+    public static final int AFFILIATION_FIELD_NUMBER = 5;
+    private volatile java.lang.Object affiliation_;
+
     /**
      * <pre>
-     *ta	 The affiliate information passed to the ecommerce tracking code.
+     * ta	 The affiliate information passed to the ecommerce tracking code.
      * </pre>
      *
      * <code>optional string affiliation = 5;</code>
      */
     public java.lang.String getAffiliation() {
-      java.lang.Object ref = affiliation_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        affiliation_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = affiliation_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            affiliation_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *ta	 The affiliate information passed to the ecommerce tracking code.
+     * ta	 The affiliate information passed to the ecommerce tracking code.
      * </pre>
      *
      * <code>optional string affiliation = 5;</code>
      */
     public com.google.protobuf.ByteString
-        getAffiliationBytes() {
-      java.lang.Object ref = affiliation_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        affiliation_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *ta	 The affiliate information passed to the ecommerce tracking code.
-     * </pre>
-     *
-     * <code>optional string affiliation = 5;</code>
-     */
-    public Builder setAffiliation(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      affiliation_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *ta	 The affiliate information passed to the ecommerce tracking code.
-     * </pre>
-     *
-     * <code>optional string affiliation = 5;</code>
-     */
-    public Builder clearAffiliation() {
-      
-      affiliation_ = getDefaultInstance().getAffiliation();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *ta	 The affiliate information passed to the ecommerce tracking code.
-     * </pre>
-     *
-     * <code>optional string affiliation = 5;</code>
-     */
-    public Builder setAffiliationBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      affiliation_ = value;
-      onChanged();
-      return this;
+    getAffiliationBytes() {
+        java.lang.Object ref = affiliation_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            affiliation_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object currency_ = "";
+    public static final int CURRENCY_FIELD_NUMBER = 6;
+    private volatile java.lang.Object currency_;
+
     /**
      * <pre>
-     *cu	The local currency code for the transaction.
+     * cu	The local currency code for the transaction.
      * </pre>
      *
      * <code>optional string currency = 6;</code>
      */
     public java.lang.String getCurrency() {
-      java.lang.Object ref = currency_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        currency_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = currency_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            currency_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *cu	The local currency code for the transaction.
+     * cu	The local currency code for the transaction.
      * </pre>
      *
      * <code>optional string currency = 6;</code>
      */
     public com.google.protobuf.ByteString
-        getCurrencyBytes() {
-      java.lang.Object ref = currency_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        currency_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *cu	The local currency code for the transaction.
-     * </pre>
-     *
-     * <code>optional string currency = 6;</code>
-     */
-    public Builder setCurrency(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      currency_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *cu	The local currency code for the transaction.
-     * </pre>
-     *
-     * <code>optional string currency = 6;</code>
-     */
-    public Builder clearCurrency() {
-      
-      currency_ = getDefaultInstance().getCurrency();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *cu	The local currency code for the transaction.
-     * </pre>
-     *
-     * <code>optional string currency = 6;</code>
-     */
-    public Builder setCurrencyBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      currency_ = value;
-      onChanged();
-      return this;
+    getCurrencyBytes() {
+        java.lang.Object ref = currency_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            currency_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object coupon_ = "";
+    public static final int COUPON_FIELD_NUMBER = 7;
+    private volatile java.lang.Object coupon_;
+
     /**
      * <pre>
-     *tcc	 The coupon code associated with the transaction.
+     * tcc	 The coupon code associated with the transaction.
      * </pre>
      *
      * <code>optional string coupon = 7;</code>
      */
     public java.lang.String getCoupon() {
-      java.lang.Object ref = coupon_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        coupon_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = coupon_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            coupon_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *tcc	 The coupon code associated with the transaction.
+     * tcc	 The coupon code associated with the transaction.
      * </pre>
      *
      * <code>optional string coupon = 7;</code>
      */
     public com.google.protobuf.ByteString
-        getCouponBytes() {
-      java.lang.Object ref = coupon_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        coupon_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *tcc	 The coupon code associated with the transaction.
-     * </pre>
-     *
-     * <code>optional string coupon = 7;</code>
-     */
-    public Builder setCoupon(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      coupon_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *tcc	 The coupon code associated with the transaction.
-     * </pre>
-     *
-     * <code>optional string coupon = 7;</code>
-     */
-    public Builder clearCoupon() {
-      
-      coupon_ = getDefaultInstance().getCoupon();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *tcc	 The coupon code associated with the transaction.
-     * </pre>
-     *
-     * <code>optional string coupon = 7;</code>
-     */
-    public Builder setCouponBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      coupon_ = value;
-      onChanged();
-      return this;
+    getCouponBytes() {
+        java.lang.Object ref = coupon_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            coupon_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object action_ = "";
+    public static final int ACTION_FIELD_NUMBER = 8;
+    private volatile java.lang.Object action_;
+
     /**
      * <pre>
-     *pa
+     * pa
      * </pre>
      *
      * <code>optional string action = 8;</code>
      */
     public java.lang.String getAction() {
-      java.lang.Object ref = action_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        action_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = action_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            action_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *pa
+     * pa
      * </pre>
      *
      * <code>optional string action = 8;</code>
      */
     public com.google.protobuf.ByteString
+    getActionBytes() {
+        java.lang.Object ref = action_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            action_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
+    private byte memoizedIsInitialized = -1;
+
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+        if (!getIdBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+        }
+        if (revenue_ != 0D) {
+            output.writeDouble(2, revenue_);
+        }
+        if (tax_ != 0D) {
+            output.writeDouble(3, tax_);
+        }
+        if (shipping_ != 0D) {
+            output.writeDouble(4, shipping_);
+        }
+        if (!getAffiliationBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 5, affiliation_);
+        }
+        if (!getCurrencyBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 6, currency_);
+        }
+        if (!getCouponBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 7, coupon_);
+        }
+        if (!getActionBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 8, action_);
+        }
+    }
+
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getIdBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+        }
+        if (revenue_ != 0D) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeDoubleSize(2, revenue_);
+        }
+        if (tax_ != 0D) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeDoubleSize(3, tax_);
+        }
+        if (shipping_ != 0D) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeDoubleSize(4, shipping_);
+        }
+        if (!getAffiliationBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, affiliation_);
+        }
+        if (!getCurrencyBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, currency_);
+        }
+        if (!getCouponBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, coupon_);
+        }
+        if (!getActionBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, action_);
+        }
+        memoizedSize = size;
+        return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v2.Transaction)) {
+            return super.equals(obj);
+        }
+        org.datahem.protobuf.measurementprotocol.v2.Transaction other = (org.datahem.protobuf.measurementprotocol.v2.Transaction) obj;
+
+        boolean result = true;
+        result = result && getId()
+                .equals(other.getId());
+        result = result && (
+                java.lang.Double.doubleToLongBits(getRevenue())
+                        == java.lang.Double.doubleToLongBits(
+                        other.getRevenue()));
+        result = result && (
+                java.lang.Double.doubleToLongBits(getTax())
+                        == java.lang.Double.doubleToLongBits(
+                        other.getTax()));
+        result = result && (
+                java.lang.Double.doubleToLongBits(getShipping())
+                        == java.lang.Double.doubleToLongBits(
+                        other.getShipping()));
+        result = result && getAffiliation()
+                .equals(other.getAffiliation());
+        result = result && getCurrency()
+                .equals(other.getCurrency());
+        result = result && getCoupon()
+                .equals(other.getCoupon());
+        result = result && getAction()
+                .equals(other.getAction());
+        return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptorForType().hashCode();
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId().hashCode();
+        hash = (37 * hash) + REVENUE_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                java.lang.Double.doubleToLongBits(getRevenue()));
+        hash = (37 * hash) + TAX_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                java.lang.Double.doubleToLongBits(getTax()));
+        hash = (37 * hash) + SHIPPING_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                java.lang.Double.doubleToLongBits(getShipping()));
+        hash = (37 * hash) + AFFILIATION_FIELD_NUMBER;
+        hash = (53 * hash) + getAffiliation().hashCode();
+        hash = (37 * hash) + CURRENCY_FIELD_NUMBER;
+        hash = (53 * hash) + getCurrency().hashCode();
+        hash = (37 * hash) + COUPON_FIELD_NUMBER;
+        hash = (53 * hash) + getCoupon().hashCode();
+        hash = (37 * hash) + ACTION_FIELD_NUMBER;
+        hash = (53 * hash) + getAction().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Transaction parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v2.Transaction prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+                ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
+    /**
+     * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Transaction}
+     */
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:datahem.protobuf.measurementprotocol.v2.Transaction)
+            org.datahem.protobuf.measurementprotocol.v2.TransactionOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            org.datahem.protobuf.measurementprotocol.v2.Transaction.class, org.datahem.protobuf.measurementprotocol.v2.Transaction.Builder.class);
+        }
+
+        // Construct using org.datahem.protobuf.measurementprotocol.v2.Transaction.newBuilder()
+        private Builder() {
+            maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            super(parent);
+            maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+            if (com.google.protobuf.GeneratedMessageV3
+                    .alwaysUseFieldBuilders) {
+            }
+        }
+
+        public Builder clear() {
+            super.clear();
+            id_ = "";
+
+            revenue_ = 0D;
+
+            tax_ = 0D;
+
+            shipping_ = 0D;
+
+            affiliation_ = "";
+
+            currency_ = "";
+
+            coupon_ = "";
+
+            action_ = "";
+
+            return this;
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Transaction_descriptor;
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Transaction getDefaultInstanceForType() {
+            return org.datahem.protobuf.measurementprotocol.v2.Transaction.getDefaultInstance();
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Transaction build() {
+            org.datahem.protobuf.measurementprotocol.v2.Transaction result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Transaction buildPartial() {
+            org.datahem.protobuf.measurementprotocol.v2.Transaction result = new org.datahem.protobuf.measurementprotocol.v2.Transaction(this);
+            result.id_ = id_;
+            result.revenue_ = revenue_;
+            result.tax_ = tax_;
+            result.shipping_ = shipping_;
+            result.affiliation_ = affiliation_;
+            result.currency_ = currency_;
+            result.coupon_ = coupon_;
+            result.action_ = action_;
+            onBuilt();
+            return result;
+        }
+
+        public Builder clone() {
+            return (Builder) super.clone();
+        }
+
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                Object value) {
+            return (Builder) super.setField(field, value);
+        }
+
+        public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return (Builder) super.clearField(field);
+        }
+
+        public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return (Builder) super.clearOneof(oneof);
+        }
+
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index, Object value) {
+            return (Builder) super.setRepeatedField(field, index, value);
+        }
+
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                Object value) {
+            return (Builder) super.addRepeatedField(field, value);
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof org.datahem.protobuf.measurementprotocol.v2.Transaction) {
+                return mergeFrom((org.datahem.protobuf.measurementprotocol.v2.Transaction) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Transaction other) {
+            if (other == org.datahem.protobuf.measurementprotocol.v2.Transaction.getDefaultInstance()) return this;
+            if (!other.getId().isEmpty()) {
+                id_ = other.id_;
+                onChanged();
+            }
+            if (other.getRevenue() != 0D) {
+                setRevenue(other.getRevenue());
+            }
+            if (other.getTax() != 0D) {
+                setTax(other.getTax());
+            }
+            if (other.getShipping() != 0D) {
+                setShipping(other.getShipping());
+            }
+            if (!other.getAffiliation().isEmpty()) {
+                affiliation_ = other.affiliation_;
+                onChanged();
+            }
+            if (!other.getCurrency().isEmpty()) {
+                currency_ = other.currency_;
+                onChanged();
+            }
+            if (!other.getCoupon().isEmpty()) {
+                coupon_ = other.coupon_;
+                onChanged();
+            }
+            if (!other.getAction().isEmpty()) {
+                action_ = other.action_;
+                onChanged();
+            }
+            onChanged();
+            return this;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            org.datahem.protobuf.measurementprotocol.v2.Transaction parsedMessage = null;
+            try {
+                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                parsedMessage = (org.datahem.protobuf.measurementprotocol.v2.Transaction) e.getUnfinishedMessage();
+                throw e.unwrapIOException();
+            } finally {
+                if (parsedMessage != null) {
+                    mergeFrom(parsedMessage);
+                }
+            }
+            return this;
+        }
+
+        private java.lang.Object id_ = "";
+
+        /**
+         * <pre>
+         * ti	The transaction ID of the ecommerce transaction.
+         * </pre>
+         *
+         * <code>optional string id = 1;</code>
+         */
+        public java.lang.String getId() {
+            java.lang.Object ref = id_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                id_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * ti	The transaction ID of the ecommerce transaction.
+         * </pre>
+         *
+         * <code>optional string id = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+        getIdBytes() {
+            java.lang.Object ref = id_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                id_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * ti	The transaction ID of the ecommerce transaction.
+         * </pre>
+         *
+         * <code>optional string id = 1;</code>
+         */
+        public Builder setId(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            id_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * ti	The transaction ID of the ecommerce transaction.
+         * </pre>
+         *
+         * <code>optional string id = 1;</code>
+         */
+        public Builder clearId() {
+
+            id_ = getDefaultInstance().getId();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * ti	The transaction ID of the ecommerce transaction.
+         * </pre>
+         *
+         * <code>optional string id = 1;</code>
+         */
+        public Builder setIdBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            id_ = value;
+            onChanged();
+            return this;
+        }
+
+        private double revenue_;
+
+        /**
+         * <pre>
+         * tr	 Total transaction revenue
+         * </pre>
+         *
+         * <code>optional double revenue = 2;</code>
+         */
+        public double getRevenue() {
+            return revenue_;
+        }
+
+        /**
+         * <pre>
+         * tr	 Total transaction revenue
+         * </pre>
+         *
+         * <code>optional double revenue = 2;</code>
+         */
+        public Builder setRevenue(double value) {
+
+            revenue_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * tr	 Total transaction revenue
+         * </pre>
+         *
+         * <code>optional double revenue = 2;</code>
+         */
+        public Builder clearRevenue() {
+
+            revenue_ = 0D;
+            onChanged();
+            return this;
+        }
+
+        private double tax_;
+
+        /**
+         * <pre>
+         * tt	Total transaction tax
+         * </pre>
+         *
+         * <code>optional double tax = 3;</code>
+         */
+        public double getTax() {
+            return tax_;
+        }
+
+        /**
+         * <pre>
+         * tt	Total transaction tax
+         * </pre>
+         *
+         * <code>optional double tax = 3;</code>
+         */
+        public Builder setTax(double value) {
+
+            tax_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * tt	Total transaction tax
+         * </pre>
+         *
+         * <code>optional double tax = 3;</code>
+         */
+        public Builder clearTax() {
+
+            tax_ = 0D;
+            onChanged();
+            return this;
+        }
+
+        private double shipping_;
+
+        /**
+         * <pre>
+         * ts  Total transaction shipping cost, expressed as the value passed to Analytics multiplied by 10^6. (e.g., 2.40 would be given as 2400000).
+         * </pre>
+         *
+         * <code>optional double shipping = 4;</code>
+         */
+        public double getShipping() {
+            return shipping_;
+        }
+
+        /**
+         * <pre>
+         * ts  Total transaction shipping cost, expressed as the value passed to Analytics multiplied by 10^6. (e.g., 2.40 would be given as 2400000).
+         * </pre>
+         *
+         * <code>optional double shipping = 4;</code>
+         */
+        public Builder setShipping(double value) {
+
+            shipping_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * ts  Total transaction shipping cost, expressed as the value passed to Analytics multiplied by 10^6. (e.g., 2.40 would be given as 2400000).
+         * </pre>
+         *
+         * <code>optional double shipping = 4;</code>
+         */
+        public Builder clearShipping() {
+
+            shipping_ = 0D;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object affiliation_ = "";
+
+        /**
+         * <pre>
+         * ta	 The affiliate information passed to the ecommerce tracking code.
+         * </pre>
+         *
+         * <code>optional string affiliation = 5;</code>
+         */
+        public java.lang.String getAffiliation() {
+            java.lang.Object ref = affiliation_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                affiliation_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * ta	 The affiliate information passed to the ecommerce tracking code.
+         * </pre>
+         *
+         * <code>optional string affiliation = 5;</code>
+         */
+        public com.google.protobuf.ByteString
+        getAffiliationBytes() {
+            java.lang.Object ref = affiliation_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                affiliation_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * ta	 The affiliate information passed to the ecommerce tracking code.
+         * </pre>
+         *
+         * <code>optional string affiliation = 5;</code>
+         */
+        public Builder setAffiliation(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            affiliation_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * ta	 The affiliate information passed to the ecommerce tracking code.
+         * </pre>
+         *
+         * <code>optional string affiliation = 5;</code>
+         */
+        public Builder clearAffiliation() {
+
+            affiliation_ = getDefaultInstance().getAffiliation();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * ta	 The affiliate information passed to the ecommerce tracking code.
+         * </pre>
+         *
+         * <code>optional string affiliation = 5;</code>
+         */
+        public Builder setAffiliationBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            affiliation_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object currency_ = "";
+
+        /**
+         * <pre>
+         * cu	The local currency code for the transaction.
+         * </pre>
+         *
+         * <code>optional string currency = 6;</code>
+         */
+        public java.lang.String getCurrency() {
+            java.lang.Object ref = currency_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                currency_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * cu	The local currency code for the transaction.
+         * </pre>
+         *
+         * <code>optional string currency = 6;</code>
+         */
+        public com.google.protobuf.ByteString
+        getCurrencyBytes() {
+            java.lang.Object ref = currency_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                currency_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * cu	The local currency code for the transaction.
+         * </pre>
+         *
+         * <code>optional string currency = 6;</code>
+         */
+        public Builder setCurrency(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            currency_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * cu	The local currency code for the transaction.
+         * </pre>
+         *
+         * <code>optional string currency = 6;</code>
+         */
+        public Builder clearCurrency() {
+
+            currency_ = getDefaultInstance().getCurrency();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * cu	The local currency code for the transaction.
+         * </pre>
+         *
+         * <code>optional string currency = 6;</code>
+         */
+        public Builder setCurrencyBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            currency_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object coupon_ = "";
+
+        /**
+         * <pre>
+         * tcc	 The coupon code associated with the transaction.
+         * </pre>
+         *
+         * <code>optional string coupon = 7;</code>
+         */
+        public java.lang.String getCoupon() {
+            java.lang.Object ref = coupon_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                coupon_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * tcc	 The coupon code associated with the transaction.
+         * </pre>
+         *
+         * <code>optional string coupon = 7;</code>
+         */
+        public com.google.protobuf.ByteString
+        getCouponBytes() {
+            java.lang.Object ref = coupon_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                coupon_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * tcc	 The coupon code associated with the transaction.
+         * </pre>
+         *
+         * <code>optional string coupon = 7;</code>
+         */
+        public Builder setCoupon(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            coupon_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * tcc	 The coupon code associated with the transaction.
+         * </pre>
+         *
+         * <code>optional string coupon = 7;</code>
+         */
+        public Builder clearCoupon() {
+
+            coupon_ = getDefaultInstance().getCoupon();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * tcc	 The coupon code associated with the transaction.
+         * </pre>
+         *
+         * <code>optional string coupon = 7;</code>
+         */
+        public Builder setCouponBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            coupon_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object action_ = "";
+
+        /**
+         * <pre>
+         * pa
+         * </pre>
+         *
+         * <code>optional string action = 8;</code>
+         */
+        public java.lang.String getAction() {
+            java.lang.Object ref = action_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                action_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * pa
+         * </pre>
+         *
+         * <code>optional string action = 8;</code>
+         */
+        public com.google.protobuf.ByteString
         getActionBytes() {
-      java.lang.Object ref = action_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        action_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+            java.lang.Object ref = action_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                action_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * pa
+         * </pre>
+         *
+         * <code>optional string action = 8;</code>
+         */
+        public Builder setAction(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            action_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * pa
+         * </pre>
+         *
+         * <code>optional string action = 8;</code>
+         */
+        public Builder clearAction() {
+
+            action_ = getDefaultInstance().getAction();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * pa
+         * </pre>
+         *
+         * <code>optional string action = 8;</code>
+         */
+        public Builder setActionBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            action_ = value;
+            onChanged();
+            return this;
+        }
+
+        public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return this;
+        }
+
+        public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return this;
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:datahem.protobuf.measurementprotocol.v2.Transaction)
     }
-    /**
-     * <pre>
-     *pa
-     * </pre>
-     *
-     * <code>optional string action = 8;</code>
-     */
-    public Builder setAction(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      action_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *pa
-     * </pre>
-     *
-     * <code>optional string action = 8;</code>
-     */
-    public Builder clearAction() {
-      
-      action_ = getDefaultInstance().getAction();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *pa
-     * </pre>
-     *
-     * <code>optional string action = 8;</code>
-     */
-    public Builder setActionBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      action_ = value;
-      onChanged();
-      return this;
-    }
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+
+    // @@protoc_insertion_point(class_scope:datahem.protobuf.measurementprotocol.v2.Transaction)
+    private static final org.datahem.protobuf.measurementprotocol.v2.Transaction DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v2.Transaction();
     }
 
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+    public static org.datahem.protobuf.measurementprotocol.v2.Transaction getDefaultInstance() {
+        return DEFAULT_INSTANCE;
     }
 
+    private static final com.google.protobuf.Parser<Transaction>
+            PARSER = new com.google.protobuf.AbstractParser<Transaction>() {
+        public Transaction parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return new Transaction(input, extensionRegistry);
+        }
+    };
 
-    // @@protoc_insertion_point(builder_scope:datahem.protobuf.measurementprotocol.v2.Transaction)
-  }
-
-  // @@protoc_insertion_point(class_scope:datahem.protobuf.measurementprotocol.v2.Transaction)
-  private static final org.datahem.protobuf.measurementprotocol.v2.Transaction DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v2.Transaction();
-  }
-
-  public static org.datahem.protobuf.measurementprotocol.v2.Transaction getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<Transaction>
-      PARSER = new com.google.protobuf.AbstractParser<Transaction>() {
-    public Transaction parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Transaction(input, extensionRegistry);
+    public static com.google.protobuf.Parser<Transaction> parser() {
+        return PARSER;
     }
-  };
 
-  public static com.google.protobuf.Parser<Transaction> parser() {
-    return PARSER;
-  }
+    @java.lang.Override
+    public com.google.protobuf.Parser<Transaction> getParserForType() {
+        return PARSER;
+    }
 
-  @java.lang.Override
-  public com.google.protobuf.Parser<Transaction> getParserForType() {
-    return PARSER;
-  }
-
-  public org.datahem.protobuf.measurementprotocol.v2.Transaction getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
+    public org.datahem.protobuf.measurementprotocol.v2.Transaction getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+    }
 
 }
 

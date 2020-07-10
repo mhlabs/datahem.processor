@@ -10,9 +10,9 @@ package org.datahem.protobuf.measurementprotocol.v2;
  * Copyright (C) 2018 - 2019 Robert Sahlin
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
@@ -20,1366 +20,1442 @@ package org.datahem.protobuf.measurementprotocol.v2;
 /**
  * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Device}
  */
-public  final class Device extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:datahem.protobuf.measurementprotocol.v2.Device)
-    DeviceOrBuilder {
-  // Use Device.newBuilder() to construct.
-  private Device(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private Device() {
-    browserSize_ = "";
-    flashVersion_ = "";
-    javaEnabled_ = 0;
-    language_ = "";
-    screenColors_ = "";
-    screenResolution_ = "";
-    userAgent_ = "";
-  }
+public final class Device extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:datahem.protobuf.measurementprotocol.v2.Device)
+        DeviceOrBuilder {
+    // Use Device.newBuilder() to construct.
+    private Device(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+    }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-  }
-  private Device(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    int mutable_bitField0_ = 0;
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          default: {
-            if (!input.skipField(tag)) {
-              done = true;
+    private Device() {
+        browserSize_ = "";
+        flashVersion_ = "";
+        javaEnabled_ = 0;
+        language_ = "";
+        screenColors_ = "";
+        screenResolution_ = "";
+        userAgent_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+        return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+
+    private Device(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        int mutable_bitField0_ = 0;
+        try {
+            boolean done = false;
+            while (!done) {
+                int tag = input.readTag();
+                switch (tag) {
+                    case 0:
+                        done = true;
+                        break;
+                    default: {
+                        if (!input.skipField(tag)) {
+                            done = true;
+                        }
+                        break;
+                    }
+                    case 10: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        browserSize_ = s;
+                        break;
+                    }
+                    case 18: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        flashVersion_ = s;
+                        break;
+                    }
+                    case 24: {
+
+                        javaEnabled_ = input.readInt32();
+                        break;
+                    }
+                    case 34: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        language_ = s;
+                        break;
+                    }
+                    case 42: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        screenColors_ = s;
+                        break;
+                    }
+                    case 50: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        screenResolution_ = s;
+                        break;
+                    }
+                    case 58: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        userAgent_ = s;
+                        break;
+                    }
+                }
             }
-            break;
-          }
-          case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            browserSize_ = s;
-            break;
-          }
-          case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            flashVersion_ = s;
-            break;
-          }
-          case 24: {
-
-            javaEnabled_ = input.readInt32();
-            break;
-          }
-          case 34: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            language_ = s;
-            break;
-          }
-          case 42: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            screenColors_ = s;
-            break;
-          }
-          case 50: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            screenResolution_ = s;
-            break;
-          }
-          case 58: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            userAgent_ = s;
-            break;
-          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(
+                    e).setUnfinishedMessage(this);
+        } finally {
+            makeExtensionsImmutable();
         }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      makeExtensionsImmutable();
     }
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Device_descriptor;
-  }
 
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Device_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            org.datahem.protobuf.measurementprotocol.v2.Device.class, org.datahem.protobuf.measurementprotocol.v2.Device.Builder.class);
-  }
-
-  public static final int BROWSERSIZE_FIELD_NUMBER = 1;
-  private volatile java.lang.Object browserSize_;
-  /**
-   * <pre>
-   *vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
-   * </pre>
-   *
-   * <code>optional string browserSize = 1;</code>
-   */
-  public java.lang.String getBrowserSize() {
-    java.lang.Object ref = browserSize_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      browserSize_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
-   * </pre>
-   *
-   * <code>optional string browserSize = 1;</code>
-   */
-  public com.google.protobuf.ByteString
-      getBrowserSizeBytes() {
-    java.lang.Object ref = browserSize_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      browserSize_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int FLASHVERSION_FIELD_NUMBER = 2;
-  private volatile java.lang.Object flashVersion_;
-  /**
-   * <pre>
-   *fl. The version of the Adobe Flash plugin that is installed on the browser.
-   * </pre>
-   *
-   * <code>optional string flashVersion = 2;</code>
-   */
-  public java.lang.String getFlashVersion() {
-    java.lang.Object ref = flashVersion_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      flashVersion_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *fl. The version of the Adobe Flash plugin that is installed on the browser.
-   * </pre>
-   *
-   * <code>optional string flashVersion = 2;</code>
-   */
-  public com.google.protobuf.ByteString
-      getFlashVersionBytes() {
-    java.lang.Object ref = flashVersion_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      flashVersion_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int JAVAENABLED_FIELD_NUMBER = 3;
-  private int javaEnabled_;
-  /**
-   * <pre>
-   *je. Whether or not Java is enabled in the browser.
-   * </pre>
-   *
-   * <code>optional int32 javaEnabled = 3;</code>
-   */
-  public int getJavaEnabled() {
-    return javaEnabled_;
-  }
-
-  public static final int LANGUAGE_FIELD_NUMBER = 4;
-  private volatile java.lang.Object language_;
-  /**
-   * <pre>
-   *ul. The language the device is set to use. Expressed as the IETF language code.
-   * </pre>
-   *
-   * <code>optional string language = 4;</code>
-   */
-  public java.lang.String getLanguage() {
-    java.lang.Object ref = language_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      language_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *ul. The language the device is set to use. Expressed as the IETF language code.
-   * </pre>
-   *
-   * <code>optional string language = 4;</code>
-   */
-  public com.google.protobuf.ByteString
-      getLanguageBytes() {
-    java.lang.Object ref = language_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      language_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int SCREENCOLORS_FIELD_NUMBER = 5;
-  private volatile java.lang.Object screenColors_;
-  /**
-   * <pre>
-   *sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
-   * </pre>
-   *
-   * <code>optional string screenColors = 5;</code>
-   */
-  public java.lang.String getScreenColors() {
-    java.lang.Object ref = screenColors_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      screenColors_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
-   * </pre>
-   *
-   * <code>optional string screenColors = 5;</code>
-   */
-  public com.google.protobuf.ByteString
-      getScreenColorsBytes() {
-    java.lang.Object ref = screenColors_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      screenColors_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int SCREENRESOLUTION_FIELD_NUMBER = 6;
-  private volatile java.lang.Object screenResolution_;
-  /**
-   * <pre>
-   *sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
-   * </pre>
-   *
-   * <code>optional string screenResolution = 6;</code>
-   */
-  public java.lang.String getScreenResolution() {
-    java.lang.Object ref = screenResolution_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      screenResolution_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
-   * </pre>
-   *
-   * <code>optional string screenResolution = 6;</code>
-   */
-  public com.google.protobuf.ByteString
-      getScreenResolutionBytes() {
-    java.lang.Object ref = screenResolution_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      screenResolution_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int USERAGENT_FIELD_NUMBER = 7;
-  private volatile java.lang.Object userAgent_;
-  /**
-   * <pre>
-   *"ua|user-agent|User-Agent".
-   * </pre>
-   *
-   * <code>optional string userAgent = 7;</code>
-   */
-  public java.lang.String getUserAgent() {
-    java.lang.Object ref = userAgent_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      userAgent_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *"ua|user-agent|User-Agent".
-   * </pre>
-   *
-   * <code>optional string userAgent = 7;</code>
-   */
-  public com.google.protobuf.ByteString
-      getUserAgentBytes() {
-    java.lang.Object ref = userAgent_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      userAgent_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  private byte memoizedIsInitialized = -1;
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    if (!getBrowserSizeBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, browserSize_);
-    }
-    if (!getFlashVersionBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, flashVersion_);
-    }
-    if (javaEnabled_ != 0) {
-      output.writeInt32(3, javaEnabled_);
-    }
-    if (!getLanguageBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, language_);
-    }
-    if (!getScreenColorsBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, screenColors_);
-    }
-    if (!getScreenResolutionBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, screenResolution_);
-    }
-    if (!getUserAgentBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, userAgent_);
-    }
-  }
-
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (!getBrowserSizeBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, browserSize_);
-    }
-    if (!getFlashVersionBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, flashVersion_);
-    }
-    if (javaEnabled_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(3, javaEnabled_);
-    }
-    if (!getLanguageBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, language_);
-    }
-    if (!getScreenColorsBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, screenColors_);
-    }
-    if (!getScreenResolutionBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, screenResolution_);
-    }
-    if (!getUserAgentBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, userAgent_);
-    }
-    memoizedSize = size;
-    return size;
-  }
-
-  private static final long serialVersionUID = 0L;
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v2.Device)) {
-      return super.equals(obj);
-    }
-    org.datahem.protobuf.measurementprotocol.v2.Device other = (org.datahem.protobuf.measurementprotocol.v2.Device) obj;
-
-    boolean result = true;
-    result = result && getBrowserSize()
-        .equals(other.getBrowserSize());
-    result = result && getFlashVersion()
-        .equals(other.getFlashVersion());
-    result = result && (getJavaEnabled()
-        == other.getJavaEnabled());
-    result = result && getLanguage()
-        .equals(other.getLanguage());
-    result = result && getScreenColors()
-        .equals(other.getScreenColors());
-    result = result && getScreenResolution()
-        .equals(other.getScreenResolution());
-    result = result && getUserAgent()
-        .equals(other.getUserAgent());
-    return result;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
-    hash = (37 * hash) + BROWSERSIZE_FIELD_NUMBER;
-    hash = (53 * hash) + getBrowserSize().hashCode();
-    hash = (37 * hash) + FLASHVERSION_FIELD_NUMBER;
-    hash = (53 * hash) + getFlashVersion().hashCode();
-    hash = (37 * hash) + JAVAENABLED_FIELD_NUMBER;
-    hash = (53 * hash) + getJavaEnabled();
-    hash = (37 * hash) + LANGUAGE_FIELD_NUMBER;
-    hash = (53 * hash) + getLanguage().hashCode();
-    hash = (37 * hash) + SCREENCOLORS_FIELD_NUMBER;
-    hash = (53 * hash) + getScreenColors().hashCode();
-    hash = (37 * hash) + SCREENRESOLUTION_FIELD_NUMBER;
-    hash = (53 * hash) + getScreenResolution().hashCode();
-    hash = (37 * hash) + USERAGENT_FIELD_NUMBER;
-    hash = (53 * hash) + getUserAgent().hashCode();
-    hash = (29 * hash) + unknownFields.hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Device parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Device parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v2.Device prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Device}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:datahem.protobuf.measurementprotocol.v2.Device)
-      org.datahem.protobuf.measurementprotocol.v2.DeviceOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Device_descriptor;
+    getDescriptor() {
+        return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Device_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Device_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              org.datahem.protobuf.measurementprotocol.v2.Device.class, org.datahem.protobuf.measurementprotocol.v2.Device.Builder.class);
+    internalGetFieldAccessorTable() {
+        return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Device_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        org.datahem.protobuf.measurementprotocol.v2.Device.class, org.datahem.protobuf.measurementprotocol.v2.Device.Builder.class);
     }
 
-    // Construct using org.datahem.protobuf.measurementprotocol.v2.Device.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
+    public static final int BROWSERSIZE_FIELD_NUMBER = 1;
+    private volatile java.lang.Object browserSize_;
 
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
-    }
-    public Builder clear() {
-      super.clear();
-      browserSize_ = "";
-
-      flashVersion_ = "";
-
-      javaEnabled_ = 0;
-
-      language_ = "";
-
-      screenColors_ = "";
-
-      screenResolution_ = "";
-
-      userAgent_ = "";
-
-      return this;
-    }
-
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Device_descriptor;
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Device getDefaultInstanceForType() {
-      return org.datahem.protobuf.measurementprotocol.v2.Device.getDefaultInstance();
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Device build() {
-      org.datahem.protobuf.measurementprotocol.v2.Device result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Device buildPartial() {
-      org.datahem.protobuf.measurementprotocol.v2.Device result = new org.datahem.protobuf.measurementprotocol.v2.Device(this);
-      result.browserSize_ = browserSize_;
-      result.flashVersion_ = flashVersion_;
-      result.javaEnabled_ = javaEnabled_;
-      result.language_ = language_;
-      result.screenColors_ = screenColors_;
-      result.screenResolution_ = screenResolution_;
-      result.userAgent_ = userAgent_;
-      onBuilt();
-      return result;
-    }
-
-    public Builder clone() {
-      return (Builder) super.clone();
-    }
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
-      return (Builder) super.setField(field, value);
-    }
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return (Builder) super.clearField(field);
-    }
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return (Builder) super.clearOneof(oneof);
-    }
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
-      return (Builder) super.setRepeatedField(field, index, value);
-    }
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
-      return (Builder) super.addRepeatedField(field, value);
-    }
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof org.datahem.protobuf.measurementprotocol.v2.Device) {
-        return mergeFrom((org.datahem.protobuf.measurementprotocol.v2.Device)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Device other) {
-      if (other == org.datahem.protobuf.measurementprotocol.v2.Device.getDefaultInstance()) return this;
-      if (!other.getBrowserSize().isEmpty()) {
-        browserSize_ = other.browserSize_;
-        onChanged();
-      }
-      if (!other.getFlashVersion().isEmpty()) {
-        flashVersion_ = other.flashVersion_;
-        onChanged();
-      }
-      if (other.getJavaEnabled() != 0) {
-        setJavaEnabled(other.getJavaEnabled());
-      }
-      if (!other.getLanguage().isEmpty()) {
-        language_ = other.language_;
-        onChanged();
-      }
-      if (!other.getScreenColors().isEmpty()) {
-        screenColors_ = other.screenColors_;
-        onChanged();
-      }
-      if (!other.getScreenResolution().isEmpty()) {
-        screenResolution_ = other.screenResolution_;
-        onChanged();
-      }
-      if (!other.getUserAgent().isEmpty()) {
-        userAgent_ = other.userAgent_;
-        onChanged();
-      }
-      onChanged();
-      return this;
-    }
-
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      org.datahem.protobuf.measurementprotocol.v2.Device parsedMessage = null;
-      try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (org.datahem.protobuf.measurementprotocol.v2.Device) e.getUnfinishedMessage();
-        throw e.unwrapIOException();
-      } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
-      return this;
-    }
-
-    private java.lang.Object browserSize_ = "";
     /**
      * <pre>
-     *vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
+     * vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
      * </pre>
      *
      * <code>optional string browserSize = 1;</code>
      */
     public java.lang.String getBrowserSize() {
-      java.lang.Object ref = browserSize_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        browserSize_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = browserSize_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            browserSize_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
+     * vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
      * </pre>
      *
      * <code>optional string browserSize = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getBrowserSizeBytes() {
-      java.lang.Object ref = browserSize_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        browserSize_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
-     * </pre>
-     *
-     * <code>optional string browserSize = 1;</code>
-     */
-    public Builder setBrowserSize(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      browserSize_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
-     * </pre>
-     *
-     * <code>optional string browserSize = 1;</code>
-     */
-    public Builder clearBrowserSize() {
-      
-      browserSize_ = getDefaultInstance().getBrowserSize();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
-     * </pre>
-     *
-     * <code>optional string browserSize = 1;</code>
-     */
-    public Builder setBrowserSizeBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      browserSize_ = value;
-      onChanged();
-      return this;
+    getBrowserSizeBytes() {
+        java.lang.Object ref = browserSize_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            browserSize_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object flashVersion_ = "";
+    public static final int FLASHVERSION_FIELD_NUMBER = 2;
+    private volatile java.lang.Object flashVersion_;
+
     /**
      * <pre>
-     *fl. The version of the Adobe Flash plugin that is installed on the browser.
+     * fl. The version of the Adobe Flash plugin that is installed on the browser.
      * </pre>
      *
      * <code>optional string flashVersion = 2;</code>
      */
     public java.lang.String getFlashVersion() {
-      java.lang.Object ref = flashVersion_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        flashVersion_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = flashVersion_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            flashVersion_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *fl. The version of the Adobe Flash plugin that is installed on the browser.
+     * fl. The version of the Adobe Flash plugin that is installed on the browser.
      * </pre>
      *
      * <code>optional string flashVersion = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getFlashVersionBytes() {
-      java.lang.Object ref = flashVersion_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        flashVersion_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *fl. The version of the Adobe Flash plugin that is installed on the browser.
-     * </pre>
-     *
-     * <code>optional string flashVersion = 2;</code>
-     */
-    public Builder setFlashVersion(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      flashVersion_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *fl. The version of the Adobe Flash plugin that is installed on the browser.
-     * </pre>
-     *
-     * <code>optional string flashVersion = 2;</code>
-     */
-    public Builder clearFlashVersion() {
-      
-      flashVersion_ = getDefaultInstance().getFlashVersion();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *fl. The version of the Adobe Flash plugin that is installed on the browser.
-     * </pre>
-     *
-     * <code>optional string flashVersion = 2;</code>
-     */
-    public Builder setFlashVersionBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      flashVersion_ = value;
-      onChanged();
-      return this;
+    getFlashVersionBytes() {
+        java.lang.Object ref = flashVersion_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            flashVersion_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private int javaEnabled_ ;
+    public static final int JAVAENABLED_FIELD_NUMBER = 3;
+    private int javaEnabled_;
+
     /**
      * <pre>
-     *je. Whether or not Java is enabled in the browser.
+     * je. Whether or not Java is enabled in the browser.
      * </pre>
      *
      * <code>optional int32 javaEnabled = 3;</code>
      */
     public int getJavaEnabled() {
-      return javaEnabled_;
-    }
-    /**
-     * <pre>
-     *je. Whether or not Java is enabled in the browser.
-     * </pre>
-     *
-     * <code>optional int32 javaEnabled = 3;</code>
-     */
-    public Builder setJavaEnabled(int value) {
-      
-      javaEnabled_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *je. Whether or not Java is enabled in the browser.
-     * </pre>
-     *
-     * <code>optional int32 javaEnabled = 3;</code>
-     */
-    public Builder clearJavaEnabled() {
-      
-      javaEnabled_ = 0;
-      onChanged();
-      return this;
+        return javaEnabled_;
     }
 
-    private java.lang.Object language_ = "";
+    public static final int LANGUAGE_FIELD_NUMBER = 4;
+    private volatile java.lang.Object language_;
+
     /**
      * <pre>
-     *ul. The language the device is set to use. Expressed as the IETF language code.
+     * ul. The language the device is set to use. Expressed as the IETF language code.
      * </pre>
      *
      * <code>optional string language = 4;</code>
      */
     public java.lang.String getLanguage() {
-      java.lang.Object ref = language_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        language_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = language_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            language_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *ul. The language the device is set to use. Expressed as the IETF language code.
+     * ul. The language the device is set to use. Expressed as the IETF language code.
      * </pre>
      *
      * <code>optional string language = 4;</code>
      */
     public com.google.protobuf.ByteString
-        getLanguageBytes() {
-      java.lang.Object ref = language_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        language_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *ul. The language the device is set to use. Expressed as the IETF language code.
-     * </pre>
-     *
-     * <code>optional string language = 4;</code>
-     */
-    public Builder setLanguage(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      language_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *ul. The language the device is set to use. Expressed as the IETF language code.
-     * </pre>
-     *
-     * <code>optional string language = 4;</code>
-     */
-    public Builder clearLanguage() {
-      
-      language_ = getDefaultInstance().getLanguage();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *ul. The language the device is set to use. Expressed as the IETF language code.
-     * </pre>
-     *
-     * <code>optional string language = 4;</code>
-     */
-    public Builder setLanguageBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      language_ = value;
-      onChanged();
-      return this;
+    getLanguageBytes() {
+        java.lang.Object ref = language_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            language_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object screenColors_ = "";
+    public static final int SCREENCOLORS_FIELD_NUMBER = 5;
+    private volatile java.lang.Object screenColors_;
+
     /**
      * <pre>
-     *sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
+     * sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
      * </pre>
      *
      * <code>optional string screenColors = 5;</code>
      */
     public java.lang.String getScreenColors() {
-      java.lang.Object ref = screenColors_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        screenColors_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = screenColors_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            screenColors_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
+     * sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
      * </pre>
      *
      * <code>optional string screenColors = 5;</code>
      */
     public com.google.protobuf.ByteString
-        getScreenColorsBytes() {
-      java.lang.Object ref = screenColors_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        screenColors_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
-     * </pre>
-     *
-     * <code>optional string screenColors = 5;</code>
-     */
-    public Builder setScreenColors(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      screenColors_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
-     * </pre>
-     *
-     * <code>optional string screenColors = 5;</code>
-     */
-    public Builder clearScreenColors() {
-      
-      screenColors_ = getDefaultInstance().getScreenColors();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
-     * </pre>
-     *
-     * <code>optional string screenColors = 5;</code>
-     */
-    public Builder setScreenColorsBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      screenColors_ = value;
-      onChanged();
-      return this;
+    getScreenColorsBytes() {
+        java.lang.Object ref = screenColors_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            screenColors_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object screenResolution_ = "";
+    public static final int SCREENRESOLUTION_FIELD_NUMBER = 6;
+    private volatile java.lang.Object screenResolution_;
+
     /**
      * <pre>
-     *sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
+     * sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
      * </pre>
      *
      * <code>optional string screenResolution = 6;</code>
      */
     public java.lang.String getScreenResolution() {
-      java.lang.Object ref = screenResolution_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        screenResolution_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = screenResolution_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            screenResolution_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
+     * sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
      * </pre>
      *
      * <code>optional string screenResolution = 6;</code>
      */
     public com.google.protobuf.ByteString
-        getScreenResolutionBytes() {
-      java.lang.Object ref = screenResolution_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        screenResolution_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
-     * </pre>
-     *
-     * <code>optional string screenResolution = 6;</code>
-     */
-    public Builder setScreenResolution(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      screenResolution_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
-     * </pre>
-     *
-     * <code>optional string screenResolution = 6;</code>
-     */
-    public Builder clearScreenResolution() {
-      
-      screenResolution_ = getDefaultInstance().getScreenResolution();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
-     * </pre>
-     *
-     * <code>optional string screenResolution = 6;</code>
-     */
-    public Builder setScreenResolutionBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      screenResolution_ = value;
-      onChanged();
-      return this;
+    getScreenResolutionBytes() {
+        java.lang.Object ref = screenResolution_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            screenResolution_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object userAgent_ = "";
+    public static final int USERAGENT_FIELD_NUMBER = 7;
+    private volatile java.lang.Object userAgent_;
+
     /**
      * <pre>
-     *"ua|user-agent|User-Agent".
+     * "ua|user-agent|User-Agent".
      * </pre>
      *
      * <code>optional string userAgent = 7;</code>
      */
     public java.lang.String getUserAgent() {
-      java.lang.Object ref = userAgent_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        userAgent_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = userAgent_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            userAgent_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *"ua|user-agent|User-Agent".
+     * "ua|user-agent|User-Agent".
      * </pre>
      *
      * <code>optional string userAgent = 7;</code>
      */
     public com.google.protobuf.ByteString
+    getUserAgentBytes() {
+        java.lang.Object ref = userAgent_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            userAgent_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
+    private byte memoizedIsInitialized = -1;
+
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+        if (!getBrowserSizeBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 1, browserSize_);
+        }
+        if (!getFlashVersionBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 2, flashVersion_);
+        }
+        if (javaEnabled_ != 0) {
+            output.writeInt32(3, javaEnabled_);
+        }
+        if (!getLanguageBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 4, language_);
+        }
+        if (!getScreenColorsBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 5, screenColors_);
+        }
+        if (!getScreenResolutionBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 6, screenResolution_);
+        }
+        if (!getUserAgentBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 7, userAgent_);
+        }
+    }
+
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getBrowserSizeBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, browserSize_);
+        }
+        if (!getFlashVersionBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, flashVersion_);
+        }
+        if (javaEnabled_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(3, javaEnabled_);
+        }
+        if (!getLanguageBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, language_);
+        }
+        if (!getScreenColorsBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, screenColors_);
+        }
+        if (!getScreenResolutionBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, screenResolution_);
+        }
+        if (!getUserAgentBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, userAgent_);
+        }
+        memoizedSize = size;
+        return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v2.Device)) {
+            return super.equals(obj);
+        }
+        org.datahem.protobuf.measurementprotocol.v2.Device other = (org.datahem.protobuf.measurementprotocol.v2.Device) obj;
+
+        boolean result = true;
+        result = result && getBrowserSize()
+                .equals(other.getBrowserSize());
+        result = result && getFlashVersion()
+                .equals(other.getFlashVersion());
+        result = result && (getJavaEnabled()
+                == other.getJavaEnabled());
+        result = result && getLanguage()
+                .equals(other.getLanguage());
+        result = result && getScreenColors()
+                .equals(other.getScreenColors());
+        result = result && getScreenResolution()
+                .equals(other.getScreenResolution());
+        result = result && getUserAgent()
+                .equals(other.getUserAgent());
+        return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptorForType().hashCode();
+        hash = (37 * hash) + BROWSERSIZE_FIELD_NUMBER;
+        hash = (53 * hash) + getBrowserSize().hashCode();
+        hash = (37 * hash) + FLASHVERSION_FIELD_NUMBER;
+        hash = (53 * hash) + getFlashVersion().hashCode();
+        hash = (37 * hash) + JAVAENABLED_FIELD_NUMBER;
+        hash = (53 * hash) + getJavaEnabled();
+        hash = (37 * hash) + LANGUAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getLanguage().hashCode();
+        hash = (37 * hash) + SCREENCOLORS_FIELD_NUMBER;
+        hash = (53 * hash) + getScreenColors().hashCode();
+        hash = (37 * hash) + SCREENRESOLUTION_FIELD_NUMBER;
+        hash = (53 * hash) + getScreenResolution().hashCode();
+        hash = (37 * hash) + USERAGENT_FIELD_NUMBER;
+        hash = (53 * hash) + getUserAgent().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Device parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Device parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Device parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v2.Device prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+                ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
+    /**
+     * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Device}
+     */
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:datahem.protobuf.measurementprotocol.v2.Device)
+            org.datahem.protobuf.measurementprotocol.v2.DeviceOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Device_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Device_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            org.datahem.protobuf.measurementprotocol.v2.Device.class, org.datahem.protobuf.measurementprotocol.v2.Device.Builder.class);
+        }
+
+        // Construct using org.datahem.protobuf.measurementprotocol.v2.Device.newBuilder()
+        private Builder() {
+            maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            super(parent);
+            maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+            if (com.google.protobuf.GeneratedMessageV3
+                    .alwaysUseFieldBuilders) {
+            }
+        }
+
+        public Builder clear() {
+            super.clear();
+            browserSize_ = "";
+
+            flashVersion_ = "";
+
+            javaEnabled_ = 0;
+
+            language_ = "";
+
+            screenColors_ = "";
+
+            screenResolution_ = "";
+
+            userAgent_ = "";
+
+            return this;
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Device_descriptor;
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Device getDefaultInstanceForType() {
+            return org.datahem.protobuf.measurementprotocol.v2.Device.getDefaultInstance();
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Device build() {
+            org.datahem.protobuf.measurementprotocol.v2.Device result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Device buildPartial() {
+            org.datahem.protobuf.measurementprotocol.v2.Device result = new org.datahem.protobuf.measurementprotocol.v2.Device(this);
+            result.browserSize_ = browserSize_;
+            result.flashVersion_ = flashVersion_;
+            result.javaEnabled_ = javaEnabled_;
+            result.language_ = language_;
+            result.screenColors_ = screenColors_;
+            result.screenResolution_ = screenResolution_;
+            result.userAgent_ = userAgent_;
+            onBuilt();
+            return result;
+        }
+
+        public Builder clone() {
+            return (Builder) super.clone();
+        }
+
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                Object value) {
+            return (Builder) super.setField(field, value);
+        }
+
+        public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return (Builder) super.clearField(field);
+        }
+
+        public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return (Builder) super.clearOneof(oneof);
+        }
+
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index, Object value) {
+            return (Builder) super.setRepeatedField(field, index, value);
+        }
+
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                Object value) {
+            return (Builder) super.addRepeatedField(field, value);
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof org.datahem.protobuf.measurementprotocol.v2.Device) {
+                return mergeFrom((org.datahem.protobuf.measurementprotocol.v2.Device) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Device other) {
+            if (other == org.datahem.protobuf.measurementprotocol.v2.Device.getDefaultInstance()) return this;
+            if (!other.getBrowserSize().isEmpty()) {
+                browserSize_ = other.browserSize_;
+                onChanged();
+            }
+            if (!other.getFlashVersion().isEmpty()) {
+                flashVersion_ = other.flashVersion_;
+                onChanged();
+            }
+            if (other.getJavaEnabled() != 0) {
+                setJavaEnabled(other.getJavaEnabled());
+            }
+            if (!other.getLanguage().isEmpty()) {
+                language_ = other.language_;
+                onChanged();
+            }
+            if (!other.getScreenColors().isEmpty()) {
+                screenColors_ = other.screenColors_;
+                onChanged();
+            }
+            if (!other.getScreenResolution().isEmpty()) {
+                screenResolution_ = other.screenResolution_;
+                onChanged();
+            }
+            if (!other.getUserAgent().isEmpty()) {
+                userAgent_ = other.userAgent_;
+                onChanged();
+            }
+            onChanged();
+            return this;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            org.datahem.protobuf.measurementprotocol.v2.Device parsedMessage = null;
+            try {
+                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                parsedMessage = (org.datahem.protobuf.measurementprotocol.v2.Device) e.getUnfinishedMessage();
+                throw e.unwrapIOException();
+            } finally {
+                if (parsedMessage != null) {
+                    mergeFrom(parsedMessage);
+                }
+            }
+            return this;
+        }
+
+        private java.lang.Object browserSize_ = "";
+
+        /**
+         * <pre>
+         * vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
+         * </pre>
+         *
+         * <code>optional string browserSize = 1;</code>
+         */
+        public java.lang.String getBrowserSize() {
+            java.lang.Object ref = browserSize_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                browserSize_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
+         * </pre>
+         *
+         * <code>optional string browserSize = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+        getBrowserSizeBytes() {
+            java.lang.Object ref = browserSize_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                browserSize_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
+         * </pre>
+         *
+         * <code>optional string browserSize = 1;</code>
+         */
+        public Builder setBrowserSize(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            browserSize_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
+         * </pre>
+         *
+         * <code>optional string browserSize = 1;</code>
+         */
+        public Builder clearBrowserSize() {
+
+            browserSize_ = getDefaultInstance().getBrowserSize();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
+         * </pre>
+         *
+         * <code>optional string browserSize = 1;</code>
+         */
+        public Builder setBrowserSizeBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            browserSize_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object flashVersion_ = "";
+
+        /**
+         * <pre>
+         * fl. The version of the Adobe Flash plugin that is installed on the browser.
+         * </pre>
+         *
+         * <code>optional string flashVersion = 2;</code>
+         */
+        public java.lang.String getFlashVersion() {
+            java.lang.Object ref = flashVersion_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                flashVersion_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * fl. The version of the Adobe Flash plugin that is installed on the browser.
+         * </pre>
+         *
+         * <code>optional string flashVersion = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+        getFlashVersionBytes() {
+            java.lang.Object ref = flashVersion_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                flashVersion_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * fl. The version of the Adobe Flash plugin that is installed on the browser.
+         * </pre>
+         *
+         * <code>optional string flashVersion = 2;</code>
+         */
+        public Builder setFlashVersion(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            flashVersion_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * fl. The version of the Adobe Flash plugin that is installed on the browser.
+         * </pre>
+         *
+         * <code>optional string flashVersion = 2;</code>
+         */
+        public Builder clearFlashVersion() {
+
+            flashVersion_ = getDefaultInstance().getFlashVersion();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * fl. The version of the Adobe Flash plugin that is installed on the browser.
+         * </pre>
+         *
+         * <code>optional string flashVersion = 2;</code>
+         */
+        public Builder setFlashVersionBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            flashVersion_ = value;
+            onChanged();
+            return this;
+        }
+
+        private int javaEnabled_;
+
+        /**
+         * <pre>
+         * je. Whether or not Java is enabled in the browser.
+         * </pre>
+         *
+         * <code>optional int32 javaEnabled = 3;</code>
+         */
+        public int getJavaEnabled() {
+            return javaEnabled_;
+        }
+
+        /**
+         * <pre>
+         * je. Whether or not Java is enabled in the browser.
+         * </pre>
+         *
+         * <code>optional int32 javaEnabled = 3;</code>
+         */
+        public Builder setJavaEnabled(int value) {
+
+            javaEnabled_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * je. Whether or not Java is enabled in the browser.
+         * </pre>
+         *
+         * <code>optional int32 javaEnabled = 3;</code>
+         */
+        public Builder clearJavaEnabled() {
+
+            javaEnabled_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object language_ = "";
+
+        /**
+         * <pre>
+         * ul. The language the device is set to use. Expressed as the IETF language code.
+         * </pre>
+         *
+         * <code>optional string language = 4;</code>
+         */
+        public java.lang.String getLanguage() {
+            java.lang.Object ref = language_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                language_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * ul. The language the device is set to use. Expressed as the IETF language code.
+         * </pre>
+         *
+         * <code>optional string language = 4;</code>
+         */
+        public com.google.protobuf.ByteString
+        getLanguageBytes() {
+            java.lang.Object ref = language_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                language_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * ul. The language the device is set to use. Expressed as the IETF language code.
+         * </pre>
+         *
+         * <code>optional string language = 4;</code>
+         */
+        public Builder setLanguage(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            language_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * ul. The language the device is set to use. Expressed as the IETF language code.
+         * </pre>
+         *
+         * <code>optional string language = 4;</code>
+         */
+        public Builder clearLanguage() {
+
+            language_ = getDefaultInstance().getLanguage();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * ul. The language the device is set to use. Expressed as the IETF language code.
+         * </pre>
+         *
+         * <code>optional string language = 4;</code>
+         */
+        public Builder setLanguageBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            language_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object screenColors_ = "";
+
+        /**
+         * <pre>
+         * sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
+         * </pre>
+         *
+         * <code>optional string screenColors = 5;</code>
+         */
+        public java.lang.String getScreenColors() {
+            java.lang.Object ref = screenColors_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                screenColors_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
+         * </pre>
+         *
+         * <code>optional string screenColors = 5;</code>
+         */
+        public com.google.protobuf.ByteString
+        getScreenColorsBytes() {
+            java.lang.Object ref = screenColors_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                screenColors_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
+         * </pre>
+         *
+         * <code>optional string screenColors = 5;</code>
+         */
+        public Builder setScreenColors(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            screenColors_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
+         * </pre>
+         *
+         * <code>optional string screenColors = 5;</code>
+         */
+        public Builder clearScreenColors() {
+
+            screenColors_ = getDefaultInstance().getScreenColors();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
+         * </pre>
+         *
+         * <code>optional string screenColors = 5;</code>
+         */
+        public Builder setScreenColorsBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            screenColors_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object screenResolution_ = "";
+
+        /**
+         * <pre>
+         * sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
+         * </pre>
+         *
+         * <code>optional string screenResolution = 6;</code>
+         */
+        public java.lang.String getScreenResolution() {
+            java.lang.Object ref = screenResolution_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                screenResolution_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
+         * </pre>
+         *
+         * <code>optional string screenResolution = 6;</code>
+         */
+        public com.google.protobuf.ByteString
+        getScreenResolutionBytes() {
+            java.lang.Object ref = screenResolution_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                screenResolution_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
+         * </pre>
+         *
+         * <code>optional string screenResolution = 6;</code>
+         */
+        public Builder setScreenResolution(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            screenResolution_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
+         * </pre>
+         *
+         * <code>optional string screenResolution = 6;</code>
+         */
+        public Builder clearScreenResolution() {
+
+            screenResolution_ = getDefaultInstance().getScreenResolution();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
+         * </pre>
+         *
+         * <code>optional string screenResolution = 6;</code>
+         */
+        public Builder setScreenResolutionBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            screenResolution_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object userAgent_ = "";
+
+        /**
+         * <pre>
+         * "ua|user-agent|User-Agent".
+         * </pre>
+         *
+         * <code>optional string userAgent = 7;</code>
+         */
+        public java.lang.String getUserAgent() {
+            java.lang.Object ref = userAgent_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                userAgent_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * "ua|user-agent|User-Agent".
+         * </pre>
+         *
+         * <code>optional string userAgent = 7;</code>
+         */
+        public com.google.protobuf.ByteString
         getUserAgentBytes() {
-      java.lang.Object ref = userAgent_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        userAgent_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+            java.lang.Object ref = userAgent_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                userAgent_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * "ua|user-agent|User-Agent".
+         * </pre>
+         *
+         * <code>optional string userAgent = 7;</code>
+         */
+        public Builder setUserAgent(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            userAgent_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * "ua|user-agent|User-Agent".
+         * </pre>
+         *
+         * <code>optional string userAgent = 7;</code>
+         */
+        public Builder clearUserAgent() {
+
+            userAgent_ = getDefaultInstance().getUserAgent();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * "ua|user-agent|User-Agent".
+         * </pre>
+         *
+         * <code>optional string userAgent = 7;</code>
+         */
+        public Builder setUserAgentBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            userAgent_ = value;
+            onChanged();
+            return this;
+        }
+
+        public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return this;
+        }
+
+        public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return this;
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:datahem.protobuf.measurementprotocol.v2.Device)
     }
-    /**
-     * <pre>
-     *"ua|user-agent|User-Agent".
-     * </pre>
-     *
-     * <code>optional string userAgent = 7;</code>
-     */
-    public Builder setUserAgent(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      userAgent_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *"ua|user-agent|User-Agent".
-     * </pre>
-     *
-     * <code>optional string userAgent = 7;</code>
-     */
-    public Builder clearUserAgent() {
-      
-      userAgent_ = getDefaultInstance().getUserAgent();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *"ua|user-agent|User-Agent".
-     * </pre>
-     *
-     * <code>optional string userAgent = 7;</code>
-     */
-    public Builder setUserAgentBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      userAgent_ = value;
-      onChanged();
-      return this;
-    }
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+
+    // @@protoc_insertion_point(class_scope:datahem.protobuf.measurementprotocol.v2.Device)
+    private static final org.datahem.protobuf.measurementprotocol.v2.Device DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v2.Device();
     }
 
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+    public static org.datahem.protobuf.measurementprotocol.v2.Device getDefaultInstance() {
+        return DEFAULT_INSTANCE;
     }
 
+    private static final com.google.protobuf.Parser<Device>
+            PARSER = new com.google.protobuf.AbstractParser<Device>() {
+        public Device parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return new Device(input, extensionRegistry);
+        }
+    };
 
-    // @@protoc_insertion_point(builder_scope:datahem.protobuf.measurementprotocol.v2.Device)
-  }
-
-  // @@protoc_insertion_point(class_scope:datahem.protobuf.measurementprotocol.v2.Device)
-  private static final org.datahem.protobuf.measurementprotocol.v2.Device DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v2.Device();
-  }
-
-  public static org.datahem.protobuf.measurementprotocol.v2.Device getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<Device>
-      PARSER = new com.google.protobuf.AbstractParser<Device>() {
-    public Device parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Device(input, extensionRegistry);
+    public static com.google.protobuf.Parser<Device> parser() {
+        return PARSER;
     }
-  };
 
-  public static com.google.protobuf.Parser<Device> parser() {
-    return PARSER;
-  }
+    @java.lang.Override
+    public com.google.protobuf.Parser<Device> getParserForType() {
+        return PARSER;
+    }
 
-  @java.lang.Override
-  public com.google.protobuf.Parser<Device> getParserForType() {
-    return PARSER;
-  }
-
-  public org.datahem.protobuf.measurementprotocol.v2.Device getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
+    public org.datahem.protobuf.measurementprotocol.v2.Device getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+    }
 
 }
 

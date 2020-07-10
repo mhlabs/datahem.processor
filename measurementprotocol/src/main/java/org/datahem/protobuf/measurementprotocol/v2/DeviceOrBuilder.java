@@ -10,131 +10,137 @@ package org.datahem.protobuf.measurementprotocol.v2;
  * Copyright (C) 2018 - 2019 Robert Sahlin
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
 
 public interface DeviceOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:datahem.protobuf.measurementprotocol.v2.Device)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:datahem.protobuf.measurementprotocol.v2.Device)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <pre>
-   *vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
-   * </pre>
-   *
-   * <code>optional string browserSize = 1;</code>
-   */
-  java.lang.String getBrowserSize();
-  /**
-   * <pre>
-   *vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
-   * </pre>
-   *
-   * <code>optional string browserSize = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getBrowserSizeBytes();
+    /**
+     * <pre>
+     * vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
+     * </pre>
+     *
+     * <code>optional string browserSize = 1;</code>
+     */
+    java.lang.String getBrowserSize();
 
-  /**
-   * <pre>
-   *fl. The version of the Adobe Flash plugin that is installed on the browser.
-   * </pre>
-   *
-   * <code>optional string flashVersion = 2;</code>
-   */
-  java.lang.String getFlashVersion();
-  /**
-   * <pre>
-   *fl. The version of the Adobe Flash plugin that is installed on the browser.
-   * </pre>
-   *
-   * <code>optional string flashVersion = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getFlashVersionBytes();
+    /**
+     * <pre>
+     * vp. The viewport size of users' browsers. This captures the initial dimensions of the viewport in pixels and is formatted as width x height, for example, 1920x960.
+     * </pre>
+     *
+     * <code>optional string browserSize = 1;</code>
+     */
+    com.google.protobuf.ByteString
+    getBrowserSizeBytes();
 
-  /**
-   * <pre>
-   *je. Whether or not Java is enabled in the browser.
-   * </pre>
-   *
-   * <code>optional int32 javaEnabled = 3;</code>
-   */
-  int getJavaEnabled();
+    /**
+     * <pre>
+     * fl. The version of the Adobe Flash plugin that is installed on the browser.
+     * </pre>
+     *
+     * <code>optional string flashVersion = 2;</code>
+     */
+    java.lang.String getFlashVersion();
 
-  /**
-   * <pre>
-   *ul. The language the device is set to use. Expressed as the IETF language code.
-   * </pre>
-   *
-   * <code>optional string language = 4;</code>
-   */
-  java.lang.String getLanguage();
-  /**
-   * <pre>
-   *ul. The language the device is set to use. Expressed as the IETF language code.
-   * </pre>
-   *
-   * <code>optional string language = 4;</code>
-   */
-  com.google.protobuf.ByteString
-      getLanguageBytes();
+    /**
+     * <pre>
+     * fl. The version of the Adobe Flash plugin that is installed on the browser.
+     * </pre>
+     *
+     * <code>optional string flashVersion = 2;</code>
+     */
+    com.google.protobuf.ByteString
+    getFlashVersionBytes();
 
-  /**
-   * <pre>
-   *sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
-   * </pre>
-   *
-   * <code>optional string screenColors = 5;</code>
-   */
-  java.lang.String getScreenColors();
-  /**
-   * <pre>
-   *sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
-   * </pre>
-   *
-   * <code>optional string screenColors = 5;</code>
-   */
-  com.google.protobuf.ByteString
-      getScreenColorsBytes();
+    /**
+     * <pre>
+     * je. Whether or not Java is enabled in the browser.
+     * </pre>
+     *
+     * <code>optional int32 javaEnabled = 3;</code>
+     */
+    int getJavaEnabled();
 
-  /**
-   * <pre>
-   *sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
-   * </pre>
-   *
-   * <code>optional string screenResolution = 6;</code>
-   */
-  java.lang.String getScreenResolution();
-  /**
-   * <pre>
-   *sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
-   * </pre>
-   *
-   * <code>optional string screenResolution = 6;</code>
-   */
-  com.google.protobuf.ByteString
-      getScreenResolutionBytes();
+    /**
+     * <pre>
+     * ul. The language the device is set to use. Expressed as the IETF language code.
+     * </pre>
+     *
+     * <code>optional string language = 4;</code>
+     */
+    java.lang.String getLanguage();
 
-  /**
-   * <pre>
-   *"ua|user-agent|User-Agent".
-   * </pre>
-   *
-   * <code>optional string userAgent = 7;</code>
-   */
-  java.lang.String getUserAgent();
-  /**
-   * <pre>
-   *"ua|user-agent|User-Agent".
-   * </pre>
-   *
-   * <code>optional string userAgent = 7;</code>
-   */
-  com.google.protobuf.ByteString
-      getUserAgentBytes();
+    /**
+     * <pre>
+     * ul. The language the device is set to use. Expressed as the IETF language code.
+     * </pre>
+     *
+     * <code>optional string language = 4;</code>
+     */
+    com.google.protobuf.ByteString
+    getLanguageBytes();
+
+    /**
+     * <pre>
+     * sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
+     * </pre>
+     *
+     * <code>optional string screenColors = 5;</code>
+     */
+    java.lang.String getScreenColors();
+
+    /**
+     * <pre>
+     * sd. Number of colors supported by the display, expressed as the bit-depth (e.g., "8-bit", "24-bit", etc.).
+     * </pre>
+     *
+     * <code>optional string screenColors = 5;</code>
+     */
+    com.google.protobuf.ByteString
+    getScreenColorsBytes();
+
+    /**
+     * <pre>
+     * sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
+     * </pre>
+     *
+     * <code>optional string screenResolution = 6;</code>
+     */
+    java.lang.String getScreenResolution();
+
+    /**
+     * <pre>
+     * sr. The resolution of the device's screen, expressed in pixel width x height (e.g., "800x600").
+     * </pre>
+     *
+     * <code>optional string screenResolution = 6;</code>
+     */
+    com.google.protobuf.ByteString
+    getScreenResolutionBytes();
+
+    /**
+     * <pre>
+     * "ua|user-agent|User-Agent".
+     * </pre>
+     *
+     * <code>optional string userAgent = 7;</code>
+     */
+    java.lang.String getUserAgent();
+
+    /**
+     * <pre>
+     * "ua|user-agent|User-Agent".
+     * </pre>
+     *
+     * <code>optional string userAgent = 7;</code>
+     */
+    com.google.protobuf.ByteString
+    getUserAgentBytes();
 }

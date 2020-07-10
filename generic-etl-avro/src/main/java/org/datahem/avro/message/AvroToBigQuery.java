@@ -12,10 +12,10 @@ package org.datahem.avro.message;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,20 +31,20 @@ import com.google.api.services.bigquery.model.TableCell;
 import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
-//import com.google.cloud.dataflow.sdk.transforms.DoFn;
 import org.apache.avro.Schema;
-import org.apache.avro.specific.SpecificRecord;
 import org.apache.avro.generic.GenericRecord;
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.apache.avro.Schema.*;
+import static org.apache.avro.Schema.Type;
+
+//import com.google.cloud.dataflow.sdk.transforms.DoFn;
 
 //public class AvroToBigQuery<TRecord extends SpecificRecord>  extends DoFn<TRecord, TableRow> {
 public class AvroToBigQuery {
 
-	public static TableRow getTableRow(GenericRecord record) {
+    public static TableRow getTableRow(GenericRecord record) {
         TableRow row = new TableRow();
         encode(record, row);
         return row;
@@ -69,14 +69,14 @@ public class AvroToBigQuery {
                     break;
                 case INT:
                 case LONG:
-                    row.set(name, ((Number)record.get(field.pos())).longValue());
+                    row.set(name, ((Number) record.get(field.pos())).longValue());
                     break;
                 case BOOLEAN:
                     row.set(name, record.get(field.pos()));
                     break;
                 case FLOAT:
                 case DOUBLE:
-                    row.set(name, ((Number)record.get(field.pos())).doubleValue());
+                    row.set(name, ((Number) record.get(field.pos())).doubleValue());
                     break;
                 default:
                     row.set(name, String.valueOf(record.get(field.pos())));
@@ -93,18 +93,18 @@ public class AvroToBigQuery {
             TableFieldSchema column = new TableFieldSchema().setName(field.name().replace(".", "_")).setMode("REQUIRED");
             Type type = field.schema().getType();
             //System.out.println(field.name() + " : " + type.getName());
-            if(type == Schema.Type.UNION){
-            	for (Schema possible : field.schema().getTypes()) {
-					if (possible.getType() == Schema.Type.NULL) {
-						column.setMode("NULLABLE");
-					}else{
-						//System.out.println(possible.toString());
-						type = possible.getType();
-					}
-				}
-			}
+            if (type == Schema.Type.UNION) {
+                for (Schema possible : field.schema().getTypes()) {
+                    if (possible.getType() == Schema.Type.NULL) {
+                        column.setMode("NULLABLE");
+                    } else {
+                        //System.out.println(possible.toString());
+                        type = possible.getType();
+                    }
+                }
+            }
             switch (type) {
-            	case ARRAY:
+                case ARRAY:
                     column.setType("RECORD");
                     column.setMode("REPEATED");
                     column.setFields(getFieldsSchema(field.schema().getElementType().getFields()));
@@ -143,19 +143,18 @@ public class AvroToBigQuery {
             return column;
         }).collect(Collectors.toList());
     }
-    
-    
-    
-	private static boolean nullable(Schema schema) {
-		if (Schema.Type.NULL == schema.getType()) {
-			return true;
-		} else if (Schema.Type.UNION == schema.getType()) {
-			for (Schema possible : schema.getTypes()) {
-				if (nullable(possible)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+
+
+    private static boolean nullable(Schema schema) {
+        if (Schema.Type.NULL == schema.getType()) {
+            return true;
+        } else if (Schema.Type.UNION == schema.getType()) {
+            for (Schema possible : schema.getTypes()) {
+                if (nullable(possible)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

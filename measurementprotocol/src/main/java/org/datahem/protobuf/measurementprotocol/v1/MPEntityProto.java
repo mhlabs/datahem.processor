@@ -11,11 +11,11 @@ package org.datahem.protobuf.measurementprotocol.v1;
  * %%
  * DataHem is a serverless real-time data platform built for reporting, analytics and data/ML-products.
  * Copyright (C) 2019 Robert Sahlin
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * #L%
  */
@@ -27,2353 +27,2541 @@ package org.datahem.protobuf.measurementprotocol.v1;
  * Copyright (C) 2018 - 2019 Robert Sahlin and MatHem Sverige AB
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
 
 public final class MPEntityProto {
-  private MPEntityProto() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private MPEntityProto() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  public interface ValEntityOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:org.datahem.proto.v2.ValEntity)
-      com.google.protobuf.MessageOrBuilder {
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
 
-    /**
-     * <code>optional string string_value = 1;</code>
-     */
-    java.lang.String getStringValue();
-    /**
-     * <code>optional string string_value = 1;</code>
-     */
-    com.google.protobuf.ByteString
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    public interface ValEntityOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:org.datahem.proto.v2.ValEntity)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>optional string string_value = 1;</code>
+         */
+        java.lang.String getStringValue();
+
+        /**
+         * <code>optional string string_value = 1;</code>
+         */
+        com.google.protobuf.ByteString
         getStringValueBytes();
 
-    /**
-     * <code>optional int64 int_value = 2;</code>
-     */
-    long getIntValue();
+        /**
+         * <code>optional int64 int_value = 2;</code>
+         */
+        long getIntValue();
 
-    /**
-     * <code>optional double double_value = 3;</code>
-     */
-    double getDoubleValue();
+        /**
+         * <code>optional double double_value = 3;</code>
+         */
+        double getDoubleValue();
 
-    /**
-     * <code>optional float float_value = 4;</code>
-     */
-    float getFloatValue();
-  }
-  /**
-   * Protobuf type {@code org.datahem.proto.v2.ValEntity}
-   */
-  public  static final class ValEntity extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:org.datahem.proto.v2.ValEntity)
-      ValEntityOrBuilder {
-    // Use ValEntity.newBuilder() to construct.
-    private ValEntity(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private ValEntity() {
-      stringValue_ = "";
-      intValue_ = 0L;
-      doubleValue_ = 0D;
-      floatValue_ = 0F;
+        /**
+         * <code>optional float float_value = 4;</code>
+         */
+        float getFloatValue();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private ValEntity(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              stringValue_ = s;
-              break;
-            }
-            case 16: {
-
-              intValue_ = input.readInt64();
-              break;
-            }
-            case 25: {
-
-              doubleValue_ = input.readDouble();
-              break;
-            }
-            case 37: {
-
-              floatValue_ = input.readFloat();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_ValEntity_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_ValEntity_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.class, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.Builder.class);
-    }
-
-    public static final int STRING_VALUE_FIELD_NUMBER = 1;
-    private volatile java.lang.Object stringValue_;
-    /**
-     * <code>optional string string_value = 1;</code>
-     */
-    public java.lang.String getStringValue() {
-      java.lang.Object ref = stringValue_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        stringValue_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string string_value = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getStringValueBytes() {
-      java.lang.Object ref = stringValue_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        stringValue_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int INT_VALUE_FIELD_NUMBER = 2;
-    private long intValue_;
-    /**
-     * <code>optional int64 int_value = 2;</code>
-     */
-    public long getIntValue() {
-      return intValue_;
-    }
-
-    public static final int DOUBLE_VALUE_FIELD_NUMBER = 3;
-    private double doubleValue_;
-    /**
-     * <code>optional double double_value = 3;</code>
-     */
-    public double getDoubleValue() {
-      return doubleValue_;
-    }
-
-    public static final int FLOAT_VALUE_FIELD_NUMBER = 4;
-    private float floatValue_;
-    /**
-     * <code>optional float float_value = 4;</code>
-     */
-    public float getFloatValue() {
-      return floatValue_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getStringValueBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, stringValue_);
-      }
-      if (intValue_ != 0L) {
-        output.writeInt64(2, intValue_);
-      }
-      if (doubleValue_ != 0D) {
-        output.writeDouble(3, doubleValue_);
-      }
-      if (floatValue_ != 0F) {
-        output.writeFloat(4, floatValue_);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getStringValueBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, stringValue_);
-      }
-      if (intValue_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(2, intValue_);
-      }
-      if (doubleValue_ != 0D) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeDoubleSize(3, doubleValue_);
-      }
-      if (floatValue_ != 0F) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(4, floatValue_);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity)) {
-        return super.equals(obj);
-      }
-      org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity other = (org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity) obj;
-
-      boolean result = true;
-      result = result && getStringValue()
-          .equals(other.getStringValue());
-      result = result && (getIntValue()
-          == other.getIntValue());
-      result = result && (
-          java.lang.Double.doubleToLongBits(getDoubleValue())
-          == java.lang.Double.doubleToLongBits(
-              other.getDoubleValue()));
-      result = result && (
-          java.lang.Float.floatToIntBits(getFloatValue())
-          == java.lang.Float.floatToIntBits(
-              other.getFloatValue()));
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      hash = (37 * hash) + STRING_VALUE_FIELD_NUMBER;
-      hash = (53 * hash) + getStringValue().hashCode();
-      hash = (37 * hash) + INT_VALUE_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getIntValue());
-      hash = (37 * hash) + DOUBLE_VALUE_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          java.lang.Double.doubleToLongBits(getDoubleValue()));
-      hash = (37 * hash) + FLOAT_VALUE_FIELD_NUMBER;
-      hash = (53 * hash) + java.lang.Float.floatToIntBits(
-          getFloatValue());
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * Protobuf type {@code org.datahem.proto.v2.ValEntity}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:org.datahem.proto.v2.ValEntity)
-        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntityOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_ValEntity_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_ValEntity_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.class, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.Builder.class);
-      }
-
-      // Construct using org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+    public static final class ValEntity extends
+            com.google.protobuf.GeneratedMessageV3 implements
+            // @@protoc_insertion_point(message_implements:org.datahem.proto.v2.ValEntity)
+            ValEntityOrBuilder {
+        // Use ValEntity.newBuilder() to construct.
+        private ValEntity(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            super(builder);
         }
-      }
-      public Builder clear() {
-        super.clear();
-        stringValue_ = "";
 
-        intValue_ = 0L;
-
-        doubleValue_ = 0D;
-
-        floatValue_ = 0F;
-
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_ValEntity_descriptor;
-      }
-
-      public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getDefaultInstanceForType() {
-        return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.getDefaultInstance();
-      }
-
-      public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity build() {
-        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
+        private ValEntity() {
+            stringValue_ = "";
+            intValue_ = 0L;
+            doubleValue_ = 0D;
+            floatValue_ = 0F;
         }
-        return result;
-      }
 
-      public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity buildPartial() {
-        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity result = new org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity(this);
-        result.stringValue_ = stringValue_;
-        result.intValue_ = intValue_;
-        result.doubleValue_ = doubleValue_;
-        result.floatValue_ = floatValue_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity) {
-          return mergeFrom((org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
         }
-      }
 
-      public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity other) {
-        if (other == org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.getDefaultInstance()) return this;
-        if (!other.getStringValue().isEmpty()) {
-          stringValue_ = other.stringValue_;
-          onChanged();
+        private ValEntity(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            int mutable_bitField0_ = 0;
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        default: {
+                            if (!input.skipField(tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                        case 10: {
+                            java.lang.String s = input.readStringRequireUtf8();
+
+                            stringValue_ = s;
+                            break;
+                        }
+                        case 16: {
+
+                            intValue_ = input.readInt64();
+                            break;
+                        }
+                        case 25: {
+
+                            doubleValue_ = input.readDouble();
+                            break;
+                        }
+                        case 37: {
+
+                            floatValue_ = input.readFloat();
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e).setUnfinishedMessage(this);
+            } finally {
+                makeExtensionsImmutable();
+            }
         }
-        if (other.getIntValue() != 0L) {
-          setIntValue(other.getIntValue());
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_ValEntity_descriptor;
         }
-        if (other.getDoubleValue() != 0D) {
-          setDoubleValue(other.getDoubleValue());
+
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_ValEntity_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.class, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.Builder.class);
         }
-        if (other.getFloatValue() != 0F) {
-          setFloatValue(other.getFloatValue());
+
+        public static final int STRING_VALUE_FIELD_NUMBER = 1;
+        private volatile java.lang.Object stringValue_;
+
+        /**
+         * <code>optional string string_value = 1;</code>
+         */
+        public java.lang.String getStringValue() {
+            java.lang.Object ref = stringValue_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                stringValue_ = s;
+                return s;
+            }
         }
-        onChanged();
-        return this;
-      }
 
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
+        /**
+         * <code>optional string string_value = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+        getStringValueBytes() {
+            java.lang.Object ref = stringValue_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                stringValue_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
-        return this;
-      }
 
-      private java.lang.Object stringValue_ = "";
-      /**
-       * <code>optional string string_value = 1;</code>
-       */
-      public java.lang.String getStringValue() {
-        java.lang.Object ref = stringValue_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          stringValue_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
+        public static final int INT_VALUE_FIELD_NUMBER = 2;
+        private long intValue_;
+
+        /**
+         * <code>optional int64 int_value = 2;</code>
+         */
+        public long getIntValue() {
+            return intValue_;
         }
-      }
-      /**
-       * <code>optional string string_value = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getStringValueBytes() {
-        java.lang.Object ref = stringValue_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          stringValue_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+
+        public static final int DOUBLE_VALUE_FIELD_NUMBER = 3;
+        private double doubleValue_;
+
+        /**
+         * <code>optional double double_value = 3;</code>
+         */
+        public double getDoubleValue() {
+            return doubleValue_;
         }
-      }
-      /**
-       * <code>optional string string_value = 1;</code>
-       */
-      public Builder setStringValue(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        stringValue_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string string_value = 1;</code>
-       */
-      public Builder clearStringValue() {
-        
-        stringValue_ = getDefaultInstance().getStringValue();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string string_value = 1;</code>
-       */
-      public Builder setStringValueBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        stringValue_ = value;
-        onChanged();
-        return this;
-      }
 
-      private long intValue_ ;
-      /**
-       * <code>optional int64 int_value = 2;</code>
-       */
-      public long getIntValue() {
-        return intValue_;
-      }
-      /**
-       * <code>optional int64 int_value = 2;</code>
-       */
-      public Builder setIntValue(long value) {
-        
-        intValue_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int64 int_value = 2;</code>
-       */
-      public Builder clearIntValue() {
-        
-        intValue_ = 0L;
-        onChanged();
-        return this;
-      }
+        public static final int FLOAT_VALUE_FIELD_NUMBER = 4;
+        private float floatValue_;
 
-      private double doubleValue_ ;
-      /**
-       * <code>optional double double_value = 3;</code>
-       */
-      public double getDoubleValue() {
-        return doubleValue_;
-      }
-      /**
-       * <code>optional double double_value = 3;</code>
-       */
-      public Builder setDoubleValue(double value) {
-        
-        doubleValue_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional double double_value = 3;</code>
-       */
-      public Builder clearDoubleValue() {
-        
-        doubleValue_ = 0D;
-        onChanged();
-        return this;
-      }
+        /**
+         * <code>optional float float_value = 4;</code>
+         */
+        public float getFloatValue() {
+            return floatValue_;
+        }
 
-      private float floatValue_ ;
-      /**
-       * <code>optional float float_value = 4;</code>
-       */
-      public float getFloatValue() {
-        return floatValue_;
-      }
-      /**
-       * <code>optional float float_value = 4;</code>
-       */
-      public Builder setFloatValue(float value) {
-        
-        floatValue_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional float float_value = 4;</code>
-       */
-      public Builder clearFloatValue() {
-        
-        floatValue_ = 0F;
-        onChanged();
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
+        private byte memoizedIsInitialized = -1;
 
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            if (!getStringValueBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 1, stringValue_);
+            }
+            if (intValue_ != 0L) {
+                output.writeInt64(2, intValue_);
+            }
+            if (doubleValue_ != 0D) {
+                output.writeDouble(3, doubleValue_);
+            }
+            if (floatValue_ != 0F) {
+                output.writeFloat(4, floatValue_);
+            }
+        }
+
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (!getStringValueBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, stringValue_);
+            }
+            if (intValue_ != 0L) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeInt64Size(2, intValue_);
+            }
+            if (doubleValue_ != 0D) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeDoubleSize(3, doubleValue_);
+            }
+            if (floatValue_ != 0F) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeFloatSize(4, floatValue_);
+            }
+            memoizedSize = size;
+            return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity)) {
+                return super.equals(obj);
+            }
+            org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity other = (org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity) obj;
+
+            boolean result = true;
+            result = result && getStringValue()
+                    .equals(other.getStringValue());
+            result = result && (getIntValue()
+                    == other.getIntValue());
+            result = result && (
+                    java.lang.Double.doubleToLongBits(getDoubleValue())
+                            == java.lang.Double.doubleToLongBits(
+                            other.getDoubleValue()));
+            result = result && (
+                    java.lang.Float.floatToIntBits(getFloatValue())
+                            == java.lang.Float.floatToIntBits(
+                            other.getFloatValue()));
+            return result;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptorForType().hashCode();
+            hash = (37 * hash) + STRING_VALUE_FIELD_NUMBER;
+            hash = (53 * hash) + getStringValue().hashCode();
+            hash = (37 * hash) + INT_VALUE_FIELD_NUMBER;
+            hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                    getIntValue());
+            hash = (37 * hash) + DOUBLE_VALUE_FIELD_NUMBER;
+            hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                    java.lang.Double.doubleToLongBits(getDoubleValue()));
+            hash = (37 * hash) + FLOAT_VALUE_FIELD_NUMBER;
+            hash = (53 * hash) + java.lang.Float.floatToIntBits(
+                    getFloatValue());
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity prototype) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                    ? new Builder() : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code org.datahem.proto.v2.ValEntity}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:org.datahem.proto.v2.ValEntity)
+                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntityOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_ValEntity_descriptor;
+            }
+
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_ValEntity_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.class, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.Builder.class);
+            }
+
+            // Construct using org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessageV3
+                        .alwaysUseFieldBuilders) {
+                }
+            }
+
+            public Builder clear() {
+                super.clear();
+                stringValue_ = "";
+
+                intValue_ = 0L;
+
+                doubleValue_ = 0D;
+
+                floatValue_ = 0F;
+
+                return this;
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_ValEntity_descriptor;
+            }
+
+            public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getDefaultInstanceForType() {
+                return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.getDefaultInstance();
+            }
+
+            public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity build() {
+                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity buildPartial() {
+                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity result = new org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity(this);
+                result.stringValue_ = stringValue_;
+                result.intValue_ = intValue_;
+                result.doubleValue_ = doubleValue_;
+                result.floatValue_ = floatValue_;
+                onBuilt();
+                return result;
+            }
+
+            public Builder clone() {
+                return (Builder) super.clone();
+            }
+
+            public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    Object value) {
+                return (Builder) super.setField(field, value);
+            }
+
+            public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field) {
+                return (Builder) super.clearField(field);
+            }
+
+            public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+                return (Builder) super.clearOneof(oneof);
+            }
+
+            public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index, Object value) {
+                return (Builder) super.setRepeatedField(field, index, value);
+            }
+
+            public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    Object value) {
+                return (Builder) super.addRepeatedField(field, value);
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity) {
+                    return mergeFrom((org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity other) {
+                if (other == org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.getDefaultInstance())
+                    return this;
+                if (!other.getStringValue().isEmpty()) {
+                    stringValue_ = other.stringValue_;
+                    onChanged();
+                }
+                if (other.getIntValue() != 0L) {
+                    setIntValue(other.getIntValue());
+                }
+                if (other.getDoubleValue() != 0D) {
+                    setDoubleValue(other.getDoubleValue());
+                }
+                if (other.getFloatValue() != 0F) {
+                    setFloatValue(other.getFloatValue());
+                }
+                onChanged();
+                return this;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private java.lang.Object stringValue_ = "";
+
+            /**
+             * <code>optional string string_value = 1;</code>
+             */
+            public java.lang.String getStringValue() {
+                java.lang.Object ref = stringValue_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    stringValue_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string string_value = 1;</code>
+             */
+            public com.google.protobuf.ByteString
+            getStringValueBytes() {
+                java.lang.Object ref = stringValue_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    stringValue_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string string_value = 1;</code>
+             */
+            public Builder setStringValue(
+                    java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                stringValue_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string string_value = 1;</code>
+             */
+            public Builder clearStringValue() {
+
+                stringValue_ = getDefaultInstance().getStringValue();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string string_value = 1;</code>
+             */
+            public Builder setStringValueBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                stringValue_ = value;
+                onChanged();
+                return this;
+            }
+
+            private long intValue_;
+
+            /**
+             * <code>optional int64 int_value = 2;</code>
+             */
+            public long getIntValue() {
+                return intValue_;
+            }
+
+            /**
+             * <code>optional int64 int_value = 2;</code>
+             */
+            public Builder setIntValue(long value) {
+
+                intValue_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional int64 int_value = 2;</code>
+             */
+            public Builder clearIntValue() {
+
+                intValue_ = 0L;
+                onChanged();
+                return this;
+            }
+
+            private double doubleValue_;
+
+            /**
+             * <code>optional double double_value = 3;</code>
+             */
+            public double getDoubleValue() {
+                return doubleValue_;
+            }
+
+            /**
+             * <code>optional double double_value = 3;</code>
+             */
+            public Builder setDoubleValue(double value) {
+
+                doubleValue_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional double double_value = 3;</code>
+             */
+            public Builder clearDoubleValue() {
+
+                doubleValue_ = 0D;
+                onChanged();
+                return this;
+            }
+
+            private float floatValue_;
+
+            /**
+             * <code>optional float float_value = 4;</code>
+             */
+            public float getFloatValue() {
+                return floatValue_;
+            }
+
+            /**
+             * <code>optional float float_value = 4;</code>
+             */
+            public Builder setFloatValue(float value) {
+
+                floatValue_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional float float_value = 4;</code>
+             */
+            public Builder clearFloatValue() {
+
+                floatValue_ = 0F;
+                onChanged();
+                return this;
+            }
+
+            public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return this;
+            }
+
+            public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return this;
+            }
 
 
-      // @@protoc_insertion_point(builder_scope:org.datahem.proto.v2.ValEntity)
+            // @@protoc_insertion_point(builder_scope:org.datahem.proto.v2.ValEntity)
+        }
+
+        // @@protoc_insertion_point(class_scope:org.datahem.proto.v2.ValEntity)
+        private static final org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity();
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<ValEntity>
+                PARSER = new com.google.protobuf.AbstractParser<ValEntity>() {
+            public ValEntity parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                return new ValEntity(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<ValEntity> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<ValEntity> getParserForType() {
+            return PARSER;
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
+
     }
 
-    // @@protoc_insertion_point(class_scope:org.datahem.proto.v2.ValEntity)
-    private static final org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity();
-    }
+    public interface MPEntityOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:org.datahem.proto.v2.MPEntity)
+            com.google.protobuf.MessageOrBuilder {
 
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
+        /**
+         * <code>optional string type = 1;</code>
+         */
+        java.lang.String getType();
 
-    private static final com.google.protobuf.Parser<ValEntity>
-        PARSER = new com.google.protobuf.AbstractParser<ValEntity>() {
-      public ValEntity parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new ValEntity(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<ValEntity> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<ValEntity> getParserForType() {
-      return PARSER;
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface MPEntityOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:org.datahem.proto.v2.MPEntity)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>optional string type = 1;</code>
-     */
-    java.lang.String getType();
-    /**
-     * <code>optional string type = 1;</code>
-     */
-    com.google.protobuf.ByteString
+        /**
+         * <code>optional string type = 1;</code>
+         */
+        com.google.protobuf.ByteString
         getTypeBytes();
 
-    /**
-     * <code>optional string hit_id = 2;</code>
-     */
-    java.lang.String getHitId();
-    /**
-     * <code>optional string hit_id = 2;</code>
-     */
-    com.google.protobuf.ByteString
+        /**
+         * <code>optional string hit_id = 2;</code>
+         */
+        java.lang.String getHitId();
+
+        /**
+         * <code>optional string hit_id = 2;</code>
+         */
+        com.google.protobuf.ByteString
         getHitIdBytes();
 
-    /**
-     * <code>optional string client_id = 3;</code>
-     */
-    java.lang.String getClientId();
-    /**
-     * <code>optional string client_id = 3;</code>
-     */
-    com.google.protobuf.ByteString
+        /**
+         * <code>optional string client_id = 3;</code>
+         */
+        java.lang.String getClientId();
+
+        /**
+         * <code>optional string client_id = 3;</code>
+         */
+        com.google.protobuf.ByteString
         getClientIdBytes();
 
-    /**
-     * <code>optional string user_id = 4;</code>
-     */
-    java.lang.String getUserId();
-    /**
-     * <code>optional string user_id = 4;</code>
-     */
-    com.google.protobuf.ByteString
+        /**
+         * <code>optional string user_id = 4;</code>
+         */
+        java.lang.String getUserId();
+
+        /**
+         * <code>optional string user_id = 4;</code>
+         */
+        com.google.protobuf.ByteString
         getUserIdBytes();
 
-    /**
-     * <code>optional string local_date_time = 5;</code>
-     */
-    java.lang.String getLocalDateTime();
-    /**
-     * <code>optional string local_date_time = 5;</code>
-     */
-    com.google.protobuf.ByteString
+        /**
+         * <code>optional string local_date_time = 5;</code>
+         */
+        java.lang.String getLocalDateTime();
+
+        /**
+         * <code>optional string local_date_time = 5;</code>
+         */
+        com.google.protobuf.ByteString
         getLocalDateTimeBytes();
 
-    /**
-     * <code>optional int64 epoch_millis = 6;</code>
-     */
-    long getEpochMillis();
+        /**
+         * <code>optional int64 epoch_millis = 6;</code>
+         */
+        long getEpochMillis();
 
-    /**
-     * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-     */
-    int getParamsCount();
-    /**
-     * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-     */
-    boolean containsParams(
-        java.lang.String key);
-    /**
-     * Use {@link #getParamsMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
-    getParams();
-    /**
-     * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-     */
-    java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
-    getParamsMap();
-    /**
-     * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-     */
+        /**
+         * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+         */
+        int getParamsCount();
 
-    org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrDefault(
-        java.lang.String key,
-        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity defaultValue);
-    /**
-     * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-     */
+        /**
+         * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+         */
+        boolean containsParams(
+                java.lang.String key);
 
-    org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrThrow(
-        java.lang.String key);
+        /**
+         * Use {@link #getParamsMap()} instead.
+         */
+        @java.lang.Deprecated
+        java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
+        getParams();
 
-    /**
-     * <code>optional string date = 8;</code>
-     */
-    java.lang.String getDate();
-    /**
-     * <code>optional string date = 8;</code>
-     */
-    com.google.protobuf.ByteString
+        /**
+         * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+         */
+        java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
+        getParamsMap();
+
+        /**
+         * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+         */
+
+        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrDefault(
+                java.lang.String key,
+                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity defaultValue);
+
+        /**
+         * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+         */
+
+        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrThrow(
+                java.lang.String key);
+
+        /**
+         * <code>optional string date = 8;</code>
+         */
+        java.lang.String getDate();
+
+        /**
+         * <code>optional string date = 8;</code>
+         */
+        com.google.protobuf.ByteString
         getDateBytes();
-  }
-  /**
-   * Protobuf type {@code org.datahem.proto.v2.MPEntity}
-   */
-  public  static final class MPEntity extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:org.datahem.proto.v2.MPEntity)
-      MPEntityOrBuilder {
-    // Use MPEntity.newBuilder() to construct.
-    private MPEntity(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private MPEntity() {
-      type_ = "";
-      hitId_ = "";
-      clientId_ = "";
-      userId_ = "";
-      localDateTime_ = "";
-      epochMillis_ = 0L;
-      date_ = "";
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private MPEntity(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              type_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              hitId_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              clientId_ = s;
-              break;
-            }
-            case 34: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              userId_ = s;
-              break;
-            }
-            case 42: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              localDateTime_ = s;
-              break;
-            }
-            case 48: {
-
-              epochMillis_ = input.readInt64();
-              break;
-            }
-            case 58: {
-              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-                params_ = com.google.protobuf.MapField.newMapField(
-                    ParamsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000040;
-              }
-              com.google.protobuf.MapEntry<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
-              params = input.readMessage(
-                  ParamsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              params_.getMutableMap().put(params.getKey(), params.getValue());
-              break;
-            }
-            case 66: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              date_ = s;
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_descriptor;
-    }
-
-    @SuppressWarnings({"rawtypes"})
-    protected com.google.protobuf.MapField internalGetMapField(
-        int number) {
-      switch (number) {
-        case 7:
-          return internalGetParams();
-        default:
-          throw new RuntimeException(
-              "Invalid map field number: " + number);
-      }
-    }
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.class, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.Builder.class);
-    }
-
-    private int bitField0_;
-    public static final int TYPE_FIELD_NUMBER = 1;
-    private volatile java.lang.Object type_;
-    /**
-     * <code>optional string type = 1;</code>
-     */
-    public java.lang.String getType() {
-      java.lang.Object ref = type_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        type_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string type = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getTypeBytes() {
-      java.lang.Object ref = type_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        type_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int HIT_ID_FIELD_NUMBER = 2;
-    private volatile java.lang.Object hitId_;
-    /**
-     * <code>optional string hit_id = 2;</code>
-     */
-    public java.lang.String getHitId() {
-      java.lang.Object ref = hitId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        hitId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string hit_id = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getHitIdBytes() {
-      java.lang.Object ref = hitId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        hitId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int CLIENT_ID_FIELD_NUMBER = 3;
-    private volatile java.lang.Object clientId_;
-    /**
-     * <code>optional string client_id = 3;</code>
-     */
-    public java.lang.String getClientId() {
-      java.lang.Object ref = clientId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        clientId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string client_id = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getClientIdBytes() {
-      java.lang.Object ref = clientId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        clientId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int USER_ID_FIELD_NUMBER = 4;
-    private volatile java.lang.Object userId_;
-    /**
-     * <code>optional string user_id = 4;</code>
-     */
-    public java.lang.String getUserId() {
-      java.lang.Object ref = userId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        userId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string user_id = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getUserIdBytes() {
-      java.lang.Object ref = userId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        userId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int LOCAL_DATE_TIME_FIELD_NUMBER = 5;
-    private volatile java.lang.Object localDateTime_;
-    /**
-     * <code>optional string local_date_time = 5;</code>
-     */
-    public java.lang.String getLocalDateTime() {
-      java.lang.Object ref = localDateTime_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        localDateTime_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string local_date_time = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getLocalDateTimeBytes() {
-      java.lang.Object ref = localDateTime_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        localDateTime_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int EPOCH_MILLIS_FIELD_NUMBER = 6;
-    private long epochMillis_;
-    /**
-     * <code>optional int64 epoch_millis = 6;</code>
-     */
-    public long getEpochMillis() {
-      return epochMillis_;
-    }
-
-    public static final int PARAMS_FIELD_NUMBER = 7;
-    private static final class ParamsDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>newDefaultInstance(
-                  org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                  org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.getDefaultInstance());
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> params_;
-    private com.google.protobuf.MapField<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
-    internalGetParams() {
-      if (params_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            ParamsDefaultEntryHolder.defaultEntry);
-      }
-      return params_;
-    }
-
-    public int getParamsCount() {
-      return internalGetParams().getMap().size();
-    }
-    /**
-     * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-     */
-
-    public boolean containsParams(
-        java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      return internalGetParams().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getParamsMap()} instead.
-     */
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> getParams() {
-      return getParamsMap();
-    }
-    /**
-     * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-     */
-
-    public java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> getParamsMap() {
-      return internalGetParams().getMap();
-    }
-    /**
-     * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-     */
-
-    public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrDefault(
-        java.lang.String key,
-        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity defaultValue) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> map =
-          internalGetParams().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
-    }
-    /**
-     * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-     */
-
-    public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> map =
-          internalGetParams().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
-    }
-
-    public static final int DATE_FIELD_NUMBER = 8;
-    private volatile java.lang.Object date_;
-    /**
-     * <code>optional string date = 8;</code>
-     */
-    public java.lang.String getDate() {
-      java.lang.Object ref = date_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        date_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string date = 8;</code>
-     */
-    public com.google.protobuf.ByteString
-        getDateBytes() {
-      java.lang.Object ref = date_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        date_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getTypeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, type_);
-      }
-      if (!getHitIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hitId_);
-      }
-      if (!getClientIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, clientId_);
-      }
-      if (!getUserIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, userId_);
-      }
-      if (!getLocalDateTimeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, localDateTime_);
-      }
-      if (epochMillis_ != 0L) {
-        output.writeInt64(6, epochMillis_);
-      }
-      for (java.util.Map.Entry<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> entry
-           : internalGetParams().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
-        params = ParamsDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        output.writeMessage(7, params);
-      }
-      if (!getDateBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, date_);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getTypeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, type_);
-      }
-      if (!getHitIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hitId_);
-      }
-      if (!getClientIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, clientId_);
-      }
-      if (!getUserIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, userId_);
-      }
-      if (!getLocalDateTimeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, localDateTime_);
-      }
-      if (epochMillis_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(6, epochMillis_);
-      }
-      for (java.util.Map.Entry<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> entry
-           : internalGetParams().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
-        params = ParamsDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(7, params);
-      }
-      if (!getDateBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, date_);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity)) {
-        return super.equals(obj);
-      }
-      org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity other = (org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity) obj;
-
-      boolean result = true;
-      result = result && getType()
-          .equals(other.getType());
-      result = result && getHitId()
-          .equals(other.getHitId());
-      result = result && getClientId()
-          .equals(other.getClientId());
-      result = result && getUserId()
-          .equals(other.getUserId());
-      result = result && getLocalDateTime()
-          .equals(other.getLocalDateTime());
-      result = result && (getEpochMillis()
-          == other.getEpochMillis());
-      result = result && internalGetParams().equals(
-          other.internalGetParams());
-      result = result && getDate()
-          .equals(other.getDate());
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      hash = (37 * hash) + TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + getType().hashCode();
-      hash = (37 * hash) + HIT_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getHitId().hashCode();
-      hash = (37 * hash) + CLIENT_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getClientId().hashCode();
-      hash = (37 * hash) + USER_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getUserId().hashCode();
-      hash = (37 * hash) + LOCAL_DATE_TIME_FIELD_NUMBER;
-      hash = (53 * hash) + getLocalDateTime().hashCode();
-      hash = (37 * hash) + EPOCH_MILLIS_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getEpochMillis());
-      if (!internalGetParams().getMap().isEmpty()) {
-        hash = (37 * hash) + PARAMS_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetParams().hashCode();
-      }
-      hash = (37 * hash) + DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getDate().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * Protobuf type {@code org.datahem.proto.v2.MPEntity}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:org.datahem.proto.v2.MPEntity)
-        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntityOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_descriptor;
-      }
-
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMapField(
-          int number) {
-        switch (number) {
-          case 7:
-            return internalGetParams();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
+    public static final class MPEntity extends
+            com.google.protobuf.GeneratedMessageV3 implements
+            // @@protoc_insertion_point(message_implements:org.datahem.proto.v2.MPEntity)
+            MPEntityOrBuilder {
+        // Use MPEntity.newBuilder() to construct.
+        private MPEntity(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            super(builder);
         }
-      }
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMutableMapField(
-          int number) {
-        switch (number) {
-          case 7:
-            return internalGetMutableParams();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
+
+        private MPEntity() {
+            type_ = "";
+            hitId_ = "";
+            clientId_ = "";
+            userId_ = "";
+            localDateTime_ = "";
+            epochMillis_ = 0L;
+            date_ = "";
         }
-      }
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.class, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.Builder.class);
-      }
 
-      // Construct using org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
         }
-      }
-      public Builder clear() {
-        super.clear();
-        type_ = "";
 
-        hitId_ = "";
+        private MPEntity(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            int mutable_bitField0_ = 0;
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        default: {
+                            if (!input.skipField(tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                        case 10: {
+                            java.lang.String s = input.readStringRequireUtf8();
 
-        clientId_ = "";
+                            type_ = s;
+                            break;
+                        }
+                        case 18: {
+                            java.lang.String s = input.readStringRequireUtf8();
 
-        userId_ = "";
+                            hitId_ = s;
+                            break;
+                        }
+                        case 26: {
+                            java.lang.String s = input.readStringRequireUtf8();
 
-        localDateTime_ = "";
+                            clientId_ = s;
+                            break;
+                        }
+                        case 34: {
+                            java.lang.String s = input.readStringRequireUtf8();
 
-        epochMillis_ = 0L;
+                            userId_ = s;
+                            break;
+                        }
+                        case 42: {
+                            java.lang.String s = input.readStringRequireUtf8();
 
-        internalGetMutableParams().clear();
-        date_ = "";
+                            localDateTime_ = s;
+                            break;
+                        }
+                        case 48: {
 
-        return this;
-      }
+                            epochMillis_ = input.readInt64();
+                            break;
+                        }
+                        case 58: {
+                            if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+                                params_ = com.google.protobuf.MapField.newMapField(
+                                        ParamsDefaultEntryHolder.defaultEntry);
+                                mutable_bitField0_ |= 0x00000040;
+                            }
+                            com.google.protobuf.MapEntry<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
+                                    params = input.readMessage(
+                                    ParamsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+                            params_.getMutableMap().put(params.getKey(), params.getValue());
+                            break;
+                        }
+                        case 66: {
+                            java.lang.String s = input.readStringRequireUtf8();
 
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_descriptor;
-      }
-
-      public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity getDefaultInstanceForType() {
-        return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.getDefaultInstance();
-      }
-
-      public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity build() {
-        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
+                            date_ = s;
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e).setUnfinishedMessage(this);
+            } finally {
+                makeExtensionsImmutable();
+            }
         }
-        return result;
-      }
 
-      public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity buildPartial() {
-        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity result = new org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        result.type_ = type_;
-        result.hitId_ = hitId_;
-        result.clientId_ = clientId_;
-        result.userId_ = userId_;
-        result.localDateTime_ = localDateTime_;
-        result.epochMillis_ = epochMillis_;
-        result.params_ = internalGetParams();
-        result.params_.makeImmutable();
-        result.date_ = date_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity) {
-          return mergeFrom((org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_descriptor;
         }
-      }
 
-      public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity other) {
-        if (other == org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.getDefaultInstance()) return this;
-        if (!other.getType().isEmpty()) {
-          type_ = other.type_;
-          onChanged();
+        @SuppressWarnings({"rawtypes"})
+        protected com.google.protobuf.MapField internalGetMapField(
+                int number) {
+            switch (number) {
+                case 7:
+                    return internalGetParams();
+                default:
+                    throw new RuntimeException(
+                            "Invalid map field number: " + number);
+            }
         }
-        if (!other.getHitId().isEmpty()) {
-          hitId_ = other.hitId_;
-          onChanged();
+
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.class, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.Builder.class);
         }
-        if (!other.getClientId().isEmpty()) {
-          clientId_ = other.clientId_;
-          onChanged();
+
+        private int bitField0_;
+        public static final int TYPE_FIELD_NUMBER = 1;
+        private volatile java.lang.Object type_;
+
+        /**
+         * <code>optional string type = 1;</code>
+         */
+        public java.lang.String getType() {
+            java.lang.Object ref = type_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                type_ = s;
+                return s;
+            }
         }
-        if (!other.getUserId().isEmpty()) {
-          userId_ = other.userId_;
-          onChanged();
+
+        /**
+         * <code>optional string type = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+        getTypeBytes() {
+            java.lang.Object ref = type_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                type_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
-        if (!other.getLocalDateTime().isEmpty()) {
-          localDateTime_ = other.localDateTime_;
-          onChanged();
+
+        public static final int HIT_ID_FIELD_NUMBER = 2;
+        private volatile java.lang.Object hitId_;
+
+        /**
+         * <code>optional string hit_id = 2;</code>
+         */
+        public java.lang.String getHitId() {
+            java.lang.Object ref = hitId_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                hitId_ = s;
+                return s;
+            }
         }
-        if (other.getEpochMillis() != 0L) {
-          setEpochMillis(other.getEpochMillis());
+
+        /**
+         * <code>optional string hit_id = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+        getHitIdBytes() {
+            java.lang.Object ref = hitId_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                hitId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
-        internalGetMutableParams().mergeFrom(
-            other.internalGetParams());
-        if (!other.getDate().isEmpty()) {
-          date_ = other.date_;
-          onChanged();
+
+        public static final int CLIENT_ID_FIELD_NUMBER = 3;
+        private volatile java.lang.Object clientId_;
+
+        /**
+         * <code>optional string client_id = 3;</code>
+         */
+        public java.lang.String getClientId() {
+            java.lang.Object ref = clientId_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                clientId_ = s;
+                return s;
+            }
         }
-        onChanged();
-        return this;
-      }
 
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
+        /**
+         * <code>optional string client_id = 3;</code>
+         */
+        public com.google.protobuf.ByteString
+        getClientIdBytes() {
+            java.lang.Object ref = clientId_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                clientId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
-        return this;
-      }
-      private int bitField0_;
 
-      private java.lang.Object type_ = "";
-      /**
-       * <code>optional string type = 1;</code>
-       */
-      public java.lang.String getType() {
-        java.lang.Object ref = type_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          type_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
+        public static final int USER_ID_FIELD_NUMBER = 4;
+        private volatile java.lang.Object userId_;
+
+        /**
+         * <code>optional string user_id = 4;</code>
+         */
+        public java.lang.String getUserId() {
+            java.lang.Object ref = userId_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                userId_ = s;
+                return s;
+            }
         }
-      }
-      /**
-       * <code>optional string type = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getTypeBytes() {
-        java.lang.Object ref = type_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          type_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+
+        /**
+         * <code>optional string user_id = 4;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUserIdBytes() {
+            java.lang.Object ref = userId_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                userId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
-      }
-      /**
-       * <code>optional string type = 1;</code>
-       */
-      public Builder setType(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        type_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string type = 1;</code>
-       */
-      public Builder clearType() {
-        
-        type_ = getDefaultInstance().getType();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string type = 1;</code>
-       */
-      public Builder setTypeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        type_ = value;
-        onChanged();
-        return this;
-      }
 
-      private java.lang.Object hitId_ = "";
-      /**
-       * <code>optional string hit_id = 2;</code>
-       */
-      public java.lang.String getHitId() {
-        java.lang.Object ref = hitId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          hitId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
+        public static final int LOCAL_DATE_TIME_FIELD_NUMBER = 5;
+        private volatile java.lang.Object localDateTime_;
+
+        /**
+         * <code>optional string local_date_time = 5;</code>
+         */
+        public java.lang.String getLocalDateTime() {
+            java.lang.Object ref = localDateTime_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                localDateTime_ = s;
+                return s;
+            }
         }
-      }
-      /**
-       * <code>optional string hit_id = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getHitIdBytes() {
-        java.lang.Object ref = hitId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          hitId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+
+        /**
+         * <code>optional string local_date_time = 5;</code>
+         */
+        public com.google.protobuf.ByteString
+        getLocalDateTimeBytes() {
+            java.lang.Object ref = localDateTime_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                localDateTime_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
-      }
-      /**
-       * <code>optional string hit_id = 2;</code>
-       */
-      public Builder setHitId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        hitId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string hit_id = 2;</code>
-       */
-      public Builder clearHitId() {
-        
-        hitId_ = getDefaultInstance().getHitId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string hit_id = 2;</code>
-       */
-      public Builder setHitIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        hitId_ = value;
-        onChanged();
-        return this;
-      }
 
-      private java.lang.Object clientId_ = "";
-      /**
-       * <code>optional string client_id = 3;</code>
-       */
-      public java.lang.String getClientId() {
-        java.lang.Object ref = clientId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          clientId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
+        public static final int EPOCH_MILLIS_FIELD_NUMBER = 6;
+        private long epochMillis_;
+
+        /**
+         * <code>optional int64 epoch_millis = 6;</code>
+         */
+        public long getEpochMillis() {
+            return epochMillis_;
         }
-      }
-      /**
-       * <code>optional string client_id = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getClientIdBytes() {
-        java.lang.Object ref = clientId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          clientId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+
+        public static final int PARAMS_FIELD_NUMBER = 7;
+
+        private static final class ParamsDefaultEntryHolder {
+            static final com.google.protobuf.MapEntry<
+                    java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> defaultEntry =
+                    com.google.protobuf.MapEntry
+                            .<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>newDefaultInstance(
+                                    org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_descriptor,
+                                    com.google.protobuf.WireFormat.FieldType.STRING,
+                                    "",
+                                    com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                                    org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity.getDefaultInstance());
         }
-      }
-      /**
-       * <code>optional string client_id = 3;</code>
-       */
-      public Builder setClientId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        clientId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string client_id = 3;</code>
-       */
-      public Builder clearClientId() {
-        
-        clientId_ = getDefaultInstance().getClientId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string client_id = 3;</code>
-       */
-      public Builder setClientIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        clientId_ = value;
-        onChanged();
-        return this;
-      }
 
-      private java.lang.Object userId_ = "";
-      /**
-       * <code>optional string user_id = 4;</code>
-       */
-      public java.lang.String getUserId() {
-        java.lang.Object ref = userId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          userId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
+        private com.google.protobuf.MapField<
+                java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> params_;
+
+        private com.google.protobuf.MapField<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
+        internalGetParams() {
+            if (params_ == null) {
+                return com.google.protobuf.MapField.emptyMapField(
+                        ParamsDefaultEntryHolder.defaultEntry);
+            }
+            return params_;
         }
-      }
-      /**
-       * <code>optional string user_id = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getUserIdBytes() {
-        java.lang.Object ref = userId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          userId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+
+        public int getParamsCount() {
+            return internalGetParams().getMap().size();
         }
-      }
-      /**
-       * <code>optional string user_id = 4;</code>
-       */
-      public Builder setUserId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        userId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string user_id = 4;</code>
-       */
-      public Builder clearUserId() {
-        
-        userId_ = getDefaultInstance().getUserId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string user_id = 4;</code>
-       */
-      public Builder setUserIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        userId_ = value;
-        onChanged();
-        return this;
-      }
 
-      private java.lang.Object localDateTime_ = "";
-      /**
-       * <code>optional string local_date_time = 5;</code>
-       */
-      public java.lang.String getLocalDateTime() {
-        java.lang.Object ref = localDateTime_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          localDateTime_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
+        /**
+         * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+         */
+
+        public boolean containsParams(
+                java.lang.String key) {
+            if (key == null) {
+                throw new java.lang.NullPointerException();
+            }
+            return internalGetParams().getMap().containsKey(key);
         }
-      }
-      /**
-       * <code>optional string local_date_time = 5;</code>
-       */
-      public com.google.protobuf.ByteString
-          getLocalDateTimeBytes() {
-        java.lang.Object ref = localDateTime_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          localDateTime_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+
+        /**
+         * Use {@link #getParamsMap()} instead.
+         */
+        @java.lang.Deprecated
+        public java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> getParams() {
+            return getParamsMap();
         }
-      }
-      /**
-       * <code>optional string local_date_time = 5;</code>
-       */
-      public Builder setLocalDateTime(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        localDateTime_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string local_date_time = 5;</code>
-       */
-      public Builder clearLocalDateTime() {
-        
-        localDateTime_ = getDefaultInstance().getLocalDateTime();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string local_date_time = 5;</code>
-       */
-      public Builder setLocalDateTimeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        localDateTime_ = value;
-        onChanged();
-        return this;
-      }
 
-      private long epochMillis_ ;
-      /**
-       * <code>optional int64 epoch_millis = 6;</code>
-       */
-      public long getEpochMillis() {
-        return epochMillis_;
-      }
-      /**
-       * <code>optional int64 epoch_millis = 6;</code>
-       */
-      public Builder setEpochMillis(long value) {
-        
-        epochMillis_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int64 epoch_millis = 6;</code>
-       */
-      public Builder clearEpochMillis() {
-        
-        epochMillis_ = 0L;
-        onChanged();
-        return this;
-      }
+        /**
+         * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+         */
 
-      private com.google.protobuf.MapField<
-          java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> params_;
-      private com.google.protobuf.MapField<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
-      internalGetParams() {
-        if (params_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              ParamsDefaultEntryHolder.defaultEntry);
+        public java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> getParamsMap() {
+            return internalGetParams().getMap();
         }
-        return params_;
-      }
-      private com.google.protobuf.MapField<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
-      internalGetMutableParams() {
-        onChanged();;
-        if (params_ == null) {
-          params_ = com.google.protobuf.MapField.newMapField(
-              ParamsDefaultEntryHolder.defaultEntry);
+
+        /**
+         * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+         */
+
+        public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrDefault(
+                java.lang.String key,
+                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity defaultValue) {
+            if (key == null) {
+                throw new java.lang.NullPointerException();
+            }
+            java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> map =
+                    internalGetParams().getMap();
+            return map.containsKey(key) ? map.get(key) : defaultValue;
         }
-        if (!params_.isMutable()) {
-          params_ = params_.copy();
+
+        /**
+         * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+         */
+
+        public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrThrow(
+                java.lang.String key) {
+            if (key == null) {
+                throw new java.lang.NullPointerException();
+            }
+            java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> map =
+                    internalGetParams().getMap();
+            if (!map.containsKey(key)) {
+                throw new java.lang.IllegalArgumentException();
+            }
+            return map.get(key);
         }
-        return params_;
-      }
 
-      public int getParamsCount() {
-        return internalGetParams().getMap().size();
-      }
-      /**
-       * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-       */
+        public static final int DATE_FIELD_NUMBER = 8;
+        private volatile java.lang.Object date_;
 
-      public boolean containsParams(
-          java.lang.String key) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        return internalGetParams().getMap().containsKey(key);
-      }
-      /**
-       * Use {@link #getParamsMap()} instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> getParams() {
-        return getParamsMap();
-      }
-      /**
-       * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-       */
-
-      public java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> getParamsMap() {
-        return internalGetParams().getMap();
-      }
-      /**
-       * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-       */
-
-      public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrDefault(
-          java.lang.String key,
-          org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity defaultValue) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> map =
-            internalGetParams().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
-      }
-      /**
-       * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-       */
-
-      public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrThrow(
-          java.lang.String key) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> map =
-            internalGetParams().getMap();
-        if (!map.containsKey(key)) {
-          throw new java.lang.IllegalArgumentException();
+        /**
+         * <code>optional string date = 8;</code>
+         */
+        public java.lang.String getDate() {
+            java.lang.Object ref = date_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                date_ = s;
+                return s;
+            }
         }
-        return map.get(key);
-      }
 
-      public Builder clearParams() {
-        getMutableParams().clear();
-        return this;
-      }
-      /**
-       * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-       */
-
-      public Builder removeParams(
-          java.lang.String key) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        getMutableParams().remove(key);
-        return this;
-      }
-      /**
-       * Use alternate mutation accessors instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
-      getMutableParams() {
-        return internalGetMutableParams().getMutableMap();
-      }
-      /**
-       * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-       */
-      public Builder putParams(
-          java.lang.String key,
-          org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity value) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        if (value == null) { throw new java.lang.NullPointerException(); }
-        getMutableParams().put(key, value);
-        return this;
-      }
-      /**
-       * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
-       */
-
-      public Builder putAllParams(
-          java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> values) {
-        getMutableParams().putAll(values);
-        return this;
-      }
-
-      private java.lang.Object date_ = "";
-      /**
-       * <code>optional string date = 8;</code>
-       */
-      public java.lang.String getDate() {
-        java.lang.Object ref = date_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          date_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
+        /**
+         * <code>optional string date = 8;</code>
+         */
+        public com.google.protobuf.ByteString
+        getDateBytes() {
+            java.lang.Object ref = date_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                date_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
         }
-      }
-      /**
-       * <code>optional string date = 8;</code>
-       */
-      public com.google.protobuf.ByteString
-          getDateBytes() {
-        java.lang.Object ref = date_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          date_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+
+        private byte memoizedIsInitialized = -1;
+
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
         }
-      }
-      /**
-       * <code>optional string date = 8;</code>
-       */
-      public Builder setDate(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        date_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string date = 8;</code>
-       */
-      public Builder clearDate() {
-        
-        date_ = getDefaultInstance().getDate();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string date = 8;</code>
-       */
-      public Builder setDateBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        date_ = value;
-        onChanged();
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
 
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            if (!getTypeBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 1, type_);
+            }
+            if (!getHitIdBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hitId_);
+            }
+            if (!getClientIdBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 3, clientId_);
+            }
+            if (!getUserIdBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 4, userId_);
+            }
+            if (!getLocalDateTimeBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 5, localDateTime_);
+            }
+            if (epochMillis_ != 0L) {
+                output.writeInt64(6, epochMillis_);
+            }
+            for (java.util.Map.Entry<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> entry
+                    : internalGetParams().getMap().entrySet()) {
+                com.google.protobuf.MapEntry<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
+                        params = ParamsDefaultEntryHolder.defaultEntry.newBuilderForType()
+                        .setKey(entry.getKey())
+                        .setValue(entry.getValue())
+                        .build();
+                output.writeMessage(7, params);
+            }
+            if (!getDateBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 8, date_);
+            }
+        }
+
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (!getTypeBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, type_);
+            }
+            if (!getHitIdBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hitId_);
+            }
+            if (!getClientIdBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, clientId_);
+            }
+            if (!getUserIdBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, userId_);
+            }
+            if (!getLocalDateTimeBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, localDateTime_);
+            }
+            if (epochMillis_ != 0L) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeInt64Size(6, epochMillis_);
+            }
+            for (java.util.Map.Entry<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> entry
+                    : internalGetParams().getMap().entrySet()) {
+                com.google.protobuf.MapEntry<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
+                        params = ParamsDefaultEntryHolder.defaultEntry.newBuilderForType()
+                        .setKey(entry.getKey())
+                        .setValue(entry.getValue())
+                        .build();
+                size += com.google.protobuf.CodedOutputStream
+                        .computeMessageSize(7, params);
+            }
+            if (!getDateBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, date_);
+            }
+            memoizedSize = size;
+            return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity)) {
+                return super.equals(obj);
+            }
+            org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity other = (org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity) obj;
+
+            boolean result = true;
+            result = result && getType()
+                    .equals(other.getType());
+            result = result && getHitId()
+                    .equals(other.getHitId());
+            result = result && getClientId()
+                    .equals(other.getClientId());
+            result = result && getUserId()
+                    .equals(other.getUserId());
+            result = result && getLocalDateTime()
+                    .equals(other.getLocalDateTime());
+            result = result && (getEpochMillis()
+                    == other.getEpochMillis());
+            result = result && internalGetParams().equals(
+                    other.internalGetParams());
+            result = result && getDate()
+                    .equals(other.getDate());
+            return result;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptorForType().hashCode();
+            hash = (37 * hash) + TYPE_FIELD_NUMBER;
+            hash = (53 * hash) + getType().hashCode();
+            hash = (37 * hash) + HIT_ID_FIELD_NUMBER;
+            hash = (53 * hash) + getHitId().hashCode();
+            hash = (37 * hash) + CLIENT_ID_FIELD_NUMBER;
+            hash = (53 * hash) + getClientId().hashCode();
+            hash = (37 * hash) + USER_ID_FIELD_NUMBER;
+            hash = (53 * hash) + getUserId().hashCode();
+            hash = (37 * hash) + LOCAL_DATE_TIME_FIELD_NUMBER;
+            hash = (53 * hash) + getLocalDateTime().hashCode();
+            hash = (37 * hash) + EPOCH_MILLIS_FIELD_NUMBER;
+            hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                    getEpochMillis());
+            if (!internalGetParams().getMap().isEmpty()) {
+                hash = (37 * hash) + PARAMS_FIELD_NUMBER;
+                hash = (53 * hash) + internalGetParams().hashCode();
+            }
+            hash = (37 * hash) + DATE_FIELD_NUMBER;
+            hash = (53 * hash) + getDate().hashCode();
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity prototype) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                    ? new Builder() : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code org.datahem.proto.v2.MPEntity}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:org.datahem.proto.v2.MPEntity)
+                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntityOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_descriptor;
+            }
+
+            @SuppressWarnings({"rawtypes"})
+            protected com.google.protobuf.MapField internalGetMapField(
+                    int number) {
+                switch (number) {
+                    case 7:
+                        return internalGetParams();
+                    default:
+                        throw new RuntimeException(
+                                "Invalid map field number: " + number);
+                }
+            }
+
+            @SuppressWarnings({"rawtypes"})
+            protected com.google.protobuf.MapField internalGetMutableMapField(
+                    int number) {
+                switch (number) {
+                    case 7:
+                        return internalGetMutableParams();
+                    default:
+                        throw new RuntimeException(
+                                "Invalid map field number: " + number);
+                }
+            }
+
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.class, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.Builder.class);
+            }
+
+            // Construct using org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessageV3
+                        .alwaysUseFieldBuilders) {
+                }
+            }
+
+            public Builder clear() {
+                super.clear();
+                type_ = "";
+
+                hitId_ = "";
+
+                clientId_ = "";
+
+                userId_ = "";
+
+                localDateTime_ = "";
+
+                epochMillis_ = 0L;
+
+                internalGetMutableParams().clear();
+                date_ = "";
+
+                return this;
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.internal_static_org_datahem_proto_v2_MPEntity_descriptor;
+            }
+
+            public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity getDefaultInstanceForType() {
+                return org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.getDefaultInstance();
+            }
+
+            public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity build() {
+                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity buildPartial() {
+                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity result = new org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity(this);
+                int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                result.type_ = type_;
+                result.hitId_ = hitId_;
+                result.clientId_ = clientId_;
+                result.userId_ = userId_;
+                result.localDateTime_ = localDateTime_;
+                result.epochMillis_ = epochMillis_;
+                result.params_ = internalGetParams();
+                result.params_.makeImmutable();
+                result.date_ = date_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            public Builder clone() {
+                return (Builder) super.clone();
+            }
+
+            public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    Object value) {
+                return (Builder) super.setField(field, value);
+            }
+
+            public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field) {
+                return (Builder) super.clearField(field);
+            }
+
+            public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+                return (Builder) super.clearOneof(oneof);
+            }
+
+            public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index, Object value) {
+                return (Builder) super.setRepeatedField(field, index, value);
+            }
+
+            public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    Object value) {
+                return (Builder) super.addRepeatedField(field, value);
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity) {
+                    return mergeFrom((org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity other) {
+                if (other == org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity.getDefaultInstance())
+                    return this;
+                if (!other.getType().isEmpty()) {
+                    type_ = other.type_;
+                    onChanged();
+                }
+                if (!other.getHitId().isEmpty()) {
+                    hitId_ = other.hitId_;
+                    onChanged();
+                }
+                if (!other.getClientId().isEmpty()) {
+                    clientId_ = other.clientId_;
+                    onChanged();
+                }
+                if (!other.getUserId().isEmpty()) {
+                    userId_ = other.userId_;
+                    onChanged();
+                }
+                if (!other.getLocalDateTime().isEmpty()) {
+                    localDateTime_ = other.localDateTime_;
+                    onChanged();
+                }
+                if (other.getEpochMillis() != 0L) {
+                    setEpochMillis(other.getEpochMillis());
+                }
+                internalGetMutableParams().mergeFrom(
+                        other.internalGetParams());
+                if (!other.getDate().isEmpty()) {
+                    date_ = other.date_;
+                    onChanged();
+                }
+                onChanged();
+                return this;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private java.lang.Object type_ = "";
+
+            /**
+             * <code>optional string type = 1;</code>
+             */
+            public java.lang.String getType() {
+                java.lang.Object ref = type_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    type_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string type = 1;</code>
+             */
+            public com.google.protobuf.ByteString
+            getTypeBytes() {
+                java.lang.Object ref = type_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    type_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string type = 1;</code>
+             */
+            public Builder setType(
+                    java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                type_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string type = 1;</code>
+             */
+            public Builder clearType() {
+
+                type_ = getDefaultInstance().getType();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string type = 1;</code>
+             */
+            public Builder setTypeBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                type_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object hitId_ = "";
+
+            /**
+             * <code>optional string hit_id = 2;</code>
+             */
+            public java.lang.String getHitId() {
+                java.lang.Object ref = hitId_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    hitId_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string hit_id = 2;</code>
+             */
+            public com.google.protobuf.ByteString
+            getHitIdBytes() {
+                java.lang.Object ref = hitId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    hitId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string hit_id = 2;</code>
+             */
+            public Builder setHitId(
+                    java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                hitId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string hit_id = 2;</code>
+             */
+            public Builder clearHitId() {
+
+                hitId_ = getDefaultInstance().getHitId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string hit_id = 2;</code>
+             */
+            public Builder setHitIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                hitId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object clientId_ = "";
+
+            /**
+             * <code>optional string client_id = 3;</code>
+             */
+            public java.lang.String getClientId() {
+                java.lang.Object ref = clientId_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    clientId_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string client_id = 3;</code>
+             */
+            public com.google.protobuf.ByteString
+            getClientIdBytes() {
+                java.lang.Object ref = clientId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    clientId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string client_id = 3;</code>
+             */
+            public Builder setClientId(
+                    java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                clientId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string client_id = 3;</code>
+             */
+            public Builder clearClientId() {
+
+                clientId_ = getDefaultInstance().getClientId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string client_id = 3;</code>
+             */
+            public Builder setClientIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                clientId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object userId_ = "";
+
+            /**
+             * <code>optional string user_id = 4;</code>
+             */
+            public java.lang.String getUserId() {
+                java.lang.Object ref = userId_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    userId_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 4;</code>
+             */
+            public com.google.protobuf.ByteString
+            getUserIdBytes() {
+                java.lang.Object ref = userId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    userId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string user_id = 4;</code>
+             */
+            public Builder setUserId(
+                    java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 4;</code>
+             */
+            public Builder clearUserId() {
+
+                userId_ = getDefaultInstance().getUserId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string user_id = 4;</code>
+             */
+            public Builder setUserIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                userId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object localDateTime_ = "";
+
+            /**
+             * <code>optional string local_date_time = 5;</code>
+             */
+            public java.lang.String getLocalDateTime() {
+                java.lang.Object ref = localDateTime_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    localDateTime_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string local_date_time = 5;</code>
+             */
+            public com.google.protobuf.ByteString
+            getLocalDateTimeBytes() {
+                java.lang.Object ref = localDateTime_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    localDateTime_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string local_date_time = 5;</code>
+             */
+            public Builder setLocalDateTime(
+                    java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                localDateTime_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string local_date_time = 5;</code>
+             */
+            public Builder clearLocalDateTime() {
+
+                localDateTime_ = getDefaultInstance().getLocalDateTime();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string local_date_time = 5;</code>
+             */
+            public Builder setLocalDateTimeBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                localDateTime_ = value;
+                onChanged();
+                return this;
+            }
+
+            private long epochMillis_;
+
+            /**
+             * <code>optional int64 epoch_millis = 6;</code>
+             */
+            public long getEpochMillis() {
+                return epochMillis_;
+            }
+
+            /**
+             * <code>optional int64 epoch_millis = 6;</code>
+             */
+            public Builder setEpochMillis(long value) {
+
+                epochMillis_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional int64 epoch_millis = 6;</code>
+             */
+            public Builder clearEpochMillis() {
+
+                epochMillis_ = 0L;
+                onChanged();
+                return this;
+            }
+
+            private com.google.protobuf.MapField<
+                    java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> params_;
+
+            private com.google.protobuf.MapField<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
+            internalGetParams() {
+                if (params_ == null) {
+                    return com.google.protobuf.MapField.emptyMapField(
+                            ParamsDefaultEntryHolder.defaultEntry);
+                }
+                return params_;
+            }
+
+            private com.google.protobuf.MapField<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
+            internalGetMutableParams() {
+                onChanged();
+                ;
+                if (params_ == null) {
+                    params_ = com.google.protobuf.MapField.newMapField(
+                            ParamsDefaultEntryHolder.defaultEntry);
+                }
+                if (!params_.isMutable()) {
+                    params_ = params_.copy();
+                }
+                return params_;
+            }
+
+            public int getParamsCount() {
+                return internalGetParams().getMap().size();
+            }
+
+            /**
+             * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+             */
+
+            public boolean containsParams(
+                    java.lang.String key) {
+                if (key == null) {
+                    throw new java.lang.NullPointerException();
+                }
+                return internalGetParams().getMap().containsKey(key);
+            }
+
+            /**
+             * Use {@link #getParamsMap()} instead.
+             */
+            @java.lang.Deprecated
+            public java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> getParams() {
+                return getParamsMap();
+            }
+
+            /**
+             * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+             */
+
+            public java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> getParamsMap() {
+                return internalGetParams().getMap();
+            }
+
+            /**
+             * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+             */
+
+            public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrDefault(
+                    java.lang.String key,
+                    org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity defaultValue) {
+                if (key == null) {
+                    throw new java.lang.NullPointerException();
+                }
+                java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> map =
+                        internalGetParams().getMap();
+                return map.containsKey(key) ? map.get(key) : defaultValue;
+            }
+
+            /**
+             * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+             */
+
+            public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity getParamsOrThrow(
+                    java.lang.String key) {
+                if (key == null) {
+                    throw new java.lang.NullPointerException();
+                }
+                java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> map =
+                        internalGetParams().getMap();
+                if (!map.containsKey(key)) {
+                    throw new java.lang.IllegalArgumentException();
+                }
+                return map.get(key);
+            }
+
+            public Builder clearParams() {
+                getMutableParams().clear();
+                return this;
+            }
+
+            /**
+             * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+             */
+
+            public Builder removeParams(
+                    java.lang.String key) {
+                if (key == null) {
+                    throw new java.lang.NullPointerException();
+                }
+                getMutableParams().remove(key);
+                return this;
+            }
+
+            /**
+             * Use alternate mutation accessors instead.
+             */
+            @java.lang.Deprecated
+            public java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity>
+            getMutableParams() {
+                return internalGetMutableParams().getMutableMap();
+            }
+
+            /**
+             * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+             */
+            public Builder putParams(
+                    java.lang.String key,
+                    org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity value) {
+                if (key == null) {
+                    throw new java.lang.NullPointerException();
+                }
+                if (value == null) {
+                    throw new java.lang.NullPointerException();
+                }
+                getMutableParams().put(key, value);
+                return this;
+            }
+
+            /**
+             * <code>map&lt;string, .org.datahem.proto.v2.ValEntity&gt; params = 7;</code>
+             */
+
+            public Builder putAllParams(
+                    java.util.Map<java.lang.String, org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.ValEntity> values) {
+                getMutableParams().putAll(values);
+                return this;
+            }
+
+            private java.lang.Object date_ = "";
+
+            /**
+             * <code>optional string date = 8;</code>
+             */
+            public java.lang.String getDate() {
+                java.lang.Object ref = date_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    date_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <code>optional string date = 8;</code>
+             */
+            public com.google.protobuf.ByteString
+            getDateBytes() {
+                java.lang.Object ref = date_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    date_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>optional string date = 8;</code>
+             */
+            public Builder setDate(
+                    java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                date_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string date = 8;</code>
+             */
+            public Builder clearDate() {
+
+                date_ = getDefaultInstance().getDate();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>optional string date = 8;</code>
+             */
+            public Builder setDateBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                date_ = value;
+                onChanged();
+                return this;
+            }
+
+            public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return this;
+            }
+
+            public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return this;
+            }
 
 
-      // @@protoc_insertion_point(builder_scope:org.datahem.proto.v2.MPEntity)
-    }
+            // @@protoc_insertion_point(builder_scope:org.datahem.proto.v2.MPEntity)
+        }
 
-    // @@protoc_insertion_point(class_scope:org.datahem.proto.v2.MPEntity)
-    private static final org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity();
-    }
+        // @@protoc_insertion_point(class_scope:org.datahem.proto.v2.MPEntity)
+        private static final org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity DEFAULT_INSTANCE;
 
-    public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
+        static {
+            DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity();
+        }
 
-    private static final com.google.protobuf.Parser<MPEntity>
-        PARSER = new com.google.protobuf.AbstractParser<MPEntity>() {
-      public MPEntity parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new MPEntity(input, extensionRegistry);
-      }
-    };
+        public static org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
 
-    public static com.google.protobuf.Parser<MPEntity> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<MPEntity> getParserForType() {
-      return PARSER;
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_org_datahem_proto_v2_ValEntity_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_org_datahem_proto_v2_ValEntity_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_org_datahem_proto_v2_MPEntity_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_org_datahem_proto_v2_MPEntity_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_fieldAccessorTable;
-
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n$measurement_protocol_entity_v2.proto\022\024" +
-      "org.datahem.proto.v2\"_\n\tValEntity\022\024\n\014str" +
-      "ing_value\030\001 \001(\t\022\021\n\tint_value\030\002 \001(\003\022\024\n\014do" +
-      "uble_value\030\003 \001(\001\022\023\n\013float_value\030\004 \001(\002\"\225\002" +
-      "\n\010MPEntity\022\014\n\004type\030\001 \001(\t\022\016\n\006hit_id\030\002 \001(\t" +
-      "\022\021\n\tclient_id\030\003 \001(\t\022\017\n\007user_id\030\004 \001(\t\022\027\n\017" +
-      "local_date_time\030\005 \001(\t\022\024\n\014epoch_millis\030\006 " +
-      "\001(\003\022:\n\006params\030\007 \003(\0132*.org.datahem.proto." +
-      "v2.MPEntity.ParamsEntry\022\014\n\004date\030\010 \001(\t\032N\n" +
-      "\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022.\n\005value\030\002 \001(\013",
-      "2\037.org.datahem.proto.v2.ValEntity:\0028\001B<\n" +
-      "+org.datahem.protobuf.measurementprotoco" +
-      "l.v1B\rMPEntityProtob\006proto3"
-    };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
+        private static final com.google.protobuf.Parser<MPEntity>
+                PARSER = new com.google.protobuf.AbstractParser<MPEntity>() {
+            public MPEntity parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                return new MPEntity(input, extensionRegistry);
+            }
         };
-    com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
-    internal_static_org_datahem_proto_v2_ValEntity_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_org_datahem_proto_v2_ValEntity_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_org_datahem_proto_v2_ValEntity_descriptor,
-        new java.lang.String[] { "StringValue", "IntValue", "DoubleValue", "FloatValue", });
-    internal_static_org_datahem_proto_v2_MPEntity_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_org_datahem_proto_v2_MPEntity_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_org_datahem_proto_v2_MPEntity_descriptor,
-        new java.lang.String[] { "Type", "HitId", "ClientId", "UserId", "LocalDateTime", "EpochMillis", "Params", "Date", });
-    internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_descriptor =
-      internal_static_org_datahem_proto_v2_MPEntity_descriptor.getNestedTypes().get(0);
-    internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
-  }
 
-  // @@protoc_insertion_point(outer_class_scope)
+        public static com.google.protobuf.Parser<MPEntity> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<MPEntity> getParserForType() {
+            return PARSER;
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v1.MPEntityProto.MPEntity getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
+
+    }
+
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_org_datahem_proto_v2_ValEntity_descriptor;
+    private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internal_static_org_datahem_proto_v2_ValEntity_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_org_datahem_proto_v2_MPEntity_descriptor;
+    private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internal_static_org_datahem_proto_v2_MPEntity_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_descriptor;
+    private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_fieldAccessorTable;
+
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
+
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n$measurement_protocol_entity_v2.proto\022\024" +
+                        "org.datahem.proto.v2\"_\n\tValEntity\022\024\n\014str" +
+                        "ing_value\030\001 \001(\t\022\021\n\tint_value\030\002 \001(\003\022\024\n\014do" +
+                        "uble_value\030\003 \001(\001\022\023\n\013float_value\030\004 \001(\002\"\225\002" +
+                        "\n\010MPEntity\022\014\n\004type\030\001 \001(\t\022\016\n\006hit_id\030\002 \001(\t" +
+                        "\022\021\n\tclient_id\030\003 \001(\t\022\017\n\007user_id\030\004 \001(\t\022\027\n\017" +
+                        "local_date_time\030\005 \001(\t\022\024\n\014epoch_millis\030\006 " +
+                        "\001(\003\022:\n\006params\030\007 \003(\0132*.org.datahem.proto." +
+                        "v2.MPEntity.ParamsEntry\022\014\n\004date\030\010 \001(\t\032N\n" +
+                        "\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022.\n\005value\030\002 \001(\013",
+                "2\037.org.datahem.proto.v2.ValEntity:\0028\001B<\n" +
+                        "+org.datahem.protobuf.measurementprotoco" +
+                        "l.v1B\rMPEntityProtob\006proto3"
+        };
+        com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
+                new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
+                    public com.google.protobuf.ExtensionRegistry assignDescriptors(
+                            com.google.protobuf.Descriptors.FileDescriptor root) {
+                        descriptor = root;
+                        return null;
+                    }
+                };
+        com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        }, assigner);
+        internal_static_org_datahem_proto_v2_ValEntity_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_org_datahem_proto_v2_ValEntity_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_org_datahem_proto_v2_ValEntity_descriptor,
+                new java.lang.String[]{"StringValue", "IntValue", "DoubleValue", "FloatValue",});
+        internal_static_org_datahem_proto_v2_MPEntity_descriptor =
+                getDescriptor().getMessageTypes().get(1);
+        internal_static_org_datahem_proto_v2_MPEntity_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_org_datahem_proto_v2_MPEntity_descriptor,
+                new java.lang.String[]{"Type", "HitId", "ClientId", "UserId", "LocalDateTime", "EpochMillis", "Params", "Date",});
+        internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_descriptor =
+                internal_static_org_datahem_proto_v2_MPEntity_descriptor.getNestedTypes().get(0);
+        internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_org_datahem_proto_v2_MPEntity_ParamsEntry_descriptor,
+                new java.lang.String[]{"Key", "Value",});
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

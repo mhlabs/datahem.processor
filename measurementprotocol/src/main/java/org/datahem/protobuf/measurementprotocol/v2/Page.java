@@ -10,9 +10,9 @@ package org.datahem.protobuf.measurementprotocol.v2;
  * Copyright (C) 2018 - 2019 Robert Sahlin
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
@@ -20,1065 +20,185 @@ package org.datahem.protobuf.measurementprotocol.v2;
 /**
  * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Page}
  */
-public  final class Page extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:datahem.protobuf.measurementprotocol.v2.Page)
-    PageOrBuilder {
-  // Use Page.newBuilder() to construct.
-  private Page(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private Page() {
-    title_ = "";
-    url_ = "";
-    hostname_ = "";
-    path_ = "";
-    referer_ = "";
-    refererHost_ = "";
-    refererPath_ = "";
-    searchKeyword_ = "";
-    encoding_ = "";
-    linkId_ = "";
-  }
+public final class Page extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:datahem.protobuf.measurementprotocol.v2.Page)
+        PageOrBuilder {
+    // Use Page.newBuilder() to construct.
+    private Page(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+    }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-  }
-  private Page(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    int mutable_bitField0_ = 0;
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          default: {
-            if (!input.skipField(tag)) {
-              done = true;
+    private Page() {
+        title_ = "";
+        url_ = "";
+        hostname_ = "";
+        path_ = "";
+        referer_ = "";
+        refererHost_ = "";
+        refererPath_ = "";
+        searchKeyword_ = "";
+        encoding_ = "";
+        linkId_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+        return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+
+    private Page(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        int mutable_bitField0_ = 0;
+        try {
+            boolean done = false;
+            while (!done) {
+                int tag = input.readTag();
+                switch (tag) {
+                    case 0:
+                        done = true;
+                        break;
+                    default: {
+                        if (!input.skipField(tag)) {
+                            done = true;
+                        }
+                        break;
+                    }
+                    case 10: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        title_ = s;
+                        break;
+                    }
+                    case 18: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        url_ = s;
+                        break;
+                    }
+                    case 26: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        hostname_ = s;
+                        break;
+                    }
+                    case 34: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        path_ = s;
+                        break;
+                    }
+                    case 42: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        referer_ = s;
+                        break;
+                    }
+                    case 50: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        refererHost_ = s;
+                        break;
+                    }
+                    case 58: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        refererPath_ = s;
+                        break;
+                    }
+                    case 66: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        searchKeyword_ = s;
+                        break;
+                    }
+                    case 82: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        encoding_ = s;
+                        break;
+                    }
+                    case 90: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        linkId_ = s;
+                        break;
+                    }
+                }
             }
-            break;
-          }
-          case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            title_ = s;
-            break;
-          }
-          case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            url_ = s;
-            break;
-          }
-          case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            hostname_ = s;
-            break;
-          }
-          case 34: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            path_ = s;
-            break;
-          }
-          case 42: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            referer_ = s;
-            break;
-          }
-          case 50: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            refererHost_ = s;
-            break;
-          }
-          case 58: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            refererPath_ = s;
-            break;
-          }
-          case 66: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            searchKeyword_ = s;
-            break;
-          }
-          case 82: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            encoding_ = s;
-            break;
-          }
-          case 90: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            linkId_ = s;
-            break;
-          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(
+                    e).setUnfinishedMessage(this);
+        } finally {
+            makeExtensionsImmutable();
         }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      makeExtensionsImmutable();
     }
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Page_descriptor;
-  }
 
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Page_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            org.datahem.protobuf.measurementprotocol.v2.Page.class, org.datahem.protobuf.measurementprotocol.v2.Page.Builder.class);
-  }
-
-  public static final int TITLE_FIELD_NUMBER = 1;
-  private volatile java.lang.Object title_;
-  /**
-   * <pre>
-   *dt. The page title.
-   * </pre>
-   *
-   * <code>optional string title = 1;</code>
-   */
-  public java.lang.String getTitle() {
-    java.lang.Object ref = title_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      title_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *dt. The page title.
-   * </pre>
-   *
-   * <code>optional string title = 1;</code>
-   */
-  public com.google.protobuf.ByteString
-      getTitleBytes() {
-    java.lang.Object ref = title_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      title_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int URL_FIELD_NUMBER = 2;
-  private volatile java.lang.Object url_;
-  /**
-   * <pre>
-   * </pre>
-   *
-   * <code>optional string url = 2;</code>
-   */
-  public java.lang.String getUrl() {
-    java.lang.Object ref = url_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      url_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * </pre>
-   *
-   * <code>optional string url = 2;</code>
-   */
-  public com.google.protobuf.ByteString
-      getUrlBytes() {
-    java.lang.Object ref = url_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      url_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int HOSTNAME_FIELD_NUMBER = 3;
-  private volatile java.lang.Object hostname_;
-  /**
-   * <pre>
-   *dh. The hostname of the URL.
-   * </pre>
-   *
-   * <code>optional string hostname = 3;</code>
-   */
-  public java.lang.String getHostname() {
-    java.lang.Object ref = hostname_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      hostname_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *dh. The hostname of the URL.
-   * </pre>
-   *
-   * <code>optional string hostname = 3;</code>
-   */
-  public com.google.protobuf.ByteString
-      getHostnameBytes() {
-    java.lang.Object ref = hostname_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      hostname_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int PATH_FIELD_NUMBER = 4;
-  private volatile java.lang.Object path_;
-  /**
-   * <pre>
-   *dp.The URL path of the page.
-   * </pre>
-   *
-   * <code>optional string path = 4;</code>
-   */
-  public java.lang.String getPath() {
-    java.lang.Object ref = path_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      path_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *dp.The URL path of the page.
-   * </pre>
-   *
-   * <code>optional string path = 4;</code>
-   */
-  public com.google.protobuf.ByteString
-      getPathBytes() {
-    java.lang.Object ref = path_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      path_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int REFERER_FIELD_NUMBER = 5;
-  private volatile java.lang.Object referer_;
-  /**
-   * <pre>
-   *dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
-   * </pre>
-   *
-   * <code>optional string referer = 5;</code>
-   */
-  public java.lang.String getReferer() {
-    java.lang.Object ref = referer_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      referer_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
-   * </pre>
-   *
-   * <code>optional string referer = 5;</code>
-   */
-  public com.google.protobuf.ByteString
-      getRefererBytes() {
-    java.lang.Object ref = referer_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      referer_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int REFERERHOST_FIELD_NUMBER = 6;
-  private volatile java.lang.Object refererHost_;
-  /**
-   * <pre>
-   *drh
-   * </pre>
-   *
-   * <code>optional string refererHost = 6;</code>
-   */
-  public java.lang.String getRefererHost() {
-    java.lang.Object ref = refererHost_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      refererHost_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *drh
-   * </pre>
-   *
-   * <code>optional string refererHost = 6;</code>
-   */
-  public com.google.protobuf.ByteString
-      getRefererHostBytes() {
-    java.lang.Object ref = refererHost_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      refererHost_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int REFERERPATH_FIELD_NUMBER = 7;
-  private volatile java.lang.Object refererPath_;
-  /**
-   * <pre>
-   *drp
-   * </pre>
-   *
-   * <code>optional string refererPath = 7;</code>
-   */
-  public java.lang.String getRefererPath() {
-    java.lang.Object ref = refererPath_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      refererPath_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *drp
-   * </pre>
-   *
-   * <code>optional string refererPath = 7;</code>
-   */
-  public com.google.protobuf.ByteString
-      getRefererPathBytes() {
-    java.lang.Object ref = refererPath_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      refererPath_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int SEARCHKEYWORD_FIELD_NUMBER = 8;
-  private volatile java.lang.Object searchKeyword_;
-  /**
-   * <pre>
-   *sst. If this was a search results page, this is the keyword entered.
-   * </pre>
-   *
-   * <code>optional string searchKeyword = 8;</code>
-   */
-  public java.lang.String getSearchKeyword() {
-    java.lang.Object ref = searchKeyword_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      searchKeyword_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *sst. If this was a search results page, this is the keyword entered.
-   * </pre>
-   *
-   * <code>optional string searchKeyword = 8;</code>
-   */
-  public com.google.protobuf.ByteString
-      getSearchKeywordBytes() {
-    java.lang.Object ref = searchKeyword_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      searchKeyword_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int ENCODING_FIELD_NUMBER = 10;
-  private volatile java.lang.Object encoding_;
-  /**
-   * <pre>
-   *string searchCategory = 9;	//If this was a search-results page, this is the category selected.
-   * </pre>
-   *
-   * <code>optional string encoding = 10;</code>
-   */
-  public java.lang.String getEncoding() {
-    java.lang.Object ref = encoding_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      encoding_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *string searchCategory = 9;	//If this was a search-results page, this is the category selected.
-   * </pre>
-   *
-   * <code>optional string encoding = 10;</code>
-   */
-  public com.google.protobuf.ByteString
-      getEncodingBytes() {
-    java.lang.Object ref = encoding_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      encoding_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int LINKID_FIELD_NUMBER = 11;
-  private volatile java.lang.Object linkId_;
-  /**
-   * <pre>
-   *linkid
-   * </pre>
-   *
-   * <code>optional string linkId = 11;</code>
-   */
-  public java.lang.String getLinkId() {
-    java.lang.Object ref = linkId_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      linkId_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *linkid
-   * </pre>
-   *
-   * <code>optional string linkId = 11;</code>
-   */
-  public com.google.protobuf.ByteString
-      getLinkIdBytes() {
-    java.lang.Object ref = linkId_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      linkId_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  private byte memoizedIsInitialized = -1;
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    if (!getTitleBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, title_);
-    }
-    if (!getUrlBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, url_);
-    }
-    if (!getHostnameBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, hostname_);
-    }
-    if (!getPathBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, path_);
-    }
-    if (!getRefererBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, referer_);
-    }
-    if (!getRefererHostBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, refererHost_);
-    }
-    if (!getRefererPathBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, refererPath_);
-    }
-    if (!getSearchKeywordBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 8, searchKeyword_);
-    }
-    if (!getEncodingBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 10, encoding_);
-    }
-    if (!getLinkIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 11, linkId_);
-    }
-  }
-
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (!getTitleBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, title_);
-    }
-    if (!getUrlBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, url_);
-    }
-    if (!getHostnameBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, hostname_);
-    }
-    if (!getPathBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, path_);
-    }
-    if (!getRefererBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, referer_);
-    }
-    if (!getRefererHostBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, refererHost_);
-    }
-    if (!getRefererPathBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, refererPath_);
-    }
-    if (!getSearchKeywordBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, searchKeyword_);
-    }
-    if (!getEncodingBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, encoding_);
-    }
-    if (!getLinkIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, linkId_);
-    }
-    memoizedSize = size;
-    return size;
-  }
-
-  private static final long serialVersionUID = 0L;
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v2.Page)) {
-      return super.equals(obj);
-    }
-    org.datahem.protobuf.measurementprotocol.v2.Page other = (org.datahem.protobuf.measurementprotocol.v2.Page) obj;
-
-    boolean result = true;
-    result = result && getTitle()
-        .equals(other.getTitle());
-    result = result && getUrl()
-        .equals(other.getUrl());
-    result = result && getHostname()
-        .equals(other.getHostname());
-    result = result && getPath()
-        .equals(other.getPath());
-    result = result && getReferer()
-        .equals(other.getReferer());
-    result = result && getRefererHost()
-        .equals(other.getRefererHost());
-    result = result && getRefererPath()
-        .equals(other.getRefererPath());
-    result = result && getSearchKeyword()
-        .equals(other.getSearchKeyword());
-    result = result && getEncoding()
-        .equals(other.getEncoding());
-    result = result && getLinkId()
-        .equals(other.getLinkId());
-    return result;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
-    hash = (37 * hash) + TITLE_FIELD_NUMBER;
-    hash = (53 * hash) + getTitle().hashCode();
-    hash = (37 * hash) + URL_FIELD_NUMBER;
-    hash = (53 * hash) + getUrl().hashCode();
-    hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
-    hash = (53 * hash) + getHostname().hashCode();
-    hash = (37 * hash) + PATH_FIELD_NUMBER;
-    hash = (53 * hash) + getPath().hashCode();
-    hash = (37 * hash) + REFERER_FIELD_NUMBER;
-    hash = (53 * hash) + getReferer().hashCode();
-    hash = (37 * hash) + REFERERHOST_FIELD_NUMBER;
-    hash = (53 * hash) + getRefererHost().hashCode();
-    hash = (37 * hash) + REFERERPATH_FIELD_NUMBER;
-    hash = (53 * hash) + getRefererPath().hashCode();
-    hash = (37 * hash) + SEARCHKEYWORD_FIELD_NUMBER;
-    hash = (53 * hash) + getSearchKeyword().hashCode();
-    hash = (37 * hash) + ENCODING_FIELD_NUMBER;
-    hash = (53 * hash) + getEncoding().hashCode();
-    hash = (37 * hash) + LINKID_FIELD_NUMBER;
-    hash = (53 * hash) + getLinkId().hashCode();
-    hash = (29 * hash) + unknownFields.hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Page parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Page parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v2.Page prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Page}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:datahem.protobuf.measurementprotocol.v2.Page)
-      org.datahem.protobuf.measurementprotocol.v2.PageOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Page_descriptor;
+    getDescriptor() {
+        return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Page_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Page_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              org.datahem.protobuf.measurementprotocol.v2.Page.class, org.datahem.protobuf.measurementprotocol.v2.Page.Builder.class);
+    internalGetFieldAccessorTable() {
+        return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Page_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        org.datahem.protobuf.measurementprotocol.v2.Page.class, org.datahem.protobuf.measurementprotocol.v2.Page.Builder.class);
     }
 
-    // Construct using org.datahem.protobuf.measurementprotocol.v2.Page.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
+    public static final int TITLE_FIELD_NUMBER = 1;
+    private volatile java.lang.Object title_;
 
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
-    }
-    public Builder clear() {
-      super.clear();
-      title_ = "";
-
-      url_ = "";
-
-      hostname_ = "";
-
-      path_ = "";
-
-      referer_ = "";
-
-      refererHost_ = "";
-
-      refererPath_ = "";
-
-      searchKeyword_ = "";
-
-      encoding_ = "";
-
-      linkId_ = "";
-
-      return this;
-    }
-
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Page_descriptor;
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Page getDefaultInstanceForType() {
-      return org.datahem.protobuf.measurementprotocol.v2.Page.getDefaultInstance();
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Page build() {
-      org.datahem.protobuf.measurementprotocol.v2.Page result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Page buildPartial() {
-      org.datahem.protobuf.measurementprotocol.v2.Page result = new org.datahem.protobuf.measurementprotocol.v2.Page(this);
-      result.title_ = title_;
-      result.url_ = url_;
-      result.hostname_ = hostname_;
-      result.path_ = path_;
-      result.referer_ = referer_;
-      result.refererHost_ = refererHost_;
-      result.refererPath_ = refererPath_;
-      result.searchKeyword_ = searchKeyword_;
-      result.encoding_ = encoding_;
-      result.linkId_ = linkId_;
-      onBuilt();
-      return result;
-    }
-
-    public Builder clone() {
-      return (Builder) super.clone();
-    }
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
-      return (Builder) super.setField(field, value);
-    }
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return (Builder) super.clearField(field);
-    }
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return (Builder) super.clearOneof(oneof);
-    }
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
-      return (Builder) super.setRepeatedField(field, index, value);
-    }
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
-      return (Builder) super.addRepeatedField(field, value);
-    }
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof org.datahem.protobuf.measurementprotocol.v2.Page) {
-        return mergeFrom((org.datahem.protobuf.measurementprotocol.v2.Page)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Page other) {
-      if (other == org.datahem.protobuf.measurementprotocol.v2.Page.getDefaultInstance()) return this;
-      if (!other.getTitle().isEmpty()) {
-        title_ = other.title_;
-        onChanged();
-      }
-      if (!other.getUrl().isEmpty()) {
-        url_ = other.url_;
-        onChanged();
-      }
-      if (!other.getHostname().isEmpty()) {
-        hostname_ = other.hostname_;
-        onChanged();
-      }
-      if (!other.getPath().isEmpty()) {
-        path_ = other.path_;
-        onChanged();
-      }
-      if (!other.getReferer().isEmpty()) {
-        referer_ = other.referer_;
-        onChanged();
-      }
-      if (!other.getRefererHost().isEmpty()) {
-        refererHost_ = other.refererHost_;
-        onChanged();
-      }
-      if (!other.getRefererPath().isEmpty()) {
-        refererPath_ = other.refererPath_;
-        onChanged();
-      }
-      if (!other.getSearchKeyword().isEmpty()) {
-        searchKeyword_ = other.searchKeyword_;
-        onChanged();
-      }
-      if (!other.getEncoding().isEmpty()) {
-        encoding_ = other.encoding_;
-        onChanged();
-      }
-      if (!other.getLinkId().isEmpty()) {
-        linkId_ = other.linkId_;
-        onChanged();
-      }
-      onChanged();
-      return this;
-    }
-
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      org.datahem.protobuf.measurementprotocol.v2.Page parsedMessage = null;
-      try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (org.datahem.protobuf.measurementprotocol.v2.Page) e.getUnfinishedMessage();
-        throw e.unwrapIOException();
-      } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
-      return this;
-    }
-
-    private java.lang.Object title_ = "";
     /**
      * <pre>
-     *dt. The page title.
+     * dt. The page title.
      * </pre>
      *
      * <code>optional string title = 1;</code>
      */
     public java.lang.String getTitle() {
-      java.lang.Object ref = title_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        title_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = title_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            title_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *dt. The page title.
+     * dt. The page title.
      * </pre>
      *
      * <code>optional string title = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getTitleBytes() {
-      java.lang.Object ref = title_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        title_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *dt. The page title.
-     * </pre>
-     *
-     * <code>optional string title = 1;</code>
-     */
-    public Builder setTitle(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      title_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *dt. The page title.
-     * </pre>
-     *
-     * <code>optional string title = 1;</code>
-     */
-    public Builder clearTitle() {
-      
-      title_ = getDefaultInstance().getTitle();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *dt. The page title.
-     * </pre>
-     *
-     * <code>optional string title = 1;</code>
-     */
-    public Builder setTitleBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      title_ = value;
-      onChanged();
-      return this;
+    getTitleBytes() {
+        java.lang.Object ref = title_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            title_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object url_ = "";
+    public static final int URL_FIELD_NUMBER = 2;
+    private volatile java.lang.Object url_;
+
     /**
      * <pre>
      * </pre>
@@ -1086,17 +206,18 @@ public  final class Page extends
      * <code>optional string url = 2;</code>
      */
     public java.lang.String getUrl() {
-      java.lang.Object ref = url_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        url_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = url_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            url_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
      * </pre>
@@ -1104,821 +225,1800 @@ public  final class Page extends
      * <code>optional string url = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getUrlBytes() {
-      java.lang.Object ref = url_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        url_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * </pre>
-     *
-     * <code>optional string url = 2;</code>
-     */
-    public Builder setUrl(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      url_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * </pre>
-     *
-     * <code>optional string url = 2;</code>
-     */
-    public Builder clearUrl() {
-      
-      url_ = getDefaultInstance().getUrl();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * </pre>
-     *
-     * <code>optional string url = 2;</code>
-     */
-    public Builder setUrlBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      url_ = value;
-      onChanged();
-      return this;
+    getUrlBytes() {
+        java.lang.Object ref = url_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            url_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object hostname_ = "";
+    public static final int HOSTNAME_FIELD_NUMBER = 3;
+    private volatile java.lang.Object hostname_;
+
     /**
      * <pre>
-     *dh. The hostname of the URL.
+     * dh. The hostname of the URL.
      * </pre>
      *
      * <code>optional string hostname = 3;</code>
      */
     public java.lang.String getHostname() {
-      java.lang.Object ref = hostname_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        hostname_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = hostname_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            hostname_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *dh. The hostname of the URL.
+     * dh. The hostname of the URL.
      * </pre>
      *
      * <code>optional string hostname = 3;</code>
      */
     public com.google.protobuf.ByteString
-        getHostnameBytes() {
-      java.lang.Object ref = hostname_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        hostname_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *dh. The hostname of the URL.
-     * </pre>
-     *
-     * <code>optional string hostname = 3;</code>
-     */
-    public Builder setHostname(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      hostname_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *dh. The hostname of the URL.
-     * </pre>
-     *
-     * <code>optional string hostname = 3;</code>
-     */
-    public Builder clearHostname() {
-      
-      hostname_ = getDefaultInstance().getHostname();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *dh. The hostname of the URL.
-     * </pre>
-     *
-     * <code>optional string hostname = 3;</code>
-     */
-    public Builder setHostnameBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      hostname_ = value;
-      onChanged();
-      return this;
+    getHostnameBytes() {
+        java.lang.Object ref = hostname_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            hostname_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object path_ = "";
+    public static final int PATH_FIELD_NUMBER = 4;
+    private volatile java.lang.Object path_;
+
     /**
      * <pre>
-     *dp.The URL path of the page.
+     * dp.The URL path of the page.
      * </pre>
      *
      * <code>optional string path = 4;</code>
      */
     public java.lang.String getPath() {
-      java.lang.Object ref = path_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        path_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = path_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            path_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *dp.The URL path of the page.
+     * dp.The URL path of the page.
      * </pre>
      *
      * <code>optional string path = 4;</code>
      */
     public com.google.protobuf.ByteString
-        getPathBytes() {
-      java.lang.Object ref = path_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        path_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *dp.The URL path of the page.
-     * </pre>
-     *
-     * <code>optional string path = 4;</code>
-     */
-    public Builder setPath(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      path_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *dp.The URL path of the page.
-     * </pre>
-     *
-     * <code>optional string path = 4;</code>
-     */
-    public Builder clearPath() {
-      
-      path_ = getDefaultInstance().getPath();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *dp.The URL path of the page.
-     * </pre>
-     *
-     * <code>optional string path = 4;</code>
-     */
-    public Builder setPathBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      path_ = value;
-      onChanged();
-      return this;
+    getPathBytes() {
+        java.lang.Object ref = path_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            path_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object referer_ = "";
+    public static final int REFERER_FIELD_NUMBER = 5;
+    private volatile java.lang.Object referer_;
+
     /**
      * <pre>
-     *dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
+     * dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
      * </pre>
      *
      * <code>optional string referer = 5;</code>
      */
     public java.lang.String getReferer() {
-      java.lang.Object ref = referer_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        referer_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = referer_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            referer_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
+     * dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
      * </pre>
      *
      * <code>optional string referer = 5;</code>
      */
     public com.google.protobuf.ByteString
-        getRefererBytes() {
-      java.lang.Object ref = referer_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        referer_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
-     * </pre>
-     *
-     * <code>optional string referer = 5;</code>
-     */
-    public Builder setReferer(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      referer_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
-     * </pre>
-     *
-     * <code>optional string referer = 5;</code>
-     */
-    public Builder clearReferer() {
-      
-      referer_ = getDefaultInstance().getReferer();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
-     * </pre>
-     *
-     * <code>optional string referer = 5;</code>
-     */
-    public Builder setRefererBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      referer_ = value;
-      onChanged();
-      return this;
+    getRefererBytes() {
+        java.lang.Object ref = referer_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            referer_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object refererHost_ = "";
+    public static final int REFERERHOST_FIELD_NUMBER = 6;
+    private volatile java.lang.Object refererHost_;
+
     /**
      * <pre>
-     *drh
+     * drh
      * </pre>
      *
      * <code>optional string refererHost = 6;</code>
      */
     public java.lang.String getRefererHost() {
-      java.lang.Object ref = refererHost_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        refererHost_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = refererHost_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            refererHost_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *drh
+     * drh
      * </pre>
      *
      * <code>optional string refererHost = 6;</code>
      */
     public com.google.protobuf.ByteString
-        getRefererHostBytes() {
-      java.lang.Object ref = refererHost_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        refererHost_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *drh
-     * </pre>
-     *
-     * <code>optional string refererHost = 6;</code>
-     */
-    public Builder setRefererHost(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      refererHost_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *drh
-     * </pre>
-     *
-     * <code>optional string refererHost = 6;</code>
-     */
-    public Builder clearRefererHost() {
-      
-      refererHost_ = getDefaultInstance().getRefererHost();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *drh
-     * </pre>
-     *
-     * <code>optional string refererHost = 6;</code>
-     */
-    public Builder setRefererHostBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      refererHost_ = value;
-      onChanged();
-      return this;
+    getRefererHostBytes() {
+        java.lang.Object ref = refererHost_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            refererHost_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object refererPath_ = "";
+    public static final int REFERERPATH_FIELD_NUMBER = 7;
+    private volatile java.lang.Object refererPath_;
+
     /**
      * <pre>
-     *drp
+     * drp
      * </pre>
      *
      * <code>optional string refererPath = 7;</code>
      */
     public java.lang.String getRefererPath() {
-      java.lang.Object ref = refererPath_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        refererPath_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = refererPath_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            refererPath_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *drp
+     * drp
      * </pre>
      *
      * <code>optional string refererPath = 7;</code>
      */
     public com.google.protobuf.ByteString
-        getRefererPathBytes() {
-      java.lang.Object ref = refererPath_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        refererPath_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *drp
-     * </pre>
-     *
-     * <code>optional string refererPath = 7;</code>
-     */
-    public Builder setRefererPath(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      refererPath_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *drp
-     * </pre>
-     *
-     * <code>optional string refererPath = 7;</code>
-     */
-    public Builder clearRefererPath() {
-      
-      refererPath_ = getDefaultInstance().getRefererPath();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *drp
-     * </pre>
-     *
-     * <code>optional string refererPath = 7;</code>
-     */
-    public Builder setRefererPathBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      refererPath_ = value;
-      onChanged();
-      return this;
+    getRefererPathBytes() {
+        java.lang.Object ref = refererPath_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            refererPath_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object searchKeyword_ = "";
+    public static final int SEARCHKEYWORD_FIELD_NUMBER = 8;
+    private volatile java.lang.Object searchKeyword_;
+
     /**
      * <pre>
-     *sst. If this was a search results page, this is the keyword entered.
+     * sst. If this was a search results page, this is the keyword entered.
      * </pre>
      *
      * <code>optional string searchKeyword = 8;</code>
      */
     public java.lang.String getSearchKeyword() {
-      java.lang.Object ref = searchKeyword_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        searchKeyword_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = searchKeyword_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            searchKeyword_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *sst. If this was a search results page, this is the keyword entered.
+     * sst. If this was a search results page, this is the keyword entered.
      * </pre>
      *
      * <code>optional string searchKeyword = 8;</code>
      */
     public com.google.protobuf.ByteString
-        getSearchKeywordBytes() {
-      java.lang.Object ref = searchKeyword_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        searchKeyword_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *sst. If this was a search results page, this is the keyword entered.
-     * </pre>
-     *
-     * <code>optional string searchKeyword = 8;</code>
-     */
-    public Builder setSearchKeyword(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      searchKeyword_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *sst. If this was a search results page, this is the keyword entered.
-     * </pre>
-     *
-     * <code>optional string searchKeyword = 8;</code>
-     */
-    public Builder clearSearchKeyword() {
-      
-      searchKeyword_ = getDefaultInstance().getSearchKeyword();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *sst. If this was a search results page, this is the keyword entered.
-     * </pre>
-     *
-     * <code>optional string searchKeyword = 8;</code>
-     */
-    public Builder setSearchKeywordBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      searchKeyword_ = value;
-      onChanged();
-      return this;
+    getSearchKeywordBytes() {
+        java.lang.Object ref = searchKeyword_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            searchKeyword_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object encoding_ = "";
+    public static final int ENCODING_FIELD_NUMBER = 10;
+    private volatile java.lang.Object encoding_;
+
     /**
      * <pre>
-     *string searchCategory = 9;	//If this was a search-results page, this is the category selected.
+     * string searchCategory = 9;	//If this was a search-results page, this is the category selected.
      * </pre>
      *
      * <code>optional string encoding = 10;</code>
      */
     public java.lang.String getEncoding() {
-      java.lang.Object ref = encoding_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        encoding_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = encoding_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            encoding_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *string searchCategory = 9;	//If this was a search-results page, this is the category selected.
+     * string searchCategory = 9;	//If this was a search-results page, this is the category selected.
      * </pre>
      *
      * <code>optional string encoding = 10;</code>
      */
     public com.google.protobuf.ByteString
-        getEncodingBytes() {
-      java.lang.Object ref = encoding_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        encoding_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *string searchCategory = 9;	//If this was a search-results page, this is the category selected.
-     * </pre>
-     *
-     * <code>optional string encoding = 10;</code>
-     */
-    public Builder setEncoding(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      encoding_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *string searchCategory = 9;	//If this was a search-results page, this is the category selected.
-     * </pre>
-     *
-     * <code>optional string encoding = 10;</code>
-     */
-    public Builder clearEncoding() {
-      
-      encoding_ = getDefaultInstance().getEncoding();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *string searchCategory = 9;	//If this was a search-results page, this is the category selected.
-     * </pre>
-     *
-     * <code>optional string encoding = 10;</code>
-     */
-    public Builder setEncodingBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      encoding_ = value;
-      onChanged();
-      return this;
+    getEncodingBytes() {
+        java.lang.Object ref = encoding_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            encoding_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object linkId_ = "";
+    public static final int LINKID_FIELD_NUMBER = 11;
+    private volatile java.lang.Object linkId_;
+
     /**
      * <pre>
-     *linkid
+     * linkid
      * </pre>
      *
      * <code>optional string linkId = 11;</code>
      */
     public java.lang.String getLinkId() {
-      java.lang.Object ref = linkId_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        linkId_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = linkId_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            linkId_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *linkid
+     * linkid
      * </pre>
      *
      * <code>optional string linkId = 11;</code>
      */
     public com.google.protobuf.ByteString
+    getLinkIdBytes() {
+        java.lang.Object ref = linkId_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            linkId_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
+    private byte memoizedIsInitialized = -1;
+
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+        if (!getTitleBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 1, title_);
+        }
+        if (!getUrlBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 2, url_);
+        }
+        if (!getHostnameBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 3, hostname_);
+        }
+        if (!getPathBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 4, path_);
+        }
+        if (!getRefererBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 5, referer_);
+        }
+        if (!getRefererHostBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 6, refererHost_);
+        }
+        if (!getRefererPathBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 7, refererPath_);
+        }
+        if (!getSearchKeywordBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 8, searchKeyword_);
+        }
+        if (!getEncodingBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 10, encoding_);
+        }
+        if (!getLinkIdBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 11, linkId_);
+        }
+    }
+
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getTitleBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, title_);
+        }
+        if (!getUrlBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, url_);
+        }
+        if (!getHostnameBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, hostname_);
+        }
+        if (!getPathBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, path_);
+        }
+        if (!getRefererBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, referer_);
+        }
+        if (!getRefererHostBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, refererHost_);
+        }
+        if (!getRefererPathBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, refererPath_);
+        }
+        if (!getSearchKeywordBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, searchKeyword_);
+        }
+        if (!getEncodingBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, encoding_);
+        }
+        if (!getLinkIdBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, linkId_);
+        }
+        memoizedSize = size;
+        return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v2.Page)) {
+            return super.equals(obj);
+        }
+        org.datahem.protobuf.measurementprotocol.v2.Page other = (org.datahem.protobuf.measurementprotocol.v2.Page) obj;
+
+        boolean result = true;
+        result = result && getTitle()
+                .equals(other.getTitle());
+        result = result && getUrl()
+                .equals(other.getUrl());
+        result = result && getHostname()
+                .equals(other.getHostname());
+        result = result && getPath()
+                .equals(other.getPath());
+        result = result && getReferer()
+                .equals(other.getReferer());
+        result = result && getRefererHost()
+                .equals(other.getRefererHost());
+        result = result && getRefererPath()
+                .equals(other.getRefererPath());
+        result = result && getSearchKeyword()
+                .equals(other.getSearchKeyword());
+        result = result && getEncoding()
+                .equals(other.getEncoding());
+        result = result && getLinkId()
+                .equals(other.getLinkId());
+        return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptorForType().hashCode();
+        hash = (37 * hash) + TITLE_FIELD_NUMBER;
+        hash = (53 * hash) + getTitle().hashCode();
+        hash = (37 * hash) + URL_FIELD_NUMBER;
+        hash = (53 * hash) + getUrl().hashCode();
+        hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
+        hash = (53 * hash) + getHostname().hashCode();
+        hash = (37 * hash) + PATH_FIELD_NUMBER;
+        hash = (53 * hash) + getPath().hashCode();
+        hash = (37 * hash) + REFERER_FIELD_NUMBER;
+        hash = (53 * hash) + getReferer().hashCode();
+        hash = (37 * hash) + REFERERHOST_FIELD_NUMBER;
+        hash = (53 * hash) + getRefererHost().hashCode();
+        hash = (37 * hash) + REFERERPATH_FIELD_NUMBER;
+        hash = (53 * hash) + getRefererPath().hashCode();
+        hash = (37 * hash) + SEARCHKEYWORD_FIELD_NUMBER;
+        hash = (53 * hash) + getSearchKeyword().hashCode();
+        hash = (37 * hash) + ENCODING_FIELD_NUMBER;
+        hash = (53 * hash) + getEncoding().hashCode();
+        hash = (37 * hash) + LINKID_FIELD_NUMBER;
+        hash = (53 * hash) + getLinkId().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Page parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Page parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Page parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v2.Page prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+                ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
+    /**
+     * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Page}
+     */
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:datahem.protobuf.measurementprotocol.v2.Page)
+            org.datahem.protobuf.measurementprotocol.v2.PageOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Page_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Page_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            org.datahem.protobuf.measurementprotocol.v2.Page.class, org.datahem.protobuf.measurementprotocol.v2.Page.Builder.class);
+        }
+
+        // Construct using org.datahem.protobuf.measurementprotocol.v2.Page.newBuilder()
+        private Builder() {
+            maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            super(parent);
+            maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+            if (com.google.protobuf.GeneratedMessageV3
+                    .alwaysUseFieldBuilders) {
+            }
+        }
+
+        public Builder clear() {
+            super.clear();
+            title_ = "";
+
+            url_ = "";
+
+            hostname_ = "";
+
+            path_ = "";
+
+            referer_ = "";
+
+            refererHost_ = "";
+
+            refererPath_ = "";
+
+            searchKeyword_ = "";
+
+            encoding_ = "";
+
+            linkId_ = "";
+
+            return this;
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Page_descriptor;
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Page getDefaultInstanceForType() {
+            return org.datahem.protobuf.measurementprotocol.v2.Page.getDefaultInstance();
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Page build() {
+            org.datahem.protobuf.measurementprotocol.v2.Page result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Page buildPartial() {
+            org.datahem.protobuf.measurementprotocol.v2.Page result = new org.datahem.protobuf.measurementprotocol.v2.Page(this);
+            result.title_ = title_;
+            result.url_ = url_;
+            result.hostname_ = hostname_;
+            result.path_ = path_;
+            result.referer_ = referer_;
+            result.refererHost_ = refererHost_;
+            result.refererPath_ = refererPath_;
+            result.searchKeyword_ = searchKeyword_;
+            result.encoding_ = encoding_;
+            result.linkId_ = linkId_;
+            onBuilt();
+            return result;
+        }
+
+        public Builder clone() {
+            return (Builder) super.clone();
+        }
+
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                Object value) {
+            return (Builder) super.setField(field, value);
+        }
+
+        public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return (Builder) super.clearField(field);
+        }
+
+        public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return (Builder) super.clearOneof(oneof);
+        }
+
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index, Object value) {
+            return (Builder) super.setRepeatedField(field, index, value);
+        }
+
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                Object value) {
+            return (Builder) super.addRepeatedField(field, value);
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof org.datahem.protobuf.measurementprotocol.v2.Page) {
+                return mergeFrom((org.datahem.protobuf.measurementprotocol.v2.Page) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Page other) {
+            if (other == org.datahem.protobuf.measurementprotocol.v2.Page.getDefaultInstance()) return this;
+            if (!other.getTitle().isEmpty()) {
+                title_ = other.title_;
+                onChanged();
+            }
+            if (!other.getUrl().isEmpty()) {
+                url_ = other.url_;
+                onChanged();
+            }
+            if (!other.getHostname().isEmpty()) {
+                hostname_ = other.hostname_;
+                onChanged();
+            }
+            if (!other.getPath().isEmpty()) {
+                path_ = other.path_;
+                onChanged();
+            }
+            if (!other.getReferer().isEmpty()) {
+                referer_ = other.referer_;
+                onChanged();
+            }
+            if (!other.getRefererHost().isEmpty()) {
+                refererHost_ = other.refererHost_;
+                onChanged();
+            }
+            if (!other.getRefererPath().isEmpty()) {
+                refererPath_ = other.refererPath_;
+                onChanged();
+            }
+            if (!other.getSearchKeyword().isEmpty()) {
+                searchKeyword_ = other.searchKeyword_;
+                onChanged();
+            }
+            if (!other.getEncoding().isEmpty()) {
+                encoding_ = other.encoding_;
+                onChanged();
+            }
+            if (!other.getLinkId().isEmpty()) {
+                linkId_ = other.linkId_;
+                onChanged();
+            }
+            onChanged();
+            return this;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            org.datahem.protobuf.measurementprotocol.v2.Page parsedMessage = null;
+            try {
+                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                parsedMessage = (org.datahem.protobuf.measurementprotocol.v2.Page) e.getUnfinishedMessage();
+                throw e.unwrapIOException();
+            } finally {
+                if (parsedMessage != null) {
+                    mergeFrom(parsedMessage);
+                }
+            }
+            return this;
+        }
+
+        private java.lang.Object title_ = "";
+
+        /**
+         * <pre>
+         * dt. The page title.
+         * </pre>
+         *
+         * <code>optional string title = 1;</code>
+         */
+        public java.lang.String getTitle() {
+            java.lang.Object ref = title_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                title_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * dt. The page title.
+         * </pre>
+         *
+         * <code>optional string title = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+        getTitleBytes() {
+            java.lang.Object ref = title_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                title_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * dt. The page title.
+         * </pre>
+         *
+         * <code>optional string title = 1;</code>
+         */
+        public Builder setTitle(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            title_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * dt. The page title.
+         * </pre>
+         *
+         * <code>optional string title = 1;</code>
+         */
+        public Builder clearTitle() {
+
+            title_ = getDefaultInstance().getTitle();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * dt. The page title.
+         * </pre>
+         *
+         * <code>optional string title = 1;</code>
+         */
+        public Builder setTitleBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            title_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object url_ = "";
+
+        /**
+         * <pre>
+         * </pre>
+         *
+         * <code>optional string url = 2;</code>
+         */
+        public java.lang.String getUrl() {
+            java.lang.Object ref = url_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                url_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * </pre>
+         *
+         * <code>optional string url = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUrlBytes() {
+            java.lang.Object ref = url_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                url_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * </pre>
+         *
+         * <code>optional string url = 2;</code>
+         */
+        public Builder setUrl(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            url_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * </pre>
+         *
+         * <code>optional string url = 2;</code>
+         */
+        public Builder clearUrl() {
+
+            url_ = getDefaultInstance().getUrl();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * </pre>
+         *
+         * <code>optional string url = 2;</code>
+         */
+        public Builder setUrlBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            url_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object hostname_ = "";
+
+        /**
+         * <pre>
+         * dh. The hostname of the URL.
+         * </pre>
+         *
+         * <code>optional string hostname = 3;</code>
+         */
+        public java.lang.String getHostname() {
+            java.lang.Object ref = hostname_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                hostname_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * dh. The hostname of the URL.
+         * </pre>
+         *
+         * <code>optional string hostname = 3;</code>
+         */
+        public com.google.protobuf.ByteString
+        getHostnameBytes() {
+            java.lang.Object ref = hostname_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                hostname_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * dh. The hostname of the URL.
+         * </pre>
+         *
+         * <code>optional string hostname = 3;</code>
+         */
+        public Builder setHostname(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            hostname_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * dh. The hostname of the URL.
+         * </pre>
+         *
+         * <code>optional string hostname = 3;</code>
+         */
+        public Builder clearHostname() {
+
+            hostname_ = getDefaultInstance().getHostname();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * dh. The hostname of the URL.
+         * </pre>
+         *
+         * <code>optional string hostname = 3;</code>
+         */
+        public Builder setHostnameBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            hostname_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object path_ = "";
+
+        /**
+         * <pre>
+         * dp.The URL path of the page.
+         * </pre>
+         *
+         * <code>optional string path = 4;</code>
+         */
+        public java.lang.String getPath() {
+            java.lang.Object ref = path_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                path_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * dp.The URL path of the page.
+         * </pre>
+         *
+         * <code>optional string path = 4;</code>
+         */
+        public com.google.protobuf.ByteString
+        getPathBytes() {
+            java.lang.Object ref = path_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                path_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * dp.The URL path of the page.
+         * </pre>
+         *
+         * <code>optional string path = 4;</code>
+         */
+        public Builder setPath(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            path_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * dp.The URL path of the page.
+         * </pre>
+         *
+         * <code>optional string path = 4;</code>
+         */
+        public Builder clearPath() {
+
+            path_ = getDefaultInstance().getPath();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * dp.The URL path of the page.
+         * </pre>
+         *
+         * <code>optional string path = 4;</code>
+         */
+        public Builder setPathBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            path_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object referer_ = "";
+
+        /**
+         * <pre>
+         * dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
+         * </pre>
+         *
+         * <code>optional string referer = 5;</code>
+         */
+        public java.lang.String getReferer() {
+            java.lang.Object ref = referer_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                referer_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
+         * </pre>
+         *
+         * <code>optional string referer = 5;</code>
+         */
+        public com.google.protobuf.ByteString
+        getRefererBytes() {
+            java.lang.Object ref = referer_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                referer_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
+         * </pre>
+         *
+         * <code>optional string referer = 5;</code>
+         */
+        public Builder setReferer(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            referer_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
+         * </pre>
+         *
+         * <code>optional string referer = 5;</code>
+         */
+        public Builder clearReferer() {
+
+            referer_ = getDefaultInstance().getReferer();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * dr. The referring page, if the session has a goal completion or transaction. If this page is from the same domain, this is blank.
+         * </pre>
+         *
+         * <code>optional string referer = 5;</code>
+         */
+        public Builder setRefererBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            referer_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object refererHost_ = "";
+
+        /**
+         * <pre>
+         * drh
+         * </pre>
+         *
+         * <code>optional string refererHost = 6;</code>
+         */
+        public java.lang.String getRefererHost() {
+            java.lang.Object ref = refererHost_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                refererHost_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * drh
+         * </pre>
+         *
+         * <code>optional string refererHost = 6;</code>
+         */
+        public com.google.protobuf.ByteString
+        getRefererHostBytes() {
+            java.lang.Object ref = refererHost_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                refererHost_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * drh
+         * </pre>
+         *
+         * <code>optional string refererHost = 6;</code>
+         */
+        public Builder setRefererHost(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            refererHost_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * drh
+         * </pre>
+         *
+         * <code>optional string refererHost = 6;</code>
+         */
+        public Builder clearRefererHost() {
+
+            refererHost_ = getDefaultInstance().getRefererHost();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * drh
+         * </pre>
+         *
+         * <code>optional string refererHost = 6;</code>
+         */
+        public Builder setRefererHostBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            refererHost_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object refererPath_ = "";
+
+        /**
+         * <pre>
+         * drp
+         * </pre>
+         *
+         * <code>optional string refererPath = 7;</code>
+         */
+        public java.lang.String getRefererPath() {
+            java.lang.Object ref = refererPath_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                refererPath_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * drp
+         * </pre>
+         *
+         * <code>optional string refererPath = 7;</code>
+         */
+        public com.google.protobuf.ByteString
+        getRefererPathBytes() {
+            java.lang.Object ref = refererPath_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                refererPath_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * drp
+         * </pre>
+         *
+         * <code>optional string refererPath = 7;</code>
+         */
+        public Builder setRefererPath(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            refererPath_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * drp
+         * </pre>
+         *
+         * <code>optional string refererPath = 7;</code>
+         */
+        public Builder clearRefererPath() {
+
+            refererPath_ = getDefaultInstance().getRefererPath();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * drp
+         * </pre>
+         *
+         * <code>optional string refererPath = 7;</code>
+         */
+        public Builder setRefererPathBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            refererPath_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object searchKeyword_ = "";
+
+        /**
+         * <pre>
+         * sst. If this was a search results page, this is the keyword entered.
+         * </pre>
+         *
+         * <code>optional string searchKeyword = 8;</code>
+         */
+        public java.lang.String getSearchKeyword() {
+            java.lang.Object ref = searchKeyword_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                searchKeyword_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * sst. If this was a search results page, this is the keyword entered.
+         * </pre>
+         *
+         * <code>optional string searchKeyword = 8;</code>
+         */
+        public com.google.protobuf.ByteString
+        getSearchKeywordBytes() {
+            java.lang.Object ref = searchKeyword_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                searchKeyword_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * sst. If this was a search results page, this is the keyword entered.
+         * </pre>
+         *
+         * <code>optional string searchKeyword = 8;</code>
+         */
+        public Builder setSearchKeyword(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            searchKeyword_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * sst. If this was a search results page, this is the keyword entered.
+         * </pre>
+         *
+         * <code>optional string searchKeyword = 8;</code>
+         */
+        public Builder clearSearchKeyword() {
+
+            searchKeyword_ = getDefaultInstance().getSearchKeyword();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * sst. If this was a search results page, this is the keyword entered.
+         * </pre>
+         *
+         * <code>optional string searchKeyword = 8;</code>
+         */
+        public Builder setSearchKeywordBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            searchKeyword_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object encoding_ = "";
+
+        /**
+         * <pre>
+         * string searchCategory = 9;	//If this was a search-results page, this is the category selected.
+         * </pre>
+         *
+         * <code>optional string encoding = 10;</code>
+         */
+        public java.lang.String getEncoding() {
+            java.lang.Object ref = encoding_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                encoding_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * string searchCategory = 9;	//If this was a search-results page, this is the category selected.
+         * </pre>
+         *
+         * <code>optional string encoding = 10;</code>
+         */
+        public com.google.protobuf.ByteString
+        getEncodingBytes() {
+            java.lang.Object ref = encoding_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                encoding_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * string searchCategory = 9;	//If this was a search-results page, this is the category selected.
+         * </pre>
+         *
+         * <code>optional string encoding = 10;</code>
+         */
+        public Builder setEncoding(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            encoding_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * string searchCategory = 9;	//If this was a search-results page, this is the category selected.
+         * </pre>
+         *
+         * <code>optional string encoding = 10;</code>
+         */
+        public Builder clearEncoding() {
+
+            encoding_ = getDefaultInstance().getEncoding();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * string searchCategory = 9;	//If this was a search-results page, this is the category selected.
+         * </pre>
+         *
+         * <code>optional string encoding = 10;</code>
+         */
+        public Builder setEncodingBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            encoding_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object linkId_ = "";
+
+        /**
+         * <pre>
+         * linkid
+         * </pre>
+         *
+         * <code>optional string linkId = 11;</code>
+         */
+        public java.lang.String getLinkId() {
+            java.lang.Object ref = linkId_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                linkId_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * linkid
+         * </pre>
+         *
+         * <code>optional string linkId = 11;</code>
+         */
+        public com.google.protobuf.ByteString
         getLinkIdBytes() {
-      java.lang.Object ref = linkId_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        linkId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+            java.lang.Object ref = linkId_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                linkId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * linkid
+         * </pre>
+         *
+         * <code>optional string linkId = 11;</code>
+         */
+        public Builder setLinkId(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            linkId_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * linkid
+         * </pre>
+         *
+         * <code>optional string linkId = 11;</code>
+         */
+        public Builder clearLinkId() {
+
+            linkId_ = getDefaultInstance().getLinkId();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * linkid
+         * </pre>
+         *
+         * <code>optional string linkId = 11;</code>
+         */
+        public Builder setLinkIdBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            linkId_ = value;
+            onChanged();
+            return this;
+        }
+
+        public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return this;
+        }
+
+        public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return this;
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:datahem.protobuf.measurementprotocol.v2.Page)
     }
-    /**
-     * <pre>
-     *linkid
-     * </pre>
-     *
-     * <code>optional string linkId = 11;</code>
-     */
-    public Builder setLinkId(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      linkId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *linkid
-     * </pre>
-     *
-     * <code>optional string linkId = 11;</code>
-     */
-    public Builder clearLinkId() {
-      
-      linkId_ = getDefaultInstance().getLinkId();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *linkid
-     * </pre>
-     *
-     * <code>optional string linkId = 11;</code>
-     */
-    public Builder setLinkIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      linkId_ = value;
-      onChanged();
-      return this;
-    }
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+
+    // @@protoc_insertion_point(class_scope:datahem.protobuf.measurementprotocol.v2.Page)
+    private static final org.datahem.protobuf.measurementprotocol.v2.Page DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v2.Page();
     }
 
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+    public static org.datahem.protobuf.measurementprotocol.v2.Page getDefaultInstance() {
+        return DEFAULT_INSTANCE;
     }
 
+    private static final com.google.protobuf.Parser<Page>
+            PARSER = new com.google.protobuf.AbstractParser<Page>() {
+        public Page parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return new Page(input, extensionRegistry);
+        }
+    };
 
-    // @@protoc_insertion_point(builder_scope:datahem.protobuf.measurementprotocol.v2.Page)
-  }
-
-  // @@protoc_insertion_point(class_scope:datahem.protobuf.measurementprotocol.v2.Page)
-  private static final org.datahem.protobuf.measurementprotocol.v2.Page DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v2.Page();
-  }
-
-  public static org.datahem.protobuf.measurementprotocol.v2.Page getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<Page>
-      PARSER = new com.google.protobuf.AbstractParser<Page>() {
-    public Page parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Page(input, extensionRegistry);
+    public static com.google.protobuf.Parser<Page> parser() {
+        return PARSER;
     }
-  };
 
-  public static com.google.protobuf.Parser<Page> parser() {
-    return PARSER;
-  }
+    @java.lang.Override
+    public com.google.protobuf.Parser<Page> getParserForType() {
+        return PARSER;
+    }
 
-  @java.lang.Override
-  public com.google.protobuf.Parser<Page> getParserForType() {
-    return PARSER;
-  }
-
-  public org.datahem.protobuf.measurementprotocol.v2.Page getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
+    public org.datahem.protobuf.measurementprotocol.v2.Page getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+    }
 
 }
 

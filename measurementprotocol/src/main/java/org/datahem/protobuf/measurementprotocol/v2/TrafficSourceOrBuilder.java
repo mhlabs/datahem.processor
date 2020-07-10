@@ -10,158 +10,166 @@ package org.datahem.protobuf.measurementprotocol.v2;
  * Copyright (C) 2018 - 2019 Robert Sahlin
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
 
 public interface TrafficSourceOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:datahem.protobuf.measurementprotocol.v2.TrafficSource)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:datahem.protobuf.measurementprotocol.v2.TrafficSource)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <pre>
-   *ci  Value of the utm_id campaign tracking parameter, used for manual campaign tracking.
-   * </pre>
-   *
-   * <code>optional string id = 1;</code>
-   */
-  java.lang.String getId();
-  /**
-   * <pre>
-   *ci  Value of the utm_id campaign tracking parameter, used for manual campaign tracking.
-   * </pre>
-   *
-   * <code>optional string id = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getIdBytes();
+    /**
+     * <pre>
+     * ci  Value of the utm_id campaign tracking parameter, used for manual campaign tracking.
+     * </pre>
+     *
+     * <code>optional string id = 1;</code>
+     */
+    java.lang.String getId();
 
-  /**
-   * <pre>
-   *cn  The campaign value. Usually set by the utm_campaign URL parameter.
-   * </pre>
-   *
-   * <code>optional string name = 2;</code>
-   */
-  java.lang.String getName();
-  /**
-   * <pre>
-   *cn  The campaign value. Usually set by the utm_campaign URL parameter.
-   * </pre>
-   *
-   * <code>optional string name = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getNameBytes();
+    /**
+     * <pre>
+     * ci  Value of the utm_id campaign tracking parameter, used for manual campaign tracking.
+     * </pre>
+     *
+     * <code>optional string id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+    getIdBytes();
 
-  /**
-   * <pre>
-   *cc  The ad content of the traffic source. Can be set by the utm_content URL parameter.
-   * </pre>
-   *
-   * <code>optional string content = 3;</code>
-   */
-  java.lang.String getContent();
-  /**
-   * <pre>
-   *cc  The ad content of the traffic source. Can be set by the utm_content URL parameter.
-   * </pre>
-   *
-   * <code>optional string content = 3;</code>
-   */
-  com.google.protobuf.ByteString
-      getContentBytes();
+    /**
+     * <pre>
+     * cn  The campaign value. Usually set by the utm_campaign URL parameter.
+     * </pre>
+     *
+     * <code>optional string name = 2;</code>
+     */
+    java.lang.String getName();
 
-  /**
-   * <pre>
-   *cm  The medium of the traffic source. Could be "organic", "cpc", "referral", or the value of the utm_medium URL parameter.
-   * </pre>
-   *
-   * <code>optional string medium = 4;</code>
-   */
-  java.lang.String getMedium();
-  /**
-   * <pre>
-   *cm  The medium of the traffic source. Could be "organic", "cpc", "referral", or the value of the utm_medium URL parameter.
-   * </pre>
-   *
-   * <code>optional string medium = 4;</code>
-   */
-  com.google.protobuf.ByteString
-      getMediumBytes();
+    /**
+     * <pre>
+     * cn  The campaign value. Usually set by the utm_campaign URL parameter.
+     * </pre>
+     *
+     * <code>optional string name = 2;</code>
+     */
+    com.google.protobuf.ByteString
+    getNameBytes();
 
-  /**
-   * <pre>
-   *cs  The source of the traffic source. Could be the name of the search engine, the referring hostname, or a value of the utm_source URL parameter.
-   * </pre>
-   *
-   * <code>optional string source = 5;</code>
-   */
-  java.lang.String getSource();
-  /**
-   * <pre>
-   *cs  The source of the traffic source. Could be the name of the search engine, the referring hostname, or a value of the utm_source URL parameter.
-   * </pre>
-   *
-   * <code>optional string source = 5;</code>
-   */
-  com.google.protobuf.ByteString
-      getSourceBytes();
+    /**
+     * <pre>
+     * cc  The ad content of the traffic source. Can be set by the utm_content URL parameter.
+     * </pre>
+     *
+     * <code>optional string content = 3;</code>
+     */
+    java.lang.String getContent();
 
-  /**
-   * <pre>
-   *ck  The keyword of the traffic source, usually set when the trafficSource.medium is "organic" or "cpc". Can be set by the utm_term URL parameter.
-   * </pre>
-   *
-   * <code>optional string keyword = 6;</code>
-   */
-  java.lang.String getKeyword();
-  /**
-   * <pre>
-   *ck  The keyword of the traffic source, usually set when the trafficSource.medium is "organic" or "cpc". Can be set by the utm_term URL parameter.
-   * </pre>
-   *
-   * <code>optional string keyword = 6;</code>
-   */
-  com.google.protobuf.ByteString
-      getKeywordBytes();
+    /**
+     * <pre>
+     * cc  The ad content of the traffic source. Can be set by the utm_content URL parameter.
+     * </pre>
+     *
+     * <code>optional string content = 3;</code>
+     */
+    com.google.protobuf.ByteString
+    getContentBytes();
 
-  /**
-   * <pre>
-   *gclid  The Google Click ID.
-   * </pre>
-   *
-   * <code>optional string gclId = 7;</code>
-   */
-  java.lang.String getGclId();
-  /**
-   * <pre>
-   *gclid  The Google Click ID.
-   * </pre>
-   *
-   * <code>optional string gclId = 7;</code>
-   */
-  com.google.protobuf.ByteString
-      getGclIdBytes();
+    /**
+     * <pre>
+     * cm  The medium of the traffic source. Could be "organic", "cpc", "referral", or the value of the utm_medium URL parameter.
+     * </pre>
+     *
+     * <code>optional string medium = 4;</code>
+     */
+    java.lang.String getMedium();
 
-  /**
-   * <pre>
-   *dclid  The DoubleClick ID.
-   * </pre>
-   *
-   * <code>optional string dclId = 8;</code>
-   */
-  java.lang.String getDclId();
-  /**
-   * <pre>
-   *dclid  The DoubleClick ID.
-   * </pre>
-   *
-   * <code>optional string dclId = 8;</code>
-   */
-  com.google.protobuf.ByteString
-      getDclIdBytes();
+    /**
+     * <pre>
+     * cm  The medium of the traffic source. Could be "organic", "cpc", "referral", or the value of the utm_medium URL parameter.
+     * </pre>
+     *
+     * <code>optional string medium = 4;</code>
+     */
+    com.google.protobuf.ByteString
+    getMediumBytes();
+
+    /**
+     * <pre>
+     * cs  The source of the traffic source. Could be the name of the search engine, the referring hostname, or a value of the utm_source URL parameter.
+     * </pre>
+     *
+     * <code>optional string source = 5;</code>
+     */
+    java.lang.String getSource();
+
+    /**
+     * <pre>
+     * cs  The source of the traffic source. Could be the name of the search engine, the referring hostname, or a value of the utm_source URL parameter.
+     * </pre>
+     *
+     * <code>optional string source = 5;</code>
+     */
+    com.google.protobuf.ByteString
+    getSourceBytes();
+
+    /**
+     * <pre>
+     * ck  The keyword of the traffic source, usually set when the trafficSource.medium is "organic" or "cpc". Can be set by the utm_term URL parameter.
+     * </pre>
+     *
+     * <code>optional string keyword = 6;</code>
+     */
+    java.lang.String getKeyword();
+
+    /**
+     * <pre>
+     * ck  The keyword of the traffic source, usually set when the trafficSource.medium is "organic" or "cpc". Can be set by the utm_term URL parameter.
+     * </pre>
+     *
+     * <code>optional string keyword = 6;</code>
+     */
+    com.google.protobuf.ByteString
+    getKeywordBytes();
+
+    /**
+     * <pre>
+     * gclid  The Google Click ID.
+     * </pre>
+     *
+     * <code>optional string gclId = 7;</code>
+     */
+    java.lang.String getGclId();
+
+    /**
+     * <pre>
+     * gclid  The Google Click ID.
+     * </pre>
+     *
+     * <code>optional string gclId = 7;</code>
+     */
+    com.google.protobuf.ByteString
+    getGclIdBytes();
+
+    /**
+     * <pre>
+     * dclid  The DoubleClick ID.
+     * </pre>
+     *
+     * <code>optional string dclId = 8;</code>
+     */
+    java.lang.String getDclId();
+
+    /**
+     * <pre>
+     * dclid  The DoubleClick ID.
+     * </pre>
+     *
+     * <code>optional string dclId = 8;</code>
+     */
+    com.google.protobuf.ByteString
+    getDclIdBytes();
 }

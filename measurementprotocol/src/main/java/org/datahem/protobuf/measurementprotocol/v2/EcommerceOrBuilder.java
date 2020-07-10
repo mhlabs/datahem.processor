@@ -10,41 +10,42 @@ package org.datahem.protobuf.measurementprotocol.v2;
  * Copyright (C) 2018 - 2019 Robert Sahlin
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
 
 public interface EcommerceOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:datahem.protobuf.measurementprotocol.v2.Ecommerce)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:datahem.protobuf.measurementprotocol.v2.Ecommerce)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <pre>
-   *cos 	This field is populated when a checkout step is specified with the hit.
-   * </pre>
-   *
-   * <code>optional int32 step = 1;</code>
-   */
-  int getStep();
+    /**
+     * <pre>
+     * cos 	This field is populated when a checkout step is specified with the hit.
+     * </pre>
+     *
+     * <code>optional int32 step = 1;</code>
+     */
+    int getStep();
 
-  /**
-   * <pre>
-   *col  This field is populated when a checkout option is specified. For example, a shipping option such as option = 'Fedex'.
-   * </pre>
-   *
-   * <code>optional string option = 2;</code>
-   */
-  java.lang.String getOption();
-  /**
-   * <pre>
-   *col  This field is populated when a checkout option is specified. For example, a shipping option such as option = 'Fedex'.
-   * </pre>
-   *
-   * <code>optional string option = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getOptionBytes();
+    /**
+     * <pre>
+     * col  This field is populated when a checkout option is specified. For example, a shipping option such as option = 'Fedex'.
+     * </pre>
+     *
+     * <code>optional string option = 2;</code>
+     */
+    java.lang.String getOption();
+
+    /**
+     * <pre>
+     * col  This field is populated when a checkout option is specified. For example, a shipping option such as option = 'Fedex'.
+     * </pre>
+     *
+     * <code>optional string option = 2;</code>
+     */
+    com.google.protobuf.ByteString
+    getOptionBytes();
 }

@@ -12,10 +12,10 @@ package org.datahem.avro.message;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,17 +26,17 @@ package org.datahem.avro.message;
  * =========================LICENSE_END==================================
  */
 
-import java.io.Serializable;
-import org.apache.avro.message.SchemaStore;
-import com.google.common.collect.MapMaker;
-import java.util.Map;
-import org.apache.avro.Schema;
-import org.apache.avro.SchemaNormalization;
-
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
+import com.google.common.collect.MapMaker;
+import org.apache.avro.Schema;
+import org.apache.avro.SchemaNormalization;
+import org.apache.avro.message.SchemaStore;
+
+import java.io.Serializable;
+import java.util.Map;
 
 public class DatastoreCache implements SchemaStore, Serializable {
     //private final Map<Long, Schema> schemas = new MapMaker().makeMap();
@@ -49,46 +49,45 @@ public class DatastoreCache implements SchemaStore, Serializable {
      * @param schema a {@link Schema}
      */
     public void addSchema(Schema schema) {
-      long fingerprint = SchemaNormalization.parsingFingerprint64(schema);
-      System.out.println("SchemaStore addSchema: " + Long.toString(fingerprint) + " : " + schema.toString());
-      //schemas.put(fingerprint, schema);
-      schemas.put(fingerprint, schema.toString());
-      addSchemaToDatastore(fingerprint, schema);
+        long fingerprint = SchemaNormalization.parsingFingerprint64(schema);
+        System.out.println("SchemaStore addSchema: " + Long.toString(fingerprint) + " : " + schema.toString());
+        //schemas.put(fingerprint, schema);
+        schemas.put(fingerprint, schema.toString());
+        addSchemaToDatastore(fingerprint, schema);
     }
 
-	@Override
-	public Schema findByFingerprint(long fingerprint) {
-      //System.out.println("SchemaStore findByFingerprint: " + Long.toString(fingerprint) + " : " + schemas.get(fingerprint).toString());
-		if (schemas.get(fingerprint) != null) {
-			return new Schema.Parser().parse(schemas.get(fingerprint));
-		}
-		Schema schema = getSchemaFromDatastore(fingerprint);
-		if (schema != null) {
-			//schemas.put(fingerprint, schema);
-			schemas.put(fingerprint, schema.toString());
-			return schema;
-		}
-		return null;
-	}
-
-	public void addSchemaToDatastore(long fingerprint, Schema s){
-		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		Key schemaKey = datastore.newKeyFactory().setKind("Schema").newKey(Long.toString(fingerprint));
-		Entity schema = Entity.newBuilder(schemaKey)
-			.set("fingerprint", Long.toString(fingerprint))
-			.set("json", s.toString())
-			.build();
-		datastore.put(schema);
-	}
-	
-	public Schema getSchemaFromDatastore(long fingerprint) {
-		//System.out.println("SchemaStore findByFingerprint: " + Long.toString(fingerprint) + " : " + schemas.get(fingerprint).toString());
-		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		Key schemaKey = datastore.newKeyFactory().setKind("Schema").newKey(Long.toString(fingerprint));
-		Entity schema = datastore.get(schemaKey);
-		return new Schema.Parser().parse(schema.getString("json"));
+    @Override
+    public Schema findByFingerprint(long fingerprint) {
+        //System.out.println("SchemaStore findByFingerprint: " + Long.toString(fingerprint) + " : " + schemas.get(fingerprint).toString());
+        if (schemas.get(fingerprint) != null) {
+            return new Schema.Parser().parse(schemas.get(fingerprint));
+        }
+        Schema schema = getSchemaFromDatastore(fingerprint);
+        if (schema != null) {
+            //schemas.put(fingerprint, schema);
+            schemas.put(fingerprint, schema.toString());
+            return schema;
+        }
+        return null;
     }
-	
-	
-	
+
+    public void addSchemaToDatastore(long fingerprint, Schema s) {
+        Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+        Key schemaKey = datastore.newKeyFactory().setKind("Schema").newKey(Long.toString(fingerprint));
+        Entity schema = Entity.newBuilder(schemaKey)
+                .set("fingerprint", Long.toString(fingerprint))
+                .set("json", s.toString())
+                .build();
+        datastore.put(schema);
+    }
+
+    public Schema getSchemaFromDatastore(long fingerprint) {
+        //System.out.println("SchemaStore findByFingerprint: " + Long.toString(fingerprint) + " : " + schemas.get(fingerprint).toString());
+        Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+        Key schemaKey = datastore.newKeyFactory().setKind("Schema").newKey(Long.toString(fingerprint));
+        Entity schema = datastore.get(schemaKey);
+        return new Schema.Parser().parse(schema.getString("json"));
+    }
+
+
 }

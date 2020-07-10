@@ -1,12 +1,10 @@
 package org.datahem.processor.utils;
 
-import org.apache.beam.sdk.transforms.DoFn;
 import com.google.api.services.bigquery.model.TableRow;
-
+import com.google.gson.Gson;
+import org.apache.beam.sdk.transforms.DoFn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.gson.Gson;
 
 
 /*-
@@ -21,10 +19,10 @@ import com.google.gson.Gson;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,23 +33,22 @@ import com.google.gson.Gson;
  * =========================LICENSE_END==================================
  */
 
-public class JsonToTableRowFn extends DoFn<String,TableRow> {
-	
-	private static final Logger LOG = LoggerFactory.getLogger(JsonToTableRowFn.class);
+public class JsonToTableRowFn extends DoFn<String, TableRow> {
 
-      	@ProcessElement          
-	    public void processElement(ProcessContext c) {
-			try{
-				String json = (String) c.element();
-				Gson gson = new Gson();	
-				TableRow outputRow = gson.fromJson(json, TableRow.class);
-				LOG.info("tablerow: " + outputRow.toString());
-				c.output(outputRow);
-			}
-			catch(Exception e){       
-				//LOG.error(ExceptionUtils.getStackTrace(e));
-				LOG.error(e.toString());
-			}
-			return;
-		}
+    private static final Logger LOG = LoggerFactory.getLogger(JsonToTableRowFn.class);
+
+    @ProcessElement
+    public void processElement(ProcessContext c) {
+        try {
+            String json = (String) c.element();
+            Gson gson = new Gson();
+            TableRow outputRow = gson.fromJson(json, TableRow.class);
+            LOG.info("tablerow: " + outputRow.toString());
+            c.output(outputRow);
+        } catch (Exception e) {
+            //LOG.error(ExceptionUtils.getStackTrace(e));
+            LOG.error(e.toString());
+        }
+        return;
+    }
 }
