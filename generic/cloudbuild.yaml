@@ -2,7 +2,7 @@
 steps:
   - name: maven:3.6.2-jdk-8-slim
     entrypoint: 'mvn'
-    args: ['package','-Dmaven.test.skip=true','-f','./generic/pom.xml']
+    args: ['package','-f','./generic/pom.xml']
   - name: gcr.io/cloud-builders/docker
     args: ['build','-t', 'gcr.io/$PROJECT_ID/generic-pipeline:${_VERSION}', './generic/']
   - name: gcr.io/cloud-builders/docker
