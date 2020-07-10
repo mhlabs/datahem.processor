@@ -7,159 +7,98 @@ package org.datahem.processor.dynamodb;
  * Copyright (C) 2018 - 2019 MatHem Sverige AB
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
 
 
-import io.anemos.metastore.core.proto.*;
-import org.datahem.processor.dynamodb.DynamoDbStreamPipeline.*;
-import org.datahem.processor.utils.ProtobufUtils;
-
-import com.google.gson.Gson;
-
+import com.google.api.services.bigquery.model.TableFieldSchema;
+import com.google.api.services.bigquery.model.TableRow;
+import com.google.api.services.bigquery.model.TableSchema;
+import com.google.protobuf.Descriptors.Descriptor;
+import io.anemos.metastore.core.proto.ProtoDescriptor;
+import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
+import org.apache.beam.sdk.options.ValueProvider.StaticValueProvider;
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;
-import org.apache.beam.sdk.testing.ValidatesRunner;
-import org.apache.beam.sdk.values.PCollection;
-import org.apache.beam.sdk.options.ValueProvider.StaticValueProvider;
-import org.apache.beam.sdk.options.ValueProvider;
 import org.apache.beam.sdk.transforms.Create;
-import org.apache.beam.sdk.transforms.Count;
-import org.apache.beam.sdk.transforms.DoFn;
-import org.apache.beam.sdk.transforms.MapElements;
-import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
-import org.apache.beam.sdk.transforms.SerializableFunction;
-import org.apache.beam.sdk.transforms.SimpleFunction;
-import org.apache.beam.sdk.transforms.windowing.FixedWindows;
-import org.apache.beam.sdk.transforms.windowing.Window;
-import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
-
-import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
-import com.google.protobuf.Descriptors.FileDescriptor;
-import com.google.protobuf.DescriptorProtos.FileDescriptorProto;
-import com.google.protobuf.Descriptors.Descriptor;
-import com.google.protobuf.DynamicMessage;
-import com.google.protobuf.DynamicMessage.Builder;
-import com.google.protobuf.InvalidProtocolBufferException;
-
+import org.apache.beam.sdk.values.PCollection;
 import org.datahem.processor.utils.ProtobufUtils;
-import com.google.api.services.bigquery.model.TableRow;
-import com.google.api.services.bigquery.model.TableFieldSchema;
-import com.google.api.services.bigquery.model.TableSchema;
-import com.google.api.services.bigquery.model.TableReference;
-
-import com.google.protobuf.util.JsonFormat;
-
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.DateTimeZone;
-import org.joda.time.DateTime;
-
-import org.json.JSONObject;
 import org.json.JSONArray;
-
-import org.hamcrest.CoreMatchers;
+import org.json.JSONObject;
 import org.junit.Assert;
-import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.Optional;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.Comparator;
-import java.util.stream.Collectors;
-import java.util.Collections;
-import java.util.stream.Stream;
-import java.util.Base64;
-
-import com.google.cloud.ReadChannel;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.StorageOptions;
-import com.google.common.collect.HashMultimap;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.BufferedReader;
-
-import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RunWith(JUnit4.class)
 public class DynamoDbStreamPipelineTest {
-	
-	private static final Logger LOG = LoggerFactory.getLogger(DynamoDbStreamPipelineTest.class);
-	
-	@Rule public transient TestPipeline p = TestPipeline.create();
 
-    
-	private Map<String,String> attributes = new HashMap<String, String>(){
-		{
+    private static final Logger LOG = LoggerFactory.getLogger(DynamoDbStreamPipelineTest.class);
+
+    @Rule
+    public transient TestPipeline p = TestPipeline.create();
+
+
+    private Map<String, String> attributes = new HashMap<String, String>() {
+        {
             put("timestamp", "2013-08-16T23:36:32.444Z");
             put("uuid", "123-456-abc");
             put("source", "test");
-		}
-	};
+        }
+    };
 
 
-	@Test
-	public void withoutOptionsTest(){
+    @Test
+    public void withoutOptionsTest() {
 
         JSONObject testPayloadObject = new JSONObject()
-            .put("StringField", "a string")
-            .put("Int32Field", 32) 
-            .put("Int64Field", 3147483647L) 
-            .put("DoubleField", 1.1d) 
-            .put("FloatField", 1f) 
-            .put("BoolField", true) 
-            .put("BytesField",  Base64.getEncoder().encodeToString("bytes".getBytes())) 
-            .put("EnumField", 1)
-            .put("repeatedString", new JSONArray().put("one").put("two").put("three"))
-            .put("repeatedInt32", new JSONArray().put(32).put(64).put(128))
-            .put("repeatedInt64", new JSONArray().put(3147483647L).put(3147483647L).put(3147483647L))
-            .put("repeatedDouble", new JSONArray().put(1.1d).put(1.2d).put(1.3d))
-            .put("repeatedFloat", new JSONArray().put(1f).put(2f).put(3f))
-            .put("repeatedBool", new JSONArray().put("true").put("false").put("true"))
-            .put("repeatedBytes", new JSONArray()
-                .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
-                .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
-                .put(Base64.getEncoder().encodeToString("bytes".getBytes())))
-            .put("repeatedEnum", new JSONArray().put(0).put(1).put(2));
-        
+                .put("StringField", "a string")
+                .put("Int32Field", 32)
+                .put("Int64Field", 3147483647L)
+                .put("DoubleField", 1.1d)
+                .put("FloatField", 1f)
+                .put("BoolField", true)
+                .put("BytesField", Base64.getEncoder().encodeToString("bytes".getBytes()))
+                .put("EnumField", 1)
+                .put("repeatedString", new JSONArray().put("one").put("two").put("three"))
+                .put("repeatedInt32", new JSONArray().put(32).put(64).put(128))
+                .put("repeatedInt64", new JSONArray().put(3147483647L).put(3147483647L).put(3147483647L))
+                .put("repeatedDouble", new JSONArray().put(1.1d).put(1.2d).put(1.3d))
+                .put("repeatedFloat", new JSONArray().put(1f).put(2f).put(3f))
+                .put("repeatedBool", new JSONArray().put("true").put("false").put("true"))
+                .put("repeatedBytes", new JSONArray()
+                        .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
+                        .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
+                        .put(Base64.getEncoder().encodeToString("bytes".getBytes())))
+                .put("repeatedEnum", new JSONArray().put(0).put(1).put(2));
+
         JSONObject messageChild = new JSONObject(testPayloadObject.toString());
         messageChild.remove("_ATTRIBUTES");
         messageChild.put("stringMap", new JSONObject()
-            .put("timestamp", "2013-08-16T23:36:32.444Z")
-            .put("uuid", "123-456-abc")
-            .put("source", "test"));
+                .put("timestamp", "2013-08-16T23:36:32.444Z")
+                .put("uuid", "123-456-abc")
+                .put("source", "test"));
 
         testPayloadObject
-            .put("messageChild", messageChild)
-            .put("repeatedMessage", new JSONArray()
-                .put(messageChild)
-                .put(messageChild));
+                .put("messageChild", messageChild)
+                .put("repeatedMessage", new JSONArray()
+                        .put(messageChild)
+                        .put(messageChild));
 
-        String testPayload = new JSONObject().put("NewImage",testPayloadObject).toString();
+        String testPayload = new JSONObject().put("NewImage", testPayloadObject).toString();
         byte[] payload = testPayload.getBytes(StandardCharsets.UTF_8);
         PubsubMessage pm = new PubsubMessage(payload, attributes);
         //END INPUT
@@ -186,9 +125,9 @@ public class DynamoDbStreamPipelineTest {
                 .set("repeatedFloat", Stream.of(1.0f, 2.0f, 3.0f).collect(Collectors.toList()))
                 .set("repeatedBool", Stream.of(true, false, true).collect(Collectors.toList()))
                 .set("repeatedBytes", Stream.of("Ynl0ZXM=", "Ynl0ZXM=", "Ynl0ZXM=").collect(Collectors.toList()))
-                .set("repeatedEnum", Stream.of(0,1,2).collect(Collectors.toList()))
+                .set("repeatedEnum", Stream.of(0, 1, 2).collect(Collectors.toList()))
                 .set("stringMap", attributes);
-        
+
         attributes = new ArrayList<TableRow>();
         attributes.add(new TableRow().set("key", "source").set("value", "test"));
         attributes.add(new TableRow().set("key", "uuid").set("value", "123-456-abc"));
@@ -196,36 +135,36 @@ public class DynamoDbStreamPipelineTest {
         attributes.add(new TableRow().set("key", "timestamp").set("value", "2013-08-16T23:36:32.444Z"));
 
         TableRow assertTableRow = new TableRow()
-            .set("StringField", "a string")
-            .set("Int32Field", 32)
-            .set("Int64Field", 3147483647L)
-            .set("DoubleField", 1.1d)
-            .set("FloatField", 1.0f)
-            .set("BoolField", true)
-            .set("BytesField", "Ynl0ZXM=")
-            .set("EnumField", 1)
-            .set("messageChild", childMessage)
-            .set("repeatedMessage", Stream.of(childMessage,childMessage).collect(Collectors.toList()))
-            .set("repeatedString", Stream.of("one", "two", "three").collect(Collectors.toList()))
-            .set("repeatedInt32", Stream.of(32, 64, 128).collect(Collectors.toList()))
-            .set("repeatedInt64", Stream.of(3147483647L, 3147483647L, 3147483647L).collect(Collectors.toList()))
-            .set("repeatedDouble", Stream.of(1.1d, 1.2d, 1.3d).collect(Collectors.toList()))
-            .set("repeatedFloat", Stream.of(1.0f, 2.0f, 3.0f).collect(Collectors.toList()))
-            .set("repeatedBool", Stream.of(true, false, true).collect(Collectors.toList()))
-            .set("repeatedBytes", Stream.of("Ynl0ZXM=", "Ynl0ZXM=", "Ynl0ZXM=").collect(Collectors.toList()))
-            .set("repeatedEnum", Stream.of(0,1,2).collect(Collectors.toList()))
-            .set("_ATTRIBUTES", attributes);
-        
-        
+                .set("StringField", "a string")
+                .set("Int32Field", 32)
+                .set("Int64Field", 3147483647L)
+                .set("DoubleField", 1.1d)
+                .set("FloatField", 1.0f)
+                .set("BoolField", true)
+                .set("BytesField", "Ynl0ZXM=")
+                .set("EnumField", 1)
+                .set("messageChild", childMessage)
+                .set("repeatedMessage", Stream.of(childMessage, childMessage).collect(Collectors.toList()))
+                .set("repeatedString", Stream.of("one", "two", "three").collect(Collectors.toList()))
+                .set("repeatedInt32", Stream.of(32, 64, 128).collect(Collectors.toList()))
+                .set("repeatedInt64", Stream.of(3147483647L, 3147483647L, 3147483647L).collect(Collectors.toList()))
+                .set("repeatedDouble", Stream.of(1.1d, 1.2d, 1.3d).collect(Collectors.toList()))
+                .set("repeatedFloat", Stream.of(1.0f, 2.0f, 3.0f).collect(Collectors.toList()))
+                .set("repeatedBool", Stream.of(true, false, true).collect(Collectors.toList()))
+                .set("repeatedBytes", Stream.of("Ynl0ZXM=", "Ynl0ZXM=", "Ynl0ZXM=").collect(Collectors.toList()))
+                .set("repeatedEnum", Stream.of(0, 1, 2).collect(Collectors.toList()))
+                .set("_ATTRIBUTES", attributes);
+
+
         TableFieldSchema.Categories fieldCategories = new TableFieldSchema.Categories();
         fieldCategories.setNames(null);
-        
+
         TableSchema assertAttributesSchema = new TableSchema();
         List<TableFieldSchema> attributesFields = new ArrayList<TableFieldSchema>();
         attributesFields.add(new TableFieldSchema().setName("key").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
         attributesFields.add(new TableFieldSchema().setName("value").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
         assertAttributesSchema.setFields(attributesFields);
-        
+
         TableSchema assertChildSchema = new TableSchema();
         List<TableFieldSchema> childFields = new ArrayList<TableFieldSchema>();
         childFields.add(new TableFieldSchema().setName("StringField").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
@@ -272,81 +211,80 @@ public class DynamoDbStreamPipelineTest {
 
         TableSchema eventSchema = null;
         String tableDescription = "";
-        try{
+        try {
             ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-descriptor", "testSchemas.desc");
             Descriptor descriptor = protoDescriptor.getDescriptorByName("datahem.test.TestWithoutOptions");
             eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, ".*590903188537942776.*");
             Assert.assertEquals(eventSchema, assertSchema);
             LOG.info("withoutOptionsTest assert TableSchema without errors.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
+        try {
 
             PCollection<TableRow> output = p
-                .apply(Create.of(Arrays.asList(pm)))
-                .apply(ParDo.of(new DynamoDbStreamPipeline.PubsubMessageToTableRowFn(
-                    StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
-                    StaticValueProvider.of("testSchemas.desc"),
-                    StaticValueProvider.of("datahem.test.TestWithoutOptions"))));
+                    .apply(Create.of(Arrays.asList(pm)))
+                    .apply(ParDo.of(new DynamoDbStreamPipeline.PubsubMessageToTableRowFn(
+                            StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
+                            StaticValueProvider.of("testSchemas.desc"),
+                            StaticValueProvider.of("datahem.test.TestWithoutOptions"))));
             PAssert.that(output).containsInAnyOrder(assertTableRow);
             p.run();
             LOG.info("withoutOptionsTest assert TableRow without errors.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
         }
     }
 
 
-
     @Test
-	public void withSchemaOptionsTest(){
+    public void withSchemaOptionsTest() {
 
         //BEGIN INPUT
         JSONObject messageChild = new JSONObject()
-            .put("StringField", "a string")
-            .put("Int32Field", 32) 
-            .put("Int64Field", 3147483647L) 
-            .put("DoubleField", 1.1d) 
-            .put("FloatField", 1.1f) 
-            .put("BoolField", true) 
-            .put("HiddenStringField", "a hidden string");
+                .put("StringField", "a string")
+                .put("Int32Field", 32)
+                .put("Int64Field", 3147483647L)
+                .put("DoubleField", 1.1d)
+                .put("FloatField", 1.1f)
+                .put("BoolField", true)
+                .put("HiddenStringField", "a hidden string");
 
         JSONObject testPayloadObject = new JSONObject()
-            .put("StringField", "a string")
-            .put("Int32Field", 32) 
-            .put("Int64Field", 3147483647L) 
-            .put("DoubleField", 1.1d) 
-            .put("FloatField", 1.1f) 
-            .put("BoolField", true) 
-            .put("BytesField",  Base64.getEncoder().encodeToString("bytes".getBytes())) 
-            .put("EnumField", 1)
-            .put("messageChild", messageChild)
-            .put("repeatedMessage", new JSONArray()
-                .put(messageChild)
-                .put(messageChild))
-            .put("repeatedString", new JSONArray().put("one").put("two").put("three"))
-            .put("repeatedInt32", new JSONArray().put(32).put(64).put(128))
-            .put("repeatedInt64", new JSONArray().put(3147483647L).put(3147483647L).put(3147483647L))
-            .put("repeatedDouble", new JSONArray().put(1.1d).put(1.2d).put(1.3d))
-            .put("repeatedFloat", new JSONArray().put(1.1f).put(1.2f).put(1.3f))
-            .put("repeatedBool", new JSONArray().put("true").put("false").put("true"))
-            .put("repeatedBytes", new JSONArray()
-                .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
-                .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
-                .put(Base64.getEncoder().encodeToString("bytes".getBytes())))
-            .put("repeatedEnum", new JSONArray().put(0).put(1).put(2))
-            .put("HiddenStringField", "a hidden string")
-            .put("BigQueryTime", "19:00:00")
-            .put("BigQueryDate", "2019-12-03")
-            .put("BigQueryDatetime", "2019-12-03 19:00:00")
-            .put("BigQueryTimestamp", "2019-12-03T21:00:00+02:00")
-            .put("HiddenStringField", "a hidden string");
-            
+                .put("StringField", "a string")
+                .put("Int32Field", 32)
+                .put("Int64Field", 3147483647L)
+                .put("DoubleField", 1.1d)
+                .put("FloatField", 1.1f)
+                .put("BoolField", true)
+                .put("BytesField", Base64.getEncoder().encodeToString("bytes".getBytes()))
+                .put("EnumField", 1)
+                .put("messageChild", messageChild)
+                .put("repeatedMessage", new JSONArray()
+                        .put(messageChild)
+                        .put(messageChild))
+                .put("repeatedString", new JSONArray().put("one").put("two").put("three"))
+                .put("repeatedInt32", new JSONArray().put(32).put(64).put(128))
+                .put("repeatedInt64", new JSONArray().put(3147483647L).put(3147483647L).put(3147483647L))
+                .put("repeatedDouble", new JSONArray().put(1.1d).put(1.2d).put(1.3d))
+                .put("repeatedFloat", new JSONArray().put(1.1f).put(1.2f).put(1.3f))
+                .put("repeatedBool", new JSONArray().put("true").put("false").put("true"))
+                .put("repeatedBytes", new JSONArray()
+                        .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
+                        .put(Base64.getEncoder().encodeToString("bytes".getBytes()))
+                        .put(Base64.getEncoder().encodeToString("bytes".getBytes())))
+                .put("repeatedEnum", new JSONArray().put(0).put(1).put(2))
+                .put("HiddenStringField", "a hidden string")
+                .put("BigQueryTime", "19:00:00")
+                .put("BigQueryDate", "2019-12-03")
+                .put("BigQueryDatetime", "2019-12-03 19:00:00")
+                .put("BigQueryTimestamp", "2019-12-03T21:00:00+02:00")
+                .put("HiddenStringField", "a hidden string");
 
-        String testPayload = new JSONObject().put("NewImage",testPayloadObject).toString();
+
+        String testPayload = new JSONObject().put("NewImage", testPayloadObject).toString();
         byte[] payload = testPayload.getBytes(StandardCharsets.UTF_8);
         PubsubMessage pm = new PubsubMessage(payload, attributes);
         //END INPUT
@@ -367,42 +305,42 @@ public class DynamoDbStreamPipelineTest {
                 .set("RenamedChildBool", true);
 
         TableRow assertTableRow = new TableRow()
-            .set("RenamedString", "a string")
-            .set("RenamedInt32", 32)
-            .set("RenamedInt64", 3147483647L)
-            .set("RenamedDouble", 1.1d)
-            .set("RenamedFloat", 1.1f)
-            .set("RenamedBool", true)
-            .set("RenamedBytes", "Ynl0ZXM=")
-            .set("RenamedEnum", 1)
-            .set("RenamedMessageChild", childMessage)
-            .set("RenamedRepeatedMessage", Stream.of(childMessage,childMessage).collect(Collectors.toList()))
-            .set("RenamedRepeatedString", Stream.of("one", "two", "three").collect(Collectors.toList()))
-            .set("RenamedRepeatedInt32", Stream.of(32, 64, 128).collect(Collectors.toList()))
-            .set("RenamedRepeatedInt64", Stream.of(3147483647L, 3147483647L, 3147483647L).collect(Collectors.toList()))
-            .set("RenamedRepeatedDouble", Stream.of(1.1d, 1.2d, 1.3d).collect(Collectors.toList()))
-            .set("RenamedRepeatedFloat", Stream.of(1.1f, 1.2f, 1.3f).collect(Collectors.toList()))
-            .set("RenamedRepeatedBool", Stream.of(true, false, true).collect(Collectors.toList()))
-            .set("RenamedRepeatedBytes", Stream.of("Ynl0ZXM=", "Ynl0ZXM=", "Ynl0ZXM=").collect(Collectors.toList()))
-            .set("RenamedRepeatedEnum", Stream.of(0,1,2).collect(Collectors.toList()))
-            .set("RenamedBigQueryTime", "19:00:00")
-            .set("RenamedBigQueryDate", "2019-12-03")
-            .set("RenamedBigQueryDatetime", "2019-12-03 19:00:00")
-            .set("RenamedBigQueryTimestamp", "2019-12-03T21:00:00+02:00")
-            .set("RenamedAttributesMap", attributes);
-            
+                .set("RenamedString", "a string")
+                .set("RenamedInt32", 32)
+                .set("RenamedInt64", 3147483647L)
+                .set("RenamedDouble", 1.1d)
+                .set("RenamedFloat", 1.1f)
+                .set("RenamedBool", true)
+                .set("RenamedBytes", "Ynl0ZXM=")
+                .set("RenamedEnum", 1)
+                .set("RenamedMessageChild", childMessage)
+                .set("RenamedRepeatedMessage", Stream.of(childMessage, childMessage).collect(Collectors.toList()))
+                .set("RenamedRepeatedString", Stream.of("one", "two", "three").collect(Collectors.toList()))
+                .set("RenamedRepeatedInt32", Stream.of(32, 64, 128).collect(Collectors.toList()))
+                .set("RenamedRepeatedInt64", Stream.of(3147483647L, 3147483647L, 3147483647L).collect(Collectors.toList()))
+                .set("RenamedRepeatedDouble", Stream.of(1.1d, 1.2d, 1.3d).collect(Collectors.toList()))
+                .set("RenamedRepeatedFloat", Stream.of(1.1f, 1.2f, 1.3f).collect(Collectors.toList()))
+                .set("RenamedRepeatedBool", Stream.of(true, false, true).collect(Collectors.toList()))
+                .set("RenamedRepeatedBytes", Stream.of("Ynl0ZXM=", "Ynl0ZXM=", "Ynl0ZXM=").collect(Collectors.toList()))
+                .set("RenamedRepeatedEnum", Stream.of(0, 1, 2).collect(Collectors.toList()))
+                .set("RenamedBigQueryTime", "19:00:00")
+                .set("RenamedBigQueryDate", "2019-12-03")
+                .set("RenamedBigQueryDatetime", "2019-12-03 19:00:00")
+                .set("RenamedBigQueryTimestamp", "2019-12-03T21:00:00+02:00")
+                .set("RenamedAttributesMap", attributes);
+
         //END OUTPUT TABLEROW
-        
+
         //BEGIN OUTPUT TABLESCHEMA
         TableFieldSchema.Categories fieldCategories = new TableFieldSchema.Categories();
         fieldCategories.setNames(Stream.of("projects/datahem/taxonomies/1234567890/categories/1234567890").collect(Collectors.toList()));
-        
+
         TableSchema assertAttributesSchema = new TableSchema();
         List<TableFieldSchema> attributesFields = new ArrayList<TableFieldSchema>();
         attributesFields.add(new TableFieldSchema().setName("key").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(new TableFieldSchema.Categories().setNames(null)));
         attributesFields.add(new TableFieldSchema().setName("value").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(new TableFieldSchema.Categories().setNames(null)));
         assertAttributesSchema.setFields(attributesFields);
-        
+
         TableSchema assertChildSchema = new TableSchema();
         List<TableFieldSchema> childFields = new ArrayList<TableFieldSchema>();
         childFields.add(new TableFieldSchema().setName("RenamedChildString").setType("STRING").setMode("NULLABLE").setDescription("A String").setCategories(fieldCategories));
@@ -439,64 +377,64 @@ public class DynamoDbStreamPipelineTest {
         fields.add(new TableFieldSchema().setName("RenamedBigQueryTimestamp").setType("TIMESTAMP").setMode("NULLABLE").setDescription("A BigQuery TIMESTAMP.").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("RenamedAttributesMap").setType("RECORD").setMode("REPEATED").setDescription("A string map.").setFields(assertAttributesSchema.getFields()));
         assertSchema.setFields(fields);
-        
+
         //END OUTPUT TABLESCHEMA
 
         TableSchema eventSchema = null;
         String tableDescription = "";
-        try{
+        try {
             ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-descriptor", "testSchemas.desc");
             Descriptor descriptor = protoDescriptor.getDescriptorByName("datahem.test.TestSchemaOptions");
             eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, ".*1234567890.*");
             Assert.assertEquals(eventSchema, assertSchema);
             LOG.info("withOptionsTest assert TableSchema without errors.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
+        try {
 
             PCollection<TableRow> output = p
-                .apply(Create.of(Arrays.asList(pm)))
-                .apply(ParDo.of(new DynamoDbStreamPipeline.PubsubMessageToTableRowFn(
-                    StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
-                    StaticValueProvider.of("testSchemas.desc"),
-                    StaticValueProvider.of("datahem.test.TestSchemaOptions"))));
+                    .apply(Create.of(Arrays.asList(pm)))
+                    .apply(ParDo.of(new DynamoDbStreamPipeline.PubsubMessageToTableRowFn(
+                            StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
+                            StaticValueProvider.of("testSchemas.desc"),
+                            StaticValueProvider.of("datahem.test.TestSchemaOptions"))));
             PAssert.that(output).containsInAnyOrder(assertTableRow);
             p.run();
             LOG.info("withSchemaOptionsTest assert TableRow without errors.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
         }
     }
 
-    
+
     @Test
-	public void withOptionsTest(){
+    public void withOptionsTest() {
 
         //BEGIN INPUT
 
         JSONObject testPayloadObject = new JSONObject()
-            .put("StringAppendix", "a string")
-            .put("StringFilter", "throw away")
-            .put("StringCoalesce", "")
-            .put("DoubleField", 100.d)
-            .put("Int32Field", 10)
-            .put("BigQueryDatetimeFiltered","0001-01-01 00:00:00")
-            .put("BigQueryTimestampFiltered","0001-01-01T00:00:00+02:00")
-            .put("BigQueryDatetimeNotFiltered","2019-01-01 00:00:00")
-            .put("BigQueryTimestampNotFiltered","2019-01-01T00:00:00+02:00")
-            .put("BigQueryTimeAppend","01:01")
-            .put("BigQueryDatetimeAppend","2019-01-01 01:01")
-            .put("BigQueryTimestampAppend","2019-01-01 01:01:00T01:01")
-            .put("LocalTimestampWithWrongOffsetToUtc","2019-01-01T12:00:00+00:00")
-            .put("DatetimeToDate","2019-01-01 00:00:00")
-            .put("LocalTimestampWithoutOptionalTToUtc","2019-01-01 12:00:00")
-            .put("LocalTimestampWithOptionalTToUtc","2019-01-01T12:00:00");
-            
- 
-        String testPayload = new JSONObject().put("NewImage",testPayloadObject).toString();
+                .put("StringAppendix", "a string")
+                .put("StringFilter", "throw away")
+                .put("StringCoalesce", "")
+                .put("DoubleField", 100.d)
+                .put("Int32Field", 10)
+                .put("BigQueryDatetimeFiltered", "0001-01-01 00:00:00")
+                .put("BigQueryTimestampFiltered", "0001-01-01T00:00:00+02:00")
+                .put("BigQueryDatetimeNotFiltered", "2019-01-01 00:00:00")
+                .put("BigQueryTimestampNotFiltered", "2019-01-01T00:00:00+02:00")
+                .put("BigQueryTimeAppend", "01:01")
+                .put("BigQueryDatetimeAppend", "2019-01-01 01:01")
+                .put("BigQueryTimestampAppend", "2019-01-01 01:01:00T01:01")
+                .put("LocalTimestampWithWrongOffsetToUtc", "2019-01-01T12:00:00+00:00")
+                .put("DatetimeToDate", "2019-01-01 00:00:00")
+                .put("LocalTimestampWithoutOptionalTToUtc", "2019-01-01 12:00:00")
+                .put("LocalTimestampWithOptionalTToUtc", "2019-01-01T12:00:00");
+
+
+        String testPayload = new JSONObject().put("NewImage", testPayloadObject).toString();
         byte[] payload = testPayload.getBytes(StandardCharsets.UTF_8);
         PubsubMessage pm = new PubsubMessage(payload, attributes);
         //END INPUT
@@ -509,28 +447,28 @@ public class DynamoDbStreamPipelineTest {
         attributes.add(new TableRow().set("key", "timestamp").set("value", "2013-08-16T23:36:32.444Z"));
 
         TableRow assertTableRow = new TableRow()
-            .set("StringAppendix", "a stringAppendix")
-            .set("StringCoalesce", "a string")
-            .set("DoubleField", 10d)
-            .set("Int32Field", 10)
-            .set("Int32Coalesce", 10)
-            .set("BigQueryDatetimeNotFiltered","2019-01-01 00:00:00")
-            .set("BigQueryTimestampNotFiltered","2019-01-01T00:00:00+02:00")
-            .set("BigQueryTimeAppend","01:01:00")
-            .set("BigQueryDatetimeAppend","2019-01-01 01:01:00")
-            .set("BigQueryTimestampAppend","2019-01-01 01:01:00T01:01:00")
-            .set("LocalTimestampWithWrongOffsetToUtc","2019-01-01T11:00:00Z")
-            .set("DatetimeToDate","2019-01-01")
-            .set("LocalTimestampWithoutOptionalTToUtc","2019-01-01T11:00:00Z")
-            .set("LocalTimestampWithOptionalTToUtc","2019-01-01T11:00:00Z")
-            .set("PartitionTimestamp", "2018-12-31T23:00:00Z")
-            .set("_ATTRIBUTES", attributes);
-            
+                .set("StringAppendix", "a stringAppendix")
+                .set("StringCoalesce", "a string")
+                .set("DoubleField", 10d)
+                .set("Int32Field", 10)
+                .set("Int32Coalesce", 10)
+                .set("BigQueryDatetimeNotFiltered", "2019-01-01 00:00:00")
+                .set("BigQueryTimestampNotFiltered", "2019-01-01T00:00:00+02:00")
+                .set("BigQueryTimeAppend", "01:01:00")
+                .set("BigQueryDatetimeAppend", "2019-01-01 01:01:00")
+                .set("BigQueryTimestampAppend", "2019-01-01 01:01:00T01:01:00")
+                .set("LocalTimestampWithWrongOffsetToUtc", "2019-01-01T11:00:00Z")
+                .set("DatetimeToDate", "2019-01-01")
+                .set("LocalTimestampWithoutOptionalTToUtc", "2019-01-01T11:00:00Z")
+                .set("LocalTimestampWithOptionalTToUtc", "2019-01-01T11:00:00Z")
+                .set("PartitionTimestamp", "2018-12-31T23:00:00Z")
+                .set("_ATTRIBUTES", attributes);
+
         //END OUTPUT TABLEROW
-        
+
         //BEGIN OUTPUT TABLESCHEMA
         TableFieldSchema.Categories fieldCategories = new TableFieldSchema.Categories().setNames(null);
-        
+
         TableSchema assertAttributesSchema = new TableSchema();
         List<TableFieldSchema> attributesFields = new ArrayList<TableFieldSchema>();
         attributesFields.add(new TableFieldSchema().setName("key").setType("STRING").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
@@ -567,34 +505,34 @@ public class DynamoDbStreamPipelineTest {
         fields.add(new TableFieldSchema().setName("PartitionTimestamp").setType("TIMESTAMP").setMode("NULLABLE").setDescription("").setCategories(fieldCategories));
         fields.add(new TableFieldSchema().setName("_ATTRIBUTES").setType("RECORD").setMode("REPEATED").setDescription("").setFields(assertAttributesSchema.getFields()));
         assertSchema.setFields(fields);
-        
+
         //END OUTPUT TABLESCHEMA
-        
+
         //Test Schema generation
         TableSchema eventSchema = null;
         String tableDescription = "";
-        try{
+        try {
             ProtoDescriptor protoDescriptor = ProtobufUtils.getProtoDescriptorFromCloudStorage("mathem-ml-datahem-test-descriptor", "testSchemas.desc");
             Descriptor descriptor = protoDescriptor.getDescriptorByName("datahem.test.TestWithOptions");
             eventSchema = ProtobufUtils.makeTableSchema(protoDescriptor, descriptor, ".*1234567890.*");
             Assert.assertEquals(eventSchema, assertSchema);
             LOG.info("withOptionsTest assert TableSchema without errors.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         //Test GenericStreamPipeline
-        try{
+        try {
             PCollection<TableRow> output = p
-                .apply(Create.of(Arrays.asList(pm)))
-                .apply(ParDo.of(new DynamoDbStreamPipeline.PubsubMessageToTableRowFn(
-                    StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
-                    StaticValueProvider.of("testSchemas.desc"),
-                    StaticValueProvider.of("datahem.test.TestWithOptions"))));
+                    .apply(Create.of(Arrays.asList(pm)))
+                    .apply(ParDo.of(new DynamoDbStreamPipeline.PubsubMessageToTableRowFn(
+                            StaticValueProvider.of("mathem-ml-datahem-test-descriptor"),
+                            StaticValueProvider.of("testSchemas.desc"),
+                            StaticValueProvider.of("datahem.test.TestWithOptions"))));
             PAssert.that(output).containsInAnyOrder(assertTableRow);
             p.run();
             LOG.info("withOptionsTest assert TableRow without errors.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
         }
