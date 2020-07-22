@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <surefire-plugin.version>2.20</surefire-plugin.version>
         <java.version>1.8</java.version>
-        <beam.version>2.15.0</beam.version>
+        <beam.version>2.21.0</beam.version>
         <!--<license.dir>${basedir}</license.dir>-->
         <license.copyrightOwners>Robert Sahlin and MatHem Sverige AB</license.copyrightOwners>
         <!--<license.licenseName>mit</license.licenseName>-->
@@ -222,7 +222,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>24.1.1-jre</version>
+            <version>29.0-jre</version>
         </dependency>
 
         <dependency>
