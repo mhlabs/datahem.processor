@@ -1,2 +1,2 @@
-FROM openjdk:8u212-jre-slim-stretch
+FROM openjdk:11.0.11-jre-slim
 COPY generic-pipeline-bundled.jar /target/
