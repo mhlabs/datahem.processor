@@ -12,10 +12,10 @@ package org.datahem.avro.message;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,11 +28,11 @@ package org.datahem.avro.message;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
+
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.HashMap;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Test2 {
 
@@ -42,97 +42,97 @@ public class Test2 {
         HashMap<String, Object> hm = new HashMap<String, Object>();
 
         try (JsonReader reader = new JsonReader(new StringReader(json_string))) {
-        	if (JsonToken.BEGIN_OBJECT.equals(reader.peek())) {
-    			reader.beginObject();
-    		}
+            if (JsonToken.BEGIN_OBJECT.equals(reader.peek())) {
+                reader.beginObject();
+            }
             readObject(reader, hm);
 
-        System.out.println(hm.toString());
+            System.out.println(hm.toString());
+        }
     }
-}
 
-private static HashMap<String, Object> readObject(JsonReader reader, HashMap<String, Object> hm) throws IOException{
-    	String name = "";
+    private static HashMap<String, Object> readObject(JsonReader reader, HashMap<String, Object> hm) throws IOException {
+        String name = "";
         Object value;
         JsonToken nextToken = reader.peek();
-    	while (reader.hasNext() && !JsonToken.END_DOCUMENT.equals(nextToken)) {
+        while (reader.hasNext() && !JsonToken.END_DOCUMENT.equals(nextToken)) {
 
-                nextToken = reader.peek();
-                switch(nextToken){
-                	case BEGIN_OBJECT: 
-                    	reader.beginObject();
-                    	value = readObject(reader, new HashMap<String, Object>());
-                    	hm.put(name,value);
-                    	break;
-                	case BEGIN_ARRAY:
-                    	reader.beginArray();
-                    	value = readArray(reader, new ArrayList<Object>());
-						hm.put(name,value);
-						break;
-                	case END_ARRAY:
-                    	reader.endArray();
-                    	break;
-                	case NAME:
-                    	name = reader.nextName();
-                    	break;
-                	case STRING:
-                    	value = reader.nextString();
-                    	hm.put(name,value);
-                    	break;
-                	case NUMBER:
-                    	value = reader.nextDouble();
-                    	hm.put(name,value);
-                    	break;
-                    case BOOLEAN:
-                    	value = reader.nextBoolean();
-                    	hm.put(name,value);
-                    	break;
-                }	
-                nextToken = reader.peek();
-                if(JsonToken.END_OBJECT.equals(nextToken)){
-                    reader.endObject();
-                    return hm;
-                }
-            }
-            return hm;
-      }
-
-      
-      private static ArrayList<Object> readArray(JsonReader reader, ArrayList<Object> al) throws IOException{
-        Object value;
-        JsonToken nextToken = reader.peek();
-    	while (reader.hasNext() && !JsonToken.END_DOCUMENT.equals(nextToken)) {
-
-                nextToken = reader.peek();
-                switch(nextToken){
-                	case BEGIN_OBJECT:
-                    	reader.beginObject();
-                    	value = readObject(reader, new HashMap<String, Object>());
-                    	al.add(value);
-                    	break;
-                    case BEGIN_ARRAY:
-                    	reader.beginArray();
-                    	break;
-					case STRING:
-                    	value = reader.nextString();
-                    	al.add(value);
-                    	break;
-					case NUMBER:
-                    	value = reader.nextDouble();
-                    	al.add(value);
-                    	break;
-                    case BOOLEAN:
-                    	value = reader.nextBoolean();
-                    	al.add(value);
-                    	break;
-                } 
-                nextToken = reader.peek();
-                if (JsonToken.END_ARRAY.equals(nextToken)) {
+            nextToken = reader.peek();
+            switch (nextToken) {
+                case BEGIN_OBJECT:
+                    reader.beginObject();
+                    value = readObject(reader, new HashMap<String, Object>());
+                    hm.put(name, value);
+                    break;
+                case BEGIN_ARRAY:
+                    reader.beginArray();
+                    value = readArray(reader, new ArrayList<Object>());
+                    hm.put(name, value);
+                    break;
+                case END_ARRAY:
                     reader.endArray();
-                    return al;
-                }
-                System.out.println(nextToken.toString());
+                    break;
+                case NAME:
+                    name = reader.nextName();
+                    break;
+                case STRING:
+                    value = reader.nextString();
+                    hm.put(name, value);
+                    break;
+                case NUMBER:
+                    value = reader.nextDouble();
+                    hm.put(name, value);
+                    break;
+                case BOOLEAN:
+                    value = reader.nextBoolean();
+                    hm.put(name, value);
+                    break;
             }
-            return al;
-      }
+            nextToken = reader.peek();
+            if (JsonToken.END_OBJECT.equals(nextToken)) {
+                reader.endObject();
+                return hm;
+            }
+        }
+        return hm;
+    }
+
+
+    private static ArrayList<Object> readArray(JsonReader reader, ArrayList<Object> al) throws IOException {
+        Object value;
+        JsonToken nextToken = reader.peek();
+        while (reader.hasNext() && !JsonToken.END_DOCUMENT.equals(nextToken)) {
+
+            nextToken = reader.peek();
+            switch (nextToken) {
+                case BEGIN_OBJECT:
+                    reader.beginObject();
+                    value = readObject(reader, new HashMap<String, Object>());
+                    al.add(value);
+                    break;
+                case BEGIN_ARRAY:
+                    reader.beginArray();
+                    break;
+                case STRING:
+                    value = reader.nextString();
+                    al.add(value);
+                    break;
+                case NUMBER:
+                    value = reader.nextDouble();
+                    al.add(value);
+                    break;
+                case BOOLEAN:
+                    value = reader.nextBoolean();
+                    al.add(value);
+                    break;
+            }
+            nextToken = reader.peek();
+            if (JsonToken.END_ARRAY.equals(nextToken)) {
+                reader.endArray();
+                return al;
+            }
+            System.out.println(nextToken.toString());
+        }
+        return al;
+    }
 }

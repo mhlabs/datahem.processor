@@ -10,68 +10,71 @@ package org.datahem.protobuf.measurementprotocol.v2;
  * Copyright (C) 2018 - 2019 Robert Sahlin
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
 
 public interface SocialOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:datahem.protobuf.measurementprotocol.v2.Social)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:datahem.protobuf.measurementprotocol.v2.Social)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <pre>
-   *sa	The social action passed with the social tracking code (Share, Tweet, etc.).
-   * </pre>
-   *
-   * <code>optional string action = 1;</code>
-   */
-  java.lang.String getAction();
-  /**
-   * <pre>
-   *sa	The social action passed with the social tracking code (Share, Tweet, etc.).
-   * </pre>
-   *
-   * <code>optional string action = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getActionBytes();
+    /**
+     * <pre>
+     * sa	The social action passed with the social tracking code (Share, Tweet, etc.).
+     * </pre>
+     *
+     * <code>optional string action = 1;</code>
+     */
+    java.lang.String getAction();
 
-  /**
-   * <pre>
-   *st	For social interactions, this is the URL (or resource) which receives the social network action.
-   * </pre>
-   *
-   * <code>optional string target = 2;</code>
-   */
-  java.lang.String getTarget();
-  /**
-   * <pre>
-   *st	For social interactions, this is the URL (or resource) which receives the social network action.
-   * </pre>
-   *
-   * <code>optional string target = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getTargetBytes();
+    /**
+     * <pre>
+     * sa	The social action passed with the social tracking code (Share, Tweet, etc.).
+     * </pre>
+     *
+     * <code>optional string action = 1;</code>
+     */
+    com.google.protobuf.ByteString
+    getActionBytes();
 
-  /**
-   * <pre>
-   *sn 	The social network name. This is related to the referring social network for traffic sources; e.g., Google+, Blogger.
-   * </pre>
-   *
-   * <code>optional string network = 3;</code>
-   */
-  java.lang.String getNetwork();
-  /**
-   * <pre>
-   *sn 	The social network name. This is related to the referring social network for traffic sources; e.g., Google+, Blogger.
-   * </pre>
-   *
-   * <code>optional string network = 3;</code>
-   */
-  com.google.protobuf.ByteString
-      getNetworkBytes();
+    /**
+     * <pre>
+     * st	For social interactions, this is the URL (or resource) which receives the social network action.
+     * </pre>
+     *
+     * <code>optional string target = 2;</code>
+     */
+    java.lang.String getTarget();
+
+    /**
+     * <pre>
+     * st	For social interactions, this is the URL (or resource) which receives the social network action.
+     * </pre>
+     *
+     * <code>optional string target = 2;</code>
+     */
+    com.google.protobuf.ByteString
+    getTargetBytes();
+
+    /**
+     * <pre>
+     * sn 	The social network name. This is related to the referring social network for traffic sources; e.g., Google+, Blogger.
+     * </pre>
+     *
+     * <code>optional string network = 3;</code>
+     */
+    java.lang.String getNetwork();
+
+    /**
+     * <pre>
+     * sn 	The social network name. This is related to the referring social network for traffic sources; e.g., Google+, Blogger.
+     * </pre>
+     *
+     * <code>optional string network = 3;</code>
+     */
+    com.google.protobuf.ByteString
+    getNetworkBytes();
 }

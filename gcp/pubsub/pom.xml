@@ -110,8 +110,6 @@
             </plugin>
 
             <!-- License information -->
-
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
@@ -249,6 +247,5 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
-
     </dependencies>
 </project>

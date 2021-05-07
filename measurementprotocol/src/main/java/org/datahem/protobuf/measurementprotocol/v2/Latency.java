@@ -10,9 +10,9 @@ package org.datahem.protobuf.measurementprotocol.v2;
  * Copyright (C) 2018 - 2019 Robert Sahlin
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
@@ -20,1493 +20,1580 @@ package org.datahem.protobuf.measurementprotocol.v2;
 /**
  * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Latency}
  */
-public  final class Latency extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:datahem.protobuf.measurementprotocol.v2.Latency)
-    LatencyOrBuilder {
-  // Use Latency.newBuilder() to construct.
-  private Latency(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private Latency() {
-    domainLookupTime_ = 0;
-    domContentLoadedTime_ = 0;
-    domInteractiveTime_ = 0;
-    pageDownloadTime_ = 0;
-    pageLoadTime_ = 0;
-    redirectionTime_ = 0;
-    serverConnectionTime_ = 0;
-    serverResponseTime_ = 0;
-    userTimingCategory_ = "";
-    userTimingLabel_ = "";
-    userTimingValue_ = 0;
-    userTimingVariable_ = "";
-  }
+public final class Latency extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:datahem.protobuf.measurementprotocol.v2.Latency)
+        LatencyOrBuilder {
+    // Use Latency.newBuilder() to construct.
+    private Latency(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+    }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-  }
-  private Latency(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    int mutable_bitField0_ = 0;
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          default: {
-            if (!input.skipField(tag)) {
-              done = true;
+    private Latency() {
+        domainLookupTime_ = 0;
+        domContentLoadedTime_ = 0;
+        domInteractiveTime_ = 0;
+        pageDownloadTime_ = 0;
+        pageLoadTime_ = 0;
+        redirectionTime_ = 0;
+        serverConnectionTime_ = 0;
+        serverResponseTime_ = 0;
+        userTimingCategory_ = "";
+        userTimingLabel_ = "";
+        userTimingValue_ = 0;
+        userTimingVariable_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+        return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+
+    private Latency(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        int mutable_bitField0_ = 0;
+        try {
+            boolean done = false;
+            while (!done) {
+                int tag = input.readTag();
+                switch (tag) {
+                    case 0:
+                        done = true;
+                        break;
+                    default: {
+                        if (!input.skipField(tag)) {
+                            done = true;
+                        }
+                        break;
+                    }
+                    case 8: {
+
+                        domainLookupTime_ = input.readInt32();
+                        break;
+                    }
+                    case 16: {
+
+                        domContentLoadedTime_ = input.readInt32();
+                        break;
+                    }
+                    case 24: {
+
+                        domInteractiveTime_ = input.readInt32();
+                        break;
+                    }
+                    case 32: {
+
+                        pageDownloadTime_ = input.readInt32();
+                        break;
+                    }
+                    case 40: {
+
+                        pageLoadTime_ = input.readInt32();
+                        break;
+                    }
+                    case 48: {
+
+                        redirectionTime_ = input.readInt32();
+                        break;
+                    }
+                    case 56: {
+
+                        serverConnectionTime_ = input.readInt32();
+                        break;
+                    }
+                    case 64: {
+
+                        serverResponseTime_ = input.readInt32();
+                        break;
+                    }
+                    case 74: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        userTimingCategory_ = s;
+                        break;
+                    }
+                    case 82: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        userTimingLabel_ = s;
+                        break;
+                    }
+                    case 88: {
+
+                        userTimingValue_ = input.readInt32();
+                        break;
+                    }
+                    case 98: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        userTimingVariable_ = s;
+                        break;
+                    }
+                }
             }
-            break;
-          }
-          case 8: {
-
-            domainLookupTime_ = input.readInt32();
-            break;
-          }
-          case 16: {
-
-            domContentLoadedTime_ = input.readInt32();
-            break;
-          }
-          case 24: {
-
-            domInteractiveTime_ = input.readInt32();
-            break;
-          }
-          case 32: {
-
-            pageDownloadTime_ = input.readInt32();
-            break;
-          }
-          case 40: {
-
-            pageLoadTime_ = input.readInt32();
-            break;
-          }
-          case 48: {
-
-            redirectionTime_ = input.readInt32();
-            break;
-          }
-          case 56: {
-
-            serverConnectionTime_ = input.readInt32();
-            break;
-          }
-          case 64: {
-
-            serverResponseTime_ = input.readInt32();
-            break;
-          }
-          case 74: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            userTimingCategory_ = s;
-            break;
-          }
-          case 82: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            userTimingLabel_ = s;
-            break;
-          }
-          case 88: {
-
-            userTimingValue_ = input.readInt32();
-            break;
-          }
-          case 98: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            userTimingVariable_ = s;
-            break;
-          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(
+                    e).setUnfinishedMessage(this);
+        } finally {
+            makeExtensionsImmutable();
         }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      makeExtensionsImmutable();
     }
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Latency_descriptor;
-  }
 
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Latency_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            org.datahem.protobuf.measurementprotocol.v2.Latency.class, org.datahem.protobuf.measurementprotocol.v2.Latency.Builder.class);
-  }
-
-  public static final int DOMAINLOOKUPTIME_FIELD_NUMBER = 1;
-  private int domainLookupTime_;
-  /**
-   * <pre>
-   *dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
-   * </pre>
-   *
-   * <code>optional int32 domainLookupTime = 1;</code>
-   */
-  public int getDomainLookupTime() {
-    return domainLookupTime_;
-  }
-
-  public static final int DOMCONTENTLOADEDTIME_FIELD_NUMBER = 2;
-  private int domContentLoadedTime_;
-  /**
-   * <pre>
-   *clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
-   * </pre>
-   *
-   * <code>optional int32 domContentLoadedTime = 2;</code>
-   */
-  public int getDomContentLoadedTime() {
-    return domContentLoadedTime_;
-  }
-
-  public static final int DOMINTERACTIVETIME_FIELD_NUMBER = 3;
-  private int domInteractiveTime_;
-  /**
-   * <pre>
-   *dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
-   * </pre>
-   *
-   * <code>optional int32 domInteractiveTime = 3;</code>
-   */
-  public int getDomInteractiveTime() {
-    return domInteractiveTime_;
-  }
-
-  public static final int PAGEDOWNLOADTIME_FIELD_NUMBER = 4;
-  private int pageDownloadTime_;
-  /**
-   * <pre>
-   *pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
-   * </pre>
-   *
-   * <code>optional int32 pageDownloadTime = 4;</code>
-   */
-  public int getPageDownloadTime() {
-    return pageDownloadTime_;
-  }
-
-  public static final int PAGELOADTIME_FIELD_NUMBER = 5;
-  private int pageLoadTime_;
-  /**
-   * <pre>
-   *plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
-   * </pre>
-   *
-   * <code>optional int32 pageLoadTime = 5;</code>
-   */
-  public int getPageLoadTime() {
-    return pageLoadTime_;
-  }
-
-  public static final int REDIRECTIONTIME_FIELD_NUMBER = 6;
-  private int redirectionTime_;
-  /**
-   * <pre>
-   *rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
-   * </pre>
-   *
-   * <code>optional int32 redirectionTime = 6;</code>
-   */
-  public int getRedirectionTime() {
-    return redirectionTime_;
-  }
-
-  public static final int SERVERCONNECTIONTIME_FIELD_NUMBER = 7;
-  private int serverConnectionTime_;
-  /**
-   * <pre>
-   *tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
-   * </pre>
-   *
-   * <code>optional int32 serverConnectionTime = 7;</code>
-   */
-  public int getServerConnectionTime() {
-    return serverConnectionTime_;
-  }
-
-  public static final int SERVERRESPONSETIME_FIELD_NUMBER = 8;
-  private int serverResponseTime_;
-  /**
-   * <pre>
-   *srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
-   * </pre>
-   *
-   * <code>optional int32 serverResponseTime = 8;</code>
-   */
-  public int getServerResponseTime() {
-    return serverResponseTime_;
-  }
-
-  public static final int USERTIMINGCATEGORY_FIELD_NUMBER = 9;
-  private volatile java.lang.Object userTimingCategory_;
-  /**
-   * <pre>
-   *utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
-   * </pre>
-   *
-   * <code>optional string userTimingCategory = 9;</code>
-   */
-  public java.lang.String getUserTimingCategory() {
-    java.lang.Object ref = userTimingCategory_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      userTimingCategory_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
-   * </pre>
-   *
-   * <code>optional string userTimingCategory = 9;</code>
-   */
-  public com.google.protobuf.ByteString
-      getUserTimingCategoryBytes() {
-    java.lang.Object ref = userTimingCategory_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      userTimingCategory_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int USERTIMINGLABEL_FIELD_NUMBER = 10;
-  private volatile java.lang.Object userTimingLabel_;
-  /**
-   * <pre>
-   *utl	The name of the resource's action being tracked.
-   * </pre>
-   *
-   * <code>optional string userTimingLabel = 10;</code>
-   */
-  public java.lang.String getUserTimingLabel() {
-    java.lang.Object ref = userTimingLabel_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      userTimingLabel_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *utl	The name of the resource's action being tracked.
-   * </pre>
-   *
-   * <code>optional string userTimingLabel = 10;</code>
-   */
-  public com.google.protobuf.ByteString
-      getUserTimingLabelBytes() {
-    java.lang.Object ref = userTimingLabel_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      userTimingLabel_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int USERTIMINGVALUE_FIELD_NUMBER = 11;
-  private int userTimingValue_;
-  /**
-   * <pre>
-   *utt 	Total number of milliseconds for user timing.
-   * </pre>
-   *
-   * <code>optional int32 userTimingValue = 11;</code>
-   */
-  public int getUserTimingValue() {
-    return userTimingValue_;
-  }
-
-  public static final int USERTIMINGVARIABLE_FIELD_NUMBER = 12;
-  private volatile java.lang.Object userTimingVariable_;
-  /**
-   * <pre>
-   *utv	Variable used to add flexibility to visualize user timings in the reports.
-   * </pre>
-   *
-   * <code>optional string userTimingVariable = 12;</code>
-   */
-  public java.lang.String getUserTimingVariable() {
-    java.lang.Object ref = userTimingVariable_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      userTimingVariable_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *utv	Variable used to add flexibility to visualize user timings in the reports.
-   * </pre>
-   *
-   * <code>optional string userTimingVariable = 12;</code>
-   */
-  public com.google.protobuf.ByteString
-      getUserTimingVariableBytes() {
-    java.lang.Object ref = userTimingVariable_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      userTimingVariable_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  private byte memoizedIsInitialized = -1;
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    if (domainLookupTime_ != 0) {
-      output.writeInt32(1, domainLookupTime_);
-    }
-    if (domContentLoadedTime_ != 0) {
-      output.writeInt32(2, domContentLoadedTime_);
-    }
-    if (domInteractiveTime_ != 0) {
-      output.writeInt32(3, domInteractiveTime_);
-    }
-    if (pageDownloadTime_ != 0) {
-      output.writeInt32(4, pageDownloadTime_);
-    }
-    if (pageLoadTime_ != 0) {
-      output.writeInt32(5, pageLoadTime_);
-    }
-    if (redirectionTime_ != 0) {
-      output.writeInt32(6, redirectionTime_);
-    }
-    if (serverConnectionTime_ != 0) {
-      output.writeInt32(7, serverConnectionTime_);
-    }
-    if (serverResponseTime_ != 0) {
-      output.writeInt32(8, serverResponseTime_);
-    }
-    if (!getUserTimingCategoryBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 9, userTimingCategory_);
-    }
-    if (!getUserTimingLabelBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 10, userTimingLabel_);
-    }
-    if (userTimingValue_ != 0) {
-      output.writeInt32(11, userTimingValue_);
-    }
-    if (!getUserTimingVariableBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 12, userTimingVariable_);
-    }
-  }
-
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (domainLookupTime_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, domainLookupTime_);
-    }
-    if (domContentLoadedTime_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(2, domContentLoadedTime_);
-    }
-    if (domInteractiveTime_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(3, domInteractiveTime_);
-    }
-    if (pageDownloadTime_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(4, pageDownloadTime_);
-    }
-    if (pageLoadTime_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(5, pageLoadTime_);
-    }
-    if (redirectionTime_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(6, redirectionTime_);
-    }
-    if (serverConnectionTime_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(7, serverConnectionTime_);
-    }
-    if (serverResponseTime_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(8, serverResponseTime_);
-    }
-    if (!getUserTimingCategoryBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, userTimingCategory_);
-    }
-    if (!getUserTimingLabelBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, userTimingLabel_);
-    }
-    if (userTimingValue_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(11, userTimingValue_);
-    }
-    if (!getUserTimingVariableBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, userTimingVariable_);
-    }
-    memoizedSize = size;
-    return size;
-  }
-
-  private static final long serialVersionUID = 0L;
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v2.Latency)) {
-      return super.equals(obj);
-    }
-    org.datahem.protobuf.measurementprotocol.v2.Latency other = (org.datahem.protobuf.measurementprotocol.v2.Latency) obj;
-
-    boolean result = true;
-    result = result && (getDomainLookupTime()
-        == other.getDomainLookupTime());
-    result = result && (getDomContentLoadedTime()
-        == other.getDomContentLoadedTime());
-    result = result && (getDomInteractiveTime()
-        == other.getDomInteractiveTime());
-    result = result && (getPageDownloadTime()
-        == other.getPageDownloadTime());
-    result = result && (getPageLoadTime()
-        == other.getPageLoadTime());
-    result = result && (getRedirectionTime()
-        == other.getRedirectionTime());
-    result = result && (getServerConnectionTime()
-        == other.getServerConnectionTime());
-    result = result && (getServerResponseTime()
-        == other.getServerResponseTime());
-    result = result && getUserTimingCategory()
-        .equals(other.getUserTimingCategory());
-    result = result && getUserTimingLabel()
-        .equals(other.getUserTimingLabel());
-    result = result && (getUserTimingValue()
-        == other.getUserTimingValue());
-    result = result && getUserTimingVariable()
-        .equals(other.getUserTimingVariable());
-    return result;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
-    hash = (37 * hash) + DOMAINLOOKUPTIME_FIELD_NUMBER;
-    hash = (53 * hash) + getDomainLookupTime();
-    hash = (37 * hash) + DOMCONTENTLOADEDTIME_FIELD_NUMBER;
-    hash = (53 * hash) + getDomContentLoadedTime();
-    hash = (37 * hash) + DOMINTERACTIVETIME_FIELD_NUMBER;
-    hash = (53 * hash) + getDomInteractiveTime();
-    hash = (37 * hash) + PAGEDOWNLOADTIME_FIELD_NUMBER;
-    hash = (53 * hash) + getPageDownloadTime();
-    hash = (37 * hash) + PAGELOADTIME_FIELD_NUMBER;
-    hash = (53 * hash) + getPageLoadTime();
-    hash = (37 * hash) + REDIRECTIONTIME_FIELD_NUMBER;
-    hash = (53 * hash) + getRedirectionTime();
-    hash = (37 * hash) + SERVERCONNECTIONTIME_FIELD_NUMBER;
-    hash = (53 * hash) + getServerConnectionTime();
-    hash = (37 * hash) + SERVERRESPONSETIME_FIELD_NUMBER;
-    hash = (53 * hash) + getServerResponseTime();
-    hash = (37 * hash) + USERTIMINGCATEGORY_FIELD_NUMBER;
-    hash = (53 * hash) + getUserTimingCategory().hashCode();
-    hash = (37 * hash) + USERTIMINGLABEL_FIELD_NUMBER;
-    hash = (53 * hash) + getUserTimingLabel().hashCode();
-    hash = (37 * hash) + USERTIMINGVALUE_FIELD_NUMBER;
-    hash = (53 * hash) + getUserTimingValue();
-    hash = (37 * hash) + USERTIMINGVARIABLE_FIELD_NUMBER;
-    hash = (53 * hash) + getUserTimingVariable().hashCode();
-    hash = (29 * hash) + unknownFields.hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Latency parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Latency parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v2.Latency prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Latency}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:datahem.protobuf.measurementprotocol.v2.Latency)
-      org.datahem.protobuf.measurementprotocol.v2.LatencyOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Latency_descriptor;
+    getDescriptor() {
+        return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Latency_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Latency_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              org.datahem.protobuf.measurementprotocol.v2.Latency.class, org.datahem.protobuf.measurementprotocol.v2.Latency.Builder.class);
+    internalGetFieldAccessorTable() {
+        return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Latency_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        org.datahem.protobuf.measurementprotocol.v2.Latency.class, org.datahem.protobuf.measurementprotocol.v2.Latency.Builder.class);
     }
 
-    // Construct using org.datahem.protobuf.measurementprotocol.v2.Latency.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
+    public static final int DOMAINLOOKUPTIME_FIELD_NUMBER = 1;
+    private int domainLookupTime_;
 
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
-    }
-    public Builder clear() {
-      super.clear();
-      domainLookupTime_ = 0;
-
-      domContentLoadedTime_ = 0;
-
-      domInteractiveTime_ = 0;
-
-      pageDownloadTime_ = 0;
-
-      pageLoadTime_ = 0;
-
-      redirectionTime_ = 0;
-
-      serverConnectionTime_ = 0;
-
-      serverResponseTime_ = 0;
-
-      userTimingCategory_ = "";
-
-      userTimingLabel_ = "";
-
-      userTimingValue_ = 0;
-
-      userTimingVariable_ = "";
-
-      return this;
-    }
-
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Latency_descriptor;
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Latency getDefaultInstanceForType() {
-      return org.datahem.protobuf.measurementprotocol.v2.Latency.getDefaultInstance();
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Latency build() {
-      org.datahem.protobuf.measurementprotocol.v2.Latency result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    public org.datahem.protobuf.measurementprotocol.v2.Latency buildPartial() {
-      org.datahem.protobuf.measurementprotocol.v2.Latency result = new org.datahem.protobuf.measurementprotocol.v2.Latency(this);
-      result.domainLookupTime_ = domainLookupTime_;
-      result.domContentLoadedTime_ = domContentLoadedTime_;
-      result.domInteractiveTime_ = domInteractiveTime_;
-      result.pageDownloadTime_ = pageDownloadTime_;
-      result.pageLoadTime_ = pageLoadTime_;
-      result.redirectionTime_ = redirectionTime_;
-      result.serverConnectionTime_ = serverConnectionTime_;
-      result.serverResponseTime_ = serverResponseTime_;
-      result.userTimingCategory_ = userTimingCategory_;
-      result.userTimingLabel_ = userTimingLabel_;
-      result.userTimingValue_ = userTimingValue_;
-      result.userTimingVariable_ = userTimingVariable_;
-      onBuilt();
-      return result;
-    }
-
-    public Builder clone() {
-      return (Builder) super.clone();
-    }
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
-      return (Builder) super.setField(field, value);
-    }
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return (Builder) super.clearField(field);
-    }
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return (Builder) super.clearOneof(oneof);
-    }
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
-      return (Builder) super.setRepeatedField(field, index, value);
-    }
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
-      return (Builder) super.addRepeatedField(field, value);
-    }
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof org.datahem.protobuf.measurementprotocol.v2.Latency) {
-        return mergeFrom((org.datahem.protobuf.measurementprotocol.v2.Latency)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Latency other) {
-      if (other == org.datahem.protobuf.measurementprotocol.v2.Latency.getDefaultInstance()) return this;
-      if (other.getDomainLookupTime() != 0) {
-        setDomainLookupTime(other.getDomainLookupTime());
-      }
-      if (other.getDomContentLoadedTime() != 0) {
-        setDomContentLoadedTime(other.getDomContentLoadedTime());
-      }
-      if (other.getDomInteractiveTime() != 0) {
-        setDomInteractiveTime(other.getDomInteractiveTime());
-      }
-      if (other.getPageDownloadTime() != 0) {
-        setPageDownloadTime(other.getPageDownloadTime());
-      }
-      if (other.getPageLoadTime() != 0) {
-        setPageLoadTime(other.getPageLoadTime());
-      }
-      if (other.getRedirectionTime() != 0) {
-        setRedirectionTime(other.getRedirectionTime());
-      }
-      if (other.getServerConnectionTime() != 0) {
-        setServerConnectionTime(other.getServerConnectionTime());
-      }
-      if (other.getServerResponseTime() != 0) {
-        setServerResponseTime(other.getServerResponseTime());
-      }
-      if (!other.getUserTimingCategory().isEmpty()) {
-        userTimingCategory_ = other.userTimingCategory_;
-        onChanged();
-      }
-      if (!other.getUserTimingLabel().isEmpty()) {
-        userTimingLabel_ = other.userTimingLabel_;
-        onChanged();
-      }
-      if (other.getUserTimingValue() != 0) {
-        setUserTimingValue(other.getUserTimingValue());
-      }
-      if (!other.getUserTimingVariable().isEmpty()) {
-        userTimingVariable_ = other.userTimingVariable_;
-        onChanged();
-      }
-      onChanged();
-      return this;
-    }
-
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      org.datahem.protobuf.measurementprotocol.v2.Latency parsedMessage = null;
-      try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (org.datahem.protobuf.measurementprotocol.v2.Latency) e.getUnfinishedMessage();
-        throw e.unwrapIOException();
-      } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
-      return this;
-    }
-
-    private int domainLookupTime_ ;
     /**
      * <pre>
-     *dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
+     * dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
      * </pre>
      *
      * <code>optional int32 domainLookupTime = 1;</code>
      */
     public int getDomainLookupTime() {
-      return domainLookupTime_;
-    }
-    /**
-     * <pre>
-     *dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
-     * </pre>
-     *
-     * <code>optional int32 domainLookupTime = 1;</code>
-     */
-    public Builder setDomainLookupTime(int value) {
-      
-      domainLookupTime_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
-     * </pre>
-     *
-     * <code>optional int32 domainLookupTime = 1;</code>
-     */
-    public Builder clearDomainLookupTime() {
-      
-      domainLookupTime_ = 0;
-      onChanged();
-      return this;
+        return domainLookupTime_;
     }
 
-    private int domContentLoadedTime_ ;
+    public static final int DOMCONTENTLOADEDTIME_FIELD_NUMBER = 2;
+    private int domContentLoadedTime_;
+
     /**
      * <pre>
-     *clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
+     * clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
      * </pre>
      *
      * <code>optional int32 domContentLoadedTime = 2;</code>
      */
     public int getDomContentLoadedTime() {
-      return domContentLoadedTime_;
-    }
-    /**
-     * <pre>
-     *clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
-     * </pre>
-     *
-     * <code>optional int32 domContentLoadedTime = 2;</code>
-     */
-    public Builder setDomContentLoadedTime(int value) {
-      
-      domContentLoadedTime_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
-     * </pre>
-     *
-     * <code>optional int32 domContentLoadedTime = 2;</code>
-     */
-    public Builder clearDomContentLoadedTime() {
-      
-      domContentLoadedTime_ = 0;
-      onChanged();
-      return this;
+        return domContentLoadedTime_;
     }
 
-    private int domInteractiveTime_ ;
+    public static final int DOMINTERACTIVETIME_FIELD_NUMBER = 3;
+    private int domInteractiveTime_;
+
     /**
      * <pre>
-     *dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
+     * dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
      * </pre>
      *
      * <code>optional int32 domInteractiveTime = 3;</code>
      */
     public int getDomInteractiveTime() {
-      return domInteractiveTime_;
-    }
-    /**
-     * <pre>
-     *dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
-     * </pre>
-     *
-     * <code>optional int32 domInteractiveTime = 3;</code>
-     */
-    public Builder setDomInteractiveTime(int value) {
-      
-      domInteractiveTime_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
-     * </pre>
-     *
-     * <code>optional int32 domInteractiveTime = 3;</code>
-     */
-    public Builder clearDomInteractiveTime() {
-      
-      domInteractiveTime_ = 0;
-      onChanged();
-      return this;
+        return domInteractiveTime_;
     }
 
-    private int pageDownloadTime_ ;
+    public static final int PAGEDOWNLOADTIME_FIELD_NUMBER = 4;
+    private int pageDownloadTime_;
+
     /**
      * <pre>
-     *pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
+     * pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
      * </pre>
      *
      * <code>optional int32 pageDownloadTime = 4;</code>
      */
     public int getPageDownloadTime() {
-      return pageDownloadTime_;
-    }
-    /**
-     * <pre>
-     *pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
-     * </pre>
-     *
-     * <code>optional int32 pageDownloadTime = 4;</code>
-     */
-    public Builder setPageDownloadTime(int value) {
-      
-      pageDownloadTime_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
-     * </pre>
-     *
-     * <code>optional int32 pageDownloadTime = 4;</code>
-     */
-    public Builder clearPageDownloadTime() {
-      
-      pageDownloadTime_ = 0;
-      onChanged();
-      return this;
+        return pageDownloadTime_;
     }
 
-    private int pageLoadTime_ ;
+    public static final int PAGELOADTIME_FIELD_NUMBER = 5;
+    private int pageLoadTime_;
+
     /**
      * <pre>
-     *plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
+     * plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
      * </pre>
      *
      * <code>optional int32 pageLoadTime = 5;</code>
      */
     public int getPageLoadTime() {
-      return pageLoadTime_;
-    }
-    /**
-     * <pre>
-     *plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
-     * </pre>
-     *
-     * <code>optional int32 pageLoadTime = 5;</code>
-     */
-    public Builder setPageLoadTime(int value) {
-      
-      pageLoadTime_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
-     * </pre>
-     *
-     * <code>optional int32 pageLoadTime = 5;</code>
-     */
-    public Builder clearPageLoadTime() {
-      
-      pageLoadTime_ = 0;
-      onChanged();
-      return this;
+        return pageLoadTime_;
     }
 
-    private int redirectionTime_ ;
+    public static final int REDIRECTIONTIME_FIELD_NUMBER = 6;
+    private int redirectionTime_;
+
     /**
      * <pre>
-     *rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
+     * rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
      * </pre>
      *
      * <code>optional int32 redirectionTime = 6;</code>
      */
     public int getRedirectionTime() {
-      return redirectionTime_;
-    }
-    /**
-     * <pre>
-     *rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
-     * </pre>
-     *
-     * <code>optional int32 redirectionTime = 6;</code>
-     */
-    public Builder setRedirectionTime(int value) {
-      
-      redirectionTime_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
-     * </pre>
-     *
-     * <code>optional int32 redirectionTime = 6;</code>
-     */
-    public Builder clearRedirectionTime() {
-      
-      redirectionTime_ = 0;
-      onChanged();
-      return this;
+        return redirectionTime_;
     }
 
-    private int serverConnectionTime_ ;
+    public static final int SERVERCONNECTIONTIME_FIELD_NUMBER = 7;
+    private int serverConnectionTime_;
+
     /**
      * <pre>
-     *tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
+     * tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
      * </pre>
      *
      * <code>optional int32 serverConnectionTime = 7;</code>
      */
     public int getServerConnectionTime() {
-      return serverConnectionTime_;
-    }
-    /**
-     * <pre>
-     *tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
-     * </pre>
-     *
-     * <code>optional int32 serverConnectionTime = 7;</code>
-     */
-    public Builder setServerConnectionTime(int value) {
-      
-      serverConnectionTime_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
-     * </pre>
-     *
-     * <code>optional int32 serverConnectionTime = 7;</code>
-     */
-    public Builder clearServerConnectionTime() {
-      
-      serverConnectionTime_ = 0;
-      onChanged();
-      return this;
+        return serverConnectionTime_;
     }
 
-    private int serverResponseTime_ ;
+    public static final int SERVERRESPONSETIME_FIELD_NUMBER = 8;
+    private int serverResponseTime_;
+
     /**
      * <pre>
-     *srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
+     * srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
      * </pre>
      *
      * <code>optional int32 serverResponseTime = 8;</code>
      */
     public int getServerResponseTime() {
-      return serverResponseTime_;
-    }
-    /**
-     * <pre>
-     *srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
-     * </pre>
-     *
-     * <code>optional int32 serverResponseTime = 8;</code>
-     */
-    public Builder setServerResponseTime(int value) {
-      
-      serverResponseTime_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
-     * </pre>
-     *
-     * <code>optional int32 serverResponseTime = 8;</code>
-     */
-    public Builder clearServerResponseTime() {
-      
-      serverResponseTime_ = 0;
-      onChanged();
-      return this;
+        return serverResponseTime_;
     }
 
-    private java.lang.Object userTimingCategory_ = "";
+    public static final int USERTIMINGCATEGORY_FIELD_NUMBER = 9;
+    private volatile java.lang.Object userTimingCategory_;
+
     /**
      * <pre>
-     *utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
+     * utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
      * </pre>
      *
      * <code>optional string userTimingCategory = 9;</code>
      */
     public java.lang.String getUserTimingCategory() {
-      java.lang.Object ref = userTimingCategory_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        userTimingCategory_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = userTimingCategory_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            userTimingCategory_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
+     * utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
      * </pre>
      *
      * <code>optional string userTimingCategory = 9;</code>
      */
     public com.google.protobuf.ByteString
-        getUserTimingCategoryBytes() {
-      java.lang.Object ref = userTimingCategory_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        userTimingCategory_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
-     * </pre>
-     *
-     * <code>optional string userTimingCategory = 9;</code>
-     */
-    public Builder setUserTimingCategory(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      userTimingCategory_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
-     * </pre>
-     *
-     * <code>optional string userTimingCategory = 9;</code>
-     */
-    public Builder clearUserTimingCategory() {
-      
-      userTimingCategory_ = getDefaultInstance().getUserTimingCategory();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
-     * </pre>
-     *
-     * <code>optional string userTimingCategory = 9;</code>
-     */
-    public Builder setUserTimingCategoryBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      userTimingCategory_ = value;
-      onChanged();
-      return this;
+    getUserTimingCategoryBytes() {
+        java.lang.Object ref = userTimingCategory_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            userTimingCategory_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object userTimingLabel_ = "";
+    public static final int USERTIMINGLABEL_FIELD_NUMBER = 10;
+    private volatile java.lang.Object userTimingLabel_;
+
     /**
      * <pre>
-     *utl	The name of the resource's action being tracked.
+     * utl	The name of the resource's action being tracked.
      * </pre>
      *
      * <code>optional string userTimingLabel = 10;</code>
      */
     public java.lang.String getUserTimingLabel() {
-      java.lang.Object ref = userTimingLabel_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        userTimingLabel_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = userTimingLabel_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            userTimingLabel_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *utl	The name of the resource's action being tracked.
+     * utl	The name of the resource's action being tracked.
      * </pre>
      *
      * <code>optional string userTimingLabel = 10;</code>
      */
     public com.google.protobuf.ByteString
-        getUserTimingLabelBytes() {
-      java.lang.Object ref = userTimingLabel_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        userTimingLabel_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *utl	The name of the resource's action being tracked.
-     * </pre>
-     *
-     * <code>optional string userTimingLabel = 10;</code>
-     */
-    public Builder setUserTimingLabel(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      userTimingLabel_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *utl	The name of the resource's action being tracked.
-     * </pre>
-     *
-     * <code>optional string userTimingLabel = 10;</code>
-     */
-    public Builder clearUserTimingLabel() {
-      
-      userTimingLabel_ = getDefaultInstance().getUserTimingLabel();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *utl	The name of the resource's action being tracked.
-     * </pre>
-     *
-     * <code>optional string userTimingLabel = 10;</code>
-     */
-    public Builder setUserTimingLabelBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      userTimingLabel_ = value;
-      onChanged();
-      return this;
+    getUserTimingLabelBytes() {
+        java.lang.Object ref = userTimingLabel_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            userTimingLabel_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private int userTimingValue_ ;
+    public static final int USERTIMINGVALUE_FIELD_NUMBER = 11;
+    private int userTimingValue_;
+
     /**
      * <pre>
-     *utt 	Total number of milliseconds for user timing.
+     * utt 	Total number of milliseconds for user timing.
      * </pre>
      *
      * <code>optional int32 userTimingValue = 11;</code>
      */
     public int getUserTimingValue() {
-      return userTimingValue_;
-    }
-    /**
-     * <pre>
-     *utt 	Total number of milliseconds for user timing.
-     * </pre>
-     *
-     * <code>optional int32 userTimingValue = 11;</code>
-     */
-    public Builder setUserTimingValue(int value) {
-      
-      userTimingValue_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *utt 	Total number of milliseconds for user timing.
-     * </pre>
-     *
-     * <code>optional int32 userTimingValue = 11;</code>
-     */
-    public Builder clearUserTimingValue() {
-      
-      userTimingValue_ = 0;
-      onChanged();
-      return this;
+        return userTimingValue_;
     }
 
-    private java.lang.Object userTimingVariable_ = "";
+    public static final int USERTIMINGVARIABLE_FIELD_NUMBER = 12;
+    private volatile java.lang.Object userTimingVariable_;
+
     /**
      * <pre>
-     *utv	Variable used to add flexibility to visualize user timings in the reports.
+     * utv	Variable used to add flexibility to visualize user timings in the reports.
      * </pre>
      *
      * <code>optional string userTimingVariable = 12;</code>
      */
     public java.lang.String getUserTimingVariable() {
-      java.lang.Object ref = userTimingVariable_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        userTimingVariable_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = userTimingVariable_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            userTimingVariable_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
-     *utv	Variable used to add flexibility to visualize user timings in the reports.
+     * utv	Variable used to add flexibility to visualize user timings in the reports.
      * </pre>
      *
      * <code>optional string userTimingVariable = 12;</code>
      */
     public com.google.protobuf.ByteString
+    getUserTimingVariableBytes() {
+        java.lang.Object ref = userTimingVariable_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            userTimingVariable_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
+    private byte memoizedIsInitialized = -1;
+
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+        if (domainLookupTime_ != 0) {
+            output.writeInt32(1, domainLookupTime_);
+        }
+        if (domContentLoadedTime_ != 0) {
+            output.writeInt32(2, domContentLoadedTime_);
+        }
+        if (domInteractiveTime_ != 0) {
+            output.writeInt32(3, domInteractiveTime_);
+        }
+        if (pageDownloadTime_ != 0) {
+            output.writeInt32(4, pageDownloadTime_);
+        }
+        if (pageLoadTime_ != 0) {
+            output.writeInt32(5, pageLoadTime_);
+        }
+        if (redirectionTime_ != 0) {
+            output.writeInt32(6, redirectionTime_);
+        }
+        if (serverConnectionTime_ != 0) {
+            output.writeInt32(7, serverConnectionTime_);
+        }
+        if (serverResponseTime_ != 0) {
+            output.writeInt32(8, serverResponseTime_);
+        }
+        if (!getUserTimingCategoryBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 9, userTimingCategory_);
+        }
+        if (!getUserTimingLabelBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 10, userTimingLabel_);
+        }
+        if (userTimingValue_ != 0) {
+            output.writeInt32(11, userTimingValue_);
+        }
+        if (!getUserTimingVariableBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 12, userTimingVariable_);
+        }
+    }
+
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (domainLookupTime_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(1, domainLookupTime_);
+        }
+        if (domContentLoadedTime_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(2, domContentLoadedTime_);
+        }
+        if (domInteractiveTime_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(3, domInteractiveTime_);
+        }
+        if (pageDownloadTime_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(4, pageDownloadTime_);
+        }
+        if (pageLoadTime_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(5, pageLoadTime_);
+        }
+        if (redirectionTime_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(6, redirectionTime_);
+        }
+        if (serverConnectionTime_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(7, serverConnectionTime_);
+        }
+        if (serverResponseTime_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(8, serverResponseTime_);
+        }
+        if (!getUserTimingCategoryBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, userTimingCategory_);
+        }
+        if (!getUserTimingLabelBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, userTimingLabel_);
+        }
+        if (userTimingValue_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(11, userTimingValue_);
+        }
+        if (!getUserTimingVariableBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, userTimingVariable_);
+        }
+        memoizedSize = size;
+        return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof org.datahem.protobuf.measurementprotocol.v2.Latency)) {
+            return super.equals(obj);
+        }
+        org.datahem.protobuf.measurementprotocol.v2.Latency other = (org.datahem.protobuf.measurementprotocol.v2.Latency) obj;
+
+        boolean result = true;
+        result = result && (getDomainLookupTime()
+                == other.getDomainLookupTime());
+        result = result && (getDomContentLoadedTime()
+                == other.getDomContentLoadedTime());
+        result = result && (getDomInteractiveTime()
+                == other.getDomInteractiveTime());
+        result = result && (getPageDownloadTime()
+                == other.getPageDownloadTime());
+        result = result && (getPageLoadTime()
+                == other.getPageLoadTime());
+        result = result && (getRedirectionTime()
+                == other.getRedirectionTime());
+        result = result && (getServerConnectionTime()
+                == other.getServerConnectionTime());
+        result = result && (getServerResponseTime()
+                == other.getServerResponseTime());
+        result = result && getUserTimingCategory()
+                .equals(other.getUserTimingCategory());
+        result = result && getUserTimingLabel()
+                .equals(other.getUserTimingLabel());
+        result = result && (getUserTimingValue()
+                == other.getUserTimingValue());
+        result = result && getUserTimingVariable()
+                .equals(other.getUserTimingVariable());
+        return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptorForType().hashCode();
+        hash = (37 * hash) + DOMAINLOOKUPTIME_FIELD_NUMBER;
+        hash = (53 * hash) + getDomainLookupTime();
+        hash = (37 * hash) + DOMCONTENTLOADEDTIME_FIELD_NUMBER;
+        hash = (53 * hash) + getDomContentLoadedTime();
+        hash = (37 * hash) + DOMINTERACTIVETIME_FIELD_NUMBER;
+        hash = (53 * hash) + getDomInteractiveTime();
+        hash = (37 * hash) + PAGEDOWNLOADTIME_FIELD_NUMBER;
+        hash = (53 * hash) + getPageDownloadTime();
+        hash = (37 * hash) + PAGELOADTIME_FIELD_NUMBER;
+        hash = (53 * hash) + getPageLoadTime();
+        hash = (37 * hash) + REDIRECTIONTIME_FIELD_NUMBER;
+        hash = (53 * hash) + getRedirectionTime();
+        hash = (37 * hash) + SERVERCONNECTIONTIME_FIELD_NUMBER;
+        hash = (53 * hash) + getServerConnectionTime();
+        hash = (37 * hash) + SERVERRESPONSETIME_FIELD_NUMBER;
+        hash = (53 * hash) + getServerResponseTime();
+        hash = (37 * hash) + USERTIMINGCATEGORY_FIELD_NUMBER;
+        hash = (53 * hash) + getUserTimingCategory().hashCode();
+        hash = (37 * hash) + USERTIMINGLABEL_FIELD_NUMBER;
+        hash = (53 * hash) + getUserTimingLabel().hashCode();
+        hash = (37 * hash) + USERTIMINGVALUE_FIELD_NUMBER;
+        hash = (53 * hash) + getUserTimingValue();
+        hash = (37 * hash) + USERTIMINGVARIABLE_FIELD_NUMBER;
+        hash = (53 * hash) + getUserTimingVariable().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Latency parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Latency parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static org.datahem.protobuf.measurementprotocol.v2.Latency parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(org.datahem.protobuf.measurementprotocol.v2.Latency prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+                ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
+    /**
+     * Protobuf type {@code datahem.protobuf.measurementprotocol.v2.Latency}
+     */
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:datahem.protobuf.measurementprotocol.v2.Latency)
+            org.datahem.protobuf.measurementprotocol.v2.LatencyOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Latency_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Latency_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            org.datahem.protobuf.measurementprotocol.v2.Latency.class, org.datahem.protobuf.measurementprotocol.v2.Latency.Builder.class);
+        }
+
+        // Construct using org.datahem.protobuf.measurementprotocol.v2.Latency.newBuilder()
+        private Builder() {
+            maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            super(parent);
+            maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+            if (com.google.protobuf.GeneratedMessageV3
+                    .alwaysUseFieldBuilders) {
+            }
+        }
+
+        public Builder clear() {
+            super.clear();
+            domainLookupTime_ = 0;
+
+            domContentLoadedTime_ = 0;
+
+            domInteractiveTime_ = 0;
+
+            pageDownloadTime_ = 0;
+
+            pageLoadTime_ = 0;
+
+            redirectionTime_ = 0;
+
+            serverConnectionTime_ = 0;
+
+            serverResponseTime_ = 0;
+
+            userTimingCategory_ = "";
+
+            userTimingLabel_ = "";
+
+            userTimingValue_ = 0;
+
+            userTimingVariable_ = "";
+
+            return this;
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+            return org.datahem.protobuf.measurementprotocol.v2.MeasurementProtocolOuterClass.internal_static_datahem_protobuf_measurementprotocol_v2_Latency_descriptor;
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Latency getDefaultInstanceForType() {
+            return org.datahem.protobuf.measurementprotocol.v2.Latency.getDefaultInstance();
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Latency build() {
+            org.datahem.protobuf.measurementprotocol.v2.Latency result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        public org.datahem.protobuf.measurementprotocol.v2.Latency buildPartial() {
+            org.datahem.protobuf.measurementprotocol.v2.Latency result = new org.datahem.protobuf.measurementprotocol.v2.Latency(this);
+            result.domainLookupTime_ = domainLookupTime_;
+            result.domContentLoadedTime_ = domContentLoadedTime_;
+            result.domInteractiveTime_ = domInteractiveTime_;
+            result.pageDownloadTime_ = pageDownloadTime_;
+            result.pageLoadTime_ = pageLoadTime_;
+            result.redirectionTime_ = redirectionTime_;
+            result.serverConnectionTime_ = serverConnectionTime_;
+            result.serverResponseTime_ = serverResponseTime_;
+            result.userTimingCategory_ = userTimingCategory_;
+            result.userTimingLabel_ = userTimingLabel_;
+            result.userTimingValue_ = userTimingValue_;
+            result.userTimingVariable_ = userTimingVariable_;
+            onBuilt();
+            return result;
+        }
+
+        public Builder clone() {
+            return (Builder) super.clone();
+        }
+
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                Object value) {
+            return (Builder) super.setField(field, value);
+        }
+
+        public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return (Builder) super.clearField(field);
+        }
+
+        public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return (Builder) super.clearOneof(oneof);
+        }
+
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index, Object value) {
+            return (Builder) super.setRepeatedField(field, index, value);
+        }
+
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                Object value) {
+            return (Builder) super.addRepeatedField(field, value);
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof org.datahem.protobuf.measurementprotocol.v2.Latency) {
+                return mergeFrom((org.datahem.protobuf.measurementprotocol.v2.Latency) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(org.datahem.protobuf.measurementprotocol.v2.Latency other) {
+            if (other == org.datahem.protobuf.measurementprotocol.v2.Latency.getDefaultInstance()) return this;
+            if (other.getDomainLookupTime() != 0) {
+                setDomainLookupTime(other.getDomainLookupTime());
+            }
+            if (other.getDomContentLoadedTime() != 0) {
+                setDomContentLoadedTime(other.getDomContentLoadedTime());
+            }
+            if (other.getDomInteractiveTime() != 0) {
+                setDomInteractiveTime(other.getDomInteractiveTime());
+            }
+            if (other.getPageDownloadTime() != 0) {
+                setPageDownloadTime(other.getPageDownloadTime());
+            }
+            if (other.getPageLoadTime() != 0) {
+                setPageLoadTime(other.getPageLoadTime());
+            }
+            if (other.getRedirectionTime() != 0) {
+                setRedirectionTime(other.getRedirectionTime());
+            }
+            if (other.getServerConnectionTime() != 0) {
+                setServerConnectionTime(other.getServerConnectionTime());
+            }
+            if (other.getServerResponseTime() != 0) {
+                setServerResponseTime(other.getServerResponseTime());
+            }
+            if (!other.getUserTimingCategory().isEmpty()) {
+                userTimingCategory_ = other.userTimingCategory_;
+                onChanged();
+            }
+            if (!other.getUserTimingLabel().isEmpty()) {
+                userTimingLabel_ = other.userTimingLabel_;
+                onChanged();
+            }
+            if (other.getUserTimingValue() != 0) {
+                setUserTimingValue(other.getUserTimingValue());
+            }
+            if (!other.getUserTimingVariable().isEmpty()) {
+                userTimingVariable_ = other.userTimingVariable_;
+                onChanged();
+            }
+            onChanged();
+            return this;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            org.datahem.protobuf.measurementprotocol.v2.Latency parsedMessage = null;
+            try {
+                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                parsedMessage = (org.datahem.protobuf.measurementprotocol.v2.Latency) e.getUnfinishedMessage();
+                throw e.unwrapIOException();
+            } finally {
+                if (parsedMessage != null) {
+                    mergeFrom(parsedMessage);
+                }
+            }
+            return this;
+        }
+
+        private int domainLookupTime_;
+
+        /**
+         * <pre>
+         * dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
+         * </pre>
+         *
+         * <code>optional int32 domainLookupTime = 1;</code>
+         */
+        public int getDomainLookupTime() {
+            return domainLookupTime_;
+        }
+
+        /**
+         * <pre>
+         * dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
+         * </pre>
+         *
+         * <code>optional int32 domainLookupTime = 1;</code>
+         */
+        public Builder setDomainLookupTime(int value) {
+
+            domainLookupTime_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * dns	The total time (in milliseconds) all samples spent in DNS lookup for this page.
+         * </pre>
+         *
+         * <code>optional int32 domainLookupTime = 1;</code>
+         */
+        public Builder clearDomainLookupTime() {
+
+            domainLookupTime_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int domContentLoadedTime_;
+
+        /**
+         * <pre>
+         * clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
+         * </pre>
+         *
+         * <code>optional int32 domContentLoadedTime = 2;</code>
+         */
+        public int getDomContentLoadedTime() {
+            return domContentLoadedTime_;
+        }
+
+        /**
+         * <pre>
+         * clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
+         * </pre>
+         *
+         * <code>optional int32 domContentLoadedTime = 2;</code>
+         */
+        public Builder setDomContentLoadedTime(int value) {
+
+            domContentLoadedTime_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * clt	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document and execute deferred and parser-inserted scripts (DOMContentLoaded).
+         * </pre>
+         *
+         * <code>optional int32 domContentLoadedTime = 2;</code>
+         */
+        public Builder clearDomContentLoadedTime() {
+
+            domContentLoadedTime_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int domInteractiveTime_;
+
+        /**
+         * <pre>
+         * dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
+         * </pre>
+         *
+         * <code>optional int32 domInteractiveTime = 3;</code>
+         */
+        public int getDomInteractiveTime() {
+            return domInteractiveTime_;
+        }
+
+        /**
+         * <pre>
+         * dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
+         * </pre>
+         *
+         * <code>optional int32 domInteractiveTime = 3;</code>
+         */
+        public Builder setDomInteractiveTime(int value) {
+
+            domInteractiveTime_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * dit	The time (in milliseconds), including the network time from users' locations to the site's server, the browser takes to parse the document (DOMInteractive).
+         * </pre>
+         *
+         * <code>optional int32 domInteractiveTime = 3;</code>
+         */
+        public Builder clearDomInteractiveTime() {
+
+            domInteractiveTime_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int pageDownloadTime_;
+
+        /**
+         * <pre>
+         * pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
+         * </pre>
+         *
+         * <code>optional int32 pageDownloadTime = 4;</code>
+         */
+        public int getPageDownloadTime() {
+            return pageDownloadTime_;
+        }
+
+        /**
+         * <pre>
+         * pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
+         * </pre>
+         *
+         * <code>optional int32 pageDownloadTime = 4;</code>
+         */
+        public Builder setPageDownloadTime(int value) {
+
+            pageDownloadTime_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * pdt	INTEGER	The total time (in milliseconds) to download this page among all samples.
+         * </pre>
+         *
+         * <code>optional int32 pageDownloadTime = 4;</code>
+         */
+        public Builder clearPageDownloadTime() {
+
+            pageDownloadTime_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int pageLoadTime_;
+
+        /**
+         * <pre>
+         * plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
+         * </pre>
+         *
+         * <code>optional int32 pageLoadTime = 5;</code>
+         */
+        public int getPageLoadTime() {
+            return pageLoadTime_;
+        }
+
+        /**
+         * <pre>
+         * plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
+         * </pre>
+         *
+         * <code>optional int32 pageLoadTime = 5;</code>
+         */
+        public Builder setPageLoadTime(int value) {
+
+            pageLoadTime_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * plt	Total time (in milliseconds), from pageview initiation (e.g., a click on a page link) to page load completion in the browser, the pages in the sample set take to load.
+         * </pre>
+         *
+         * <code>optional int32 pageLoadTime = 5;</code>
+         */
+        public Builder clearPageLoadTime() {
+
+            pageLoadTime_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int redirectionTime_;
+
+        /**
+         * <pre>
+         * rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
+         * </pre>
+         *
+         * <code>optional int32 redirectionTime = 6;</code>
+         */
+        public int getRedirectionTime() {
+            return redirectionTime_;
+        }
+
+        /**
+         * <pre>
+         * rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
+         * </pre>
+         *
+         * <code>optional int32 redirectionTime = 6;</code>
+         */
+        public Builder setRedirectionTime(int value) {
+
+            redirectionTime_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * rrt	The total time (in milliseconds) all samples spent in redirects before fetching this page. If there are no redirects, this is 0.
+         * </pre>
+         *
+         * <code>optional int32 redirectionTime = 6;</code>
+         */
+        public Builder clearRedirectionTime() {
+
+            redirectionTime_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int serverConnectionTime_;
+
+        /**
+         * <pre>
+         * tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
+         * </pre>
+         *
+         * <code>optional int32 serverConnectionTime = 7;</code>
+         */
+        public int getServerConnectionTime() {
+            return serverConnectionTime_;
+        }
+
+        /**
+         * <pre>
+         * tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
+         * </pre>
+         *
+         * <code>optional int32 serverConnectionTime = 7;</code>
+         */
+        public Builder setServerConnectionTime(int value) {
+
+            serverConnectionTime_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * tcp	Total time (in milliseconds) all samples spent in establishing a TCP connection to this page.
+         * </pre>
+         *
+         * <code>optional int32 serverConnectionTime = 7;</code>
+         */
+        public Builder clearServerConnectionTime() {
+
+            serverConnectionTime_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int serverResponseTime_;
+
+        /**
+         * <pre>
+         * srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
+         * </pre>
+         *
+         * <code>optional int32 serverResponseTime = 8;</code>
+         */
+        public int getServerResponseTime() {
+            return serverResponseTime_;
+        }
+
+        /**
+         * <pre>
+         * srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
+         * </pre>
+         *
+         * <code>optional int32 serverResponseTime = 8;</code>
+         */
+        public Builder setServerResponseTime(int value) {
+
+            serverResponseTime_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * srt	The total time (in milliseconds) the site's server takes to respond to users' requests among all samples; this includes the network time from users' locations to the server.
+         * </pre>
+         *
+         * <code>optional int32 serverResponseTime = 8;</code>
+         */
+        public Builder clearServerResponseTime() {
+
+            serverResponseTime_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object userTimingCategory_ = "";
+
+        /**
+         * <pre>
+         * utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
+         * </pre>
+         *
+         * <code>optional string userTimingCategory = 9;</code>
+         */
+        public java.lang.String getUserTimingCategory() {
+            java.lang.Object ref = userTimingCategory_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                userTimingCategory_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
+         * </pre>
+         *
+         * <code>optional string userTimingCategory = 9;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUserTimingCategoryBytes() {
+            java.lang.Object ref = userTimingCategory_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                userTimingCategory_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
+         * </pre>
+         *
+         * <code>optional string userTimingCategory = 9;</code>
+         */
+        public Builder setUserTimingCategory(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            userTimingCategory_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
+         * </pre>
+         *
+         * <code>optional string userTimingCategory = 9;</code>
+         */
+        public Builder clearUserTimingCategory() {
+
+            userTimingCategory_ = getDefaultInstance().getUserTimingCategory();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * utc	For easier reporting purposes, this is used to categorize all user timing variables into logical groups.
+         * </pre>
+         *
+         * <code>optional string userTimingCategory = 9;</code>
+         */
+        public Builder setUserTimingCategoryBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            userTimingCategory_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object userTimingLabel_ = "";
+
+        /**
+         * <pre>
+         * utl	The name of the resource's action being tracked.
+         * </pre>
+         *
+         * <code>optional string userTimingLabel = 10;</code>
+         */
+        public java.lang.String getUserTimingLabel() {
+            java.lang.Object ref = userTimingLabel_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                userTimingLabel_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * utl	The name of the resource's action being tracked.
+         * </pre>
+         *
+         * <code>optional string userTimingLabel = 10;</code>
+         */
+        public com.google.protobuf.ByteString
+        getUserTimingLabelBytes() {
+            java.lang.Object ref = userTimingLabel_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                userTimingLabel_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * utl	The name of the resource's action being tracked.
+         * </pre>
+         *
+         * <code>optional string userTimingLabel = 10;</code>
+         */
+        public Builder setUserTimingLabel(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            userTimingLabel_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * utl	The name of the resource's action being tracked.
+         * </pre>
+         *
+         * <code>optional string userTimingLabel = 10;</code>
+         */
+        public Builder clearUserTimingLabel() {
+
+            userTimingLabel_ = getDefaultInstance().getUserTimingLabel();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * utl	The name of the resource's action being tracked.
+         * </pre>
+         *
+         * <code>optional string userTimingLabel = 10;</code>
+         */
+        public Builder setUserTimingLabelBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            userTimingLabel_ = value;
+            onChanged();
+            return this;
+        }
+
+        private int userTimingValue_;
+
+        /**
+         * <pre>
+         * utt 	Total number of milliseconds for user timing.
+         * </pre>
+         *
+         * <code>optional int32 userTimingValue = 11;</code>
+         */
+        public int getUserTimingValue() {
+            return userTimingValue_;
+        }
+
+        /**
+         * <pre>
+         * utt 	Total number of milliseconds for user timing.
+         * </pre>
+         *
+         * <code>optional int32 userTimingValue = 11;</code>
+         */
+        public Builder setUserTimingValue(int value) {
+
+            userTimingValue_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * utt 	Total number of milliseconds for user timing.
+         * </pre>
+         *
+         * <code>optional int32 userTimingValue = 11;</code>
+         */
+        public Builder clearUserTimingValue() {
+
+            userTimingValue_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object userTimingVariable_ = "";
+
+        /**
+         * <pre>
+         * utv	Variable used to add flexibility to visualize user timings in the reports.
+         * </pre>
+         *
+         * <code>optional string userTimingVariable = 12;</code>
+         */
+        public java.lang.String getUserTimingVariable() {
+            java.lang.Object ref = userTimingVariable_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                userTimingVariable_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * utv	Variable used to add flexibility to visualize user timings in the reports.
+         * </pre>
+         *
+         * <code>optional string userTimingVariable = 12;</code>
+         */
+        public com.google.protobuf.ByteString
         getUserTimingVariableBytes() {
-      java.lang.Object ref = userTimingVariable_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        userTimingVariable_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+            java.lang.Object ref = userTimingVariable_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                userTimingVariable_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * utv	Variable used to add flexibility to visualize user timings in the reports.
+         * </pre>
+         *
+         * <code>optional string userTimingVariable = 12;</code>
+         */
+        public Builder setUserTimingVariable(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            userTimingVariable_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * utv	Variable used to add flexibility to visualize user timings in the reports.
+         * </pre>
+         *
+         * <code>optional string userTimingVariable = 12;</code>
+         */
+        public Builder clearUserTimingVariable() {
+
+            userTimingVariable_ = getDefaultInstance().getUserTimingVariable();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * utv	Variable used to add flexibility to visualize user timings in the reports.
+         * </pre>
+         *
+         * <code>optional string userTimingVariable = 12;</code>
+         */
+        public Builder setUserTimingVariableBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            userTimingVariable_ = value;
+            onChanged();
+            return this;
+        }
+
+        public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return this;
+        }
+
+        public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return this;
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:datahem.protobuf.measurementprotocol.v2.Latency)
     }
-    /**
-     * <pre>
-     *utv	Variable used to add flexibility to visualize user timings in the reports.
-     * </pre>
-     *
-     * <code>optional string userTimingVariable = 12;</code>
-     */
-    public Builder setUserTimingVariable(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      userTimingVariable_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *utv	Variable used to add flexibility to visualize user timings in the reports.
-     * </pre>
-     *
-     * <code>optional string userTimingVariable = 12;</code>
-     */
-    public Builder clearUserTimingVariable() {
-      
-      userTimingVariable_ = getDefaultInstance().getUserTimingVariable();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *utv	Variable used to add flexibility to visualize user timings in the reports.
-     * </pre>
-     *
-     * <code>optional string userTimingVariable = 12;</code>
-     */
-    public Builder setUserTimingVariableBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      userTimingVariable_ = value;
-      onChanged();
-      return this;
-    }
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+
+    // @@protoc_insertion_point(class_scope:datahem.protobuf.measurementprotocol.v2.Latency)
+    private static final org.datahem.protobuf.measurementprotocol.v2.Latency DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v2.Latency();
     }
 
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+    public static org.datahem.protobuf.measurementprotocol.v2.Latency getDefaultInstance() {
+        return DEFAULT_INSTANCE;
     }
 
+    private static final com.google.protobuf.Parser<Latency>
+            PARSER = new com.google.protobuf.AbstractParser<Latency>() {
+        public Latency parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return new Latency(input, extensionRegistry);
+        }
+    };
 
-    // @@protoc_insertion_point(builder_scope:datahem.protobuf.measurementprotocol.v2.Latency)
-  }
-
-  // @@protoc_insertion_point(class_scope:datahem.protobuf.measurementprotocol.v2.Latency)
-  private static final org.datahem.protobuf.measurementprotocol.v2.Latency DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new org.datahem.protobuf.measurementprotocol.v2.Latency();
-  }
-
-  public static org.datahem.protobuf.measurementprotocol.v2.Latency getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<Latency>
-      PARSER = new com.google.protobuf.AbstractParser<Latency>() {
-    public Latency parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Latency(input, extensionRegistry);
+    public static com.google.protobuf.Parser<Latency> parser() {
+        return PARSER;
     }
-  };
 
-  public static com.google.protobuf.Parser<Latency> parser() {
-    return PARSER;
-  }
+    @java.lang.Override
+    public com.google.protobuf.Parser<Latency> getParserForType() {
+        return PARSER;
+    }
 
-  @java.lang.Override
-  public com.google.protobuf.Parser<Latency> getParserForType() {
-    return PARSER;
-  }
-
-  public org.datahem.protobuf.measurementprotocol.v2.Latency getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
+    public org.datahem.protobuf.measurementprotocol.v2.Latency getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+    }
 
 }
 

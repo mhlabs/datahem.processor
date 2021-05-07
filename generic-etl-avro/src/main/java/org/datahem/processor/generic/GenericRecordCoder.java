@@ -1,26 +1,25 @@
 package org.datahem.processor.generic;
 
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericData.Record;
+import org.apache.avro.message.BinaryMessageEncoder;
+import org.apache.avro.message.MessageEncoder;
+import org.apache.beam.sdk.coders.Coder;
+import org.apache.beam.sdk.coders.CoderException;
+import org.apache.beam.sdk.coders.CustomCoder;
+import org.datahem.avro.message.DatastoreCache;
+import org.datahem.avro.message.DynamicBinaryMessageDecoder;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
-import org.apache.avro.Schema;
-import org.apache.beam.sdk.coders.Coder;
-
-import org.apache.beam.sdk.coders.CustomCoder;
-//import org.apache.avro.message.BinaryMessageDecoder;
-import org.datahem.avro.message.DynamicBinaryMessageDecoder;
-//import org.apache.avro.message.MessageDecoder;
-import org.apache.avro.message.BinaryMessageEncoder;
-import org.apache.avro.message.MessageEncoder;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.GenericData.Record;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.beam.sdk.coders.CoderException;
-import java.util.List;
 import java.util.Collections;
-import java.io.ByteArrayOutputStream;
-import org.datahem.avro.message.DatastoreCache;
+import java.util.List;
+
+//import org.apache.avro.message.BinaryMessageDecoder;
+//import org.apache.avro.message.MessageDecoder;
 
 /*-
  * ========================LICENSE_START=================================
@@ -34,10 +33,10 @@ import org.datahem.avro.message.DatastoreCache;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,45 +48,46 @@ import org.datahem.avro.message.DatastoreCache;
  */
 public class GenericRecordCoder extends CustomCoder<Record> {
 
-	@Override
-	public void encode(Record record, OutputStream outStream) throws IOException {
-		MessageEncoder<Record> encoder = new BinaryMessageEncoder<>(GenericData.get(), record.getSchema());
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		encoder.encode(record, output);
-		output.flush();
-		output.writeTo(outStream);
-	}
+    @Override
+    public void encode(Record record, OutputStream outStream) throws IOException {
+        MessageEncoder<Record> encoder = new BinaryMessageEncoder<>(GenericData.get(), record.getSchema());
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        encoder.encode(record, output);
+        output.flush();
+        output.writeTo(outStream);
+    }
 
-  @Override
-  public Record decode(InputStream inStream) throws CoderException, IOException {
-  	String SCHEMA_STR_V1 = "{\"type\":\"record\", \"namespace\":\"foo\", \"name\":\"Man\", \"fields\":[ { \"name\":\"name\", \"type\":\"string\" }, { \"name\":\"age\", \"type\":[\"null\",\"double\"] } ] }";
-  	Schema SCHEMA_V1 = new Schema.Parser().parse(SCHEMA_STR_V1);
-  	DatastoreCache cache = new DatastoreCache();
-  	DynamicBinaryMessageDecoder<Record> decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, cache);
-  	return decoder.decode(toByteArray(inStream));
-  }
- 
-  @Override
-  public List<? extends Coder<?>> getCoderArguments() {
-    return Collections.emptyList();
-  }
- 
-  @Override
-  public void verifyDeterministic() throws NonDeterministicException {}
-  
-  public static byte[] toByteArray(InputStream in) throws IOException {
+    @Override
+    public Record decode(InputStream inStream) throws CoderException, IOException {
+        String SCHEMA_STR_V1 = "{\"type\":\"record\", \"namespace\":\"foo\", \"name\":\"Man\", \"fields\":[ { \"name\":\"name\", \"type\":\"string\" }, { \"name\":\"age\", \"type\":[\"null\",\"double\"] } ] }";
+        Schema SCHEMA_V1 = new Schema.Parser().parse(SCHEMA_STR_V1);
+        DatastoreCache cache = new DatastoreCache();
+        DynamicBinaryMessageDecoder<Record> decoder = new DynamicBinaryMessageDecoder<>(GenericData.get(), SCHEMA_V1, cache);
+        return decoder.decode(toByteArray(inStream));
+    }
 
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
+    @Override
+    public List<? extends Coder<?>> getCoderArguments() {
+        return Collections.emptyList();
+    }
 
-		byte[] buffer = new byte[1024];
-		int len;
+    @Override
+    public void verifyDeterministic() throws NonDeterministicException {
+    }
 
-		// read bytes from the input stream and store them in buffer
-		while ((len = in.read(buffer)) != -1) {
-			// write bytes from the buffer into output stream
-			os.write(buffer, 0, len);
-		}
+    public static byte[] toByteArray(InputStream in) throws IOException {
 
-		return os.toByteArray();
-	}
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+        byte[] buffer = new byte[1024];
+        int len;
+
+        // read bytes from the input stream and store them in buffer
+        while ((len = in.read(buffer)) != -1) {
+            // write bytes from the buffer into output stream
+            os.write(buffer, 0, len);
+        }
+
+        return os.toByteArray();
+    }
 }

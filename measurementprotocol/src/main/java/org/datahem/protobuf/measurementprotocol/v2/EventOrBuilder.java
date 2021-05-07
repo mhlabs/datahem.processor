@@ -10,77 +10,80 @@ package org.datahem.protobuf.measurementprotocol.v2;
  * Copyright (C) 2018 - 2019 Robert Sahlin
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
 
 public interface EventOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:datahem.protobuf.measurementprotocol.v2.Event)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:datahem.protobuf.measurementprotocol.v2.Event)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <pre>
-   *ec.	The event category.
-   * </pre>
-   *
-   * <code>optional string category = 1;</code>
-   */
-  java.lang.String getCategory();
-  /**
-   * <pre>
-   *ec.	The event category.
-   * </pre>
-   *
-   * <code>optional string category = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getCategoryBytes();
+    /**
+     * <pre>
+     * ec.	The event category.
+     * </pre>
+     *
+     * <code>optional string category = 1;</code>
+     */
+    java.lang.String getCategory();
 
-  /**
-   * <pre>
-   *ea.	The event action.
-   * </pre>
-   *
-   * <code>optional string action = 2;</code>
-   */
-  java.lang.String getAction();
-  /**
-   * <pre>
-   *ea.	The event action.
-   * </pre>
-   *
-   * <code>optional string action = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getActionBytes();
+    /**
+     * <pre>
+     * ec.	The event category.
+     * </pre>
+     *
+     * <code>optional string category = 1;</code>
+     */
+    com.google.protobuf.ByteString
+    getCategoryBytes();
 
-  /**
-   * <pre>
-   *el	The event label.
-   * </pre>
-   *
-   * <code>optional string label = 3;</code>
-   */
-  java.lang.String getLabel();
-  /**
-   * <pre>
-   *el	The event label.
-   * </pre>
-   *
-   * <code>optional string label = 3;</code>
-   */
-  com.google.protobuf.ByteString
-      getLabelBytes();
+    /**
+     * <pre>
+     * ea.	The event action.
+     * </pre>
+     *
+     * <code>optional string action = 2;</code>
+     */
+    java.lang.String getAction();
 
-  /**
-   * <pre>
-   *ev	The event value.        
-   * </pre>
-   *
-   * <code>optional int32 value = 4;</code>
-   */
-  int getValue();
+    /**
+     * <pre>
+     * ea.	The event action.
+     * </pre>
+     *
+     * <code>optional string action = 2;</code>
+     */
+    com.google.protobuf.ByteString
+    getActionBytes();
+
+    /**
+     * <pre>
+     * el	The event label.
+     * </pre>
+     *
+     * <code>optional string label = 3;</code>
+     */
+    java.lang.String getLabel();
+
+    /**
+     * <pre>
+     * el	The event label.
+     * </pre>
+     *
+     * <code>optional string label = 3;</code>
+     */
+    com.google.protobuf.ByteString
+    getLabelBytes();
+
+    /**
+     * <pre>
+     * ev	The event value.
+     * </pre>
+     *
+     * <code>optional int32 value = 4;</code>
+     */
+    int getValue();
 }

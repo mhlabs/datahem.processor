@@ -8,50 +8,50 @@ option java_multiple_files = true;
 option java_package = "org.datahem.test";
 
 enum WithoutOptionsEnum {
-        Food = 0;
-        Bard = 1;
-        Bazd = 2;
-    }
+  Food = 0;
+  Bard = 1;
+  Bazd = 2;
+}
 
 message TestWithoutOptions {
 
-    string StringField = 1;
-    int32 Int32Field = 2;
-    int64 Int64Field = 3;
-    double DoubleField = 4;
-    float FloatField = 5;
-    bool BoolField = 6;
-    bytes BytesField = 7;
-    WithoutOptionsEnum EnumField = 8;
-    MessageChild messageChild = 9;
-    repeated MessageChild repeatedMessage = 10;
-    repeated string repeatedString = 11 ;
-    repeated int32 repeatedInt32 = 12 ;
-    repeated int64 repeatedInt64 = 13 ;
-    repeated double repeatedDouble = 14;
-    repeated float repeatedFloat = 15 ;
-    repeated bool repeatedBool = 16 ;
-    repeated bytes repeatedBytes = 17;
-    repeated WithoutOptionsEnum repeatedEnum = 18;
-    map<string,string> _ATTRIBUTES = 300;
+  string StringField = 1;
+  int32 Int32Field = 2;
+  int64 Int64Field = 3;
+  double DoubleField = 4;
+  float FloatField = 5;
+  bool BoolField = 6;
+  bytes BytesField = 7;
+  WithoutOptionsEnum EnumField = 8;
+  MessageChild messageChild = 9;
+  repeated MessageChild repeatedMessage = 10;
+  repeated string repeatedString = 11 ;
+  repeated int32 repeatedInt32 = 12 ;
+  repeated int64 repeatedInt64 = 13 ;
+  repeated double repeatedDouble = 14;
+  repeated float repeatedFloat = 15 ;
+  repeated bool repeatedBool = 16 ;
+  repeated bytes repeatedBytes = 17;
+  repeated WithoutOptionsEnum repeatedEnum = 18;
+  map<string, string> _ATTRIBUTES = 300;
 }
 
-    message MessageChild {
-        string StringField = 1;
-        int32 Int32Field = 2;
-        int64 Int64Field = 3;
-        double DoubleField = 4;
-        float FloatField = 5;
-        bool BoolField = 6;
-        bytes BytesField = 7;
-        WithoutOptionsEnum EnumField = 8;
-        repeated string repeatedString = 9;
-        repeated int32 repeatedInt32 = 10;
-        repeated int64 repeatedInt64 = 11;
-        repeated double repeatedDouble = 12;
-        repeated float repeatedFloat = 13;
-        repeated bool repeatedBool = 14;
-        repeated bytes repeatedBytes = 15;
-        repeated WithoutOptionsEnum repeatedEnum = 16;
-        map<string,string> stringMap = 17;
+message MessageChild {
+  string StringField = 1;
+  int32 Int32Field = 2;
+  int64 Int64Field = 3;
+  double DoubleField = 4;
+  float FloatField = 5;
+  bool BoolField = 6;
+  bytes BytesField = 7;
+  WithoutOptionsEnum EnumField = 8;
+  repeated string repeatedString = 9;
+  repeated int32 repeatedInt32 = 10;
+  repeated int64 repeatedInt64 = 11;
+  repeated double repeatedDouble = 12;
+  repeated float repeatedFloat = 13;
+  repeated bool repeatedBool = 14;
+  repeated bytes repeatedBytes = 15;
+  repeated WithoutOptionsEnum repeatedEnum = 16;
+  map<string, string> stringMap = 17;
 }

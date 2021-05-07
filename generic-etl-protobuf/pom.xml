@@ -284,7 +284,6 @@
             <version>4.5.5</version>
         </dependency>
 
-
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>

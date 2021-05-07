@@ -7,44 +7,43 @@ package org.datahem.processor.measurementprotocol.v2.utils;
  * Copyright (C) 2018 - 2019 Robert Sahlin
  * %%
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  * =========================LICENSE_END==================================
  */
 
 
 import org.datahem.protobuf.measurementprotocol.v2.Time;
-
-import java.util.Map;
-import java.util.Optional;
-import org.datahem.processor.utils.FieldMapper;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+import java.util.Optional;
 
-public class TimeEntity{
+
+public class TimeEntity {
     private String timeZone;
-	
-	private static final Logger LOG = LoggerFactory.getLogger(TimeEntity.class);
-	
-    public String getTimeZone(){
-    	return this.timeZone;
-  	}
 
-	public void setTimeZone(String tz){
-    	this.timeZone = tz;
-  	}
+    private static final Logger LOG = LoggerFactory.getLogger(TimeEntity.class);
 
-	public TimeEntity(){}
-	
-	public Time build(Map<String, String> pm){
-        try{   
+    public String getTimeZone() {
+        return this.timeZone;
+    }
+
+    public void setTimeZone(String tz) {
+        this.timeZone = tz;
+    }
+
+    public TimeEntity() {
+    }
+
+    public Time build(Map<String, String> pm) {
+        try {
             DateTime localDateTime = DateTime.parse(pm.get("timestamp")).withZone(DateTimeZone.forID(getTimeZone()));
             Time.Builder builder = Time.newBuilder();
             Optional.ofNullable(localDateTime.toString(DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss"))).ifPresent(builder::setDateTime);
@@ -62,10 +61,9 @@ public class TimeEntity{
             */
             Optional.ofNullable(timeZone).ifPresent(builder::setTimeZone);
             return builder.build();
-        }
-        catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             LOG.error(e.toString());
             return null;
         }
-	}
+    }
 }

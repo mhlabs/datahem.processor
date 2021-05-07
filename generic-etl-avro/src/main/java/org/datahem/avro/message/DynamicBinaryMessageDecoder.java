@@ -31,10 +31,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -46,19 +46,19 @@
  */
 package org.datahem.avro.message;
 
-import org.apache.avro.message.BinaryMessageDecoder;
-import org.apache.avro.message.BinaryMessageEncoder;
 import com.google.common.collect.MapMaker;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaNormalization;
 import org.apache.avro.generic.GenericData;
+import org.apache.avro.message.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Map;
+
 //import org.apache.avro.message.SchemaStore;
-import org.apache.avro.message.*;
 
 /**
  * A {@link MessageDecoder} that reads a binary-encoded datum. This checks for
@@ -77,152 +77,151 @@ import org.apache.avro.message.*;
  * This class is thread-safe.
  */
 public class DynamicBinaryMessageDecoder<D> extends MessageDecoder.BaseDecoder<D> {
-	
-	static final byte[] V1_HEADER = new byte[] {(byte) 0xC3, (byte) 0x01};
 
-  private static final ThreadLocal<byte[]> HEADER_BUFFER =
-      new ThreadLocal<byte[]>() {
-        @Override
-        protected byte[] initialValue() {
-          return new byte[10];
-        }
-      };
+    static final byte[] V1_HEADER = new byte[]{(byte) 0xC3, (byte) 0x01};
 
-  private static final ThreadLocal<ByteBuffer> FP_BUFFER =
-      new ThreadLocal<ByteBuffer>() {
-        @Override
-        protected ByteBuffer initialValue() {
-          byte[] header = HEADER_BUFFER.get();
-          return ByteBuffer.wrap(header).order(ByteOrder.LITTLE_ENDIAN);
-        }
-      };
+    private static final ThreadLocal<byte[]> HEADER_BUFFER =
+            new ThreadLocal<byte[]>() {
+                @Override
+                protected byte[] initialValue() {
+                    return new byte[10];
+                }
+            };
 
-  private final GenericData model;
-  private final Schema readSchema;
-  private final SchemaStore resolver;
+    private static final ThreadLocal<ByteBuffer> FP_BUFFER =
+            new ThreadLocal<ByteBuffer>() {
+                @Override
+                protected ByteBuffer initialValue() {
+                    byte[] header = HEADER_BUFFER.get();
+                    return ByteBuffer.wrap(header).order(ByteOrder.LITTLE_ENDIAN);
+                }
+            };
 
-  private final Map<Long, RawMessageDecoder<D>> codecByFingerprint =
-      new MapMaker().makeMap();
+    private final GenericData model;
+    private final Schema readSchema;
+    private final SchemaStore resolver;
 
-  /**
-   * Creates a new {@link BinaryMessageEncoder} that uses the given
-   * {@link GenericData data model} to construct datum instances described by
-   * the {@link Schema schema}.
-   * <p>
-   * The {@code readSchema} is as used the expected schema (read schema). Datum
-   * instances created by this class will are described by the expected schema.
-   * <p>
-   * The schema used to decode incoming buffers is determined by the schema
-   * fingerprint encoded in the message header. This class can decode messages
-   * that were encoded using the {@code readSchema} and other schemas that are
-   * added using {@link #addSchema(Schema)}.
-   *
-   * @param model the {@link GenericData data model} for datum instances
-   * @param readSchema the {@link Schema} used to construct datum instances
-   */
-  public DynamicBinaryMessageDecoder(GenericData model, Schema readSchema) {
-    this(model, readSchema, null);
-  }
+    private final Map<Long, RawMessageDecoder<D>> codecByFingerprint =
+            new MapMaker().makeMap();
 
-  /**
-   * Creates a new {@link BinaryMessageEncoder} that uses the given
-   * {@link GenericData data model} to construct datum instances described by
-   * the {@link Schema schema}.
-   * <p>
-   * The {@code readSchema} is used as the expected schema (read schema). Datum
-   * instances created by this class will are described by the expected schema.
-   * <p>
-   * The schema used to decode incoming buffers is determined by the schema
-   * fingerprint encoded in the message header. This class can decode messages
-   * that were encoded using the {@code readSchema}, other schemas that are
-   * added using {@link #addSchema(Schema)}, or schemas returned by the
-   * {@code resolver}.
-   *
-   * @param model the {@link GenericData data model} for datum instances
-   * @param readSchema the {@link Schema} used to construct datum instances
-   * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
-   */
-  public DynamicBinaryMessageDecoder(GenericData model, Schema readSchema,
-                              SchemaStore resolver) {
-    this.model = model;
-    this.readSchema = readSchema;
-    this.resolver = resolver;
-    addSchema(readSchema);
-  }
+    /**
+     * Creates a new {@link BinaryMessageEncoder} that uses the given
+     * {@link GenericData data model} to construct datum instances described by
+     * the {@link Schema schema}.
+     * <p>
+     * The {@code readSchema} is as used the expected schema (read schema). Datum
+     * instances created by this class will are described by the expected schema.
+     * <p>
+     * The schema used to decode incoming buffers is determined by the schema
+     * fingerprint encoded in the message header. This class can decode messages
+     * that were encoded using the {@code readSchema} and other schemas that are
+     * added using {@link #addSchema(Schema)}.
+     *
+     * @param model      the {@link GenericData data model} for datum instances
+     * @param readSchema the {@link Schema} used to construct datum instances
+     */
+    public DynamicBinaryMessageDecoder(GenericData model, Schema readSchema) {
+        this(model, readSchema, null);
+    }
 
-  /**
-   * Adds a {@link Schema} that can be used to decode buffers.
-   *
-   * @param writeSchema a {@link Schema} to use when decoding buffers
-   */
-  public void addSchema(Schema writeSchema) {
-    long fp = SchemaNormalization.parsingFingerprint64(writeSchema);
-    codecByFingerprint.put(fp,
-        new RawMessageDecoder<>(model, writeSchema));
+    /**
+     * Creates a new {@link BinaryMessageEncoder} that uses the given
+     * {@link GenericData data model} to construct datum instances described by
+     * the {@link Schema schema}.
+     * <p>
+     * The {@code readSchema} is used as the expected schema (read schema). Datum
+     * instances created by this class will are described by the expected schema.
+     * <p>
+     * The schema used to decode incoming buffers is determined by the schema
+     * fingerprint encoded in the message header. This class can decode messages
+     * that were encoded using the {@code readSchema}, other schemas that are
+     * added using {@link #addSchema(Schema)}, or schemas returned by the
+     * {@code resolver}.
+     *
+     * @param model      the {@link GenericData data model} for datum instances
+     * @param readSchema the {@link Schema} used to construct datum instances
+     * @param resolver   a {@link SchemaStore} used to find schemas by fingerprint
+     */
+    public DynamicBinaryMessageDecoder(GenericData model, Schema readSchema,
+                                       SchemaStore resolver) {
+        this.model = model;
+        this.readSchema = readSchema;
+        this.resolver = resolver;
+        addSchema(readSchema);
+    }
+
+    /**
+     * Adds a {@link Schema} that can be used to decode buffers.
+     *
+     * @param writeSchema a {@link Schema} to use when decoding buffers
+     */
+    public void addSchema(Schema writeSchema) {
+        long fp = SchemaNormalization.parsingFingerprint64(writeSchema);
+        codecByFingerprint.put(fp,
+                new RawMessageDecoder<>(model, writeSchema));
         //new RawMessageDecoder<>(model, writeSchema, writeSchema));
-  }
-
-  private RawMessageDecoder<D> getDecoder(long fp) {
-    RawMessageDecoder<D> decoder = codecByFingerprint.get(fp);
-    if (decoder != null) {
-      return decoder;
     }
 
-    if (resolver != null) {
-      Schema writeSchema = resolver.findByFingerprint(fp);
-      if (writeSchema != null) {
-        addSchema(writeSchema);
-        return codecByFingerprint.get(fp);
-      }
-      else{
-      	return new RawMessageDecoder<>(model, readSchema);
-      }
+    private RawMessageDecoder<D> getDecoder(long fp) {
+        RawMessageDecoder<D> decoder = codecByFingerprint.get(fp);
+        if (decoder != null) {
+            return decoder;
+        }
+
+        if (resolver != null) {
+            Schema writeSchema = resolver.findByFingerprint(fp);
+            if (writeSchema != null) {
+                addSchema(writeSchema);
+                return codecByFingerprint.get(fp);
+            } else {
+                return new RawMessageDecoder<>(model, readSchema);
+            }
+        }
+
+        throw new MissingSchemaException(
+                "Cannot resolve schema for fingerprint: " + fp);
     }
 
-    throw new MissingSchemaException(
-        "Cannot resolve schema for fingerprint: " + fp);
-  }
+    @Override
+    public D decode(InputStream stream, D reuse) throws IOException {
+        byte[] header = HEADER_BUFFER.get();
+        try {
+            if (!readFully(stream, header)) {
+                throw new BadHeaderException("Not enough header bytes");
+            }
+        } catch (IOException e) {
+            throw new IOException("Failed to read header and fingerprint bytes", e);
+        }
 
-  @Override
-  public D decode(InputStream stream, D reuse) throws IOException {
-    byte[] header = HEADER_BUFFER.get();
-    try {
-      if (!readFully(stream, header)) {
-        throw new BadHeaderException("Not enough header bytes");
-      }
-    } catch (IOException e) {
-      throw new IOException("Failed to read header and fingerprint bytes", e);
+        if (DynamicBinaryMessageDecoder.V1_HEADER[0] != header[0] ||
+                DynamicBinaryMessageDecoder.V1_HEADER[1] != header[1]) {
+            throw new BadHeaderException(String.format(
+                    "Unrecognized header bytes: 0x%02X 0x%02X",
+                    header[0], header[1]));
+        }
+
+        RawMessageDecoder<D> decoder = getDecoder(FP_BUFFER.get().getLong(2));
+
+        return decoder.decode(stream, reuse);
     }
 
-    if (DynamicBinaryMessageDecoder.V1_HEADER[0] != header[0] ||
-        DynamicBinaryMessageDecoder.V1_HEADER[1] != header[1]) {
-      throw new BadHeaderException(String.format(
-          "Unrecognized header bytes: 0x%02X 0x%02X",
-          header[0], header[1]));
+    /**
+     * Reads a buffer from a stream, making multiple read calls if necessary.
+     *
+     * @param stream an InputStream to read from
+     * @param bytes  a buffer
+     * @return true if the buffer is complete, false otherwise (stream ended)
+     * @throws IOException
+     */
+    private boolean readFully(InputStream stream, byte[] bytes)
+            throws IOException {
+        int pos = 0;
+        int bytesRead;
+        while ((bytes.length - pos) > 0 &&
+                (bytesRead = stream.read(bytes, pos, bytes.length - pos)) > 0) {
+            pos += bytesRead;
+        }
+        return (pos == bytes.length);
     }
-
-    RawMessageDecoder<D> decoder = getDecoder(FP_BUFFER.get().getLong(2));
-
-    return decoder.decode(stream, reuse);
-  }
-
-  /**
-   * Reads a buffer from a stream, making multiple read calls if necessary.
-   *
-   * @param stream an InputStream to read from
-   * @param bytes a buffer
-   * @return true if the buffer is complete, false otherwise (stream ended)
-   * @throws IOException
-   */
-  private boolean readFully(InputStream stream, byte[] bytes)
-      throws IOException {
-    int pos = 0;
-    int bytesRead;
-    while ((bytes.length - pos) > 0 &&
-        (bytesRead = stream.read(bytes, pos, bytes.length - pos)) > 0) {
-      pos += bytesRead;
-    }
-    return (pos == bytes.length);
-  }
 
 }
