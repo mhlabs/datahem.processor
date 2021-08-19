@@ -49,6 +49,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Set;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 //import java.util.regex.Pattern;
 //import java.util.regex.Matcher;
@@ -138,6 +140,7 @@ public class DynamoDbStreamPipeline {
             String pubsubPayload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
             HashMap<String, String> attributes = new HashMap<String, String>();
             attributes.putAll(pubsubMessage.getAttributeMap());
+            attributes.put("processingTime", Instant.now().truncatedTo(ChronoUnit.MILLIS).toString());
 
             JSONObject DynamoDbStreamObject = new JSONObject(pubsubPayload);
             JSONObject payloadObject;
