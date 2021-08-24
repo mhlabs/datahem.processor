@@ -46,6 +46,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -128,7 +131,10 @@ public class GenericStreamPipeline {
             // Get pubsub message payload and attributes
             //PubsubMessage pubsubMessage = c.element();
             String payload = new String(pubsubMessage.getPayload(), StandardCharsets.UTF_8);
-            Map<String, String> attributes = pubsubMessage.getAttributeMap();
+            
+            HashMap<String, String> attributes = new HashMap<String, String>();
+            attributes.putAll(pubsubMessage.getAttributeMap());
+            attributes.put("processingTime", Instant.now().truncatedTo(ChronoUnit.MILLIS).toString());
 
             // Parse json to protobuf
             if (messageDescriptor == null) {
