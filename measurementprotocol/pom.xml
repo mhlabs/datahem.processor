@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <surefire-plugin.version>2.22.1</surefire-plugin.version>
         <java.version>11</java.version>
-        <beam.version>2.28.0</beam.version>
+        <beam.version>2.34.0</beam.version>
         <!--<license.dir>${basedir}</license.dir>-->
         <!--<license.copyrightOwners>Robert Sahlin</license.copyrightOwners>-->
         <license.licenseName>agpl_v3_later</license.licenseName>
@@ -296,7 +296,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.xerial.snappy/snappy-java -->
