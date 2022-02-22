@@ -154,7 +154,7 @@ public class GenericStreamPipeline {
                     JsonFormat.parser().merge(payload, builder);
                 } catch (InvalidProtocolBufferException e) {
                     // Alert if unknown fields exist in message
-                    LOG.error("Unknown fields in message, doesn't match current schema " + descriptorFullName.get(), e);
+                    LOG.warn("Unknown fields in message, doesn't match current schema " + descriptorFullName.get(), e);
                     builder.clear();
                     // Parse but allow for unknown fields
                     JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
